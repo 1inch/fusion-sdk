@@ -2,9 +2,9 @@ import {toBN, trim0x} from '../utils'
 import {
     buildOrderData,
     getLimitOrderV3Domain,
-    getOrderHash
-} from './eip712/order-typed-data-builder'
-import {EIP712TypedData} from './eip712/eip712.types'
+    getOrderHash,
+    EIP712TypedData
+} from './eip712'
 import {ZERO_ADDRESS, ZX} from '../constants'
 import {buildSalt} from './utils'
 import {InteractionsData, LimitOrderV3Struct, OrderInfoData} from './types'

@@ -1,11 +1,11 @@
-import {AuctionSalt} from '../auction-salt/auction-salt'
-import {AuctionSuffix} from '../auction-suffix/auction-suffix'
-import {LimitOrder} from '../limit-order/limit-order'
+import {AuctionSalt} from '../auction-salt'
+import {AuctionSuffix} from '../auction-suffix'
 import {
+    LimitOrder,
     InteractionsData,
     LimitOrderV3Struct,
     OrderInfoData
-} from '../limit-order/types'
+} from '../limit-order'
 
 export class FusionOrder extends LimitOrder {
     constructor(
