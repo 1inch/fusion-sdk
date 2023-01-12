@@ -1,4 +1,4 @@
-import {BigNumber} from '@ethersproject/bignumber';
+import {BigNumber} from '@ethersproject/bignumber'
 
 export interface EIP712TypedData {
     types: EIP712Types
@@ -24,4 +24,11 @@ export declare type EIP712ObjectValue =
 
 export interface EIP712Object {
     [key: string]: EIP712ObjectValue
+}
+
+export type EIP712DomainType = {
+    name: string
+    version: string
+    chainId: number
+    verifyingContract: string
 }

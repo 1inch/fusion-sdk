@@ -1,14 +1,18 @@
-import {AuctionSalt} from '../auction-salt/auction-salt';
-import {AuctionSuffix} from '../auction-suffix/auction-suffix';
-import {LimitOrder} from '../limit-order/limit-order';
-import {InteractionsData, LimitOrderV3Struct, OrderInfoData} from '../limit-order/types';
+import {AuctionSalt} from '../auction-salt/auction-salt'
+import {AuctionSuffix} from '../auction-suffix/auction-suffix'
+import {LimitOrder} from '../limit-order/limit-order'
+import {
+    InteractionsData,
+    LimitOrderV3Struct,
+    OrderInfoData
+} from '../limit-order/types'
 
 export class FusionOrder extends LimitOrder {
     constructor(
         orderInfo: OrderInfoData,
         private readonly auction: AuctionSalt,
         private readonly auctionSuffix: AuctionSuffix,
-        interactions?: InteractionsData,
+        interactions?: InteractionsData
     ) {
         super(orderInfo, interactions)
     }

@@ -20,5 +20,4 @@ export const Order = [
 
 export const LimitOrderV3TypeDataName = '1inch Aggregation Router'
 export const LimitOrderV3TypeDataVersion = '5'
-export const ChainId = 1
 export const VerifyingContract = '0x1111111254eeb25477b68fb85ed929f73a960582'

@@ -1,10 +1,13 @@
-import {toBN, trim0x} from '../utils';
-import {LimitOrderV3TypeDataName, LimitOrderV3TypeDataVersion} from './eip712/domain';
-import {buildOrderData, getOrderHash} from './eip712/order-typed-data-builder';
-import {EIP712TypedData} from './eip712/eip712.types';
-import {ZERO_ADDRESS, ZX} from '../constants';
-import {buildSalt} from './utils';
-import {InteractionsData, LimitOrderV3Struct, OrderInfoData} from './types';
+import {toBN, trim0x} from '../utils'
+import {
+    buildOrderData,
+    getLimitOrderV3Domain,
+    getOrderHash
+} from './eip712/order-typed-data-builder'
+import {EIP712TypedData} from './eip712/eip712.types'
+import {ZERO_ADDRESS, ZX} from '../constants'
+import {buildSalt} from './utils'
+import {InteractionsData, LimitOrderV3Struct, OrderInfoData} from './types'
 
 export class LimitOrder {
     public readonly makerAsset: string
@@ -61,18 +64,22 @@ export class LimitOrder {
         this.postInteraction = interactions?.postInteraction || ZX
     }
 
-    static getOrderHash(order: LimitOrderV3Struct): string {
-        return getOrderHash(LimitOrder.getTypedData(order))
+    static getOrderHash(
+        order: LimitOrderV3Struct,
+        domain = getLimitOrderV3Domain(1)
+    ): string {
+        return getOrderHash(LimitOrder.getTypedData(order, domain))
     }
 
-    static getTypedData(order: LimitOrderV3Struct): EIP712TypedData {
+    static getTypedData(
+        order: LimitOrderV3Struct,
+        domain = getLimitOrderV3Domain(1)
+    ): EIP712TypedData {
         return buildOrderData(
-            1,
-            '',
-            // config.network_chain_id,
-            // config.chain.web3.limit_order_protocol_v3.address,
-            LimitOrderV3TypeDataName,
-            LimitOrderV3TypeDataVersion,
+            domain.chainId,
+            domain.verifyingContract,
+            domain.name,
+            domain.version,
             order
         )
     }
@@ -90,11 +97,14 @@ export class LimitOrder {
         ]
 
         // https://stackoverflow.com/a/55261098/440168
-        const cumulativeSum = ((sum) => (value: number) => {
-            sum += value
+        const cumulativeSum = (
+            (sum) =>
+            (value: number): number => {
+                sum += value
 
-            return sum
-        })(0)
+                return sum
+            }
+        )(0)
 
         const offsets = allInteractions
             .map((a) => a.length / 2 - 1)

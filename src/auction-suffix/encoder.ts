@@ -1,7 +1,7 @@
-import {BigNumber} from '@ethersproject/bignumber';
-import {trim0x} from '../utils';
-import {AuctionPoint, AuctionWhitelistItem} from './types';
-import {ZERO_ADDRESS} from '../constants';
+import {BigNumber} from '@ethersproject/bignumber'
+import {trim0x} from '../utils'
+import {AuctionPoint, AuctionWhitelistItem} from './types'
+import {ZERO_ADDRESS} from '../constants'
 
 export function encodeAuctionParams(points: AuctionPoint[]): string {
     return points

@@ -1,14 +1,14 @@
-import { toSec } from '../utils'
-import {AuctionPoint, AuctionWhitelistItem, SettlementSuffixData} from './types';
-import {ZERO_ADDRESS} from '../constants';
+import {toSec} from '../utils'
+import {AuctionPoint, AuctionWhitelistItem, SettlementSuffixData} from './types'
+import {ZERO_ADDRESS} from '../constants'
 import {
     encodeAuctionParams,
     encodeFlags,
     encodePublicResolvingDeadline,
     encodeTakingFeeData,
     encodeWhitelist
-} from './encoder';
-import {NoPublicResolvingDeadline} from './constants';
+} from './encoder'
+import {NoPublicResolvingDeadline} from './constants'
 
 export class AuctionSuffix {
     public readonly points: AuctionPoint[]

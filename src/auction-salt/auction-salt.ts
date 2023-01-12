@@ -1,7 +1,7 @@
-import assert from 'assert';
-import {toBN} from '../utils';
-import {AuctionSaltData} from './types';
-import {randomInt} from 'crypto';
+import assert from 'assert'
+import {toBN} from '../utils'
+import {AuctionSaltData} from './types'
+import {randomInt} from 'crypto'
 
 export class AuctionSalt {
     private readonly auctionStartTime: number
@@ -27,15 +27,11 @@ export class AuctionSalt {
             toBN(this.auctionStartTime).toString('hex').padStart(8, '0') +
             toBN(this.duration).toString('hex').padStart(6, '0') +
             toBN(this.initialRateBump).toString('hex').padStart(6, '0') +
-            toBN(this.bankFee)
-                .toString('hex')
-                .padStart(8, '0') +
-            toBN(this.salt)
-                .toString('hex')
-                .padStart(36, '0')
+            toBN(this.bankFee).toString('hex').padStart(8, '0') +
+            toBN(this.salt).toString('hex').padStart(36, '0')
 
         assert(res.length === 64, 'Some inputs were out of allowed ranges')
 
-        return toBN(('0x' + res)).toString()
+        return toBN('0x' + res).toString()
     }
 }

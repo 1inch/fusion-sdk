@@ -1,8 +1,7 @@
-import {AuctionSalt} from './auction-salt';
-import crypto from 'crypto';
+import {AuctionSalt} from './auction-salt'
+import crypto from 'crypto'
 
 describe('Auction Salt', () => {
-
     jest.spyOn(crypto, 'randomInt').mockImplementation(() => 1000)
 
     it('should create salt', () => {
@@ -13,7 +12,9 @@ describe('Auction Salt', () => {
             bankFee: '0'
         })
 
-        expect(salt.build()).toBe('45118768841948961586167738353692277076075522015101619148498725069326976549864')
+        expect(salt.build()).toBe(
+            '45118768841948961586167738353692277076075522015101619148498725069326976549864'
+        )
     })
 
     it('should create salt with non zero bank fee', () => {
@@ -24,7 +25,9 @@ describe('Auction Salt', () => {
             bankFee: '123123123'
         })
 
-        expect(salt.build()).toBe('45118768841948961586167741099429671146420854337050268925130474518618971309032')
+        expect(salt.build()).toBe(
+            '45118768841948961586167741099429671146420854337050268925130474518618971309032'
+        )
     })
 
     it('should fail to create salt due to wrong auction start time', () => {
@@ -35,7 +38,9 @@ describe('Auction Salt', () => {
             bankFee: '123123123'
         })
 
-        expect(() => salt.build()).toThrow('Some inputs were out of allowed ranges')
+        expect(() => salt.build()).toThrow(
+            'Some inputs were out of allowed ranges'
+        )
     })
 
     it('should fail to create salt due to initial rate bump out of range', () => {
@@ -46,7 +51,9 @@ describe('Auction Salt', () => {
             bankFee: '123123123'
         })
 
-        expect(() => salt.build()).toThrow('Some inputs were out of allowed ranges')
+        expect(() => salt.build()).toThrow(
+            'Some inputs were out of allowed ranges'
+        )
     })
 
     it('should fail to create salt due to wrong duration', () => {
@@ -57,6 +64,8 @@ describe('Auction Salt', () => {
             bankFee: '123123123'
         })
 
-        expect(() => salt.build()).toThrow('Some inputs were out of allowed ranges')
+        expect(() => salt.build()).toThrow(
+            'Some inputs were out of allowed ranges'
+        )
     })
 })

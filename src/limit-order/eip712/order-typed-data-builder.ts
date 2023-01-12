@@ -1,15 +1,23 @@
 import {SignTypedDataVersion, TypedDataUtils} from '@metamask/eth-sig-util'
-import {EIP712Domain, Order} from './domain'
-import {EIP712TypedData} from './eip712.types'
-import {LimitOrderV3Struct} from '../types';
+import {
+    EIP712Domain,
+    LimitOrderV3TypeDataName,
+    LimitOrderV3TypeDataVersion,
+    Order,
+    VerifyingContract
+} from './domain'
+import {EIP712DomainType, EIP712TypedData} from './eip712.types'
+import {LimitOrderV3Struct} from '../types'
 
 export function getOrderHash(data: EIP712TypedData): string {
-    return ('0x' +
+    return (
+        '0x' +
         TypedDataUtils.eip712Hash(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             data as any,
             SignTypedDataVersion.V4
-        ).toString('hex'))
+        ).toString('hex')
+    )
 }
 
 export function buildOrderData(
@@ -42,4 +50,13 @@ export function domainSeparator(
             SignTypedDataVersion.V4
         ).toString('hex')
     )
+}
+
+export function getLimitOrderV3Domain(chainId: number): EIP712DomainType {
+    return {
+        name: LimitOrderV3TypeDataName,
+        version: LimitOrderV3TypeDataVersion,
+        chainId,
+        verifyingContract: VerifyingContract
+    }
 }

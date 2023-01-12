@@ -1,4 +1,4 @@
-import BN from 'bn.js';
+import BN from 'bn.js'
 
 export function toSec(time: number | string | Date): number {
     const t = time instanceof Date ? time.getTime() : time
@@ -11,6 +11,7 @@ export function toBN(val: number | string): BN {
         if (!Number.isSafeInteger(val)) {
             throw new Error('integer is not safe')
         }
+
         return new BN(val)
     }
 
