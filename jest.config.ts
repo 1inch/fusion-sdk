@@ -33,7 +33,7 @@ export default {
 
     // A list of reporter names that Jest uses when writing coverage reports
     coverageReporters: [
-        'json-summary',
+        'json-summary'
         // "json",
         // "text",
         // "lcov",
@@ -145,10 +145,7 @@ export default {
     // testLocationInResults: false,
 
     // The glob patterns Jest uses to detect test files
-    testMatch: [
-        '**/__tests__/**/*.[jt]s?(x)',
-        '**/?(*.)+(spec|test).[tj]s?(x)',
-    ],
+    testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)']
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
     // testPathIgnorePatterns: [
@@ -190,4 +187,4 @@ export default {
 
     // Whether to use watchman for file crawling
     // watchman: true,
-};
+}

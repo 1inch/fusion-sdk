@@ -1,3 +1,5 @@
+import {DynamicField} from './constants'
+
 export type OrderInfoData = {
     makerAsset: string
     takerAsset: string
@@ -18,7 +20,6 @@ export type InteractionsData = {
     permit?: string
     preInteraction?: string
     postInteraction?: string
-    suffix?: string
 }
 
 export type LimitOrderV3Struct = {
@@ -33,3 +34,7 @@ export type LimitOrderV3Struct = {
     offsets: string
     interactions: string
 }
+
+export type InteractionField = keyof typeof DynamicField
+
+export type ParsedInteractions = Record<InteractionField, string>

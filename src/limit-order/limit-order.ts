@@ -8,6 +8,7 @@ import {
 import {ZERO_ADDRESS, ZX} from '../constants'
 import {buildSalt} from './utils'
 import {InteractionsData, LimitOrderV3Struct, OrderInfoData} from './types'
+import {parseInteractions} from './parser'
 
 export class LimitOrder {
     public readonly makerAsset: string
@@ -81,6 +82,27 @@ export class LimitOrder {
             domain.name,
             domain.version,
             order
+        )
+    }
+
+    static decode(struct: LimitOrderV3Struct): LimitOrder {
+        const interactions = parseInteractions(
+            struct.offsets,
+            struct.interactions
+        )
+
+        return new LimitOrder(
+            {
+                makerAsset: struct.makerAsset,
+                takerAsset: struct.takerAsset,
+                maker: struct.maker,
+                takingAmount: struct.takingAmount,
+                makingAmount: struct.makingAmount,
+                allowedSender: struct.allowedSender,
+                receiver: struct.receiver,
+                salt: struct.salt
+            },
+            interactions
         )
     }
 

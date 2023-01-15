@@ -1,6 +1,7 @@
 import {LimitOrder} from './limit-order'
 import {PredicateFactory} from './predicate-factory'
 import {InteractionsFactory} from './interactions-factory'
+import {LimitOrderV3Struct} from './types'
 
 describe('Limit Order', () => {
     jest.spyOn(Math, 'random').mockReturnValue(1)
@@ -91,5 +92,26 @@ describe('Limit Order', () => {
             takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
             takingAmount: '1420000000'
         })
+    })
+
+    it('should decode limit order struct', () => {
+        const orderStruct: LimitOrderV3Struct = {
+            allowedSender: '0x0000000000000000000000000000000000000000',
+            interactions:
+                '0x63592c2b0000000000000000000000000000000000000000000000000000000063c0566a08b067ad41e45babe5bbb52fc2fe7f692f628b0600000000219ab540356cbb839cbe05303d7705fa',
+            maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
+            makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            makingAmount: '1000000000000000000',
+            offsets:
+                '2048955946929424286921227713067743020696385405755235979139736848564224',
+            receiver: '0x0000000000000000000000000000000000000000',
+            salt: '1673549418040',
+            takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+            takingAmount: '1420000000'
+        }
+
+        const order = LimitOrder.decode(orderStruct)
+
+        expect(order.build()).toStrictEqual(orderStruct)
     })
 })
