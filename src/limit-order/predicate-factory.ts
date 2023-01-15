@@ -45,4 +45,38 @@ export class PredicateFactory {
             timeNonceAccountHex
         )
     }
+
+    /**
+     * @param predicate predicate field from parsed order's interactions
+     * @returns {number} expiration time in seconds in case it exists in predicate
+     */
+    static parseExpirationTime(predicate: string): number | null {
+        if (predicate.includes(PredicateFactory.TIMESTAMP_BELOW_SELECTOR)) {
+            const dataAfterSelector = predicate.split(
+                PredicateFactory.TIMESTAMP_BELOW_SELECTOR
+            )[1]
+            const deadlineSec = BigNumber.from(
+                '0x' + dataAfterSelector.substring(0, 64)
+            ).toString()
+
+            return +deadlineSec
+        }
+
+        if (
+            predicate.includes(
+                PredicateFactory.TIMESTAMP_BELOW_AND_NONCE_EQUALS_SELECTOR
+            )
+        ) {
+            const dataAfterSelector = predicate.split(
+                PredicateFactory.TIMESTAMP_BELOW_AND_NONCE_EQUALS_SELECTOR
+            )[1]
+            const funcData = '0x' + dataAfterSelector.substring(0, 64)
+            const info = toBN(funcData)
+            const dateSec = info.shrn(160 + (208 - 160)).toString()
+
+            return +dateSec
+        }
+
+        return null
+    }
 }

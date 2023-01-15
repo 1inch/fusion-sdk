@@ -29,4 +29,27 @@ describe('Predicate Factory', () => {
             '0x2cc2878d000063c056a600000000000100000000219ab540356cbb839cbe05303d7705fa'
         )
     })
+
+    it('should parse timestampBelow predicate expiration time', () => {
+        const predicate =
+            '0x63592c2b0000000000000000000000000000000000000000000000000000000063c056a6'
+        const expirationTime = PredicateFactory.parseExpirationTime(predicate)
+
+        expect(expirationTime).toBe(1673549478)
+    })
+
+    it('should parse timestampBelowAndNonceEquals predicate expiration time', () => {
+        const predicate =
+            '0x2cc2878d000063c056a600000000000100000000219ab540356cbb839cbe05303d7705fa'
+        const expirationTime = PredicateFactory.parseExpirationTime(predicate)
+
+        expect(expirationTime).toBe(1673549478)
+    })
+
+    it('should return null on non exising expiration time', () => {
+        const predicate = '0x12345678'
+        const expirationTime = PredicateFactory.parseExpirationTime(predicate)
+
+        expect(expirationTime).toBe(null)
+    })
 })
