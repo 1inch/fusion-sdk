@@ -68,4 +68,13 @@ describe('Auction Salt', () => {
             'Some inputs were out of allowed ranges'
         )
     })
+
+    it('should decode salt', () => {
+        const encodedSalt =
+            '45118768841948961586167741099429671146420854337050268925130474518618971309032'
+
+        const salt = AuctionSalt.decode(encodedSalt)
+
+        expect(salt.build()).toBe(encodedSalt)
+    })
 })

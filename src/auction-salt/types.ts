@@ -3,4 +3,5 @@ export type AuctionSaltData = {
     initialRateBump: number
     duration: number
     bankFee: string
+    salt?: string
 }
