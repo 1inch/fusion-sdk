@@ -12,15 +12,15 @@ import {
 } from './parser'
 
 export class AuctionSalt {
-    private readonly auctionStartTime: number
+    public readonly auctionStartTime: number
 
-    private readonly initialRateBump: number
+    public readonly initialRateBump: number
 
-    private readonly duration: number
+    public readonly duration: number
 
-    private readonly bankFee: string
+    public readonly bankFee: string
 
-    private readonly salt: string
+    public readonly salt: string
 
     constructor(auction: AuctionSaltData) {
         if (auction.salt && SALT_MASK.lt(toBN(auction.salt))) {

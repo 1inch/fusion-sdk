@@ -6,10 +6,6 @@ export function toSec(time: number | string | Date): number {
     return Math.floor(+t / 1000)
 }
 
-export function toMs(time: number | string): number {
-    return +time * 1000
-}
-
 export function toBN(val: number | string): BN {
     if (typeof val === 'number') {
         if (!Number.isSafeInteger(val)) {
