@@ -6,6 +6,10 @@ export function toSec(time: number | string | Date): number {
     return Math.floor(+t / 1000)
 }
 
+export function toMs(time: number | string): number {
+    return +time * 1000
+}
+
 export function toBN(val: number | string): BN {
     if (typeof val === 'number') {
         if (!Number.isSafeInteger(val)) {
@@ -28,4 +32,12 @@ export function trim0x(data: string): string {
     }
 
     return data
+}
+
+export function add0x(data: string): string {
+    if (data.includes('0x')) {
+        return data
+    }
+
+    return '0x' + data
 }

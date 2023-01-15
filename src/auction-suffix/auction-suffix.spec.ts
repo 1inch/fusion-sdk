@@ -43,4 +43,13 @@ describe('Auction Suffix', () => {
             '000c004e200000000000000000219ab540356cbb839cbe05303d7705fa63c0566a09'
         )
     })
+
+    it('should decode auction suffix', () => {
+        const encodedSuffix =
+            '000c004e200000000000000000219ab540356cbb839cbe05303d7705fa63c0566a09'
+
+        const suffix = AuctionSuffix.decode(encodedSuffix)
+
+        expect(suffix.build()).toBe(encodedSuffix)
+    })
 })

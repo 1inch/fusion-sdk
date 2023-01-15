@@ -1,4 +1,4 @@
-import {toBN, trim0x} from '../utils'
+import {toBN, trim0x} from '../../utils'
 import {DynamicField} from './constants'
 import BN from 'bn.js'
 import {InteractionField, ParsedInteractions} from './types'

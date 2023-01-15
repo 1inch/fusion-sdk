@@ -9,6 +9,7 @@ import {
     encodeWhitelist
 } from './encoder'
 import {NoPublicResolvingDeadline} from './constants'
+import {parseInteractionsSuffix} from './parser'
 
 export class AuctionSuffix {
     public readonly points: AuctionPoint[]
@@ -30,6 +31,18 @@ export class AuctionSuffix {
 
         this.takerFeeReceiver = suffix.takerFeeReceiver || ZERO_ADDRESS
         this.takerFeeRatio = suffix.takerFeeRatio || '0'
+    }
+
+    static decode(interactions: string): AuctionSuffix {
+        const suffix = parseInteractionsSuffix(interactions)
+
+        return new AuctionSuffix({
+            publicResolvingDeadline: suffix.publicResolvingDeadline,
+            points: suffix.points,
+            takerFeeRatio: suffix.takerFeeRatio,
+            takerFeeReceiver: suffix.takerFeeReceiver,
+            whitelist: suffix.whitelist
+        })
     }
 
     build(): string {

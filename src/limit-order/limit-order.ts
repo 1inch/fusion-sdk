@@ -8,7 +8,7 @@ import {
 import {ZERO_ADDRESS, ZX} from '../constants'
 import {buildSalt} from './utils'
 import {InteractionsData, LimitOrderV3Struct, OrderInfoData} from './types'
-import {parseInteractions} from './parser'
+import {parseInteractions} from './parser/parser'
 
 export class LimitOrder {
     public readonly makerAsset: string
