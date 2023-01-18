@@ -1,4 +1,4 @@
-import {EIP712TypedData} from '../limit-order'
+import {EIP712TypedData} from '../../limit-order'
 
 export interface ProviderConnector {
     signTypedData(

@@ -9,7 +9,7 @@ import {
     LimitOrderV3TypeDataVersion,
     Order,
     VerifyingContract
-} from '../limit-order'
+} from '../../limit-order'
 
 describe('Private Key provider connector', () => {
     let web3Provider: Web3

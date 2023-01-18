@@ -8,7 +8,7 @@ import {
     LimitOrderV3TypeDataVersion,
     Order,
     VerifyingContract
-} from '../limit-order'
+} from '../../limit-order'
 import {Web3ProviderConnector} from './web3-provider-connector'
 
 describe('Web3 provider connector', () => {
