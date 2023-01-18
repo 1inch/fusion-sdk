@@ -151,4 +151,18 @@ export class LimitOrder {
             interactions
         }
     }
+
+    getTypedData(domain = getLimitOrderV3Domain(1)): EIP712TypedData {
+        return buildOrderData(
+            domain.chainId,
+            domain.verifyingContract,
+            domain.name,
+            domain.version,
+            this.build()
+        )
+    }
+
+    getOrderHash(domain = getLimitOrderV3Domain(1)): string {
+        return getOrderHash(this.getTypedData(domain))
+    }
 }
