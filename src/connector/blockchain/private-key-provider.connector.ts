@@ -1,9 +1,11 @@
-import {ProviderConnector} from './provider.connector'
+import {BlockchainProviderConnector} from './blockchain-provider.connector'
 import Web3 from 'web3'
 import {signTypedData, SignTypedDataVersion} from '@metamask/eth-sig-util'
 import {EIP712TypedData} from '../../limit-order'
 
-export class PrivateKeyProviderConnector implements ProviderConnector {
+export class PrivateKeyProviderConnector
+    implements BlockchainProviderConnector
+{
     private readonly privateKeyBuffer: Buffer
 
     constructor(

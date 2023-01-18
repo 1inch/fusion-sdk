@@ -1,6 +1,6 @@
 import {EIP712TypedData} from '../../limit-order'
 
-export interface ProviderConnector {
+export interface BlockchainProviderConnector {
     signTypedData(
         walletAddress: string,
         typedData: EIP712TypedData

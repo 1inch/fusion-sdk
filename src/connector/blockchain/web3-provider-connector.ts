@@ -1,4 +1,4 @@
-import {ProviderConnector} from './provider.connector'
+import {BlockchainProviderConnector} from './blockchain-provider.connector'
 import Web3 from 'web3'
 import {EIP712TypedData} from '../../limit-order'
 
@@ -6,7 +6,7 @@ interface ExtendedWeb3 extends Web3 {
     signTypedDataV4(walletAddress: string, typedData: string): Promise<string>
 }
 
-export class Web3ProviderConnector implements ProviderConnector {
+export class Web3ProviderConnector implements BlockchainProviderConnector {
     constructor(protected readonly web3Provider: Web3) {}
 
     signTypedData(
