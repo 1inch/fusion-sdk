@@ -9,7 +9,7 @@ export type QuoterRequestParams = {
     permit?: string
 }
 
-export type QuoterConfig = {
+export type QuoterApiConfig = {
     network: NetworkEnum
     url: string
 }

@@ -1,16 +1,16 @@
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 import {QuoteRequest} from './quote.request'
-import {QuoterConfig, QuoterResponse} from './types'
+import {QuoterApiConfig, QuoterResponse} from './types'
 import {concatQueryParams} from '../params'
 
 export class QuoterApi {
     constructor(
-        private readonly config: QuoterConfig,
+        private readonly config: QuoterApiConfig,
         private readonly httpClient: HttpProviderConnector
     ) {}
 
     static new(
-        config: QuoterConfig,
+        config: QuoterApiConfig,
         httpClient = new AxiosProviderConnector()
     ): QuoterApi {
         return new QuoterApi(config, httpClient)
