@@ -1,13 +1,12 @@
-import {HttpProviderConnector} from '../connector'
+import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
 import {NetworkEnum} from '../constants'
-import {ProviderConnector} from '../../dist'
 import {LimitOrderV3Struct} from '../limit-order'
 import {PresetEnum} from '../api'
 
 export type FusionSDKConfigParams = {
     url: string
     network: NetworkEnum
-    blockchainProvider?: ProviderConnector
+    blockchainProvider?: BlockchainProviderConnector
     httpProvider?: HttpProviderConnector
 }
 

@@ -5,7 +5,7 @@ import {FusionOrderParamsData} from './types'
 export class FusionOrderParams {
     public readonly preset: PresetEnum = PresetEnum.fast
 
-    public readonly receiver = ZERO_ADDRESS
+    public readonly receiver: string = ZERO_ADDRESS
 
     constructor(params: FusionOrderParamsData) {
         if (params.preset) {

@@ -2,7 +2,7 @@ import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 import {QuoterRequest} from './quoter.request'
 import {QuoterApiConfig, QuoterResponse} from './types'
 import {concatQueryParams} from '../params'
-import {Quote} from './quote/quote'
+import {Quote} from './quote'
 
 export class QuoterApi {
     constructor(
