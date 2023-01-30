@@ -1,5 +1,19 @@
 # Utils library for 1inch Fusion Mode
 
+## Installation
+
+### Node
+
+```
+npm install @1inch/fusion-sdk
+```
+
+### Yarn
+
+```
+yarn add @1inch/fusion-sdk
+```
+
 ## How to swap with Fusion Mode
 
 ```typescript
