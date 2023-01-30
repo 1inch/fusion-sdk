@@ -6,13 +6,13 @@ import {isNativeCurrency} from '../../../utils'
 import {
     NetworkEnum,
     UNWRAPPER_CONTRACT_ADDRESS_MAP,
-    WRAPPER_ADDRESS_MAP,
-    ZERO_ADDRESS
+    WRAPPER_ADDRESS_MAP
 } from '../../../constants'
 import {InteractionsFactory} from '../../../limit-order/interactions-factory'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData} from './types'
+import {PredicateFactory} from '../../../limit-order/predicate-factory'
 
 export class Quote {
     public readonly fromTokenAmount: string
@@ -26,6 +26,10 @@ export class Quote {
     public readonly prices: Cost
 
     public readonly volume: Cost
+
+    public readonly whitelist: string[]
+
+    public readonly settlementAddress: string
 
     public readonly quoteId: string | null
 
@@ -45,6 +49,8 @@ export class Quote {
         this.prices = response.prices
         this.volume = response.volume
         this.quoteId = response.quoteId
+        this.whitelist = response.whitelist
+        this.settlementAddress = response.settlementAddress
     }
 
     createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
@@ -54,9 +60,21 @@ export class Quote {
 
         const salt = preset.createAuctionSalt()
 
+        const fillDurationRange = Math.round(
+            preset.auctionDuration / this.whitelist.length
+        )
+
         const suffix = new AuctionSuffix({
             points: preset.points,
-            whitelist: [] // todo: fetch whitelist from quoter
+            whitelist: this.whitelist.map((resolver, i) => ({
+                address: resolver,
+                allowance:
+                    i === 0
+                        ? 0
+                        : salt.auctionStartTime -
+                          preset.startAuctionIn +
+                          fillDurationRange * i
+            }))
         })
 
         const takerAsset = isNativeCurrency(this.params.toTokenAddress)
@@ -75,13 +93,17 @@ export class Quote {
                 takingAmount: preset.auctionEndAmount,
                 maker: this.params.walletAddress,
                 receiver: takerAssetReceiver,
-                allowedSender: ZERO_ADDRESS // todo: add settlement contract
+                allowedSender: this.settlementAddress
             },
             salt,
             suffix,
             {
                 postInteraction: this.buildUnwrapPostInteractionIfNeeded(
                     params.receiver
+                ),
+                // todo: add nonce validation and change hardcoded extended deadline
+                predicate: PredicateFactory.timestampBelow(
+                    salt.auctionStartTime + salt.duration + 32
                 )
             }
         )

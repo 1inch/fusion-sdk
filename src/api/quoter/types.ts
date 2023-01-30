@@ -21,6 +21,8 @@ export type QuoterResponse = {
     toTokenAmount: string
     prices: Cost
     volume: Cost
+    settlementAddress: string
+    whitelist: string[]
     quoteId: string | null
 }
 
