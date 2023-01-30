@@ -1,4 +1,8 @@
 import BN from 'bn.js'
+import {NATIVE_CURRENCY} from './constants'
+
+export const isNativeCurrency = (address: string): boolean =>
+    address.toLowerCase() === NATIVE_CURRENCY
 
 export function toSec(time: number | string | Date): number {
     const t = time instanceof Date ? time.getTime() : time

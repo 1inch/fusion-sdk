@@ -1,7 +1,8 @@
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
-import {QuoteRequest} from './quote.request'
+import {QuoterRequest} from './quoter.request'
 import {QuoterApiConfig, QuoterResponse} from './types'
 import {concatQueryParams} from '../params'
+import {Quote} from './quote'
 
 export class QuoterApi {
     constructor(
@@ -16,10 +17,18 @@ export class QuoterApi {
         return new QuoterApi(config, httpClient)
     }
 
-    getQuote(params: QuoteRequest): Promise<QuoterResponse> {
+    async getQuote(params: QuoterRequest): Promise<Quote> {
+        const err = params.validate()
+
+        if (err) {
+            throw new Error(err)
+        }
+
         const queryParams = concatQueryParams(params.build())
         const url = `${this.config.url}/v1.0/${this.config.network}/quote/receive/${queryParams}`
 
-        return this.httpClient.get(url)
+        const res = await this.httpClient.get<QuoterResponse>(url)
+
+        return new Quote(this.config.network, params, res)
     }
 }

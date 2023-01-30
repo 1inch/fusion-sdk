@@ -21,16 +21,18 @@ export type QuoterResponse = {
     toTokenAmount: string
     prices: Cost
     volume: Cost
+    settlementAddress: string
+    whitelist: string[]
     quoteId: string | null
 }
 
 export type QuoterPresets = {
-    fast: Preset
-    medium: Preset
-    slow: Preset
+    fast: PresetData
+    medium: PresetData
+    slow: PresetData
 }
 
-export type Preset = {
+export type PresetData = {
     auctionDuration: number
     startAuctionIn: number
     bankFee: string
@@ -51,4 +53,10 @@ export type Cost = {
         fromToken: string
         toToken: string
     }
+}
+
+export enum PresetEnum {
+    fast = 'fast',
+    medium = 'medium',
+    slow = 'slow'
 }
