@@ -74,7 +74,12 @@ describe('Quoter API', () => {
                 toToken: '1014.278029389902274042'
             }
         },
-        quoteId: null
+        quoteId: null,
+        settlementAddress: '0xa88800cd213da5ae406ce248380802bd53b47647',
+        whitelist: [
+            '0x84d99aa569d93a9ca187d83734c8c4a519c4e9b1',
+            '0xcfa62f77920d6383be12c91c71bd403599e1116f'
+        ]
     })
 
     const httpProvider: HttpProviderConnector = {
