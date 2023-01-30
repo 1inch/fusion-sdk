@@ -1,13 +1,13 @@
 {
-    "name": "@1inch/limit-order-settlement-utils",
+    "name": "@1inch/fusion-sdk",
     "version": "0.0.1",
-    "description": "Utility for Fusion mode",
+    "description": "1inch Fusion Mode SDK",
     "main": "index.js",
     "types": "index.d.ts",
     "repository": {
         "type": "git",
-        "url": "ssh://git@github.com:1inch/limit-order-settlement-utils.git",
-        "directory": "@1inch/limit-order-settlement-utils"
+        "url": "ssh://git@github.com:1inch/fusion-sdk.git",
+        "directory": "@1inch/fusion-sdk"
     },
     "scripts": {
         "prebuild": "rm -rf dist && yarn run test:coverage",
