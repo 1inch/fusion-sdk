@@ -181,4 +181,60 @@ describe(__filename, () => {
             )
         })
     })
+
+    describe('getOrderStatus', () => {
+        it('success', async () => {
+            const url = 'https://test.com'
+
+            const expected = {
+                order: {
+                    salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
+                    maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                    offsets:
+                        '970558080243398695134547109586957793750899628853613079895592438595584',
+                    receiver: '0x0000000000000000000000000000000000000000',
+                    makerAsset: '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                    takerAsset: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+                    interactions:
+                        '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
+                    makingAmount: '2246481050155000',
+                    takingAmount: '349837736598',
+                    allowedSender: '0xa88800cd213da5ae406ce248380802bd53b47647'
+                },
+                cancelTx: null,
+                points: null,
+                auctionStartDate: 1674491231,
+                auctionDuration: 180,
+                initialRateBump: 50484,
+                status: 'filled',
+                createdAt: '2023-01-23T16:26:38.803Z',
+                fromTokenToUsdPrice: '0.01546652159249409068',
+                toTokenToUsdPrice: '1.00135361305236370022',
+                fills: [
+                    {
+                        txHash: '0xcdd81e6860fc038d4fe8549efdf18488154667a2088d471cdaa7d492f24178a1',
+                        filledMakerAmount: '2246481050155001',
+                        filledAuctionTakerAmount: '351593117428'
+                    }
+                ],
+                isNativeCurrency: false
+            }
+            const httpProvider = createHttpProviderFake(expected)
+            const sdk = new FusionSDK({
+                url,
+                network: NetworkEnum.ETHEREUM,
+                httpProvider
+            })
+            const orderHash = `0x1beee023ab933cf5446c298eadadb61c05705f2156ef5b2db36c160b36f31ce4`
+
+            const response = await sdk.getOrderStatus({
+                orderHash
+            })
+
+            expect(response).toEqual(expected)
+            expect(httpProvider.get).toHaveBeenLastCalledWith(
+                `${url}/orders/v1.0/1/order/status/${orderHash}`
+            )
+        })
+    })
 })

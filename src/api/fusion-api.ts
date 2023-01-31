@@ -3,7 +3,13 @@ import {QuoterApi, QuoterRequest} from './quoter'
 import {RelayerApi, RelayerRequest} from './relayer'
 import {AxiosProviderConnector} from '../connector'
 import {Quote} from './quoter/quote/quote'
-import {ActiveOrdersRequest, ActiveOrdersResponse, OrdersApi} from './orders'
+import {
+    ActiveOrdersRequest,
+    ActiveOrdersResponse,
+    OrdersApi,
+    OrderStatusRequest,
+    OrderStatusResponse
+} from './orders'
 
 export class FusionApi {
     private readonly quoterApi: QuoterApi
@@ -51,6 +57,10 @@ export class FusionApi {
         params: ActiveOrdersRequest
     ): Promise<ActiveOrdersResponse> {
         return this.ordersApi.getActiveOrders(params)
+    }
+
+    getOrderStatus(params: OrderStatusRequest): Promise<OrderStatusResponse> {
+        return this.ordersApi.getOrderStatus(params)
     }
 
     submitOrder(params: RelayerRequest): Promise<void> {

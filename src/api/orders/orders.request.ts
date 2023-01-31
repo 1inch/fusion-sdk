@@ -1,4 +1,4 @@
-import {ActiveOrdersRequestParams} from './types'
+import {ActiveOrdersRequestParams, OrderStatusParams} from './types'
 
 export class ActiveOrdersRequest {
     public readonly page: number | undefined
@@ -18,6 +18,24 @@ export class ActiveOrdersRequest {
         return {
             page: this.page,
             limit: this.limit
+        }
+    }
+}
+
+export class OrderStatusRequest {
+    public readonly orderHash: string
+
+    constructor(params: OrderStatusParams) {
+        this.orderHash = params.orderHash
+    }
+
+    static new(params: OrderStatusParams): OrderStatusRequest {
+        return new OrderStatusRequest(params)
+    }
+
+    build(): OrderStatusParams {
+        return {
+            orderHash: this.orderHash
         }
     }
 }
