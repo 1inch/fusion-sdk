@@ -56,3 +56,29 @@ export type OrderStatusResponse = {
     initialRateBump: number
     isNativeCurrency: boolean
 }
+
+export type OrdersByMakerParams = {
+    address: string
+} & OrdersByMakerQueryParams
+
+export type OrdersByMakerQueryParams = {
+    page?: number
+    limit?: number
+}
+
+export type OrderFillsByMakerOutput = {
+    orderHash: string
+    status: OrderStatusMapped
+    makerAsset: string
+    makerAmount: string
+    takerAsset: string
+    cancelTx: string | null
+    fills: Fill[]
+    points: AuctionPoint[] | null
+    auctionStartDate: number
+    auctionDuration: number
+    initialRateBump: number
+    isNativeCurrency: boolean
+}
+
+export type OrdersByMakerResponse = PaginationOutput<OrderFillsByMakerOutput>

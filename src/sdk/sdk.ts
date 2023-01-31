@@ -11,6 +11,9 @@ import {
     ActiveOrdersRequest,
     ActiveOrdersRequestParams,
     ActiveOrdersResponse,
+    OrdersByMakerParams,
+    OrdersByMakerRequest,
+    OrdersByMakerResponse,
     OrderStatusParams,
     OrderStatusRequest,
     OrderStatusResponse
@@ -42,6 +45,16 @@ export class FusionSDK {
         const request = OrderStatusRequest.new({orderHash})
 
         return this.api.getOrderStatus(request)
+    }
+
+    async getOrdersByMaker({
+        limit,
+        page,
+        address
+    }: OrdersByMakerParams): Promise<OrdersByMakerResponse> {
+        const request = OrdersByMakerRequest.new({limit, page, address})
+
+        return this.api.getOrdersByMaker(request)
     }
 
     async getQuote(params: QuoteParams): Promise<Quote> {

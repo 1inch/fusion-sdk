@@ -237,4 +237,173 @@ describe(__filename, () => {
             )
         })
     })
+
+    describe('getOrdersByMaker', () => {
+        it('success', async () => {
+            const url = 'https://test.com'
+
+            const expected = {
+                meta: {
+                    totalItems: 247,
+                    currentPage: 1,
+                    itemsPerPage: 1,
+                    totalPages: 247
+                },
+                items: [
+                    {
+                        orderHash:
+                            '0xe8c38b4ef9c96c12290709be98f5b6cb932233ad767137ee7506aa71687c960e',
+                        status: 'filled',
+                        makerAsset:
+                            '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+                        takerAsset:
+                            '0x111111111117dc0aa78b770fa6a738034120c302',
+                        makerAmount: '351336830606',
+                        fills: [
+                            {
+                                txHash: '0x3e049a432a426e73a22b5ee19327bbfb0706c34b48eba68ff114ccfb215b5bae',
+                                filledMakerAmount: '351336830606',
+                                filledAuctionTakerAmount:
+                                    '895661510910730845524061'
+                            }
+                        ],
+                        points: null,
+                        cancelTx: null,
+                        isNativeCurrency: false,
+                        auctionStartDate: 1672989075,
+                        auctionDuration: 180,
+                        initialRateBump: 50515
+                    }
+                ]
+            }
+            const httpProvider = createHttpProviderFake(expected)
+            const sdk = new FusionSDK({
+                url,
+                network: NetworkEnum.ETHEREUM,
+                httpProvider
+            })
+
+            const address = '0xfa80cd9b3becc0b4403b0f421384724f2810775f'
+            const response = await sdk.getOrdersByMaker({
+                address,
+                limit: 1,
+                page: 1
+            })
+
+            expect(response).toEqual(expected)
+            expect(httpProvider.get).toHaveBeenLastCalledWith(
+                `${url}/orders/v1.0/1/order/maker/${address}/?limit=1&page=1`
+            )
+        })
+
+        it('handles the case when no pagination params was passed', async () => {
+            const url = 'https://test.com'
+
+            const expected = {
+                meta: {
+                    totalItems: 247,
+                    currentPage: 1,
+                    itemsPerPage: 1,
+                    totalPages: 247
+                },
+                items: [
+                    {
+                        orderHash:
+                            '0xe8c38b4ef9c96c12290709be98f5b6cb932233ad767137ee7506aa71687c960e',
+                        status: 'filled',
+                        makerAsset:
+                            '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+                        takerAsset:
+                            '0x111111111117dc0aa78b770fa6a738034120c302',
+                        makerAmount: '351336830606',
+                        fills: [
+                            {
+                                txHash: '0x3e049a432a426e73a22b5ee19327bbfb0706c34b48eba68ff114ccfb215b5bae',
+                                filledMakerAmount: '351336830606',
+                                filledAuctionTakerAmount:
+                                    '895661510910730845524061'
+                            }
+                        ],
+                        points: null,
+                        cancelTx: null,
+                        isNativeCurrency: false,
+                        auctionStartDate: 1672989075,
+                        auctionDuration: 180,
+                        initialRateBump: 50515
+                    }
+                ]
+            }
+            const httpProvider = createHttpProviderFake(expected)
+            const sdk = new FusionSDK({
+                url,
+                network: NetworkEnum.ETHEREUM,
+                httpProvider
+            })
+
+            const address = '0xfa80cd9b3becc0b4403b0f421384724f2810775f'
+            const response = await sdk.getOrdersByMaker({
+                address
+            })
+
+            expect(response).toEqual(expected)
+            expect(httpProvider.get).toHaveBeenLastCalledWith(
+                `${url}/orders/v1.0/1/order/maker/${address}/?`
+            )
+        })
+
+        it('throws an error with invalid address', async () => {
+            const url = 'https://test.com'
+
+            const expected = {
+                meta: {
+                    totalItems: 247,
+                    currentPage: 1,
+                    itemsPerPage: 1,
+                    totalPages: 247
+                },
+                items: [
+                    {
+                        orderHash:
+                            '0xe8c38b4ef9c96c12290709be98f5b6cb932233ad767137ee7506aa71687c960e',
+                        status: 'filled',
+                        makerAsset:
+                            '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+                        takerAsset:
+                            '0x111111111117dc0aa78b770fa6a738034120c302',
+                        makerAmount: '351336830606',
+                        fills: [
+                            {
+                                txHash: '0x3e049a432a426e73a22b5ee19327bbfb0706c34b48eba68ff114ccfb215b5bae',
+                                filledMakerAmount: '351336830606',
+                                filledAuctionTakerAmount:
+                                    '895661510910730845524061'
+                            }
+                        ],
+                        points: null,
+                        cancelTx: null,
+                        isNativeCurrency: false,
+                        auctionStartDate: 1672989075,
+                        auctionDuration: 180,
+                        initialRateBump: 50515
+                    }
+                ]
+            }
+            const httpProvider = createHttpProviderFake(expected)
+            const sdk = new FusionSDK({
+                url,
+                network: NetworkEnum.ETHEREUM,
+                httpProvider
+            })
+
+            const address =
+                '0xfa80cd9b3becc0b4403b0f42138472ewewewewewewew2810775f'
+            const promise = sdk.getOrdersByMaker({
+                address,
+                limit: 1,
+                page: 1
+            })
+
+            await expect(promise).rejects.toThrow(/is invalid address/)
+        })
+    })
 })
