@@ -11,19 +11,6 @@ export type ActiveOrdersRequestParams = {
     limit?: number
 }
 
-export type OrderData = {
-    salt: string
-    maker: string
-    offsets: string
-    receiver: string
-    makerAsset: string
-    takerAsset: string
-    interactions: string
-    makingAmount: string
-    takingAmount: string
-    allowedSender: string
-}
-
 export type ActiveOrder = {
     orderHash: string
     signature: string
