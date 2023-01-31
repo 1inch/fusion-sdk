@@ -5,12 +5,12 @@ export class ActiveOrdersRequest {
 
     public readonly limit: number | undefined
 
-    constructor(params: ActiveOrdersRequestParams) {
+    constructor(params: ActiveOrdersRequestParams = {}) {
         this.page = params.page
         this.limit = params.limit
     }
 
-    static new(params: ActiveOrdersRequestParams): ActiveOrdersRequest {
+    static new(params?: ActiveOrdersRequestParams): ActiveOrdersRequest {
         return new ActiveOrdersRequest(params)
     }
 

@@ -1,6 +1,6 @@
-import {HttpProviderConnector} from '../connector'
-import {NetworkEnum} from '../constants'
-import {FusionSDK} from './sdk'
+import {HttpProviderConnector} from '../../connector'
+import {NetworkEnum} from '../../constants'
+import {FusionSDK} from '../../sdk/sdk'
 
 function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
     const httpProvider: HttpProviderConnector = {

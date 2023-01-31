@@ -17,9 +17,9 @@ export class OrdersApi {
     }
 
     async getActiveOrders(
-        request: ActiveOrdersRequest
+        params: ActiveOrdersRequest
     ): Promise<ActiveOrdersResponse> {
-        const queryParams = concatQueryParams(request.build())
+        const queryParams = concatQueryParams(params.build())
         const url = `${this.config.url}/v1.0/${this.config.network}/order/active/${queryParams}`
 
         return this.httpClient.get<ActiveOrdersResponse>(url)

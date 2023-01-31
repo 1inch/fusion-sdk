@@ -1,5 +1,6 @@
 import {LimitOrderV3Struct} from '../../limit-order'
 import {NetworkEnum} from '../../constants'
+import {PaginationOutput} from '../../types'
 
 export type OrdersApiConfig = {
     network: NetworkEnum
@@ -20,14 +21,4 @@ export type ActiveOrder = {
     order: LimitOrderV3Struct
 }
 
-export type ActiveOrdersMeta = {
-    totalItems: number
-    currentPage: number
-    itemsPerPage: number
-    totalPages: number
-}
-
-export type ActiveOrdersResponse = {
-    items: ActiveOrder[]
-    meta: ActiveOrdersMeta
-}
+export type ActiveOrdersResponse = PaginationOutput<ActiveOrder>

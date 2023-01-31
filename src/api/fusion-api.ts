@@ -48,9 +48,9 @@ export class FusionApi {
     }
 
     getActiveOrders(
-        request: ActiveOrdersRequest
+        params: ActiveOrdersRequest
     ): Promise<ActiveOrdersResponse> {
-        return this.ordersApi.getActiveOrders(request)
+        return this.ordersApi.getActiveOrders(params)
     }
 
     submitOrder(params: RelayerRequest): Promise<void> {
