@@ -32,6 +32,12 @@ export class OrdersApi {
     async getOrderStatus(
         params: OrderStatusRequest
     ): Promise<OrderStatusResponse> {
+        const err = params.validate()
+
+        if (err) {
+            throw new Error(err)
+        }
+
         const url = `${this.config.url}/v1.0/${this.config.network}/order/status/${params.orderHash}`
 
         return this.httpClient.get<OrderStatusResponse>(url)

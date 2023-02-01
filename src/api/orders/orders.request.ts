@@ -1,3 +1,4 @@
+import Web3 from 'web3'
 import {ActiveOrdersRequestParams, OrderStatusParams} from './types'
 
 export class ActiveOrdersRequest {
@@ -31,6 +32,18 @@ export class OrderStatusRequest {
 
     static new(params: OrderStatusParams): OrderStatusRequest {
         return new OrderStatusRequest(params)
+    }
+
+    validate(): string | null {
+        if (this.orderHash.length !== 66) {
+            return `orderHash length should be equals 66`
+        }
+
+        if (!Web3.utils.isHex(this.orderHash)) {
+            return `orderHash have to be hex`
+        }
+
+        return null
     }
 
     build(): OrderStatusParams {
