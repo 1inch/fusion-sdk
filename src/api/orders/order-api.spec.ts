@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import {HttpProviderConnector} from '../../connector'
 import {NetworkEnum} from '../../constants'
 import {FusionSDK} from '../../sdk/sdk'

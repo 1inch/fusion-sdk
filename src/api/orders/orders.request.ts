@@ -6,15 +6,13 @@ import {
     OrderStatusParams
 } from './types'
 import Web3 from 'web3'
+import {PaginationRequest} from '../pagination'
 
 export class ActiveOrdersRequest {
-    public readonly page: number | undefined
-
-    public readonly limit: number | undefined
+    public readonly pagination: PaginationRequest
 
     constructor(params: ActiveOrdersRequestParams = {}) {
-        this.page = params.page
-        this.limit = params.limit
+        this.pagination = new PaginationRequest(params.page, params.limit)
     }
 
     static new(params?: ActiveOrdersRequestParams): ActiveOrdersRequest {
@@ -23,8 +21,8 @@ export class ActiveOrdersRequest {
 
     build(): ActiveOrdersRequestParams {
         return {
-            page: this.page,
-            limit: this.limit
+            page: this.pagination.page,
+            limit: this.pagination.limit
         }
     }
 }
@@ -62,14 +60,11 @@ export class OrderStatusRequest {
 export class OrdersByMakerRequest {
     public readonly address: string
 
-    public readonly page: number | undefined
-
-    public readonly limit: number | undefined
+    public readonly pagination: PaginationRequest
 
     constructor(params: OrdersByMakerParams) {
         this.address = params.address
-        this.limit = params.limit
-        this.page = params.page
+        this.pagination = new PaginationRequest(params.page, params.limit)
     }
 
     static new(params: OrdersByMakerParams): OrdersByMakerRequest {
@@ -77,6 +72,12 @@ export class OrdersByMakerRequest {
     }
 
     validate(): string | null {
+        const res = this.pagination.validate()
+
+        if (res) {
+            return res
+        }
+
         if (!isValidAddress(this.address)) {
             return `${this.address} is invalid address`
         }
@@ -86,8 +87,8 @@ export class OrdersByMakerRequest {
 
     buildQueryParams(): OrdersByMakerQueryParams {
         return {
-            limit: this.limit,
-            page: this.page
+            limit: this.pagination.limit,
+            page: this.pagination.page
         }
     }
 }
