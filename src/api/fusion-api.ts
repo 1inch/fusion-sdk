@@ -48,7 +48,7 @@ export class FusionApi {
     }
 
     getActiveOrders(
-        params: ActiveOrdersRequest
+        params: ActiveOrdersRequest = ActiveOrdersRequest.new()
     ): Promise<ActiveOrdersResponse> {
         return this.ordersApi.getActiveOrders(params)
     }

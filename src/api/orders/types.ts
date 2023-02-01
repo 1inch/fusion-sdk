@@ -1,6 +1,6 @@
 import {LimitOrderV3Struct} from '../../limit-order'
 import {NetworkEnum} from '../../constants'
-import {PaginationOutput} from '../../types'
+import {PaginationOutput} from '../types'
 
 export type OrdersApiConfig = {
     network: NetworkEnum
