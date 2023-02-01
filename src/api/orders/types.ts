@@ -1,6 +1,6 @@
 import {LimitOrderV3Struct} from '../../limit-order'
 import {NetworkEnum} from '../../constants'
-import {PaginationOutput} from '../../types'
+import {PaginationOutput} from '../types'
 import {AuctionPoint} from '../quoter'
 
 export type OrdersApiConfig = {
@@ -28,7 +28,7 @@ export type OrderStatusParams = {
     orderHash: string
 }
 
-export enum OrderStatusMapped {
+export enum OrderStatus {
     Pending = 'pending',
     Filled = 'filled',
     FalsePredicate = 'false-predicate',
@@ -47,7 +47,7 @@ export type Fill = {
 }
 
 export type OrderStatusResponse = {
-    status: OrderStatusMapped
+    status: OrderStatus
     order: LimitOrderV3Struct
     points: AuctionPoint[] | null
     fills: Fill[]
