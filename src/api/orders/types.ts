@@ -68,7 +68,7 @@ export type OrdersByMakerQueryParams = {
 
 export type OrderFillsByMakerOutput = {
     orderHash: string
-    status: OrderStatusMapped
+    status: OrderStatus
     makerAsset: string
     makerAmount: string
     takerAsset: string
