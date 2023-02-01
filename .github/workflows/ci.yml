@@ -1,0 +1,133 @@
+name: CI
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: self-hosted
+  
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v3
+        with:
+          token: "${{ secrets.REPO_GITHUB_TOKEN }}"
+          ref: ${{ github.ref }}
+      
+      - name: Setup Node.js
+        uses: volta-cli/action@v4
+
+      - name: Setup Git Credentials
+        run: |
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "ssh://git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "git+ssh://git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "https://github.com/1inch/"
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn --frozen-lockfile --no-progress
+
+  static-checks:
+    name: Static checks
+    needs: setup
+    runs-on: self-hosted
+
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v3
+        with:
+          token: "${{ secrets.REPO_GITHUB_TOKEN }}"
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        uses: volta-cli/action@v4
+
+      - name: Setup Git Credentials
+        run: |
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "ssh://git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "git+ssh://git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "https://github.com/1inch/"
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn --frozen-lockfile --no-progress
+
+      - name: Linter
+        run: yarn lint
+
+      - name: Type check
+        run: yarn typecheck
+  
+  tests:
+    name: Unit tests
+    needs: setup
+    runs-on: self-hosted
+
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v3
+        with:
+          token: "${{ secrets.REPO_GITHUB_TOKEN }}"
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        uses: volta-cli/action@v4
+
+      - name: Setup Git Credentials
+        run: |
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "ssh://git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "git+ssh://git@github.com/1inch/"
+          git config --global --add url."https://${GITHUB_TOKEN}@github.com/1inch/".insteadOf "https://github.com/1inch/"
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn --frozen-lockfile --no-progress
+
+      - name: Run unit tests
+        run: yarn test
