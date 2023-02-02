@@ -12,7 +12,7 @@ on:
 jobs:
   setup:
     name: Setup
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
   
     steps:
       - name: Load current commit
@@ -40,7 +40,7 @@ jobs:
   static-checks:
     name: Static checks
     needs: setup
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Load current commit
@@ -74,7 +74,7 @@ jobs:
   tests:
     name: Unit tests
     needs: setup
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Load current commit
