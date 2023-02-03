@@ -7,6 +7,11 @@ import {
 } from './types'
 import {ZERO_ADDRESS} from '../constants'
 import {getLimitOrderV3Domain} from '../limit-order'
+import {
+    ActiveOrdersRequest,
+    ActiveOrdersRequestParams,
+    ActiveOrdersResponse
+} from '../api/orders'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -17,6 +22,15 @@ export class FusionSDK {
             network: config.network,
             httpProvider: config.httpProvider
         })
+    }
+
+    async getActiveOrders({
+        page,
+        limit
+    }: ActiveOrdersRequestParams = {}): Promise<ActiveOrdersResponse> {
+        const request = ActiveOrdersRequest.new({page, limit})
+
+        return this.api.getActiveOrders(request)
     }
 
     async getQuote(params: QuoteParams): Promise<Quote> {
