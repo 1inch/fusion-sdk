@@ -19,3 +19,9 @@ export const UNWRAPPER_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
     [NetworkEnum.BINANCE]: '0x0eee00137d807a461702e9e0640c599de663e7e4',
     [NetworkEnum.POLYGON]: '0x18d410f651289bb978fc32f90d2d7e608f4f4560'
 }
+
+export const SETTLEMENT_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
+    [NetworkEnum.ETHEREUM]: '0xa88800cd213da5ae406ce248380802bd53b47647',
+    [NetworkEnum.BINANCE]: '0x1d0ae300eec4093cee4367c00b228d10a5c7ac63',
+    [NetworkEnum.POLYGON]: '0x1e8ae092651e7b14e4d0f93611267c5be19b8b9f'
+}
