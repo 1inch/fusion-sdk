@@ -11,7 +11,6 @@ import {
     ActiveOrdersRequest,
     ActiveOrdersRequestParams,
     ActiveOrdersResponse,
-    OrderStatusParams,
     OrderStatusRequest,
     OrderStatusResponse
 } from '../api/orders'
@@ -36,9 +35,7 @@ export class FusionSDK {
         return this.api.getActiveOrders(request)
     }
 
-    async getOrderStatus({
-        orderHash
-    }: OrderStatusParams): Promise<OrderStatusResponse> {
+    async getOrderStatus(orderHash: string): Promise<OrderStatusResponse> {
         const request = OrderStatusRequest.new({orderHash})
 
         return this.api.getOrderStatus(request)

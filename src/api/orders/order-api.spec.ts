@@ -227,9 +227,7 @@ describe(__filename, () => {
             })
             const orderHash = `0x1beee023ab933cf5446c298eadadb61c05705f2156ef5b2db36c160b36f31ce4`
 
-            const response = await sdk.getOrderStatus({
-                orderHash
-            })
+            const response = await sdk.getOrderStatus(orderHash)
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
@@ -281,9 +279,7 @@ describe(__filename, () => {
             })
             const orderHash = `0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4`
 
-            const promise = sdk.getOrderStatus({
-                orderHash
-            })
+            const promise = sdk.getOrderStatus(orderHash)
 
             await expect(promise).rejects.toThrow(/orderHash have to be hex/)
         })
@@ -332,9 +328,7 @@ describe(__filename, () => {
             })
             const orderHash = `0x1beee023ab933cf5446c298eadasdasdb61c0x5705f2156ef5b2db36c160b36f31ce4`
 
-            const promise = sdk.getOrderStatus({
-                orderHash
-            })
+            const promise = sdk.getOrderStatus(orderHash)
 
             await expect(promise).rejects.toThrow(
                 /orderHash length should be equals 66/
