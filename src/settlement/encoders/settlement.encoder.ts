@@ -1,10 +1,8 @@
-import {AbiCoder} from 'web3-eth-abi'
+import abiCoder from 'web3-eth-abi'
 import {FillOrderParamsExtended} from '../types'
 import {SETTLE_ORDERS_SELECTOR} from './constants'
 import {add0x, trim0x} from '../../utils'
 import {encodeFillOrder} from './fill-order.encoder'
-
-const abiCoder = new AbiCoder()
 
 export function encodeSettleOrders(params: FillOrderParamsExtended): string {
     const encodedOrder = encodeFillOrder(params).substring(10)
