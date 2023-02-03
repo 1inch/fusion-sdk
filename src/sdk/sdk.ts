@@ -10,7 +10,9 @@ import {getLimitOrderV3Domain} from '../limit-order'
 import {
     ActiveOrdersRequest,
     ActiveOrdersRequestParams,
-    ActiveOrdersResponse
+    ActiveOrdersResponse,
+    OrderStatusRequest,
+    OrderStatusResponse
 } from '../api/orders'
 
 export class FusionSDK {
@@ -31,6 +33,12 @@ export class FusionSDK {
         const request = ActiveOrdersRequest.new({page, limit})
 
         return this.api.getActiveOrders(request)
+    }
+
+    async getOrderStatus(orderHash: string): Promise<OrderStatusResponse> {
+        const request = OrderStatusRequest.new({orderHash})
+
+        return this.api.getOrderStatus(request)
     }
 
     async getQuote(params: QuoteParams): Promise<Quote> {
