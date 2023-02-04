@@ -1,24 +1,37 @@
+import {isValidAddress} from '../../validations'
+import {
+    ActiveOrdersRequestParams,
+    OrdersByMakerParams,
+    OrderStatusParams
+} from './types'
 import Web3 from 'web3'
-import {ActiveOrdersRequestParams, OrderStatusParams} from './types'
+import {PaginationParams, PaginationRequest} from '../pagination'
 
 export class ActiveOrdersRequest {
-    public readonly page: number | undefined
-
-    public readonly limit: number | undefined
+    public readonly pagination: PaginationRequest
 
     constructor(params: ActiveOrdersRequestParams = {}) {
-        this.page = params.page
-        this.limit = params.limit
+        this.pagination = new PaginationRequest(params.page, params.limit)
     }
 
     static new(params?: ActiveOrdersRequestParams): ActiveOrdersRequest {
         return new ActiveOrdersRequest(params)
     }
 
+    validate(): string | null {
+        const res = this.pagination.validate()
+
+        if (res) {
+            return res
+        }
+
+        return null
+    }
+
     build(): ActiveOrdersRequestParams {
         return {
-            page: this.page,
-            limit: this.limit
+            page: this.pagination.page,
+            limit: this.pagination.limit
         }
     }
 }
@@ -49,6 +62,42 @@ export class OrderStatusRequest {
     build(): OrderStatusParams {
         return {
             orderHash: this.orderHash
+        }
+    }
+}
+
+export class OrdersByMakerRequest {
+    public readonly address: string
+
+    public readonly pagination: PaginationRequest
+
+    constructor(params: OrdersByMakerParams) {
+        this.address = params.address
+        this.pagination = new PaginationRequest(params.page, params.limit)
+    }
+
+    static new(params: OrdersByMakerParams): OrdersByMakerRequest {
+        return new OrdersByMakerRequest(params)
+    }
+
+    validate(): string | null {
+        const res = this.pagination.validate()
+
+        if (res) {
+            return res
+        }
+
+        if (!isValidAddress(this.address)) {
+            return `${this.address} is invalid address`
+        }
+
+        return null
+    }
+
+    buildQueryParams(): PaginationParams {
+        return {
+            limit: this.pagination.limit,
+            page: this.pagination.page
         }
     }
 }

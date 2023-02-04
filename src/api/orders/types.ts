@@ -2,16 +2,14 @@ import {LimitOrderV3Struct} from '../../limit-order'
 import {NetworkEnum} from '../../constants'
 import {PaginationOutput} from '../types'
 import {AuctionPoint} from '../quoter'
+import {PaginationParams} from '../pagination'
 
 export type OrdersApiConfig = {
     network: NetworkEnum
     url: string
 }
 
-export type ActiveOrdersRequestParams = {
-    page?: number
-    limit?: number
-}
+export type ActiveOrdersRequestParams = PaginationParams
 
 export type ActiveOrder = {
     orderHash: string
@@ -56,3 +54,24 @@ export type OrderStatusResponse = {
     initialRateBump: number
     isNativeCurrency: boolean
 }
+
+export type OrdersByMakerParams = {
+    address: string
+} & PaginationParams
+
+export type OrderFillsByMakerOutput = {
+    orderHash: string
+    status: OrderStatus
+    makerAsset: string
+    makerAmount: string
+    takerAsset: string
+    cancelTx: string | null
+    fills: Fill[]
+    points: AuctionPoint[] | null
+    auctionStartDate: number
+    auctionDuration: number
+    initialRateBump: number
+    isNativeCurrency: boolean
+}
+
+export type OrdersByMakerResponse = PaginationOutput<OrderFillsByMakerOutput>

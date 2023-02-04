@@ -7,8 +7,10 @@ import {
     ActiveOrdersRequest,
     ActiveOrdersResponse,
     OrdersApi,
+    OrdersByMakerRequest,
     OrderStatusRequest,
-    OrderStatusResponse
+    OrderStatusResponse,
+    OrdersByMakerResponse
 } from './orders'
 
 export class FusionApi {
@@ -61,6 +63,12 @@ export class FusionApi {
 
     getOrderStatus(params: OrderStatusRequest): Promise<OrderStatusResponse> {
         return this.ordersApi.getOrderStatus(params)
+    }
+
+    getOrdersByMaker(
+        params: OrdersByMakerRequest
+    ): Promise<OrdersByMakerResponse> {
+        return this.ordersApi.getOrdersByMaker(params)
     }
 
     submitOrder(params: RelayerRequest): Promise<void> {
