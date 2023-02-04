@@ -28,6 +28,12 @@ export class OrdersApi {
     async getActiveOrders(
         params: ActiveOrdersRequest
     ): Promise<ActiveOrdersResponse> {
+        const err = params.validate()
+
+        if (err) {
+            throw new Error(err)
+        }
+
         const queryParams = concatQueryParams(params.build())
         const url = `${this.config.url}/v1.0/${this.config.network}/order/active/${queryParams}`
 
