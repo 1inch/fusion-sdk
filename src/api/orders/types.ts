@@ -39,9 +39,9 @@ export enum OrderStatus {
 }
 
 export type Fill = {
-    txHash: string | null
-    filledMakerAmount: string | null
-    filledAuctionTakerAmount: string | null
+    txHash: string
+    filledMakerAmount: string
+    filledAuctionTakerAmount: string
 }
 
 export type OrderStatusResponse = {
