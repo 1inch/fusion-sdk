@@ -2,11 +2,10 @@ import {isValidAddress} from '../../validations'
 import {
     ActiveOrdersRequestParams,
     OrdersByMakerParams,
-    OrdersByMakerQueryParams,
     OrderStatusParams
 } from './types'
 import Web3 from 'web3'
-import {PaginationRequest} from '../pagination'
+import {PaginationParams, PaginationRequest} from '../pagination'
 
 export class ActiveOrdersRequest {
     public readonly pagination: PaginationRequest
@@ -85,7 +84,7 @@ export class OrdersByMakerRequest {
         return null
     }
 
-    buildQueryParams(): OrdersByMakerQueryParams {
+    buildQueryParams(): PaginationParams {
         return {
             limit: this.pagination.limit,
             page: this.pagination.page

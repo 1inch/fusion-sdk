@@ -1,3 +1,8 @@
+export type PaginationParams = {
+    page?: number
+    limit?: number
+}
+
 export class PaginationRequest {
     page: number | undefined
 
