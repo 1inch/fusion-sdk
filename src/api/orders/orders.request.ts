@@ -18,6 +18,16 @@ export class ActiveOrdersRequest {
         return new ActiveOrdersRequest(params)
     }
 
+    validate(): string | null {
+        const res = this.pagination.validate()
+
+        if (res) {
+            return res
+        }
+
+        return null
+    }
+
     build(): ActiveOrdersRequestParams {
         return {
             page: this.pagination.page,
