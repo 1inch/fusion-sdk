@@ -44,10 +44,10 @@ const auctionTakingAmount = calculator.calcAuctionTakingAmount(
 | ------------- | ------ | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | salt          | string | uint256             | some unique value. It is necessary to be able to create limit orders with the same parameters (so that they have a different hash)                                                                                                     |
 | makerAsset    | string | address             | the address of the asset user want to sell (address of a token contract)                                                                                                                                                                |
-| takerAsset    | string | address             | the address of the asset you want to buy (address of a token contract)                                                                                                                                                                 |
+| takerAsset    | string | address             | the address of the asset user want to buy (address of a token contract)                                                                                                                                                                 |
 | maker         | string | address             | the address of the limit order creator                                                                                                                                                                                                 |
-| receiver      | string | address             | If it contains a zero address, which means that taker asset will be sent to the address of the creator of the limit order. If you set any other value, then taker asset will be sent to the specified address                          |
-| allowedSender | string | address             | If it contains a zero address, which means that a limit order is available for everyone to fill. If you set any other value, then the limit order will be available for execution only for the specified address (private limit order) |
+| receiver      | string | address             | If it contains a zero address, which means that taker asset will be sent to the address of the creator of the limit order. If user set any other value, then taker asset will be sent to the specified address                          |
+| allowedSender | string | address             | If it contains a zero address, which means that a limit order is available for everyone to fill. If user set any other value, then the limit order will be available for execution only for the specified address (private limit order) |
 | makingAmount  | string | uint256             | amount of maker asset                                                                                                                                                                                                                  |
 | takingAmount  | string | uint256             | amount of taker asset                                                                                                                                                                                                                  |
 | offsets       | string | uint256             | every 32's bytes represents offset of the n'ths interaction                                                                                                                                                                            |
@@ -85,7 +85,7 @@ AuctionCalculator.fromLimitOrderV3Struct(limitOrderStruct)
 
 ### AuctionCalculator.calcRateBump
 
-**Description:** used to calculate exchange rate in some point of time. You can read more about it [here](https://docs.1inch.io/docs/fusion-swap/introduction)
+**Description:** used to calculate exchange rate in some point of time. user can read more about it [here](https://docs.1inch.io/docs/fusion-swap/introduction)
 
 **Arguments**: time (unix timestamp)
 
