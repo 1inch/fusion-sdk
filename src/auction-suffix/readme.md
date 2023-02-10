@@ -25,6 +25,8 @@ type SettlementSuffixData = {
 Example:
 
 ```typescript
+import {AuctionSuffix} from '@1inch/fusion-sdk'
+
 const suffix = new AuctionSuffix({
     points: [
         {
@@ -51,6 +53,8 @@ suffix.build()
 **Example:**
 
 ```typescript
+import {AuctionSuffix} from '@1inch/fusion-sdk'
+
 const encodedSuffix =
     '000c004e200000000000000000219ab540356cbb839cbe05303d7705fa63c0566a09'
 

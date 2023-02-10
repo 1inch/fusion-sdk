@@ -1,6 +1,6 @@
 ## AuctionCalculator
 
-**Description:** used to you to calculate taker amount and auction rate
+**Description:** used to calculate taker amount and auction rate
 
 ### Real world example
 
@@ -53,14 +53,14 @@ const auctionTakingAmount = calculator.calcAuctionTakingAmount(
 | offsets       | string | uint256             | every 32's bytes represents offset of the n'ths interaction                                                                                                                                                                            |
 | interactions  | string | bytes               | used to encode fusion specific data |
 
-Order.interactions suffix structure:
+**Order.interactions suffix structure:**
 * M*(1 + 3 bytes)  - auction points coefficients with seconds delays
 * N*(4 + 20 bytes) - resolver with corresponding time limit
 * 4 bytes          - public time limit 
 * 32 bytes         - taking fee (optional if flags has _HAS_TAKING_FEE_FLAG)
 * 1 byte           - flags
 
-Examples:
+**Examples:**
 
 ```typescript
 import {AuctionCalculator} from '@1inch/fusion-sdk'
@@ -86,6 +86,7 @@ AuctionCalculator.fromLimitOrderV3Struct(limitOrderStruct)
 ### AuctionCalculator.calcRateBump
 
 **Description:** used to calculate exchange rate in some point of time. You can read more about it [here](https://docs.1inch.io/docs/fusion-swap/introduction)
+
 **Arguments**: time (unix timestamp)
 
 ### AuctionCalculator.calcAuctionTakingAmount
