@@ -107,7 +107,7 @@ AuctionCalculator.fromLimitOrderV3Struct(limitOrderStruct)
 -   [0] suffix: [AuctionSuffix](src/auction-suffix/readme.md)
 -   [1] salt: [AuctionSalt](src/auction-salt/readme.md)
 
-Example:
+**Example:**
 
 ```typescript
 import {AuctionSuffix, AuctionSalt, AuctionCalculator} from '@1inch/fusion-sdk'

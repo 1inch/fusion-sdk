@@ -22,7 +22,7 @@ type SettlementSuffixData = {
 }
 ```
 
-Example:
+**Example:**
 
 ```typescript
 import {AuctionSuffix} from '@1inch/fusion-sdk'
