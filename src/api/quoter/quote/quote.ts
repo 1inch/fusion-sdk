@@ -60,20 +60,11 @@ export class Quote {
 
         const salt = preset.createAuctionSalt()
 
-        const fillDurationRange = Math.round(
-            preset.auctionDuration / this.whitelist.length
-        )
-
         const suffix = new AuctionSuffix({
             points: preset.points,
-            whitelist: this.whitelist.map((resolver, i) => ({
+            whitelist: this.whitelist.map((resolver) => ({
                 address: resolver,
-                allowance:
-                    i === 0
-                        ? 0
-                        : salt.auctionStartTime -
-                          preset.startAuctionIn +
-                          fillDurationRange * i
+                allowance: 0
             }))
         })
 
