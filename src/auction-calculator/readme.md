@@ -43,7 +43,7 @@ const auctionTakingAmount = calculator.calcAuctionTakingAmount(
 | Name          | Type   | Inner Solidity Type | Description                                                                                                                                                                                                                            |
 | ------------- | ------ | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | salt          | string | uint256             | some unique value. It is necessary to be able to create limit orders with the same parameters (so that they have a different hash)                                                                                                     |
-| makerAsset    | string | address             | the address of the asset you want to sell (address of a token contract)                                                                                                                                                                |
+| makerAsset    | string | address             | the address of the asset user want to sell (address of a token contract)                                                                                                                                                                |
 | takerAsset    | string | address             | the address of the asset you want to buy (address of a token contract)                                                                                                                                                                 |
 | maker         | string | address             | the address of the limit order creator                                                                                                                                                                                                 |
 | receiver      | string | address             | If it contains a zero address, which means that taker asset will be sent to the address of the creator of the limit order. If you set any other value, then taker asset will be sent to the specified address                          |
@@ -56,7 +56,7 @@ const auctionTakingAmount = calculator.calcAuctionTakingAmount(
 **Order.interactions suffix structure:**
 * M*(1 + 3 bytes)  - auction points coefficients with seconds delays
 * N*(4 + 20 bytes) - resolver with corresponding time limit
-* 4 bytes          - public time limit 
+* 4 bytes          - public time limit (started from this point of time an order can be full filled by anyone)
 * 32 bytes         - taking fee (optional if flags has _HAS_TAKING_FEE_FLAG)
 * 1 byte           - flags
 

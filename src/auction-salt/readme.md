@@ -24,7 +24,7 @@ salt.build()
 // #=> '45118768841948961586167738353692277076075522015101619148498725069326976549864'
 ```
 
-Or you can pass optional parameter in constructor to control entropy (be default we use randomInt 10000)
+Or user can pass optional parameter in constructor to control entropy (be default we use randomInt 10000)
 
 ```typescript
 import {AuctionSalt} from '@1inch/fusion-sdk'
@@ -45,7 +45,6 @@ salt.build()
 
 ### static AuctionSalt.decode
 
-**Description:** creates AuctionSalt instance from string
 **Arguments:** string
 
 ```typescript
