@@ -4,8 +4,8 @@
 
 ```typescript
 type AuctionPoint = {
-    delay: number
-    coefficient: number
+    delay: number // point in time of this point relatively to previous point 
+    coefficient: number // coefficient rate bump from the end of an auction
 }
 
 type AuctionWhitelistItem = {
@@ -15,9 +15,9 @@ type AuctionWhitelistItem = {
 
 type SettlementSuffixData = {
     points: AuctionPoint[] // represents auction points with rates and delays
-    whitelist: AuctionWhitelistItem[] // combination of the resolver address and allowance in seconds, which represents how long the order can be full filled by the address
+    whitelist: AuctionWhitelistItem[] // combination of the resolver address and allowance in seconds, which represents when the resolver can start full fill the order
     publicResolvingDeadline?: number // represents deadline in seconds
-    takerFeeReceiver?: string // address of the receiver
+    takerFeeReceiver?: string // address of the fee receiver
     takerFeeRatio?: string // taker ratio, 10000000 = 1%
 }
 ```
