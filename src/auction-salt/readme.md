@@ -16,7 +16,7 @@ import {AuctionSalt} from '@1inch/fusion-sdk'
 const salt = new AuctionSalt({
     duration: 180 // in seconds,
     auctionStartTime: 1673548149 // unix timestamp,
-    initialRateBump: 50000 // 10000000 = 100%
+    initialRateBump: 50000 // difference between max and min amount in percents, 10000000 = 100%
     bankFee: '0' // in wei
 })
 
