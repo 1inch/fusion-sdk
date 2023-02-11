@@ -65,6 +65,9 @@ jobs:
         run: |
           yarn --frozen-lockfile --no-progress
 
+      - name: Prettier check
+        run: yarn prettier:check
+
       - name: Linter
         run: yarn lint
 

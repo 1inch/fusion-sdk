@@ -24,6 +24,7 @@
         "test:coverage": "jest --collectCoverage",
         "typecheck": "tsc --noEmit --skipLibCheck",
         "prettier": "prettier --write .",
+        "prettier:check": "prettier --check .",
         "ci-pipeline": "yarn run lint && yarn run test && yarn run typecheck"
     },
     "dependencies": {

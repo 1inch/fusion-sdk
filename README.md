@@ -2,7 +2,7 @@
 
 ## Installation
 
-### Node
+### Npm
 
 ```
 npm install @1inch/fusion-sdk
@@ -13,6 +13,14 @@ npm install @1inch/fusion-sdk
 ```
 yarn add @1inch/fusion-sdk
 ```
+
+## Modules docs
+
+-   [auction-calculator](src/auction-calculator/readme.md)
+-   [auction-salt](src/auction-salt/readme.md)
+-   [auction-suffix](src/auction-suffix/readme.md)
+-   [fusion-order](src/fusion-order/readme.md)
+-   [sdk](src/sdk/readme.md)
 
 ## How to swap with Fusion Mode
 

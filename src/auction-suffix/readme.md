@@ -4,7 +4,7 @@
 
 ```typescript
 type AuctionPoint = {
-    delay: number // point in time of this point relatively to previous point 
+    delay: number // point in time of this point relatively to previous point
     coefficient: number // coefficient rate bump from the end of an auction
 }
 
