@@ -1,3 +1,5 @@
+import {AuctionSuffix} from '../auction-suffix'
+import {AuctionSalt} from '../auction-salt'
 import {AuctionCalculator} from './auction-calculator'
 
 describe('Auction Calculator', () => {
@@ -18,6 +20,25 @@ describe('Auction Calculator', () => {
 
         const rate = calculator.calcRateBump(1673548209)
 
+        const auctionTakingAmount = calculator.calcAuctionTakingAmount(
+            '1420000000',
+            rate
+        )
+
+        expect(rate).toBe(14285)
+        expect(auctionTakingAmount).toBe('1422028470')
+    })
+
+    it('should be created successfully from suffix and salt', () => {
+        const suffix = AuctionSuffix.decode(
+            '0x000c004e200000000000000000219ab540356cbb839cbe05303d7705faf486570009'
+        )
+        const salt = AuctionSalt.decode(
+            '45118768841948961586167738353692277076075522015101619148498725069326976558864'
+        )
+        const calculator = AuctionCalculator.fromAuctionData(suffix, salt)
+
+        const rate = calculator.calcRateBump(1673548209)
         const auctionTakingAmount = calculator.calcAuctionTakingAmount(
             '1420000000',
             rate
