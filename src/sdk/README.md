@@ -168,7 +168,6 @@ sdk.placeOrder({
 }).then(console.log)
 ```
 
-
 ## Types
 
 ### PaginationParams
