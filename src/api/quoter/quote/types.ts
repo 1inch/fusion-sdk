@@ -4,7 +4,7 @@ import {PresetEnum} from '../types'
 export type FusionOrderParamsData = {
     preset?: PresetEnum
     receiver?: string
-    nonce?: number
+    nonce?: number | string
 }
 
 export type TimeStampVerificationWithNonceParams = {

@@ -17,6 +17,7 @@ import {
     OrderStatusRequest,
     OrderStatusResponse
 } from '../api/orders'
+import {NonceManager} from '../nonce-manager/nonce-manager'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -87,9 +88,16 @@ export class FusionSDK {
             throw new Error('quoter has not returned quoteId')
         }
 
+        const nonceManager = NonceManager.new({
+            maker: params.walletAddress,
+            blockchainProvider: this.config.blockchainProvider
+        })
+
+        const nonce = await nonceManager.getNonce()
         const order = quote.createFusionOrder({
             receiver: params.receiver,
-            preset: params.preset
+            preset: params.preset,
+            nonce
         })
 
         const domain = getLimitOrderV3Domain(this.config.network)
