@@ -11,7 +11,12 @@ import {
 import {InteractionsFactory} from '../../../limit-order/interactions-factory'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
-import {FusionOrderParamsData} from './types'
+import {
+    TimeStampVerificationWithNonceParams,
+    FusionOrderParamsData,
+    TimeStampVerificationParams,
+    DeadlineVerificationParams
+} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
 
 export class Quote {
@@ -92,16 +97,32 @@ export class Quote {
                 postInteraction: this.buildUnwrapPostInteractionIfNeeded(
                     params.receiver
                 ),
-                // todo: add nonce validation and change hardcoded extended deadline
-                predicate: PredicateFactory.timestampBelow(
-                    salt.auctionStartTime + salt.duration + 32
-                )
+                // todo: change hardcoded extended deadline
+                predicate: this.handlePredicateDeadlineVerification({
+                    deadline: salt.auctionStartTime + salt.duration + 32,
+                    address: this.params.walletAddress,
+                    nonce: params.nonce
+                })
             }
         )
     }
 
     getPreset(type = PresetEnum.fast): Preset {
         return this.presets[type]
+    }
+
+    private handlePredicateDeadlineVerification(
+        params: DeadlineVerificationParams
+    ): string {
+        if (params?.nonce) {
+            return PredicateFactory.timestampBelowAndNonceEquals(
+                params.address,
+                params.nonce,
+                params.deadline
+            )
+        } else {
+            return PredicateFactory.timestampBelow(params.deadline)
+        }
     }
 
     private buildUnwrapPostInteractionIfNeeded(
