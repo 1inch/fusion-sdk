@@ -11,12 +11,7 @@ import {
 import {InteractionsFactory} from '../../../limit-order/interactions-factory'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
-import {
-    TimeStampVerificationWithNonceParams,
-    FusionOrderParamsData,
-    TimeStampVerificationParams,
-    DeadlineVerificationParams
-} from './types'
+import {FusionOrderParamsData, DeadlineVerificationParams} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
 
 export class Quote {
