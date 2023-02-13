@@ -9,7 +9,7 @@ export type FusionOrderParamsData = {
 
 export type TimeStampVerificationWithNonceParams = {
     address: string
-    nonce?: number
+    nonce?: number | string
 }
 
 export type TimeStampVerificationParams = {

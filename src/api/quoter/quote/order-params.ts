@@ -7,7 +7,7 @@ export class FusionOrderParams {
 
     public readonly receiver: string = ZERO_ADDRESS
 
-    public readonly nonce: number | undefined
+    public readonly nonce: number | string | undefined
 
     constructor(params: FusionOrderParamsData) {
         if (params.preset) {

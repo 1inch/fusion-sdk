@@ -120,9 +120,9 @@ export class Quote {
                 params.nonce,
                 params.deadline
             )
-        } else {
-            return PredicateFactory.timestampBelow(params.deadline)
         }
+
+        return PredicateFactory.timestampBelow(params.deadline)
     }
 
     private buildUnwrapPostInteractionIfNeeded(
