@@ -16,7 +16,7 @@ type AuctionWhitelistItem = {
 type SettlementSuffixData = {
     points: AuctionPoint[] // represents auction points with rates and delays
     whitelist: AuctionWhitelistItem[] // combination of the resolver address and allowance in seconds, which represents when the resolver can start full fill the order
-    publicResolvingDeadline?: number // represents deadline in seconds
+    publicResolvingDeadline?: number // represents time in seconds when the order started to be public (can be filled by any one)
     takerFeeReceiver?: string // address of the fee receiver
     takerFeeRatio?: string // taker ratio, 10000000 = 1%
 }

@@ -9,7 +9,7 @@ import {FusionSDK, NetworkEnum} from '@1inch/fusion-sdk'
 
 async function main() {
     const sdk = new FusionSDK({
-        url: 'https://test.com',
+        url: 'https://fusion.1inch.io',
         network: NetworkEnum.ETHEREUM
     })
 
@@ -77,7 +77,7 @@ class CustomHttpProvider implements HttpProviderConnector {
 ```typescript
 import {FusionSDK, NetworkEnum} from '@1inch/fusion-sdk'
 const sdk = new FusionSDK({
-    url: 'https://test.com',
+    url: 'https://fusion.1inch.io',
     network: NetworkEnum.ETHEREUM
 })
 const orders = await sdk.getActiveOrders({page: 1, limit: 2})
@@ -96,7 +96,7 @@ const orders = await sdk.getActiveOrders({page: 1, limit: 2})
 ```typescript
 import {FusionSDK, NetworkEnum} from '@1inch/fusion-sdk'
 const sdk = new FusionSDK({
-    url: 'https://test.com',
+    url: 'https://fusion.1inch.io',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -120,7 +120,7 @@ const orders = await sdk.getOrdersByMaker({
 ```typescript
 import {FusionSDK, NetworkEnum, QuoteParams} from '@1inch/fusion-sdk'
 const sdk = new FusionSDK({
-    url: 'https://test.com',
+    url: 'https://fusion.1inch.io',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -140,6 +140,34 @@ const quote = await sdk.getQuote(params)
 **Arguments:**
 
 -   [0] params: OrderParams
+
+**Example:**
+
+```typescript
+const makerPrivateKey = '0x123....'
+const makerAddress = '0x123....'
+
+const nodeUrl = '....'
+
+const blockchainProvider = new PrivateKeyProviderConnector(
+    makerPrivateKey,
+    new Web3(nodeUrl)
+)
+
+const sdk = new FusionSDK({
+    url: 'https://fusion.1inch.io',
+    network: 1,
+    blockchainProvider
+})
+
+sdk.placeOrder({
+    fromTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
+    toTokenAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
+    amount: '50000000000000000', // 0.05 ETH
+    walletAddress: makerAddress
+}).then(console.log)
+```
+
 
 ## Types
 
