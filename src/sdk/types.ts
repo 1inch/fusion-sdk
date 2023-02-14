@@ -26,7 +26,7 @@ export type OrderParams = {
     permit?: string
     receiver?: string
     preset?: PresetEnum
-    nonce: OrderNonce | string | number
+    nonce?: OrderNonce | string | number
 }
 
 export type OrderInfo = {

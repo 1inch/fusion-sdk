@@ -96,7 +96,7 @@ export class FusionSDK {
         let nonce = params.nonce
 
         // in case of auto request from node
-        if (params.nonce === OrderNonce.Auto) {
+        if (!params?.nonce || params.nonce === OrderNonce.Auto) {
             nonce = await this.nonceManager.getNonce(params.walletAddress)
         }
 

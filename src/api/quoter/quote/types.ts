@@ -10,6 +10,6 @@ export type FusionOrderParamsData = {
 
 export type PredicateParams = {
     address: string
-    nonce?: number | string
+    nonce?: OrderNonce | number | string
     deadline: number
 }
