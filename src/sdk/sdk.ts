@@ -18,6 +18,7 @@ import {
     OrderStatusResponse
 } from '../api/orders'
 import {NonceManager} from '../nonce-manager/nonce-manager'
+import {OrderNonce} from '../nonce-manager/types'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -31,7 +32,7 @@ export class FusionSDK {
             httpProvider: config.httpProvider
         })
 
-        this.nonceManager = NonceManager.new(this.config.blockchainProvider)
+        this.nonceManager = NonceManager.new(config.blockchainProvider)
     }
 
     async getActiveOrders({
@@ -92,7 +93,13 @@ export class FusionSDK {
             throw new Error('quoter has not returned quoteId')
         }
 
-        const nonce = await this.nonceManager.getNonce(params.walletAddress)
+        let nonce = params.nonce
+
+        // in case of auto request from node
+        if (params.nonce === OrderNonce.Auto) {
+            nonce = await this.nonceManager.getNonce(params.walletAddress)
+        }
+
         const order = quote.createFusionOrder({
             receiver: params.receiver,
             preset: params.preset,

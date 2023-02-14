@@ -22,7 +22,7 @@ export class NonceManager {
     /**
      * @param maker string, address of maker
      */
-    async getNonce(maker: string): Promise<string | undefined> {
+    async getNonce(maker: string): Promise<string> {
         const encodedNonce = encodeNonce(maker)
 
         const nonceHex = await this.provider.ethCall(maker, encodedNonce)

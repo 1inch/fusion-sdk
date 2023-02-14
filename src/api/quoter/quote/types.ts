@@ -1,12 +1,11 @@
 import {PresetEnum} from '../types'
-import {BlockchainProviderConnector} from '../../../connector'
+import {OrderNonce} from '../../../nonce-manager/types'
 
 // todo: add deadline
 export type FusionOrderParamsData = {
     preset?: PresetEnum
     receiver?: string
-    nonce?: number | string
-    blockchainProvider?: BlockchainProviderConnector
+    nonce?: OrderNonce | number | string
 }
 
 export type PredicateParams = {

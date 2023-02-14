@@ -13,6 +13,7 @@ import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData, PredicateParams} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
+import {OrderNonce} from '../../../nonce-manager/types'
 
 export class Quote {
     public readonly fromTokenAmount: string
@@ -106,7 +107,7 @@ export class Quote {
     }
 
     private handlePredicate(params: PredicateParams): string {
-        if (params?.nonce) {
+        if (params?.nonce && params.nonce !== OrderNonce.Empty) {
             return PredicateFactory.timestampBelowAndNonceEquals(
                 params.address,
                 params.nonce,
