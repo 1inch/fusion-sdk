@@ -1,15 +1,11 @@
-import Contract from 'web3-eth-contract'
-import Web3 from 'web3'
+import abiCoder from 'web3-eth-abi'
+import {NONCE_SELECTOR} from './constants'
+import {add0x} from '../utils'
 
-export function encodeNonce(
-    contract: Contract.Contract,
-    address: string
-): string {
-    return contract.methods._nonces(address).encodeABI()
+export function encodeNonce(address: string): string {
+    return add0x(`${NONCE_SELECTOR}${address.substring(2).padStart(64, '0')}`)
 }
 
 export function decodeNonce(nonceHex: string): string {
-    const web3 = new Web3('')
-
-    return web3.eth.abi.decodeParameter('uint256', nonceHex).toString()
+    return abiCoder.decodeParameter('uint256', nonceHex).toString()
 }

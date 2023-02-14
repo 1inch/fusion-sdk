@@ -11,7 +11,7 @@ import {
 import {InteractionsFactory} from '../../../limit-order/interactions-factory'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
-import {FusionOrderParamsData, DeadlineVerificationParams} from './types'
+import {FusionOrderParamsData, PredicateParams} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
 
 export class Quote {
@@ -93,7 +93,7 @@ export class Quote {
                     params.receiver
                 ),
                 // todo: change hardcoded extended deadline
-                predicate: this.handlePredicateDeadlineVerification({
+                predicate: this.handlePredicate({
                     deadline: salt.auctionStartTime + salt.duration + 32,
                     address: this.params.walletAddress,
                     nonce: params.nonce
@@ -106,9 +106,7 @@ export class Quote {
         return this.presets[type]
     }
 
-    private handlePredicateDeadlineVerification(
-        params: DeadlineVerificationParams
-    ): string {
+    private handlePredicate(params: PredicateParams): string {
         if (params?.nonce) {
             return PredicateFactory.timestampBelowAndNonceEquals(
                 params.address,

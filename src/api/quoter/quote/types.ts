@@ -7,14 +7,8 @@ export type FusionOrderParamsData = {
     nonce?: number | string
 }
 
-export type TimeStampVerificationWithNonceParams = {
+export type PredicateParams = {
     address: string
     nonce?: number | string
-}
-
-export type TimeStampVerificationParams = {
     deadline: number
 }
-
-export type DeadlineVerificationParams = TimeStampVerificationParams &
-    TimeStampVerificationWithNonceParams

@@ -22,12 +22,16 @@ import {NonceManager} from '../nonce-manager/nonce-manager'
 export class FusionSDK {
     public readonly api: FusionApi
 
+    public readonly nonceManager: NonceManager
+
     constructor(private readonly config: FusionSDKConfigParams) {
         this.api = FusionApi.new({
             url: config.url,
             network: config.network,
             httpProvider: config.httpProvider
         })
+
+        this.nonceManager = NonceManager.new(this.config.blockchainProvider)
     }
 
     async getActiveOrders({
@@ -88,12 +92,7 @@ export class FusionSDK {
             throw new Error('quoter has not returned quoteId')
         }
 
-        const nonceManager = NonceManager.new({
-            maker: params.walletAddress,
-            blockchainProvider: this.config.blockchainProvider
-        })
-
-        const nonce = await nonceManager.getNonce()
+        const nonce = await this.nonceManager.getNonce(params.walletAddress)
         const order = quote.createFusionOrder({
             receiver: params.receiver,
             preset: params.preset,
