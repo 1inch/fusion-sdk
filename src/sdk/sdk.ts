@@ -1,4 +1,4 @@
-import {FusionApi, QuoterRequest, RelayerRequest, Quote} from '../api'
+import {FusionApi, Quote, QuoterRequest, RelayerRequest} from '../api'
 import {
     FusionSDKConfigParams,
     OrderInfo,

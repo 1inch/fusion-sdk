@@ -55,7 +55,6 @@ export class Quote {
 
     createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
         const params = FusionOrderParams.new(paramsData)
-
         const preset = this.getPreset(params.preset)
 
         const salt = preset.createAuctionSalt()
