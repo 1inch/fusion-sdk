@@ -29,6 +29,7 @@ describe(__filename, () => {
                         deadline: '2023-01-31T11:01:02.000Z',
                         auctionStartDate: '2023-01-31T10:58:02.000Z',
                         auctionEndDate: '2023-01-31T11:01:02.000Z',
+                        remainingMakerAmount: '57684207067582695',
                         order: {
                             salt: '45162296565521316310143660684688589556990590668045350709106347387233721386087',
                             maker: '0x84d99aa569d93a9ca187d83734c8c4a519c4e9b1',
@@ -56,6 +57,7 @@ describe(__filename, () => {
                         deadline: '2023-01-31T11:01:06.000Z',
                         auctionStartDate: '2023-01-31T10:58:11.000Z',
                         auctionEndDate: '2023-01-31T11:01:11.000Z',
+                        remainingMakerAmount: '470444951856649710700841',
                         order: {
                             salt: '45162296808160836322731793320280672051161012167252717657723413939965365979370',
                             maker: '0xe2b43fbd64f4bb4dc99a8d48ad41cfab90621567',

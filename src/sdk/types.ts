@@ -23,8 +23,8 @@ export type OrderParams = {
     amount: string
     walletAddress: string
     permit?: string
-    receiver?: string
-    preset?: PresetEnum
+    receiver?: string // by default: walletAddress (makerAddress)
+    preset?: PresetEnum // by default: recommended preset
 }
 
 export type OrderInfo = {

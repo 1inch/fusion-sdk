@@ -21,6 +21,8 @@ export class Quote {
 
     public readonly presets: Record<PresetEnum, Preset>
 
+    public readonly recommendedPreset: PresetEnum
+
     public readonly toTokenAmount: string
 
     public readonly prices: Cost
@@ -51,10 +53,14 @@ export class Quote {
         this.quoteId = response.quoteId
         this.whitelist = response.whitelist
         this.settlementAddress = response.settlementAddress
+        this.recommendedPreset = response.recommended_preset
     }
 
     createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
-        const params = FusionOrderParams.new(paramsData)
+        const params = FusionOrderParams.new({
+            preset: paramsData?.preset || this.recommendedPreset,
+            receiver: paramsData?.receiver
+        })
 
         const preset = this.getPreset(params.preset)
 

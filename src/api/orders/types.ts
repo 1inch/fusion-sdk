@@ -17,6 +17,7 @@ export type ActiveOrder = {
     deadline: string
     auctionStartDate: string
     auctionEndDate: string
+    remainingMakerAmount: string
     order: LimitOrderV3Struct
 }
 
