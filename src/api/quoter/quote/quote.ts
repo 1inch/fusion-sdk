@@ -59,7 +59,8 @@ export class Quote {
     createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
         const params = FusionOrderParams.new({
             preset: paramsData?.preset || this.recommendedPreset,
-            receiver: paramsData?.receiver
+            receiver: paramsData?.receiver,
+            permit: paramsData?.permit
         })
 
         const preset = this.getPreset(params.preset)
@@ -101,7 +102,10 @@ export class Quote {
                 // todo: add nonce validation and change hardcoded extended deadline
                 predicate: PredicateFactory.timestampBelow(
                     salt.auctionStartTime + salt.duration + 32
-                )
+                ),
+                permit: params.permit
+                    ? this.params.fromTokenAddress + params.permit.substring(2)
+                    : undefined
             }
         )
     }

@@ -4,4 +4,5 @@ import {PresetEnum} from '../types'
 export type FusionOrderParamsData = {
     preset?: PresetEnum
     receiver?: string
+    permit?: string
 }
