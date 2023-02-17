@@ -48,3 +48,7 @@ sdk.placeOrder({
     walletAddress: makerAddress
 }).then(console.log)
 ```
+
+## Resolvers
+
+`settleOrders` function usage and Resolver contract examples you can find [here](https://github.com/1inch/fusion-resolver-example)
