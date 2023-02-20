@@ -1,6 +1,7 @@
 import {FusionApi, Quote, QuoterRequest, RelayerRequest} from '../api'
 import {
     FusionSDKConfigParams,
+    Nonce,
     OrderInfo,
     OrderParams,
     QuoteParams
@@ -125,7 +126,7 @@ export class FusionSDK {
     private async getNonce(
         nonce: OrderNonce | number | string | undefined,
         walletAddress: string
-    ): Promise<number | string | undefined> {
+    ): Promise<Nonce> {
         if (!this.config.blockchainProvider) {
             throw new Error('blockchainProvider has not set to config')
         }

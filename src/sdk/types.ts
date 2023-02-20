@@ -35,3 +35,5 @@ export type OrderInfo = {
     quoteId: string
     orderHash: string
 }
+
+export type Nonce = string | number | undefined
