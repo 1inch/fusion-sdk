@@ -1,7 +1,6 @@
 import {PresetEnum} from '../types'
 import {ZERO_ADDRESS} from '../../../constants'
 import {FusionOrderParamsData} from './types'
-import {OrderNonce} from '../../../nonce-manager/types'
 
 export class FusionOrderParams {
     public readonly preset: PresetEnum = PresetEnum.fast
@@ -10,7 +9,7 @@ export class FusionOrderParams {
 
     public readonly permit: string | undefined
 
-    public readonly nonce: OrderNonce | number | string | undefined
+    public readonly nonce: number | string | undefined
 
     constructor(params: FusionOrderParamsData) {
         if (params.preset) {
