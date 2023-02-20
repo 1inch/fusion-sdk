@@ -93,7 +93,8 @@ export class FusionSDK {
         const order = quote.createFusionOrder({
             receiver: params.receiver,
             preset: params.preset,
-            nonce
+            nonce,
+            permit: params.permit
         })
 
         const domain = getLimitOrderV3Domain(this.config.network)

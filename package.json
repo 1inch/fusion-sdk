@@ -1,14 +1,13 @@
 {
     "name": "@1inch/fusion-sdk",
-    "version": "0.0.3",
+    "version": "0.0.8",
     "description": "1inch Fusion Mode SDK",
     "private": false,
     "main": "index.js",
     "types": "index.d.ts",
     "repository": {
         "type": "git",
-        "url": "ssh://git@github.com:1inch/fusion-sdk.git",
-        "directory": "@1inch/fusion-sdk"
+        "url": "ssh://git@github.com:1inch/fusion-sdk.git"
     },
     "publishConfig": {
         "access": "public",
@@ -24,6 +23,7 @@
         "test:coverage": "jest --collectCoverage",
         "typecheck": "tsc --noEmit --skipLibCheck",
         "prettier": "prettier --write .",
+        "prettier:check": "prettier --check .",
         "ci-pipeline": "yarn run lint && yarn run test && yarn run typecheck"
     },
     "dependencies": {

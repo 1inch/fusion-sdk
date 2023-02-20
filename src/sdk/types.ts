@@ -23,9 +23,9 @@ export type OrderParams = {
     toTokenAddress: string
     amount: string
     walletAddress: string
-    permit?: string
-    receiver?: string
-    preset?: PresetEnum
+    permit?: string // without first 20 bytes of token address
+    receiver?: string // by default: walletAddress (makerAddress)
+    preset?: PresetEnum // by default: recommended preset
     nonce?: OrderNonce | string | number
 }
 

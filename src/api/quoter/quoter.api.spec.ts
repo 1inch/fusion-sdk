@@ -2,6 +2,7 @@ import {QuoterApi} from './quoter.api'
 import {QuoterRequest} from './quoter.request'
 import {HttpProviderConnector} from '../../connector'
 import {Quote} from './quote'
+import {PresetEnum} from './types'
 
 describe('Quoter API', () => {
     const params = QuoterRequest.new({
@@ -11,8 +12,9 @@ describe('Quoter API', () => {
         walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa'
     })
 
-    const QuoterResponseMock = new Quote(1, params, {
+    const ResponseMock = {
         fromTokenAmount: '1000000000000000000000',
+        recommended_preset: PresetEnum.medium,
         feeToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
         presets: {
             fast: {
@@ -80,11 +82,13 @@ describe('Quoter API', () => {
             '0x84d99aa569d93a9ca187d83734c8c4a519c4e9b1',
             '0xcfa62f77920d6383be12c91c71bd403599e1116f'
         ]
-    })
+    }
+
+    const QuoterResponseMock = new Quote(1, params, ResponseMock)
 
     const httpProvider: HttpProviderConnector = {
         get: jest.fn().mockImplementationOnce(() => {
-            return Promise.resolve(QuoterResponseMock)
+            return Promise.resolve(ResponseMock)
         }),
         post: jest.fn().mockImplementation(() => {
             return Promise.resolve(null)

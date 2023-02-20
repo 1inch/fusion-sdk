@@ -2,8 +2,9 @@ import {FillOrderParams, SettlementConfig} from './types'
 import {
     buildRecursiveFillInteraction,
     buildResolveOrdersBytes,
-    encodeSettleOrders
-} from './encoders/settlement.encoder'
+    encodeSettleOrders,
+    encodeSettleOrdersParam
+} from './encoders'
 
 export class Settlement {
     constructor(private readonly config: SettlementConfig) {}
@@ -13,6 +14,19 @@ export class Settlement {
     }
 
     encodeSettleOrders(
+        // sorted by: orders[0] executes first, orders[orders.length - 1] executes last
+        orders: FillOrderParams[],
+        resolverExecutionBytes: string
+    ): string {
+        const data = this.encodeSettleOrdersParam(
+            orders,
+            resolverExecutionBytes
+        )
+
+        return encodeSettleOrders(data)
+    }
+
+    encodeSettleOrdersParam(
         // sorted by: orders[0] executes first, orders[orders.length - 1] executes last
         orders: FillOrderParams[],
         resolverExecutionBytes: string
@@ -36,7 +50,7 @@ export class Settlement {
                 )
             }, finalActionBytes)
 
-        return encodeSettleOrders({
+        return encodeSettleOrdersParam({
             ...orders[0],
             interaction
         })

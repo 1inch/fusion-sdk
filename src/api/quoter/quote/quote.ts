@@ -13,7 +13,6 @@ import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData, PredicateParams} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
-import {OrderNonce} from '../../../nonce-manager/types'
 
 export class Quote {
     public readonly fromTokenAmount: string
@@ -21,6 +20,8 @@ export class Quote {
     public readonly feeToken: string
 
     public readonly presets: Record<PresetEnum, Preset>
+
+    public readonly recommendedPreset: PresetEnum
 
     public readonly toTokenAmount: string
 
@@ -52,10 +53,17 @@ export class Quote {
         this.quoteId = response.quoteId
         this.whitelist = response.whitelist
         this.settlementAddress = response.settlementAddress
+        this.recommendedPreset = response.recommended_preset
     }
 
     createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
-        const params = FusionOrderParams.new(paramsData)
+        const params = FusionOrderParams.new({
+            preset: paramsData?.preset || this.recommendedPreset,
+            receiver: paramsData?.receiver,
+            permit: paramsData?.permit,
+            nonce: paramsData?.nonce
+        })
+
         const preset = this.getPreset(params.preset)
 
         const salt = preset.createAuctionSalt()
@@ -97,7 +105,10 @@ export class Quote {
                     deadline: salt.auctionStartTime + salt.duration + 32,
                     address: this.params.walletAddress,
                     nonce: params.nonce
-                })
+                }),
+                permit: params.permit
+                    ? this.params.fromTokenAddress + params.permit.substring(2)
+                    : undefined
             }
         )
     }

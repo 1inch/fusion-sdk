@@ -5,6 +5,7 @@ export type FusionOrderParamsData = {
     preset?: PresetEnum
     receiver?: string
     nonce?: number | string
+    permit?: string
 }
 
 export type PredicateParams = {

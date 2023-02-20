@@ -18,6 +18,7 @@ export type QuoterResponse = {
     fromTokenAmount: string
     feeToken: string
     presets: QuoterPresets
+    recommended_preset: PresetEnum
     toTokenAmount: string
     prices: Cost
     volume: Cost
