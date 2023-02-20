@@ -107,7 +107,7 @@ export class Quote {
     }
 
     private handlePredicate(params: PredicateParams): string {
-        if (params?.nonce && params.nonce !== OrderNonce.Empty) {
+        if (params?.nonce) {
             return PredicateFactory.timestampBelowAndNonceEquals(
                 params.address,
                 params.nonce,

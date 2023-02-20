@@ -23,16 +23,12 @@ import {OrderNonce} from '../nonce-manager/types'
 export class FusionSDK {
     public readonly api: FusionApi
 
-    public readonly nonceManager: NonceManager
-
     constructor(private readonly config: FusionSDKConfigParams) {
         this.api = FusionApi.new({
             url: config.url,
             network: config.network,
             httpProvider: config.httpProvider
         })
-
-        this.nonceManager = NonceManager.new(config.blockchainProvider)
     }
 
     async getActiveOrders({
@@ -93,13 +89,7 @@ export class FusionSDK {
             throw new Error('quoter has not returned quoteId')
         }
 
-        let nonce = params.nonce
-
-        // in case of auto request from node
-        if (!params?.nonce || params.nonce === OrderNonce.Auto) {
-            nonce = await this.nonceManager.getNonce(params.walletAddress)
-        }
-
+        const nonce = await this.getNonce(params.nonce, params.walletAddress)
         const order = quote.createFusionOrder({
             receiver: params.receiver,
             preset: params.preset,
@@ -129,5 +119,31 @@ export class FusionSDK {
             quoteId: quote.quoteId,
             orderHash: order.getOrderHash(domain)
         }
+    }
+
+    private async getNonce(
+        nonce: OrderNonce | number | string | undefined,
+        walletAddress: string
+    ): Promise<number | string | undefined> {
+        if (!this.config.blockchainProvider) {
+            throw new Error('blockchainProvider has not set to config')
+        }
+
+        if (nonce === OrderNonce.Empty) {
+            return
+        }
+
+        const defaultNonce = nonce !== undefined ? nonce : OrderNonce.Auto
+
+        // in case of auto request from node
+        if (defaultNonce === OrderNonce.Auto) {
+            const nonceManager = NonceManager.new(
+                this.config.blockchainProvider
+            )
+
+            return nonceManager.getNonce(walletAddress)
+        }
+
+        return defaultNonce
     }
 }

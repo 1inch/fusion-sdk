@@ -9,13 +9,7 @@ export class NonceManager {
         this.provider = blockchainProvider
     }
 
-    static new(
-        blockchainProvider: BlockchainProviderConnector | undefined
-    ): NonceManager {
-        if (!blockchainProvider) {
-            throw new Error('blockchainProvider has not set to config')
-        }
-
+    static new(blockchainProvider: BlockchainProviderConnector): NonceManager {
         return new NonceManager(blockchainProvider)
     }
 
