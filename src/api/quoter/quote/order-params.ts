@@ -9,6 +9,8 @@ export class FusionOrderParams {
 
     public readonly permit: string | undefined
 
+    public readonly nonce: number | string | undefined
+
     constructor(params: FusionOrderParamsData) {
         if (params.preset) {
             this.preset = params.preset
@@ -17,6 +19,8 @@ export class FusionOrderParams {
         if (params.receiver) {
             this.receiver = params.receiver
         }
+
+        this.nonce = params.nonce
 
         this.permit = params.permit
     }

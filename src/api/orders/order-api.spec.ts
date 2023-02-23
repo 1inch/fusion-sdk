@@ -1,7 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import {HttpProviderConnector} from '../../connector'
+import Web3 from 'web3'
+import {instance, mock} from 'ts-mockito'
+import {HttpProviderConnector, Web3ProviderConnector} from '../../connector'
 import {NetworkEnum} from '../../constants'
-import {FusionSDK} from '../../sdk/sdk'
+import {FusionSDK} from '../../sdk'
 
 function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
     const httpProvider: HttpProviderConnector = {
@@ -17,6 +19,16 @@ function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
 }
 
 describe(__filename, () => {
+    let web3Provider: Web3
+    let web3ProviderConnector: Web3ProviderConnector
+
+    beforeEach(() => {
+        web3Provider = mock<Web3>()
+        web3ProviderConnector = new Web3ProviderConnector(
+            instance(web3Provider)
+        )
+    })
+
     describe('getActiveOrders', () => {
         it('success', async () => {
             const expected = {
@@ -91,7 +103,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
 
             const response = await sdk.getActiveOrders({page: 1, limit: 2})
@@ -173,7 +186,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
 
             const response = await sdk.getActiveOrders()
@@ -226,7 +240,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
             const orderHash = `0x1beee023ab933cf5446c298eadadb61c05705f2156ef5b2db36c160b36f31ce4`
 
@@ -278,7 +293,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
             const orderHash = `0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4`
 
@@ -327,7 +343,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
             const orderHash = `0x1beee023ab933cf5446c298eadasdasdb61c0x5705f2156ef5b2db36c160b36f31ce4`
 
@@ -381,7 +398,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
 
             const address = '0xfa80cd9b3becc0b4403b0f421384724f2810775f'
@@ -438,7 +456,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
 
             const address = '0xfa80cd9b3becc0b4403b0f421384724f2810775f'
@@ -493,7 +512,8 @@ describe(__filename, () => {
             const sdk = new FusionSDK({
                 url,
                 network: NetworkEnum.ETHEREUM,
-                httpProvider
+                httpProvider,
+                blockchainProvider: web3ProviderConnector
             })
 
             const address =

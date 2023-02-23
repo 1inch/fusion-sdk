@@ -2,6 +2,7 @@ import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
 import {NetworkEnum} from '../constants'
 import {LimitOrderV3Struct} from '../limit-order'
 import {PresetEnum} from '../api'
+import {OrderNonce} from '../nonce-manager/types'
 
 export type FusionSDKConfigParams = {
     url: string
@@ -25,6 +26,7 @@ export type OrderParams = {
     permit?: string // without first 20 bytes of token address
     receiver?: string // by default: walletAddress (makerAddress)
     preset?: PresetEnum // by default: recommended preset
+    nonce?: OrderNonce | string | number
 }
 
 export type OrderInfo = {
@@ -33,3 +35,5 @@ export type OrderInfo = {
     quoteId: string
     orderHash: string
 }
+
+export type Nonce = string | number | undefined

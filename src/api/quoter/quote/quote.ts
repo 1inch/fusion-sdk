@@ -11,7 +11,7 @@ import {
 import {InteractionsFactory} from '../../../limit-order/interactions-factory'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
-import {FusionOrderParamsData} from './types'
+import {FusionOrderParamsData, PredicateParams} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
 
 export class Quote {
@@ -60,7 +60,8 @@ export class Quote {
         const params = FusionOrderParams.new({
             preset: paramsData?.preset || this.recommendedPreset,
             receiver: paramsData?.receiver,
-            permit: paramsData?.permit
+            permit: paramsData?.permit,
+            nonce: paramsData?.nonce
         })
 
         const preset = this.getPreset(params.preset)
@@ -99,10 +100,12 @@ export class Quote {
                 postInteraction: this.buildUnwrapPostInteractionIfNeeded(
                     params.receiver
                 ),
-                // todo: add nonce validation and change hardcoded extended deadline
-                predicate: PredicateFactory.timestampBelow(
-                    salt.auctionStartTime + salt.duration + 32
-                ),
+                // todo: change hardcoded extended deadline
+                predicate: this.handlePredicate({
+                    deadline: salt.auctionStartTime + salt.duration + 32,
+                    address: this.params.walletAddress,
+                    nonce: params.nonce
+                }),
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
                     : undefined
@@ -112,6 +115,18 @@ export class Quote {
 
     getPreset(type = PresetEnum.fast): Preset {
         return this.presets[type]
+    }
+
+    private handlePredicate(params: PredicateParams): string {
+        if (params?.nonce) {
+            return PredicateFactory.timestampBelowAndNonceEquals(
+                params.address,
+                params.nonce,
+                params.deadline
+            )
+        }
+
+        return PredicateFactory.timestampBelow(params.deadline)
     }
 
     private buildUnwrapPostInteractionIfNeeded(
