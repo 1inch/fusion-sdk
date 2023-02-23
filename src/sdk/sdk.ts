@@ -123,6 +123,10 @@ export class FusionSDK {
         }
     }
 
+    async cancelOrder(orderHash: string): Promise<void> {
+        const orderDetailsWithStatus = await this.getOrderStatus(orderHash)
+    }
+
     private async getNonce(
         walletAddress: string,
         nonce?: OrderNonce | number | string
