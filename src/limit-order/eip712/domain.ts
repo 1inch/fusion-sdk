@@ -1,3 +1,5 @@
+import {ONE_INCH_ROUTER_V5} from '../../constants'
+
 export const EIP712Domain = [
     {name: 'name', type: 'string'},
     {name: 'version', type: 'string'},
@@ -20,4 +22,4 @@ export const Order = [
 
 export const LimitOrderV3TypeDataName = '1inch Aggregation Router'
 export const LimitOrderV3TypeDataVersion = '5'
-export const VerifyingContract = '0x1111111254eeb25477b68fb85ed929f73a960582'
+export const VerifyingContract = ONE_INCH_ROUTER_V5

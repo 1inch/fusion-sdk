@@ -1,4 +1,10 @@
+import {BlockchainProviderConnector} from '../connector'
+
 export enum OrderNonce {
-    Auto = 'auto',
-    Empty = 'empty'
+    Auto = 'auto'
+}
+
+export type NonceManagerConfig = {
+    provider: BlockchainProviderConnector
+    limitOrderProtocolContract?: string
 }

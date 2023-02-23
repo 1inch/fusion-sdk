@@ -26,7 +26,7 @@ export type OrderParams = {
     permit?: string // without first 20 bytes of token address
     receiver?: string // by default: walletAddress (makerAddress)
     preset?: PresetEnum // by default: recommended preset
-    nonce?: OrderNonce | string | number
+    nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
 }
 
 export type OrderInfo = {

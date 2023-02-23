@@ -90,7 +90,7 @@ export class FusionSDK {
             throw new Error('quoter has not returned quoteId')
         }
 
-        const nonce = await this.getNonce(params.nonce, params.walletAddress)
+        const nonce = await this.getNonce(params.walletAddress, params.nonce)
         const order = quote.createFusionOrder({
             receiver: params.receiver,
             preset: params.preset,
@@ -124,28 +124,22 @@ export class FusionSDK {
     }
 
     private async getNonce(
-        nonce: OrderNonce | number | string | undefined,
-        walletAddress: string
+        walletAddress: string,
+        nonce?: OrderNonce | number | string
     ): Promise<Nonce> {
         if (!this.config.blockchainProvider) {
             throw new Error('blockchainProvider has not set to config')
         }
 
-        if (nonce === OrderNonce.Empty) {
-            return
-        }
-
-        const defaultNonce = nonce !== undefined ? nonce : OrderNonce.Auto
-
         // in case of auto request from node
-        if (defaultNonce === OrderNonce.Auto) {
-            const nonceManager = NonceManager.new(
-                this.config.blockchainProvider
-            )
+        if (nonce === OrderNonce.Auto) {
+            const nonceManager = NonceManager.new({
+                provider: this.config.blockchainProvider
+            })
 
             return nonceManager.getNonce(walletAddress)
         }
 
-        return defaultNonce
+        return nonce
     }
 }
