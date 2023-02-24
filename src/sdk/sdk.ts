@@ -134,7 +134,7 @@ export class FusionSDK {
         return {
             order: orderStruct,
             signature,
-            quoteId: quoteId,
+            quoteId,
             orderHash: order.getOrderHash(domain)
         }
     }
