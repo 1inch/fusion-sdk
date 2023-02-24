@@ -4,6 +4,7 @@ import {
     Nonce,
     OrderInfo,
     OrderParams,
+    PreparedOrder,
     QuoteParams
 } from './types'
 import {ZERO_ADDRESS} from '../constants'
@@ -20,6 +21,7 @@ import {
 } from '../api/orders'
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
+import {FusionOrder} from '../fusion-order'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -70,11 +72,7 @@ export class FusionSDK {
         return this.api.getQuote(request)
     }
 
-    async placeOrder(params: OrderParams): Promise<OrderInfo> {
-        if (!this.config.blockchainProvider) {
-            throw new Error('blockchainProvider has not set to config')
-        }
-
+    async createOrder(params: OrderParams): Promise<PreparedOrder> {
         const quoterRequest = QuoterRequest.new({
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
@@ -99,28 +97,47 @@ export class FusionSDK {
         })
 
         const domain = getLimitOrderV3Domain(this.config.network)
+        const hash = order.getOrderHash(domain)
 
-        const signature = await this.config.blockchainProvider.signTypedData(
-            params.walletAddress,
-            order.getTypedData(domain)
-        )
+        return {order, hash, quoteId: quote.quoteId}
+    }
+
+    public async submitOrder(
+        order: FusionOrder,
+        quoteId: string
+    ): Promise<OrderInfo> {
+        if (!this.config.blockchainProvider) {
+            throw new Error('blockchainProvider has not set to config')
+        }
 
         const orderStruct = order.build()
+        const domain = getLimitOrderV3Domain(this.config.network)
+
+        const signature = await this.config.blockchainProvider.signTypedData(
+            orderStruct.maker,
+            order.getTypedData(domain)
+        )
 
         const relayerRequest = RelayerRequest.new({
             order: orderStruct,
             signature,
-            quoteId: quote.quoteId
+            quoteId
         })
 
         await this.api.submitOrder(relayerRequest)
 
         return {
-            order: order.build(),
+            order: orderStruct,
             signature,
-            quoteId: quote.quoteId,
+            quoteId,
             orderHash: order.getOrderHash(domain)
         }
+    }
+
+    async placeOrder(params: OrderParams): Promise<OrderInfo> {
+        const {order, quoteId} = await this.createOrder(params)
+
+        return this.submitOrder(order, quoteId)
     }
 
     private async getNonce(
