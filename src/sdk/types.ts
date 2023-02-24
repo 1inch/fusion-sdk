@@ -3,7 +3,7 @@ import {NetworkEnum} from '../constants'
 import {LimitOrderV3Struct} from '../limit-order'
 import {PresetEnum} from '../api'
 import {OrderNonce} from '../nonce-manager/types'
-import {FusionOrder} from '../fusion-order';
+import {FusionOrder} from '../fusion-order'
 
 export type FusionSDKConfigParams = {
     url: string
