@@ -3,7 +3,8 @@ import {
     FusionSDKConfigParams,
     Nonce,
     OrderInfo,
-    OrderParams, PreparedOrder,
+    OrderParams,
+    PreparedOrder,
     QuoteParams
 } from './types'
 import {ZERO_ADDRESS} from '../constants'
@@ -20,7 +21,7 @@ import {
 } from '../api/orders'
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
-import {FusionOrder} from '../fusion-order';
+import {FusionOrder} from '../fusion-order'
 
 export class FusionSDK {
     public readonly api: FusionApi
