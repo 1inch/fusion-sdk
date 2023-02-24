@@ -20,6 +20,7 @@ import {
 } from '../api/orders'
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
+import {FusionOrder} from '../fusion-order';
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -119,6 +120,73 @@ export class FusionSDK {
             order: order.build(),
             signature,
             quoteId: quote.quoteId,
+            orderHash: order.getOrderHash(domain)
+        }
+    }
+
+    async createOrder(params: OrderParams) {
+        if (!this.config.blockchainProvider) {
+            throw new Error('blockchainProvider has not set to config')
+        }
+
+        const quoterRequest = QuoterRequest.new({
+            fromTokenAddress: params.fromTokenAddress,
+            toTokenAddress: params.toTokenAddress,
+            amount: params.amount,
+            walletAddress: params.walletAddress,
+            permit: params.permit,
+            enableEstimate: true
+        })
+
+        const quote = await this.api.getQuote(quoterRequest)
+
+        if (!quote.quoteId) {
+            throw new Error('quoter has not returned quoteId')
+        }
+
+        const nonce = await this.getNonce(params.walletAddress, params.nonce)
+        const order = quote.createFusionOrder({
+            receiver: params.receiver,
+            preset: params.preset,
+            nonce,
+            permit: params.permit
+        })
+
+        const domain = getLimitOrderV3Domain(this.config.network)
+        const hash = order.getOrderHash(domain)
+
+        return {order, hash, quoteId: quote.quoteId}
+    }
+
+    public async submitOrder(
+        walletAddress: string,
+        quoteId: string,
+        order: FusionOrder
+    ): Promise<OrderInfo> {
+        if (!this.config.blockchainProvider) {
+            throw new Error('blockchainProvider has not set to config')
+        }
+
+        const orderStruct = order.build()
+        const domain = getLimitOrderV3Domain(this.config.network)
+
+        const signature = await this.config.blockchainProvider.signTypedData(
+            walletAddress,
+            order.getTypedData(domain)
+        )
+
+        const relayerRequest = RelayerRequest.new({
+            order: orderStruct,
+            signature,
+            quoteId
+        })
+
+        await this.api.submitOrder(relayerRequest)
+
+        return {
+            order: order.build(),
+            signature,
+            quoteId: quoteId,
             orderHash: order.getOrderHash(domain)
         }
     }
