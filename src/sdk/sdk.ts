@@ -73,10 +73,6 @@ export class FusionSDK {
     }
 
     async createOrder(params: OrderParams): Promise<PreparedOrder> {
-        if (!this.config.blockchainProvider) {
-            throw new Error('blockchainProvider has not set to config')
-        }
-
         const quoterRequest = QuoterRequest.new({
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
@@ -107,9 +103,8 @@ export class FusionSDK {
     }
 
     public async submitOrder(
-        walletAddress: string,
-        quoteId: string,
-        order: FusionOrder
+        order: FusionOrder,
+        quoteId: string
     ): Promise<OrderInfo> {
         if (!this.config.blockchainProvider) {
             throw new Error('blockchainProvider has not set to config')
@@ -119,7 +114,7 @@ export class FusionSDK {
         const domain = getLimitOrderV3Domain(this.config.network)
 
         const signature = await this.config.blockchainProvider.signTypedData(
-            walletAddress,
+            orderStruct.maker,
             order.getTypedData(domain)
         )
 
@@ -142,7 +137,7 @@ export class FusionSDK {
     async placeOrder(params: OrderParams): Promise<OrderInfo> {
         const {order, quoteId} = await this.createOrder(params)
 
-        return this.submitOrder(params.walletAddress, quoteId, order)
+        return this.submitOrder(order, quoteId)
     }
 
     private async getNonce(
