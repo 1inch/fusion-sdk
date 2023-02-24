@@ -132,7 +132,7 @@ export class FusionSDK {
         await this.api.submitOrder(relayerRequest)
 
         return {
-            order: order.build(),
+            order: orderStruct,
             signature,
             quoteId: quoteId,
             orderHash: order.getOrderHash(domain)
