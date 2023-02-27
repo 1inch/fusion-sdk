@@ -2,7 +2,7 @@ import {FusionApiConfig} from './types'
 import {QuoterApi, QuoterRequest} from './quoter'
 import {RelayerApi, RelayerRequest} from './relayer'
 import {AxiosProviderConnector} from '../connector'
-import {Quote} from './quoter/quote/quote'
+import {Quote} from './quoter'
 import {
     ActiveOrdersRequest,
     ActiveOrdersResponse,

@@ -1,6 +1,7 @@
 import {BlockchainProviderConnector} from './blockchain-provider.connector'
 import Web3 from 'web3'
 import {EIP712TypedData} from '../../limit-order'
+import {TransactionParams} from './types'
 
 interface ExtendedWeb3 extends Web3 {
     signTypedDataV4(walletAddress: string, typedData: string): Promise<string>
@@ -34,5 +35,11 @@ export class Web3ProviderConnector implements BlockchainProviderConnector {
             to: contractAddress,
             data: callData
         })
+    }
+
+    // todo: fix this
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    signTransaction(params: Required<TransactionParams>): string {
+        return 'something'
     }
 }

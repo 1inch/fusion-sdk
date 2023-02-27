@@ -1,4 +1,5 @@
 import {EIP712TypedData} from '../../limit-order'
+import {TransactionParams} from './types'
 
 export interface BlockchainProviderConnector {
     signTypedData(
@@ -7,4 +8,6 @@ export interface BlockchainProviderConnector {
     ): Promise<string>
 
     ethCall(contractAddress: string, callData: string): Promise<string>
+
+    signTransaction(params: Required<TransactionParams>): string
 }

@@ -7,6 +7,11 @@ export type FusionApiConfig = {
     httpProvider?: HttpProviderConnector
 }
 
+export type GasPriceApiConfig = {
+    network: NetworkEnum
+    httpProvider?: HttpProviderConnector
+}
+
 export type PaginationMeta = {
     totalItems: number
     itemsPerPage: number
