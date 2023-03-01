@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import {WebSocketSdk} from '.'
+import {WebSocketApi} from '.'
 import {WebSocketServer, WebSocket} from 'ws'
 import {
     OrderBalanceOrAllowanceChangeEvent,
@@ -18,7 +18,7 @@ describe(__filename, () => {
             const message = {id: 1}
             const {wss, url} = createWebsocketServerMock([message])
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             wsSdk.onMessage((data) => {
                 expect(data).toEqual(message)
@@ -32,7 +32,7 @@ describe(__filename, () => {
             const message = {id: 1}
             const {wss, url} = createWebsocketServerMock([message])
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             wsSdk.onOpen(() => {
                 wsSdk.close()
@@ -45,7 +45,7 @@ describe(__filename, () => {
             const message = {id: 1}
             const {wss, url} = createWebsocketServerMock([message])
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             wsSdk.on('open', function (this) {
                 expect(this).toBeInstanceOf(WebSocket)
@@ -56,7 +56,7 @@ describe(__filename, () => {
         })
 
         it('should be possible to subscribe to error', (done) => {
-            const wsSdk = new WebSocketSdk('ws://localhost:1234')
+            const wsSdk = new WebSocketApi('ws://localhost:1234')
 
             wsSdk.on('error', (error) => {
                 expect(error.message).toContain('ECONNREFUSED')
@@ -77,7 +77,7 @@ describe(__filename, () => {
                 }
             })
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             wsSdk.onOpen(() => {
                 wsSdk.ping()
@@ -104,7 +104,7 @@ describe(__filename, () => {
                 }
             })
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             wsSdk.onOpen(() => {
                 wsSdk.getAllowedMethods()
@@ -163,7 +163,7 @@ describe(__filename, () => {
             const messages = [message1, message1, message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrder((data) => {
@@ -224,7 +224,7 @@ describe(__filename, () => {
             const expectedMessages = [message1, message1]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderCreated((data) => {
@@ -285,7 +285,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderInvalid((data) => {
@@ -349,7 +349,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderBalanceOrAllowanceChange((data) => {
@@ -410,7 +410,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderFilled((data) => {
@@ -472,7 +472,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketSdk(url)
+            const wsSdk = new WebSocketApi(url)
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderFilledPartially((data) => {

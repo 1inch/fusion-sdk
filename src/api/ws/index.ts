@@ -23,7 +23,7 @@ export const orderEvents: OrderEventType['event'][] = [
     'order_filled_partially'
 ]
 
-export class WebSocketSdk {
+export class WebSocketApi {
     public ws: WebSocket
 
     constructor(url: string) {

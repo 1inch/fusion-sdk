@@ -1,5 +1,6 @@
-import {LimitOrderV3Struct} from '../limit-order'
+import {LimitOrderV3Struct} from '../../limit-order'
 import WebSocket from 'ws'
+import {NetworkEnum} from '../../constants'
 
 export type AnyFunction = (...args: any[]) => any
 
@@ -69,7 +70,7 @@ export type OnOrderCreatedCb = (data: OrderCreatedEvent) => any
 export type OnOrderInvalidCb = (data: OrderInvalidEvent) => any
 
 export type OnOrderNotEnoughBalanceOrAllowanceCb = (
-    data: OrderNotEnoughBalanceOrAllowanceEvent
+    data: OrderBalanceOrAllowanceChangeEvent
 ) => any
 
 export type OnOrderFilledCb = (data: OrderFilledEvent) => any
@@ -80,3 +81,8 @@ export type OnGetAllowedMethodsCb = (
     data: GetAllowMethodsRpcEvent['result']
 ) => any
 export type OnPongCb = (data: PingRpcEvent['result']) => any
+
+export type WsApiConfig = {
+    network: NetworkEnum
+    url: string
+}

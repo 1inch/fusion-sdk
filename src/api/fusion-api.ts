@@ -12,8 +12,11 @@ import {
     OrderStatusResponse,
     OrdersByMakerResponse
 } from './orders'
+import {WebSocketApi} from './ws'
 
 export class FusionApi {
+    public ws: WebSocketApi
+
     private readonly quoterApi: QuoterApi
 
     private readonly relayerApi: RelayerApi
@@ -41,6 +44,8 @@ export class FusionApi {
             {url: `${config.url}/orders`, network: config.network},
             config.httpProvider
         )
+
+        this.ws = new WebSocketApi(`${config.url}/ws/v1.0/${config.network}`)
     }
 
     static new(config: FusionApiConfig): FusionApi {

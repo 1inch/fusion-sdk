@@ -22,9 +22,12 @@ import {
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
+import {WebSocketApi} from '../api/ws'
 
 export class FusionSDK {
     public readonly api: FusionApi
+
+    public readonly ws: WebSocketApi
 
     constructor(private readonly config: FusionSDKConfigParams) {
         this.api = FusionApi.new({
@@ -32,6 +35,8 @@ export class FusionSDK {
             network: config.network,
             httpProvider: config.httpProvider
         })
+
+        this.ws = this.api.ws
     }
 
     async getActiveOrders({
