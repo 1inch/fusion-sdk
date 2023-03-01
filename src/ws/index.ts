@@ -14,7 +14,7 @@ import {
     RpcEventType
 } from './types'
 
-const orderEvents: OrderEventType['event'][] = [
+export const orderEvents: OrderEventType['event'][] = [
     'order_created',
     'order_invalid',
     'order_not_enough_balance_or_allowance',
@@ -29,12 +29,12 @@ export class WebSocketSdk {
         this.ws = new WebSocket(url)
     }
 
-    onOpen = (cb: AnyFunction): void => {
-        this.ws.on('open', cb)
-    }
-
     on = (event: string, cb: AnyFunction): void => {
         this.ws.on(event, cb)
+    }
+
+    onOpen = (cb: AnyFunction): void => {
+        this.on('open', cb)
     }
 
     onPong = (cb: OnPongCb): void => {
@@ -51,7 +51,7 @@ export class WebSocketSdk {
     }
 
     onMessage = (cb: OnMessageCb): void => {
-        this.ws.on('message', (data: any) => {
+        this.on('message', (data: any) => {
             const parsedData = JSON.parse(data)
 
             cb(parsedData)
