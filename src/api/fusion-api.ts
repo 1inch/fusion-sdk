@@ -47,7 +47,8 @@ export class FusionApi {
 
         this.ws = new WebSocketApi({
             url: `${config.url}/ws`,
-            network: config.network
+            network: config.network,
+            lazyInit: config.wsLazyInit || true
         })
     }
 
@@ -55,7 +56,8 @@ export class FusionApi {
         return new FusionApi({
             network: config.network,
             url: config.url,
-            httpProvider: config.httpProvider || new AxiosProviderConnector()
+            httpProvider: config.httpProvider || new AxiosProviderConnector(),
+            wsLazyInit: config.wsLazyInit || true
         })
     }
 

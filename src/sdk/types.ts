@@ -10,6 +10,7 @@ export type FusionSDKConfigParams = {
     network: NetworkEnum
     blockchainProvider?: BlockchainProviderConnector
     httpProvider?: HttpProviderConnector
+    wsLazyInit?: boolean
 }
 
 export type QuoteParams = {

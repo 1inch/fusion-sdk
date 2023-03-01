@@ -85,4 +85,5 @@ export type OnPongCb = (data: PingRpcEvent['result']) => any
 export type WsApiConfig = {
     network: NetworkEnum
     url: string
+    lazyInit?: boolean
 }

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import {WebSocketApi} from '.'
+import {WebSocketApi} from './websocket-api'
 import {WebSocketServer, WebSocket} from 'ws'
 import {
     OrderBalanceOrAllowanceChangeEvent,
@@ -65,6 +65,80 @@ describe(__filename, () => {
             wsSdk.on('error', (error) => {
                 expect(error.message).toContain('ECONNREFUSED')
 
+                done()
+            })
+        })
+
+        it('should be possible to initialize in lazy mode', (done) => {
+            const message = {id: 1}
+            const port = 8080
+
+            const url = `ws://localhost:${port}/ws`
+            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+
+            wss.on('connection', (ws) => {
+                for (const m of [message]) {
+                    ws.send(JSON.stringify(m))
+                }
+            })
+
+            const wsSdk = new WebSocketApi({
+                url,
+                network: NetworkEnum.ETHEREUM,
+                lazyInit: true
+            })
+
+            expect(wsSdk.ws).toEqual(undefined)
+
+            wsSdk.init()
+
+            expect(wsSdk.ws).toBeDefined()
+
+            wsSdk.onMessage((data) => {
+                expect(data).toEqual(message)
+
+                wsSdk.close()
+                wss.close()
+                done()
+            })
+        })
+
+        it('should be safe to call methods on uninitialized ws', () => {
+            const wsSdk = new WebSocketApi({
+                url: 'random',
+                network: NetworkEnum.ETHEREUM,
+                lazyInit: true
+            })
+
+            expect(() => wsSdk.send({id: 1})).toThrowError()
+        })
+
+        it('should be possible to initialize not in lazy mode', (done) => {
+            const message = {id: 1}
+            const port = 8080
+
+            const url = `ws://localhost:${port}/ws`
+            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+
+            wss.on('connection', (ws) => {
+                for (const m of [message]) {
+                    ws.send(JSON.stringify(m))
+                }
+            })
+
+            const wsSdk = new WebSocketApi({
+                url,
+                network: NetworkEnum.ETHEREUM,
+                lazyInit: false
+            })
+
+            expect(wsSdk.ws).toBeDefined()
+
+            wsSdk.onMessage((data) => {
+                expect(data).toEqual(message)
+
+                wsSdk.close()
+                wss.close()
                 done()
             })
         })

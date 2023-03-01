@@ -5,6 +5,7 @@ export type FusionApiConfig = {
     url: string
     network: NetworkEnum
     httpProvider?: HttpProviderConnector
+    wsLazyInit?: boolean
 }
 
 export type PaginationMeta = {
