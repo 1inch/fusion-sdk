@@ -16,11 +16,10 @@ export function encodeCancelOrder(params: CancelOrderParams): string {
             params.maker,
             params.receiver,
             params.allowedSender,
-            params.interaction,
+            params.interactions,
             params.makingAmount,
             params.takingAmount,
-            params.offsets,
-            params.target
+            params.offsets
         )
         .encodeABI()
 }

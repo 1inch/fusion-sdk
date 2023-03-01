@@ -27,6 +27,7 @@ import {
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {TransactionParams} from '../connector'
+import {encodeCancelOrder} from '../settlement/encoders/cancel-order.encoder'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -138,7 +139,8 @@ export class FusionSDK {
     }
 
     async cancelOrder(
-        params: Required<TransactionParams>
+        params: Required<TransactionParams>,
+        orderHash: string
     ): Promise<string | undefined> {
         if (params.gasPriceMultiplier === 1) {
             throw new Error('cannot cancel transaction with the same gas price')
@@ -150,8 +152,24 @@ export class FusionSDK {
             )
         }
 
+        const getOrderRequest = OrderStatusRequest.new({orderHash})
+        const order = await this.api.getOrderStatus(getOrderRequest)
+        const cancelOrderEncodedData = encodeCancelOrder({
+            makerAsset: order.order.makerAsset,
+            takerAsset: order.order.takerAsset,
+            maker: order.order.maker,
+            receiver: order.order.receiver,
+            allowedSender: order.order.allowedSender,
+            interactions: order.order.interactions,
+            makingAmount: order.order.makingAmount,
+            takingAmount: order.order.takingAmount,
+            salt: order.order.salt,
+            offsets: order.order.offsets
+        })
+
         const txParams: Required<TransactionParams> = {
             ...params,
+            data: !params.data ? cancelOrderEncodedData : params.data,
             gasPrice: !params.gasPrice
                 ? await this.gasPriceApi.getGasPrice()
                 : params.gasPrice

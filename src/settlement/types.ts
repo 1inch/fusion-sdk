@@ -23,9 +23,8 @@ export type CancelOrderParams = {
     maker: string
     receiver: string
     allowedSender: string
-    interaction: string
+    interactions: string
     makingAmount: string
     takingAmount: string
     offsets: string
-    target: string
 }
