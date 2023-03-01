@@ -1,5 +1,3 @@
-import {BigNumber} from '@ethersproject/bignumber'
-import BigDecimal from 'js-big-decimal'
 import {LegacyGasPriceResponse} from '../../gas-price/types'
 import {LegacyGasPrice} from '../../gas-price/legacy-gas-price'
 import {LondonGasPrice} from '../../gas-price/london-gas-price'
