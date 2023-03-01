@@ -18,7 +18,7 @@ import {
 export const orderEvents: OrderEventType['event'][] = [
     'order_created',
     'order_invalid',
-    'order_not_enough_balance_or_allowance',
+    'order_balance_or_allowance_change',
     'order_filled',
     'order_filled_partially'
 ]
