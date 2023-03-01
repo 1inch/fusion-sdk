@@ -8,6 +8,7 @@ import {TransactionParams} from './types'
 import {LondonGasPrice} from '../../gas-price/london-gas-price'
 import {getOptions} from './config/chain.config'
 import {LegacyGasPrice} from '../../gas-price/legacy-gas-price'
+import {add0x} from '../../utils'
 
 export class PrivateKeyProviderConnector
     implements BlockchainProviderConnector
@@ -51,6 +52,15 @@ export class PrivateKeyProviderConnector
         }
 
         return this.signTransactionWithLegacyGasPrice(params)
+    }
+
+    sendTransaction(rawTx: string): Promise<string> {
+        return new Promise((resolve, reject) =>
+            this.web3Provider.eth
+                .sendSignedTransaction(add0x(rawTx))
+                .on('transactionHash', (hash) => resolve(hash))
+                .catch((err) => reject(err))
+        )
     }
 
     private signTransactionWithLondonGasPrice(

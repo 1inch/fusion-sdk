@@ -1,5 +1,5 @@
 import {BigNumber} from '@ethersproject/bignumber'
-import {GasPrice} from '../../api/gas-price/gas-price'
+import {GasPrice} from '../../api/gas-price'
 
 export type TransactionParams = {
     to: string

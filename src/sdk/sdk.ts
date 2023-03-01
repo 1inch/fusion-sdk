@@ -1,4 +1,10 @@
-import {FusionApi, Quote, QuoterRequest, RelayerRequest} from '../api'
+import {
+    FusionApi,
+    GasPriceApi,
+    Quote,
+    QuoterRequest,
+    RelayerRequest
+} from '../api'
 import {
     FusionSDKConfigParams,
     Nonce,
@@ -20,13 +26,21 @@ import {
 } from '../api/orders'
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
+import {TransactionParams} from '../connector'
 
 export class FusionSDK {
     public readonly api: FusionApi
 
+    private readonly gasPriceApi: GasPriceApi
+
     constructor(private readonly config: FusionSDKConfigParams) {
         this.api = FusionApi.new({
             url: config.url,
+            network: config.network,
+            httpProvider: config.httpProvider
+        })
+
+        this.gasPriceApi = GasPriceApi.new({
             network: config.network,
             httpProvider: config.httpProvider
         })
@@ -121,6 +135,37 @@ export class FusionSDK {
             quoteId: quote.quoteId,
             orderHash: order.getOrderHash(domain)
         }
+    }
+
+    async cancelOrder(
+        params: Required<TransactionParams>
+    ): Promise<string | undefined> {
+        if (params.gasPriceMultiplier === 1) {
+            throw new Error('cannot cancel transaction with the same gas price')
+        }
+
+        if (!params.nonce) {
+            throw new Error(
+                'you should set previous nonce for transaction cancellation'
+            )
+        }
+
+        const txParams: Required<TransactionParams> = {
+            ...params,
+            gasPrice: !params.gasPrice
+                ? await this.gasPriceApi.getGasPrice()
+                : params.gasPrice
+        }
+
+        const signedTx = await this.config.blockchainProvider?.signTransaction(
+            txParams
+        )
+
+        if (!signedTx) {
+            throw new Error(`could not sign the transaction`)
+        }
+
+        return this.config.blockchainProvider?.sendTransaction(signedTx)
     }
 
     private async getNonce(
