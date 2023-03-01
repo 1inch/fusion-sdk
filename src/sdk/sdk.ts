@@ -175,15 +175,7 @@ export class FusionSDK {
                 : params.gasPrice
         }
 
-        const signedTx = await this.config.blockchainProvider?.signTransaction(
-            txParams
-        )
-
-        if (!signedTx) {
-            throw new Error(`could not sign the transaction`)
-        }
-
-        return this.config.blockchainProvider?.sendTransaction(signedTx)
+        return this.config.blockchainProvider?.sendTransaction(txParams)
     }
 
     private async getNonce(

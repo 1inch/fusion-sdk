@@ -9,7 +9,5 @@ export interface BlockchainProviderConnector {
 
     ethCall(contractAddress: string, callData: string): Promise<string>
 
-    signTransaction(params: Required<TransactionParams>): string
-
-    sendTransaction(rawTx: string): Promise<string>
+    sendTransaction(params: Required<TransactionParams>): Promise<string>
 }

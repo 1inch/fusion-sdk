@@ -44,7 +44,18 @@ export class PrivateKeyProviderConnector
         })
     }
 
-    signTransaction(params: Required<TransactionParams>): string {
+    sendTransaction(params: Required<TransactionParams>): Promise<string> {
+        const rawTx = this.signTransaction(params)
+
+        return new Promise((resolve, reject) =>
+            this.web3Provider.eth
+                .sendSignedTransaction(add0x(rawTx))
+                .on('transactionHash', (hash) => resolve(hash))
+                .catch((err) => reject(err))
+        )
+    }
+
+    private signTransaction(params: Required<TransactionParams>): string {
         const gasPriceValue = params.gasPrice.value
 
         if (gasPriceValue instanceof LondonGasPrice) {
@@ -52,15 +63,6 @@ export class PrivateKeyProviderConnector
         }
 
         return this.signTransactionWithLegacyGasPrice(params)
-    }
-
-    sendTransaction(rawTx: string): Promise<string> {
-        return new Promise((resolve, reject) =>
-            this.web3Provider.eth
-                .sendSignedTransaction(add0x(rawTx))
-                .on('transactionHash', (hash) => resolve(hash))
-                .catch((err) => reject(err))
-        )
     }
 
     private signTransactionWithLondonGasPrice(

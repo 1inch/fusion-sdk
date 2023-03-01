@@ -2,6 +2,8 @@ import {BlockchainProviderConnector} from './blockchain-provider.connector'
 import Web3 from 'web3'
 import {EIP712TypedData} from '../../limit-order'
 import {TransactionParams} from './types'
+import {LondonGasPrice} from '../../gas-price/london-gas-price'
+import {EipGasPrice} from '../../gas-price/types'
 
 interface ExtendedWeb3 extends Web3 {
     signTypedDataV4(walletAddress: string, typedData: string): Promise<string>
@@ -37,9 +39,28 @@ export class Web3ProviderConnector implements BlockchainProviderConnector {
         })
     }
 
-    // todo: fix this
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    signTransaction(params: Required<TransactionParams>): string {
-        return 'something'
+    sendTransaction(params: Required<TransactionParams>): Promise<string> {
+        const {gasPrice, ...remainingParams} = params
+        const gp = gasPrice.value.getGasPrice(params.gasPriceMultiplier)
+        let transactionConfig = {}
+
+        if (gasPrice.value instanceof LondonGasPrice) {
+            transactionConfig = {
+                ...remainingParams,
+                ...(gp as EipGasPrice)
+            }
+        } else {
+            transactionConfig = {
+                ...remainingParams,
+                gasPrice: gasPrice.toString()
+            }
+        }
+
+        return new Promise((resolve, reject) =>
+            this.web3Provider.eth
+                .sendTransaction(transactionConfig)
+                .on('transactionHash', (hash) => resolve(hash))
+                .catch((err) => reject(err))
+        )
     }
 }
