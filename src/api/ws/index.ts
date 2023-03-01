@@ -12,7 +12,8 @@ import {
     OnOrderNotEnoughBalanceOrAllowanceCb,
     OnPongCb,
     OrderEventType,
-    RpcEventType
+    RpcEventType,
+    WsApiConfig
 } from './types'
 
 export const orderEvents: OrderEventType['event'][] = [
@@ -26,7 +27,8 @@ export const orderEvents: OrderEventType['event'][] = [
 export class WebSocketApi {
     public ws: WebSocket
 
-    constructor(url: string) {
+    constructor(config: WsApiConfig) {
+        const url = `${config.url}/v1.0/${config.network}`
         this.ws = new WebSocket(url)
     }
 

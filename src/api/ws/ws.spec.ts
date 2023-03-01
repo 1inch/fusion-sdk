@@ -9,6 +9,7 @@ import {
     OrderFilledPartiallyEvent,
     OrderInvalidEvent
 } from './types'
+import {NetworkEnum} from '../../constants'
 
 jest.setTimeout(5 * 60 * 1000)
 
@@ -18,7 +19,7 @@ describe(__filename, () => {
             const message = {id: 1}
             const {wss, url} = createWebsocketServerMock([message])
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             wsSdk.onMessage((data) => {
                 expect(data).toEqual(message)
@@ -32,7 +33,7 @@ describe(__filename, () => {
             const message = {id: 1}
             const {wss, url} = createWebsocketServerMock([message])
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             wsSdk.onOpen(() => {
                 wsSdk.close()
@@ -45,7 +46,7 @@ describe(__filename, () => {
             const message = {id: 1}
             const {wss, url} = createWebsocketServerMock([message])
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             wsSdk.on('open', function (this) {
                 expect(this).toBeInstanceOf(WebSocket)
@@ -56,7 +57,10 @@ describe(__filename, () => {
         })
 
         it('should be possible to subscribe to error', (done) => {
-            const wsSdk = new WebSocketApi('ws://localhost:1234')
+            const wsSdk = new WebSocketApi({
+                url: 'ws://localhost:1234',
+                network: NetworkEnum.ETHEREUM
+            })
 
             wsSdk.on('error', (error) => {
                 expect(error.message).toContain('ECONNREFUSED')
@@ -77,7 +81,7 @@ describe(__filename, () => {
                 }
             })
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             wsSdk.onOpen(() => {
                 wsSdk.ping()
@@ -104,7 +108,7 @@ describe(__filename, () => {
                 }
             })
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             wsSdk.onOpen(() => {
                 wsSdk.getAllowedMethods()
@@ -163,7 +167,7 @@ describe(__filename, () => {
             const messages = [message1, message1, message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrder((data) => {
@@ -224,7 +228,7 @@ describe(__filename, () => {
             const expectedMessages = [message1, message1]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderCreated((data) => {
@@ -285,7 +289,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderInvalid((data) => {
@@ -349,7 +353,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderBalanceOrAllowanceChange((data) => {
@@ -410,7 +414,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderFilled((data) => {
@@ -472,7 +476,7 @@ describe(__filename, () => {
             const expectedMessages = [message2]
             const {url, wss} = createWebsocketServerMock(messages)
 
-            const wsSdk = new WebSocketApi(url)
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
             wsSdk.onOrderFilledPartially((data) => {
@@ -496,14 +500,14 @@ function createWebsocketRpcServerMock(cb: (ws: WebSocket, data: any) => void): {
     wss: WebSocketServer
 } {
     const port = 8080
-    const url = `ws://localhost:${port}`
-    const wss = new WebSocketServer({port})
+    const returnUrl = `ws://localhost:${port}/ws`
+    const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
 
     wss.on('connection', (ws) => {
         ws.on('message', (data) => cb(ws, data))
     })
 
-    return {url, wss}
+    return {url: returnUrl, wss}
 }
 
 function createWebsocketServerMock(messages: any[]): {
@@ -511,8 +515,9 @@ function createWebsocketServerMock(messages: any[]): {
     wss: WebSocketServer
 } {
     const port = 8080
-    const url = `ws://localhost:${port}`
-    const wss = new WebSocketServer({port})
+
+    const returnUrl = `ws://localhost:${port}/ws`
+    const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
 
     wss.on('connection', (ws) => {
         for (const message of messages) {
@@ -520,5 +525,5 @@ function createWebsocketServerMock(messages: any[]): {
         }
     })
 
-    return {url, wss}
+    return {url: returnUrl, wss}
 }

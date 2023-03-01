@@ -45,7 +45,10 @@ export class FusionApi {
             config.httpProvider
         )
 
-        this.ws = new WebSocketApi(`${config.url}/ws/v1.0/${config.network}`)
+        this.ws = new WebSocketApi({
+            url: `${config.url}/ws`,
+            network: config.network
+        })
     }
 
     static new(config: FusionApiConfig): FusionApi {
