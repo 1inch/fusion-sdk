@@ -1,6 +1,9 @@
 import {LimitOrderV3Struct} from '../limit-order'
+import WebSocket from 'ws'
 
 export type AnyFunction = (...args: any[]) => any
+
+export type AnyFunctionWithThis = (this: WebSocket, ...args: any[]) => void
 
 export type Event<K extends string, T> = {event: K; data: T}
 
@@ -16,7 +19,7 @@ export type GetAllowMethodsRpcEvent = RpcEvent<'getAllowedMethods', RpcMethod[]>
 export type OrderEventType =
     | OrderCreatedEvent
     | OrderInvalidEvent
-    | OrderNotEnoughBalanceOrAllowanceEvent
+    | OrderBalanceOrAllowanceChangeEvent
     | OrderFilledEvent
     | OrderFilledPartiallyEvent
 
@@ -33,8 +36,8 @@ export type OrderCreatedEvent = Event<
     }
 >
 
-export type OrderNotEnoughBalanceOrAllowanceEvent = Event<
-    'order_not_enough_balance_or_allowance',
+export type OrderBalanceOrAllowanceChangeEvent = Event<
+    'order_balance_or_allowance_change',
     {
         orderHash: string
         remainingMakerAmount: string

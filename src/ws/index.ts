@@ -1,6 +1,7 @@
 import WebSocket from 'ws'
 import {
     AnyFunction,
+    AnyFunctionWithThis,
     OnGetAllowedMethodsCb,
     OnMessageCb,
     OnOrderCb,
@@ -29,15 +30,19 @@ export class WebSocketSdk {
         this.ws = new WebSocket(url)
     }
 
-    on = (event: string, cb: AnyFunction): void => {
+    on(event: string, cb: AnyFunctionWithThis): void {
         this.ws.on(event, cb)
     }
 
-    onOpen = (cb: AnyFunction): void => {
+    onOpen(cb: AnyFunctionWithThis): void {
         this.on('open', cb)
     }
 
-    onPong = (cb: OnPongCb): void => {
+    off(event: string, cb: AnyFunctionWithThis): void {
+        this.ws.off(event, cb)
+    }
+
+    onPong(cb: OnPongCb): void {
         this.onMessage((data: RpcEventType) => {
             if (data.method === 'ping') {
                 cb(data.result)
@@ -45,12 +50,12 @@ export class WebSocketSdk {
         })
     }
 
-    send = <T>(message: T): void => {
+    send<T>(message: T): void {
         const serialized = JSON.stringify(message)
         this.ws.send(serialized)
     }
 
-    onMessage = (cb: OnMessageCb): void => {
+    onMessage(cb: OnMessageCb): void {
         this.on('message', (data: any) => {
             const parsedData = JSON.parse(data)
 
@@ -58,18 +63,16 @@ export class WebSocketSdk {
         })
     }
 
-    onClose = (cb: AnyFunction): void => {
+    onClose(cb: AnyFunction): void {
         this.ws.on('close', cb)
     }
 
-    onError = (cb: AnyFunction): void => {
-        this.ws.on('close', cb)
+    onError(cb: AnyFunction): void {
+        this.on('error', cb)
     }
 
     ping(): void {
-        const message = JSON.stringify({method: 'ping'})
-
-        this.ws.send(message)
+        this.send({method: 'ping'})
     }
 
     close(): void {
@@ -77,9 +80,7 @@ export class WebSocketSdk {
     }
 
     getAllowedMethods(): void {
-        const message = JSON.stringify({method: 'getAllowedMethods'})
-
-        this.ws.send(message)
+        this.send({method: 'getAllowedMethods'})
     }
 
     onGetAllowedMethods(cb: OnGetAllowedMethodsCb): void {
@@ -90,7 +91,7 @@ export class WebSocketSdk {
         })
     }
 
-    onOrder = (cb: OnOrderCb): void => {
+    onOrder(cb: OnOrderCb): void {
         this.onMessage((data: OrderEventType) => {
             if (orderEvents.includes(data.event)) {
                 cb(data)
@@ -98,7 +99,7 @@ export class WebSocketSdk {
         })
     }
 
-    onOrderCreated = (cb: OnOrderCreatedCb): void => {
+    onOrderCreated(cb: OnOrderCreatedCb): void {
         this.onMessage((data: OrderEventType) => {
             if (data.event === 'order_created') {
                 cb(data)
@@ -106,7 +107,7 @@ export class WebSocketSdk {
         })
     }
 
-    onOrderInvalid = (cb: OnOrderInvalidCb): void => {
+    onOrderInvalid(cb: OnOrderInvalidCb): void {
         this.onMessage((data: OrderEventType) => {
             if (data.event === 'order_invalid') {
                 cb(data)
@@ -114,17 +115,17 @@ export class WebSocketSdk {
         })
     }
 
-    onOrderNotEnoughBalanceOrAllowance = (
+    onOrderBalanceOrAllowanceChange(
         cb: OnOrderNotEnoughBalanceOrAllowanceCb
-    ): void => {
+    ): void {
         this.onMessage((data: OrderEventType) => {
-            if (data.event === 'order_not_enough_balance_or_allowance') {
+            if (data.event === 'order_balance_or_allowance_change') {
                 cb(data)
             }
         })
     }
 
-    onOrderFilled = (cb: OnOrderFilledCb): void => {
+    onOrderFilled(cb: OnOrderFilledCb): void {
         this.onMessage((data: OrderEventType) => {
             if (data.event === 'order_filled') {
                 cb(data)
@@ -132,7 +133,7 @@ export class WebSocketSdk {
         })
     }
 
-    onOrderFilledPartially = (cb: OnOrderFilledPartiallyCb): void => {
+    onOrderFilledPartially(cb: OnOrderFilledPartiallyCb): void {
         this.onMessage((data: OrderEventType) => {
             if (data.event === 'order_filled_partially') {
                 cb(data)
