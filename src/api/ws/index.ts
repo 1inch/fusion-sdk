@@ -24,11 +24,21 @@ export const orderEvents: OrderEventType['event'][] = [
     'order_filled_partially'
 ]
 
+function castUrl(url: string): string {
+    if (url.startsWith('http')) {
+        return url.replace('http', 'ws')
+    }
+
+    return url
+}
+
 export class WebSocketApi {
     public ws: WebSocket
 
     constructor(config: WsApiConfig) {
-        const url = `${config.url}/v1.0/${config.network}`
+        const castedUrl = castUrl(config.url)
+        const url = `${castedUrl}/v1.0/${config.network}`
+
         this.ws = new WebSocket(url)
     }
 
