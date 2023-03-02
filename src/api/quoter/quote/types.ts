@@ -1,4 +1,5 @@
 import {PresetEnum} from '../types'
+import {TakingFeeInfo} from '../../../sdk'
 
 // todo: add deadline
 export type FusionOrderParamsData = {
@@ -6,8 +7,7 @@ export type FusionOrderParamsData = {
     receiver?: string
     nonce?: number | string
     permit?: string
-    takingFeeReceiver?: string
-    takingFeeRatio?: string
+    fee?: TakingFeeInfo
 }
 
 export type PredicateParams = {

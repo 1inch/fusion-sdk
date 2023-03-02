@@ -62,8 +62,7 @@ export class Quote {
             receiver: paramsData?.receiver,
             permit: paramsData?.permit,
             nonce: paramsData?.nonce,
-            takingFeeReceiver: paramsData?.takingFeeReceiver,
-            takingFeeRatio: paramsData?.takingFeeRatio
+            fee: paramsData?.fee
         })
 
         const preset = this.getPreset(params.preset)
@@ -76,8 +75,7 @@ export class Quote {
                 address: resolver,
                 allowance: 0
             })),
-            takerFeeReceiver: params.takingFeeReceiver,
-            takerFeeRatio: params.takingFeeRatio
+            fee: params.fee
         })
 
         const takerAsset = isNativeCurrency(this.params.toTokenAddress)
