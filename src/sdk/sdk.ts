@@ -143,25 +143,27 @@ export class FusionSDK {
 
     async buildCancelOrderCallData(orderHash: string): Promise<string> {
         const getOrderRequest = OrderStatusRequest.new({orderHash})
-        const order = await this.api.getOrderStatus(getOrderRequest)
+        const orderData = await this.api.getOrderStatus(getOrderRequest)
 
-        if (!order) {
+        if (!orderData) {
             throw new Error(
                 `Can not get order with the specified orderHash ${orderHash}`
             )
         }
 
+        const {order} = orderData
+
         return encodeCancelOrder({
-            makerAsset: order.order.makerAsset,
-            takerAsset: order.order.takerAsset,
-            maker: order.order.maker,
-            receiver: order.order.receiver,
-            allowedSender: order.order.allowedSender,
-            interactions: order.order.interactions,
-            makingAmount: order.order.makingAmount,
-            takingAmount: order.order.takingAmount,
-            salt: order.order.salt,
-            offsets: order.order.offsets
+            makerAsset: order.makerAsset,
+            takerAsset: order.takerAsset,
+            maker: order.maker,
+            receiver: order.receiver,
+            allowedSender: order.allowedSender,
+            interactions: order.interactions,
+            makingAmount: order.makingAmount,
+            takingAmount: order.takingAmount,
+            salt: order.salt,
+            offsets: order.offsets
         })
     }
 
