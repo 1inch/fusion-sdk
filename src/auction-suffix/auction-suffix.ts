@@ -1,6 +1,6 @@
 import {toSec} from '../utils'
 import {AuctionPoint, AuctionWhitelistItem, SettlementSuffixData} from './types'
-import {ZERO_ADDRESS} from '../constants'
+import {ZERO_ADDRESS, ZERO_NUMBER} from '../constants'
 import {
     encodeAuctionParams,
     encodeFlags,
@@ -30,7 +30,7 @@ export class AuctionSuffix {
             suffix.publicResolvingDeadline || toSec(NoPublicResolvingDeadline)
 
         this.takerFeeReceiver = suffix.takerFeeReceiver || ZERO_ADDRESS
-        this.takerFeeRatio = suffix.takerFeeRatio || '0'
+        this.takerFeeRatio = suffix.takerFeeRatio || ZERO_NUMBER
     }
 
     static decode(interactions: string): AuctionSuffix {

@@ -9,6 +9,10 @@ export class FusionOrderParams {
 
     public readonly permit: string | undefined
 
+    public readonly takingFeeReceiver: string | undefined
+
+    public readonly takingFeeRatio: string | undefined
+
     public readonly nonce: number | string | undefined
 
     constructor(params: FusionOrderParamsData) {
@@ -23,6 +27,10 @@ export class FusionOrderParams {
         this.nonce = params.nonce
 
         this.permit = params.permit
+
+        this.takingFeeRatio = params.takingFeeRatio
+
+        this.takingFeeReceiver = params.takingFeeReceiver
     }
 
     static new(params?: FusionOrderParamsData): FusionOrderParams {

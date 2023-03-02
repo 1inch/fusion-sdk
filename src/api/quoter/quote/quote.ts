@@ -1,6 +1,6 @@
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {AuctionSuffix} from '../../../auction-suffix'
+import {AuctionSuffix, encodeTakingFeeData} from '../../../auction-suffix'
 import {FusionOrder} from '../../../fusion-order'
 import {isNativeCurrency} from '../../../utils'
 import {
@@ -61,7 +61,9 @@ export class Quote {
             preset: paramsData?.preset || this.recommendedPreset,
             receiver: paramsData?.receiver,
             permit: paramsData?.permit,
-            nonce: paramsData?.nonce
+            nonce: paramsData?.nonce,
+            takingFeeReceiver: paramsData?.takingFeeReceiver,
+            takingFeeRatio: paramsData?.takingFeeRatio
         })
 
         const preset = this.getPreset(params.preset)
@@ -73,7 +75,9 @@ export class Quote {
             whitelist: this.whitelist.map((resolver) => ({
                 address: resolver,
                 allowance: 0
-            }))
+            })),
+            takerFeeReceiver: params.takingFeeReceiver,
+            takerFeeRatio: params.takingFeeRatio
         })
 
         const takerAsset = isNativeCurrency(this.params.toTokenAddress)
@@ -108,7 +112,11 @@ export class Quote {
                 }),
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
-                    : undefined
+                    : undefined,
+                takingFeeData: encodeTakingFeeData(
+                    params.takingFeeReceiver,
+                    params.takingFeeRatio
+                )
             }
         )
     }

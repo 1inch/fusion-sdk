@@ -28,6 +28,8 @@ export type OrderParams = {
     receiver?: string // by default: walletAddress (makerAddress)
     preset?: PresetEnum // by default: recommended preset
     nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
+    takingFeeRatio?: string
+    takingFeeReceiver?: string
 }
 
 export type OrderInfo = {

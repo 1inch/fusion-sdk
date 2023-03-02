@@ -1,7 +1,7 @@
 import {BigNumber} from '@ethersproject/bignumber'
 import {trim0x} from '../utils'
 import {AuctionPoint, AuctionWhitelistItem} from './types'
-import {ZERO_ADDRESS} from '../constants'
+import {ZERO_ADDRESS, ZERO_NUMBER} from '../constants'
 
 export function encodeAuctionParams(points: AuctionPoint[]): string {
     return points
@@ -27,8 +27,8 @@ export function encodePublicResolvingDeadline(deadline: number): string {
 }
 
 export function encodeTakingFeeData(
-    takerFeeReceiver: string,
-    takerFeeRatio: string
+    takerFeeReceiver: string = ZERO_ADDRESS,
+    takerFeeRatio: string = ZERO_NUMBER
 ): string {
     if (takerFeeReceiver === ZERO_ADDRESS || takerFeeRatio === '0') {
         return ''

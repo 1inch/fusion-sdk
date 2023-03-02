@@ -18,6 +18,7 @@ export type InteractionsData = {
     permit?: string
     preInteraction?: string
     postInteraction?: string
+    takingFeeData?: string
 }
 
 export type LimitOrderV3Struct = {

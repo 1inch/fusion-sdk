@@ -93,7 +93,9 @@ export class FusionSDK {
             receiver: params.receiver,
             preset: params.preset,
             nonce,
-            permit: params.permit
+            permit: params.permit,
+            takingFeeReceiver: params.takingFeeReceiver,
+            takingFeeRatio: params.takingFeeRatio
         })
 
         const domain = getLimitOrderV3Domain(this.config.network)
