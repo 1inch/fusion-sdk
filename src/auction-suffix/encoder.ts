@@ -30,7 +30,7 @@ export function encodeTakingFeeData(
     takerFeeReceiver: string = ZERO_ADDRESS,
     takerFeeRatio: string = ZERO_NUMBER
 ): string {
-    if (takerFeeReceiver === ZERO_ADDRESS || takerFeeRatio === '0') {
+    if (takerFeeReceiver === ZERO_ADDRESS || takerFeeRatio === ZERO_NUMBER) {
         return ''
     }
 
@@ -40,6 +40,10 @@ export function encodeTakingFeeData(
             .substring(2)
             .padStart(24, '0') + trim0x(takerFeeReceiver)
     )
+}
+
+export function bpsToRatioFormat(bps: string): string {
+    return BigNumber.from(bps).mul(100000).toString() // convert bps to percentage
 }
 
 export function encodeFlags(

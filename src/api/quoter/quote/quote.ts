@@ -1,6 +1,6 @@
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {AuctionSuffix, encodeTakingFeeData} from '../../../auction-suffix'
+import {AuctionSuffix} from '../../../auction-suffix'
 import {FusionOrder} from '../../../fusion-order'
 import {isNativeCurrency} from '../../../utils'
 import {
@@ -112,11 +112,7 @@ export class Quote {
                 }),
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
-                    : undefined,
-                takingFeeData: encodeTakingFeeData(
-                    params.takingFeeReceiver,
-                    params.takingFeeRatio
-                )
+                    : undefined
             }
         )
     }

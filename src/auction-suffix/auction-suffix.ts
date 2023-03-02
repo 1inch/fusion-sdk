@@ -2,6 +2,7 @@ import {toSec} from '../utils'
 import {AuctionPoint, AuctionWhitelistItem, SettlementSuffixData} from './types'
 import {ZERO_ADDRESS, ZERO_NUMBER} from '../constants'
 import {
+    bpsToRatioFormat,
     encodeAuctionParams,
     encodeFlags,
     encodePublicResolvingDeadline,
@@ -56,7 +57,7 @@ export class AuctionSuffix {
 
         const takingFeeData = encodeTakingFeeData(
             this.takerFeeReceiver,
-            this.takerFeeRatio
+            bpsToRatioFormat(this.takerFeeRatio) // we receive in bps format, 100 bps is 1%
         )
 
         const flags = encodeFlags(this.whitelist, this.points, takingFeeData)
