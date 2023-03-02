@@ -14,7 +14,7 @@ export class WebSocketApi {
 
     public order: ActiveOrdersWebSocketApi
 
-    public ws: WsProviderConnector
+    private ws: WsProviderConnector
 
     constructor(config: WsApiConfigWithProvider) {
         const provider = config.provider || new WebsocketClient(config)

@@ -88,10 +88,12 @@ describe(__filename, () => {
                 lazyInit: true
             })
 
+            // @ts-expect-error private property
             expect(wsSdk.ws).toMatchObject({initialized: false})
 
             wsSdk.init()
 
+            // @ts-expect-error private property
             expect(wsSdk.ws).toMatchObject({initialized: true})
 
             wsSdk.onMessage((data) => {
