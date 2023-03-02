@@ -9,17 +9,17 @@ const limitOrderV3 = new Contract(LimitOrderV3ABI as AbiItem[])
 
 export function encodeCancelOrder(params: LimitOrderV3Struct): string {
     return limitOrderV3.methods
-        .cancelOrder(
-            params.salt,
-            params.makerAsset,
-            params.takerAsset,
-            params.maker,
-            params.receiver,
-            params.allowedSender,
-            params.interactions,
-            params.makingAmount,
-            params.takingAmount,
-            params.offsets
-        )
+        .cancelOrder({
+            salt: params.salt,
+            makerAsset: params.makerAsset,
+            takerAsset: params.takerAsset,
+            maker: params.maker,
+            receiver: params.receiver,
+            allowedSender: params.allowedSender,
+            interactions: params.interactions,
+            makingAmount: params.makingAmount,
+            takingAmount: params.takingAmount,
+            offsets: params.offsets
+        })
         .encodeABI()
 }
