@@ -12,7 +12,3 @@ export type WsApiConfig = {
 }
 
 export type OnMessageCb = (data: any) => void
-
-export type RpcEvent<T extends RpcMethod, K> = {method: T; result: K}
-
-export type RpcMethod = 'getAllowedMethods' | 'ping'

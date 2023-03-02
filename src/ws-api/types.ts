@@ -1,6 +1,6 @@
 import {LimitOrderV3Struct} from '../limit-order'
 import {NetworkEnum} from '../constants'
-import {WsProviderConnector} from '../connector/ws'
+import {WsApiConfig, WsProviderConnector} from '../connector/ws'
 
 export type Event<K extends string, T> = {event: K; data: T}
 
@@ -62,10 +62,7 @@ export type OnOrderFilledCb = (data: OrderFilledEvent) => any
 
 export type OnOrderFilledPartiallyCb = (data: OrderFilledPartiallyEvent) => any
 
-export type WsApiConfig = {
-    network: NetworkEnum
-    url: string
-    lazyInit?: boolean
+export type WsApiConfigWithProvider = WsApiConfig & {
     provider?: WsProviderConnector
 }
 

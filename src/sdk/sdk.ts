@@ -30,8 +30,7 @@ export class FusionSDK {
         this.api = FusionApi.new({
             url: config.url,
             network: config.network,
-            httpProvider: config.httpProvider,
-            wsLazyInit: config.wsLazyInit || true
+            httpProvider: config.httpProvider
         })
     }
 

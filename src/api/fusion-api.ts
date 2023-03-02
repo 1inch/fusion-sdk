@@ -47,8 +47,7 @@ export class FusionApi {
         return new FusionApi({
             network: config.network,
             url: config.url,
-            httpProvider: config.httpProvider || new AxiosProviderConnector(),
-            wsLazyInit: config.wsLazyInit || true
+            httpProvider: config.httpProvider || new AxiosProviderConnector()
         })
     }
 

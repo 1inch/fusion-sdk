@@ -7,7 +7,7 @@ import {
 } from '../connector/ws'
 import {ActiveOrdersWebSocketApi} from './active-websocket-orders-api'
 import {RpcWebsocketApi} from './rpc-websocket-api'
-import {WsApiConfig} from './types'
+import {WsApiConfigWithProvider} from './types'
 
 export class WebSocketApi {
     public rpc: RpcWebsocketApi
@@ -16,7 +16,7 @@ export class WebSocketApi {
 
     public ws: WsProviderConnector
 
-    constructor(config: WsApiConfig) {
+    constructor(config: WsApiConfigWithProvider) {
         const provider = config.provider || new WebsocketClient(config)
 
         const configWithProvider = {...config, provider}
