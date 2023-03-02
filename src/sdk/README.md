@@ -165,7 +165,7 @@ sdk.placeOrder({
     toTokenAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
     amount: '50000000000000000', // 0.05 ETH
     walletAddress: makerAddress,
-    // fee is an optional field 
+    // fee is an optional field
     fee: {
         takingFeeRatio: 100, // 1% as we use bps format, 1% is equal to 100bps
         takingFeeReceiver: '0x0000000000000000000000000000000000000000' //  fee receiver address
