@@ -9,7 +9,7 @@ const limitOrderV3 = new Contract(LimitOrderV3ABI as AbiItem[])
 
 export function encodeCancelOrder(params: CancelOrderParams): string {
     return limitOrderV3.methods
-        .fillOrderTo(
+        .cancelOrder(
             params.salt,
             params.makerAsset,
             params.takerAsset,

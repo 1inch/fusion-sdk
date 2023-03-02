@@ -22,7 +22,7 @@ import {
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
-import {encodeCancelOrder} from '../settlement'
+import {encodeCancelOrder} from './encoders'
 
 export class FusionSDK {
     public readonly api: FusionApi

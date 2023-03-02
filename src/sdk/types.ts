@@ -44,3 +44,16 @@ export type PreparedOrder = {
 }
 
 export type Nonce = string | number | undefined
+
+export type CancelOrderParams = {
+    salt: string
+    makerAsset: string
+    takerAsset: string
+    maker: string
+    receiver: string
+    allowedSender: string
+    interactions: string
+    makingAmount: string
+    takingAmount: string
+    offsets: string
+}
