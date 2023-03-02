@@ -15,3 +15,16 @@ export type FillOrderParams = {
 }
 
 export type FillOrderParamsExtended = FillOrderParams & {interaction: string}
+
+export type CancelOrderParams = {
+    salt: string
+    makerAsset: string
+    takerAsset: string
+    maker: string
+    receiver: string
+    allowedSender: string
+    interactions: string
+    makingAmount: string
+    takingAmount: string
+    offsets: string
+}

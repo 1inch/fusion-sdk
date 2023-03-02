@@ -22,6 +22,7 @@ import {
 import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
+import {encodeCancelOrder} from '../settlement/encoders/cancel-order.encoder'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -138,6 +139,30 @@ export class FusionSDK {
         const {order, quoteId} = await this.createOrder(params)
 
         return this.submitOrder(order, quoteId)
+    }
+
+    async buildCancelOrderCallData(orderHash: string): Promise<string> {
+        const getOrderRequest = OrderStatusRequest.new({orderHash})
+        const order = await this.api.getOrderStatus(getOrderRequest)
+
+        if (!order) {
+            throw new Error(
+                `Can not get order with the specified orderHash ${orderHash}`
+            )
+        }
+
+        return encodeCancelOrder({
+            makerAsset: order.order.makerAsset,
+            takerAsset: order.order.takerAsset,
+            maker: order.order.maker,
+            receiver: order.order.receiver,
+            allowedSender: order.order.allowedSender,
+            interactions: order.order.interactions,
+            makingAmount: order.order.makingAmount,
+            takingAmount: order.order.takingAmount,
+            salt: order.order.salt,
+            offsets: order.order.offsets
+        })
     }
 
     private async getNonce(
