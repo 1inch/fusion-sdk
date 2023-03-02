@@ -8,18 +8,5 @@ import {LimitOrderV3Struct} from '../../limit-order'
 const limitOrderV3 = new Contract(LimitOrderV3ABI as AbiItem[])
 
 export function encodeCancelOrder(params: LimitOrderV3Struct): string {
-    return limitOrderV3.methods
-        .cancelOrder({
-            salt: params.salt,
-            makerAsset: params.makerAsset,
-            takerAsset: params.takerAsset,
-            maker: params.maker,
-            receiver: params.receiver,
-            allowedSender: params.allowedSender,
-            interactions: params.interactions,
-            makingAmount: params.makingAmount,
-            takingAmount: params.takingAmount,
-            offsets: params.offsets
-        })
-        .encodeABI()
+    return limitOrderV3.methods.cancelOrder(params).encodeABI()
 }
