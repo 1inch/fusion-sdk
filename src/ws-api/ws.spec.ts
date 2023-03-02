@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import {WebSocketApi} from './websocket-api'
+import {WebSocketApi} from './ws-api'
 import {WebSocketServer, WebSocket} from 'ws'
 import {
     OrderBalanceOrAllowanceChangeEvent,
@@ -9,7 +9,7 @@ import {
     OrderFilledPartiallyEvent,
     OrderInvalidEvent
 } from './types'
-import {NetworkEnum} from '../../constants'
+import {NetworkEnum} from '../constants'
 
 jest.setTimeout(5 * 60 * 1000)
 
@@ -88,11 +88,11 @@ describe(__filename, () => {
                 lazyInit: true
             })
 
-            expect(wsSdk.ws).toEqual(undefined)
+            expect(wsSdk.ws).toMatchObject({initialized: false})
 
             wsSdk.init()
 
-            expect(wsSdk.ws).toBeDefined()
+            expect(wsSdk.ws).toMatchObject({initialized: true})
 
             wsSdk.onMessage((data) => {
                 expect(data).toEqual(message)
@@ -132,7 +132,7 @@ describe(__filename, () => {
                 lazyInit: false
             })
 
-            expect(wsSdk.ws).toBeDefined()
+            expect(wsSdk).toBeDefined()
 
             wsSdk.onMessage((data) => {
                 expect(data).toEqual(message)
@@ -158,10 +158,10 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             wsSdk.onOpen(() => {
-                wsSdk.ping()
+                wsSdk.rpc.ping()
             })
 
-            wsSdk.onPong((data) => {
+            wsSdk.rpc.onPong((data) => {
                 expect(data).toEqual(response.result)
                 wsSdk.close()
                 wss.close()
@@ -185,10 +185,10 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             wsSdk.onOpen(() => {
-                wsSdk.getAllowedMethods()
+                wsSdk.rpc.getAllowedMethods()
             })
 
-            wsSdk.onGetAllowedMethods((data) => {
+            wsSdk.rpc.onGetAllowedMethods((data) => {
                 expect(data).toEqual(response.result)
                 wsSdk.close()
                 wss.close()
@@ -244,7 +244,7 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
-            wsSdk.onOrder((data) => {
+            wsSdk.order.onOrder((data) => {
                 resArray.push(data)
             })
 
@@ -305,7 +305,7 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
-            wsSdk.onOrderCreated((data) => {
+            wsSdk.order.onOrderCreated((data) => {
                 resArray.push(data)
             })
 
@@ -366,7 +366,7 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
-            wsSdk.onOrderInvalid((data) => {
+            wsSdk.order.onOrderInvalid((data) => {
                 resArray.push(data)
             })
 
@@ -430,7 +430,7 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
-            wsSdk.onOrderBalanceOrAllowanceChange((data) => {
+            wsSdk.order.onOrderBalanceOrAllowanceChange((data) => {
                 resArray.push(data)
             })
 
@@ -491,7 +491,7 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
-            wsSdk.onOrderFilled((data) => {
+            wsSdk.order.onOrderFilled((data) => {
                 resArray.push(data)
             })
 
@@ -553,7 +553,7 @@ describe(__filename, () => {
             const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
 
             const resArray: OrderEventType[] = []
-            wsSdk.onOrderFilledPartially((data) => {
+            wsSdk.order.onOrderFilledPartially((data) => {
                 resArray.push(data)
             })
 

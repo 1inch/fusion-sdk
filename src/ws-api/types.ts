@@ -1,21 +1,8 @@
-import {LimitOrderV3Struct} from '../../limit-order'
-import WebSocket from 'ws'
-import {NetworkEnum} from '../../constants'
-
-export type AnyFunction = (...args: any[]) => any
-
-export type AnyFunctionWithThis = (this: WebSocket, ...args: any[]) => void
+import {LimitOrderV3Struct} from '../limit-order'
+import {NetworkEnum} from '../constants'
+import {WsProviderConnector} from '../connector/ws'
 
 export type Event<K extends string, T> = {event: K; data: T}
-
-export type RpcEvent<T extends RpcMethod, K> = {method: T; result: K}
-
-export type RpcMethod = 'getAllowedMethods' | 'ping'
-
-export type RpcEventType = PingRpcEvent | GetAllowMethodsRpcEvent
-
-export type PingRpcEvent = RpcEvent<'ping', string>
-export type GetAllowMethodsRpcEvent = RpcEvent<'getAllowedMethods', RpcMethod[]>
 
 export type OrderEventType =
     | OrderCreatedEvent
@@ -61,8 +48,6 @@ export type OrderFilledPartiallyEvent = Event<
     {orderHash: string; remainingMakerAmount: string}
 >
 
-export type OnMessageCb = (data: any) => void
-
 export type OnOrderCb = (data: OrderEventType) => any
 
 export type OnOrderCreatedCb = (data: OrderCreatedEvent) => any
@@ -77,13 +62,32 @@ export type OnOrderFilledCb = (data: OrderFilledEvent) => any
 
 export type OnOrderFilledPartiallyCb = (data: OrderFilledPartiallyEvent) => any
 
-export type OnGetAllowedMethodsCb = (
-    data: GetAllowMethodsRpcEvent['result']
-) => any
-export type OnPongCb = (data: PingRpcEvent['result']) => any
-
 export type WsApiConfig = {
     network: NetworkEnum
     url: string
     lazyInit?: boolean
+    provider?: WsProviderConnector
 }
+
+export type WsApiConfigWithRequiredProvider = {
+    network: NetworkEnum
+    url: string
+    lazyInit?: boolean
+    provider: WsProviderConnector
+}
+
+export type RpcEvent<T extends RpcMethod, K> = {method: T; result: K}
+
+export type GetAllowMethodsRpcEvent = RpcEvent<'getAllowedMethods', RpcMethod[]>
+
+export type RpcMethod = 'getAllowedMethods' | 'ping'
+
+export type RpcEventType = PingRpcEvent | GetAllowMethodsRpcEvent
+
+export type PingRpcEvent = RpcEvent<'ping', string>
+
+export type OnPongCb = (data: PingRpcEvent['result']) => any
+
+export type OnGetAllowedMethodsCb = (
+    data: GetAllowMethodsRpcEvent['result']
+) => any
