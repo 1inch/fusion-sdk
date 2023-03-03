@@ -7,58 +7,78 @@ import {
 } from '../connector/ws'
 import {ActiveOrdersWebSocketApi} from './active-websocket-orders-api'
 import {RpcWebsocketApi} from './rpc-websocket-api'
-import {WsApiConfigWithProvider} from './types'
+import {WsApiConfigWithNetwork} from './types'
+import {castUrl} from './url'
 
 export class WebSocketApi {
-    public rpc: RpcWebsocketApi
+    public readonly rpc: RpcWebsocketApi
 
-    public order: ActiveOrdersWebSocketApi
+    public readonly order: ActiveOrdersWebSocketApi
 
-    private ws: WsProviderConnector
+    private readonly provider: WsProviderConnector
 
-    constructor(config: WsApiConfigWithProvider) {
-        const provider = config.provider || new WebsocketClient(config)
+    constructor(
+        configOrProvider: WsApiConfigWithNetwork | WsProviderConnector
+    ) {
+        if (configOrProvider instanceof WebsocketClient) {
+            this.provider = configOrProvider
+            this.rpc = new RpcWebsocketApi(configOrProvider)
+            this.order = new ActiveOrdersWebSocketApi(configOrProvider)
 
-        const configWithProvider = {...config, provider}
+            return
+        }
 
-        this.ws = provider
-        this.rpc = new RpcWebsocketApi(configWithProvider)
-        this.order = new ActiveOrdersWebSocketApi(configWithProvider)
+        const castedConfig = configOrProvider as WsApiConfigWithNetwork
+
+        const url = castUrl(castedConfig.url)
+        const urlWithNetwork = `${url}/v1.0/${castedConfig.network}`
+        const configWithUrl = {...castedConfig, url: urlWithNetwork}
+        const provider = new WebsocketClient(configWithUrl)
+
+        this.provider = provider
+        this.rpc = new RpcWebsocketApi(provider)
+        this.order = new ActiveOrdersWebSocketApi(provider)
+    }
+
+    static new(
+        configOrProvider: WsApiConfigWithNetwork | WsProviderConnector
+    ): WebSocketApi {
+        return new WebSocketApi(configOrProvider)
     }
 
     init(): void {
-        this.ws.init()
+        this.provider.init()
     }
 
     on(event: string, cb: AnyFunctionWithThis): void {
-        this.ws.on(event, cb)
+        this.provider.on(event, cb)
     }
 
     off(event: string, cb: AnyFunctionWithThis): void {
-        this.ws.off(event, cb)
+        this.provider.off(event, cb)
     }
 
     onOpen(cb: AnyFunctionWithThis): void {
-        this.ws.onOpen(cb)
+        this.provider.onOpen(cb)
     }
 
     send<T>(message: T): void {
-        this.ws.send(message)
+        this.provider.send(message)
     }
 
     close(): void {
-        this.ws.close()
+        this.provider.close()
     }
 
     onMessage(cb: OnMessageCb): void {
-        this.ws.onMessage(cb)
+        this.provider.onMessage(cb)
     }
 
     onClose(cb: AnyFunction): void {
-        this.ws.onClose(cb)
+        this.provider.onClose(cb)
     }
 
     onError(cb: AnyFunction): void {
-        this.ws.onError(cb)
+        this.provider.onError(cb)
     }
 }

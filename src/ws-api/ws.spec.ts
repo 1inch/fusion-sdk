@@ -10,6 +10,8 @@ import {
     OrderInvalidEvent
 } from './types'
 import {NetworkEnum} from '../constants'
+import {castUrl} from './url'
+import {WebsocketClient} from '../connector'
 
 jest.setTimeout(5 * 60 * 1000)
 
@@ -89,12 +91,12 @@ describe(__filename, () => {
             })
 
             // @ts-expect-error private property
-            expect(wsSdk.ws).toMatchObject({initialized: false})
+            expect(wsSdk.provider).toMatchObject({initialized: false})
 
             wsSdk.init()
 
             // @ts-expect-error private property
-            expect(wsSdk.ws).toMatchObject({initialized: true})
+            expect(wsSdk.provider).toMatchObject({initialized: true})
 
             wsSdk.onMessage((data) => {
                 expect(data).toEqual(message)
@@ -133,6 +135,72 @@ describe(__filename, () => {
                 network: NetworkEnum.ETHEREUM,
                 lazyInit: false
             })
+
+            expect(wsSdk).toBeDefined()
+
+            wsSdk.onMessage((data) => {
+                expect(data).toEqual(message)
+
+                wsSdk.close()
+                wss.close()
+                done()
+            })
+        })
+
+        it('should be possible to pass provider instead of config', (done) => {
+            const message = {id: 1}
+            const port = 8080
+
+            const url = `ws://localhost:${port}/ws`
+            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+
+            wss.on('connection', (ws) => {
+                for (const m of [message]) {
+                    ws.send(JSON.stringify(m))
+                }
+            })
+
+            const castedUrl = castUrl(url)
+            const urlWithNetwork = `${castedUrl}/v1.0/1`
+            const provider = new WebsocketClient({url: urlWithNetwork})
+
+            const wsSdk = new WebSocketApi(provider)
+
+            expect(wsSdk.rpc).toBeDefined()
+            expect(wsSdk.order).toBeDefined()
+
+            expect(wsSdk).toBeDefined()
+
+            wsSdk.onMessage((data) => {
+                expect(data).toEqual(message)
+
+                wsSdk.close()
+                wss.close()
+                done()
+            })
+        })
+
+        it('should be possible to initialize with new method', (done) => {
+            const message = {id: 1}
+            const port = 8080
+
+            const url = `ws://localhost:${port}/ws`
+            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+
+            wss.on('connection', (ws) => {
+                for (const m of [message]) {
+                    ws.send(JSON.stringify(m))
+                }
+            })
+
+            const castedUrl = castUrl(url)
+            const urlWithNetwork = `${castedUrl}/v1.0/1`
+            const provider = new WebsocketClient({url: urlWithNetwork})
+
+            const wsSdk = WebSocketApi.new(provider)
+
+            expect(wsSdk.rpc).toBeDefined()
+            expect(wsSdk.order).toBeDefined()
 
             expect(wsSdk).toBeDefined()
 

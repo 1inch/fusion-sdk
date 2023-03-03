@@ -8,15 +8,14 @@ import {
 import {WsProviderConnector} from './websocket-provider.connector'
 
 export class WebsocketClient implements WsProviderConnector {
-    public ws!: WebSocket
+    public readonly ws!: WebSocket
 
-    public url: string
+    private readonly url: string
 
-    private initialized: boolean
+    private readonly initialized: boolean
 
     constructor(config: WsApiConfig) {
-        const castedUrl = castUrl(config.url)
-        this.url = `${castedUrl}/v1.0/${config.network}`
+        this.url = config.url
 
         const lazyInit = config.lazyInit || false
 
@@ -35,7 +34,9 @@ export class WebsocketClient implements WsProviderConnector {
             throw new Error('WebSocket is already initialized')
         }
 
+        // @ts-expect-error hack for readonly property
         this.initialized = true
+        // @ts-expect-error hack for readonly property
         this.ws = new WebSocket(this.url)
     }
 
@@ -85,14 +86,6 @@ export class WebsocketClient implements WsProviderConnector {
             throwInitError()
         }
     }
-}
-
-function castUrl(url: string): string {
-    if (url.startsWith('http')) {
-        return url.replace('http', 'ws')
-    }
-
-    return url
 }
 
 function throwInitError(): void {

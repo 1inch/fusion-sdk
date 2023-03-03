@@ -1,20 +1,15 @@
 import {WsProviderConnector} from '../connector/ws'
-import {
-    OnGetAllowedMethodsCb,
-    OnPongCb,
-    RpcEventType,
-    WsApiConfigWithRequiredProvider
-} from './types'
+import {OnGetAllowedMethodsCb, OnPongCb, RpcEventType} from './types'
 
 export class RpcWebsocketApi {
-    ws!: WsProviderConnector
+    public readonly provider: WsProviderConnector
 
-    constructor(config: WsApiConfigWithRequiredProvider) {
-        this.ws = config.provider
+    constructor(provider: WsProviderConnector) {
+        this.provider = provider
     }
 
     onPong(cb: OnPongCb): void {
-        this.ws.onMessage((data: RpcEventType) => {
+        this.provider.onMessage((data: RpcEventType) => {
             if (data.method === 'ping') {
                 cb(data.result)
             }
@@ -22,15 +17,15 @@ export class RpcWebsocketApi {
     }
 
     ping(): void {
-        this.ws.send({method: 'ping'})
+        this.provider.send({method: 'ping'})
     }
 
     getAllowedMethods(): void {
-        this.ws.send({method: 'getAllowedMethods'})
+        this.provider.send({method: 'getAllowedMethods'})
     }
 
     onGetAllowedMethods(cb: OnGetAllowedMethodsCb): void {
-        this.ws.onMessage((data: RpcEventType) => {
+        this.provider.onMessage((data: RpcEventType) => {
             if (data.method === 'getAllowedMethods') {
                 cb(data.result)
             }

@@ -7,19 +7,18 @@ import {
     OnOrderFilledPartiallyCb,
     OnOrderInvalidCb,
     OnOrderNotEnoughBalanceOrAllowanceCb,
-    OrderEventType,
-    WsApiConfigWithRequiredProvider
+    OrderEventType
 } from './types'
 
 export class ActiveOrdersWebSocketApi {
-    ws!: WsProviderConnector
+    public readonly provider!: WsProviderConnector
 
-    constructor(config: WsApiConfigWithRequiredProvider) {
-        this.ws = config.provider
+    constructor(provider: WsProviderConnector) {
+        this.provider = provider
     }
 
     onOrder(cb: OnOrderCb): void {
-        this.ws.onMessage((data: OrderEventType) => {
+        this.provider.onMessage((data: OrderEventType) => {
             if (orderEvents.includes(data.event)) {
                 cb(data)
             }
@@ -27,7 +26,7 @@ export class ActiveOrdersWebSocketApi {
     }
 
     onOrderCreated(cb: OnOrderCreatedCb): void {
-        this.ws.onMessage((data: OrderEventType) => {
+        this.provider.onMessage((data: OrderEventType) => {
             if (data.event === 'order_created') {
                 cb(data)
             }
@@ -35,7 +34,7 @@ export class ActiveOrdersWebSocketApi {
     }
 
     onOrderInvalid(cb: OnOrderInvalidCb): void {
-        this.ws.onMessage((data: OrderEventType) => {
+        this.provider.onMessage((data: OrderEventType) => {
             if (data.event === 'order_invalid') {
                 cb(data)
             }
@@ -45,7 +44,7 @@ export class ActiveOrdersWebSocketApi {
     onOrderBalanceOrAllowanceChange(
         cb: OnOrderNotEnoughBalanceOrAllowanceCb
     ): void {
-        this.ws.onMessage((data: OrderEventType) => {
+        this.provider.onMessage((data: OrderEventType) => {
             if (data.event === 'order_balance_or_allowance_change') {
                 cb(data)
             }
@@ -53,7 +52,7 @@ export class ActiveOrdersWebSocketApi {
     }
 
     onOrderFilled(cb: OnOrderFilledCb): void {
-        this.ws.onMessage((data: OrderEventType) => {
+        this.provider.onMessage((data: OrderEventType) => {
             if (data.event === 'order_filled') {
                 cb(data)
             }
@@ -61,7 +60,7 @@ export class ActiveOrdersWebSocketApi {
     }
 
     onOrderFilledPartially(cb: OnOrderFilledPartiallyCb): void {
-        this.ws.onMessage((data: OrderEventType) => {
+        this.provider.onMessage((data: OrderEventType) => {
             if (data.event === 'order_filled_partially') {
                 cb(data)
             }
