@@ -7,18 +7,14 @@
 ```typescript
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
-async function main() {
-    const ws = new WebSocketApi({
-        url: 'wss://fusion.1inch.io/ws',
-        network: NetworkEnum.ETHEREUM
-    })
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
 
-    wsSdk.order.onOrder((data) => {
-        console.log('received order event', data)
-    })
-}
-
-main()
+wsSdk.order.onOrder((data) => {
+    console.log('received order event', data)
+})
 ```
 
 ## Creation
@@ -78,3 +74,209 @@ const ws = new WebSocketApi({
 ws.init()
 ```
 
+## Methods
+
+**Base methods**
+
+### on
+
+**Description**: You can subscribe to any event
+
+**Arguments**:
+
+-   [0] event: string
+-   [1] cb: Function
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.on('error', console.error)
+
+ws.on('open', function open() {
+    ws.send('something')
+})
+
+ws.on('message', function message(data) {
+    console.log('received: %s', data)
+})
+```
+
+### off
+
+**Description**: You can unsubscribe from any event
+
+**Arguments**:
+
+-   [0] event: string
+-   [1] си: Function
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.on('error', console.error)
+
+ws.on('open', function open() {
+    ws.send('something')
+})
+
+function message(data) {
+    console.log('received: %s', data)
+}
+
+ws.on('message', message)
+
+ws.off('message', message)
+```
+
+### onOpen
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.onOpen(() => {
+    console.log('connection is opened')
+})
+```
+
+### send
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.send('my message')
+```
+
+### close
+
+Closes connection
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.close()
+```
+
+### onMessage
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.onMessage((data) => {
+    console.log('message received', data)
+})
+```
+
+### onClose
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.onClose(() => {
+    console.log('connection is closed')
+})
+```
+
+### onError
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.onError((error) => {
+    console.log('error is received', error)
+})
+```
+
+**Order namespace**
+
+### onOrder
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.order.onOrder((error) => {
+    console.log('error is received', error)
+})
+```
+
+### onOrderCreated
+
+### onOrderInvalid
+
+### onOrderBalanceOrAllowanceChange
+
+### onOrderFilled
+
+### onOrderFilledPartially
+
+**Rpc namespace**
+
+### onPong
+
+### ping
+
+### getAllowedMethods
+
+### onGetAllowedMethods
