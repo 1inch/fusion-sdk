@@ -15,7 +15,7 @@ export class WebSocketApi {
 
     public readonly order: ActiveOrdersWebSocketApi
 
-    private readonly provider: WsProviderConnector
+    public readonly provider: WsProviderConnector
 
     constructor(
         configOrProvider: WsApiConfigWithNetwork | WsProviderConnector

@@ -90,12 +90,10 @@ describe(__filename, () => {
                 lazyInit: true
             })
 
-            // @ts-expect-error private property
             expect(wsSdk.provider).toMatchObject({initialized: false})
 
             wsSdk.init()
 
-            // @ts-expect-error private property
             expect(wsSdk.provider).toMatchObject({initialized: true})
 
             wsSdk.onMessage((data) => {
