@@ -144,6 +144,12 @@ ws.off('message', message)
 
 ### onOpen
 
+**Description**: subscribe to open event
+
+**Arguments**:
+
+-   [0] cb: Function
+
 **Example:**
 
 ```typescript
@@ -161,6 +167,12 @@ ws.onOpen(() => {
 
 ### send
 
+**Description**: send event to backend
+
+**Arguments**:
+
+-   [0] message: any message which can be serialized with JSON.stringify
+
 **Example:**
 
 ```typescript
@@ -176,7 +188,7 @@ ws.send('my message')
 
 ### close
 
-Closes connection
+**Description**: close connection
 
 **Example:**
 
@@ -192,6 +204,12 @@ ws.close()
 ```
 
 ### onMessage
+
+**Description**: subscribe to message event
+
+**Arguments**:
+
+-   [0] cb: (data: any) => void
 
 **Example:**
 
@@ -210,6 +228,8 @@ ws.onMessage((data) => {
 
 ### onClose
 
+**Description**: subscribe to close event
+
 **Example:**
 
 ```typescript
@@ -226,6 +246,12 @@ ws.onClose(() => {
 ```
 
 ### onError
+
+**Description**: subscribe to error event
+
+**Arguments**:
+
+-   [0] cb: (error: any) => void
 
 **Example:**
 
