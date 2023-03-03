@@ -256,27 +256,163 @@ const ws = new WebSocketApi({
     network: NetworkEnum.ETHEREUM
 })
 
-ws.order.onOrder((error) => {
-    console.log('error is received', error)
+ws.order.onOrder((data) => {
+    if (data.event === 'order_created') {
+        // do something
+    } 
+    if (data.event === 'order_invalid')  {
+        // do something
+    }
 })
 ```
 
 ### onOrderCreated
 
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.order.onOrderCreated((data) => {
+    // do something
+})
+```
+
 ### onOrderInvalid
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.order.onOrderInvalid((data) => {
+    // do something
+})
+```
 
 ### onOrderBalanceOrAllowanceChange
 
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.order.onOrderBalanceOrAllowanceChange((data) => {
+    // do something
+})
+```
+
 ### onOrderFilled
 
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.order.onOrderFilled((data) => {
+    // do something
+})
+```
+
 ### onOrderFilledPartially
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.order.onOrderFilledPartially((data) => {
+    // do something
+})
+```
 
 **Rpc namespace**
 
 ### onPong
 
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.rpc.onPong((data) => {
+    // do something
+})
+```
+
 ### ping
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.rpc.ping()
+```
 
 ### getAllowedMethods
 
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.rpc.getAllowedMethods()
+```
+
 ### onGetAllowedMethods
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.rpc.onGetAllowedMethods((data) => {
+    // do something
+})
+```
