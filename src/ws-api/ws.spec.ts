@@ -210,6 +210,22 @@ describe(__filename, () => {
                 done()
             })
         })
+
+        it('connection can be closed and you can listen to close event', (done) => {
+            const message = {id: 1}
+            const {wss, url} = createWebsocketServerMock([message])
+
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
+
+            wsSdk.onClose(() => {
+                wss.close()
+                done()
+            })
+
+            wsSdk.onOpen(() => {
+                wsSdk.close()
+            })
+        })
     })
 
     describe('rpc', () => {
