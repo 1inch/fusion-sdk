@@ -13,6 +13,9 @@ import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData, PredicateParams} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
+import {TakingFeeInfo} from '../../../sdk'
+import {BigNumber} from '@ethersproject/bignumber'
+import {BPS_FEE_POINTS} from './constants'
 
 export class Quote {
     public readonly fromTokenAmount: string
@@ -47,7 +50,10 @@ export class Quote {
             [PresetEnum.medium]: new Preset(response.presets.medium),
             [PresetEnum.slow]: new Preset(response.presets.slow)
         }
-        this.toTokenAmount = response.toTokenAmount
+        this.toTokenAmount = this.applyFeeIfNeeded(
+            response.toTokenAmount,
+            params.fee
+        )
         this.prices = response.prices
         this.volume = response.volume
         this.quoteId = response.quoteId
@@ -117,6 +123,17 @@ export class Quote {
 
     getPreset(type = PresetEnum.fast): Preset {
         return this.presets[type]
+    }
+
+    applyFeeIfNeeded(estimateAmount: string, fee?: TakingFeeInfo): string {
+        if (!fee) {
+            return estimateAmount
+        }
+
+        return BigNumber.from(estimateAmount)
+            .mul(BPS_FEE_POINTS - +fee.takingFeeRatio)
+            .div(BPS_FEE_POINTS)
+            .toString()
     }
 
     private handlePredicate(params: PredicateParams): string {

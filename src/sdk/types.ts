@@ -17,6 +17,7 @@ export type QuoteParams = {
     toTokenAddress: string
     amount: string
     permit?: string
+    fee?: TakingFeeInfo
 }
 
 export type OrderParams = {
