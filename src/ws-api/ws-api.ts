@@ -20,24 +20,22 @@ export class WebSocketApi {
     constructor(
         configOrProvider: WsApiConfigWithNetwork | WsProviderConnector
     ) {
-        if (configOrProvider instanceof WebsocketClient) {
-            this.provider = configOrProvider
-            this.rpc = new RpcWebsocketApi(configOrProvider)
-            this.order = new ActiveOrdersWebSocketApi(configOrProvider)
+        if (instanceOfWsApiConfigWithNetwork(configOrProvider)) {
+            const url = castUrl(configOrProvider.url)
+            const urlWithNetwork = `${url}/v1.0/${configOrProvider.network}`
+            const configWithUrl = {...configOrProvider, url: urlWithNetwork}
+            const provider = new WebsocketClient(configWithUrl)
+
+            this.provider = provider
+            this.rpc = new RpcWebsocketApi(provider)
+            this.order = new ActiveOrdersWebSocketApi(provider)
 
             return
         }
 
-        const castedConfig = configOrProvider as WsApiConfigWithNetwork
-
-        const url = castUrl(castedConfig.url)
-        const urlWithNetwork = `${url}/v1.0/${castedConfig.network}`
-        const configWithUrl = {...castedConfig, url: urlWithNetwork}
-        const provider = new WebsocketClient(configWithUrl)
-
-        this.provider = provider
-        this.rpc = new RpcWebsocketApi(provider)
-        this.order = new ActiveOrdersWebSocketApi(provider)
+        this.provider = configOrProvider
+        this.rpc = new RpcWebsocketApi(configOrProvider)
+        this.order = new ActiveOrdersWebSocketApi(configOrProvider)
     }
 
     static new(
@@ -81,4 +79,10 @@ export class WebSocketApi {
     onError(cb: AnyFunction): void {
         this.provider.onError(cb)
     }
+}
+
+function instanceOfWsApiConfigWithNetwork(
+    val: WsApiConfigWithNetwork | WsProviderConnector
+): val is WsApiConfigWithNetwork {
+    return 'url' in val && 'network' in val
 }
