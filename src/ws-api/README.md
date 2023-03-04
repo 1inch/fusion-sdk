@@ -115,7 +115,7 @@ ws.on('message', function message(data) {
 **Arguments**:
 
 -   [0] event: string
--   [1] си: Function
+-   [1] сb: Function
 
 **Example:**
 
@@ -272,6 +272,12 @@ ws.onError((error) => {
 
 ### onOrder
 
+**Description:** subscribe to order events
+
+**Arguments:**
+
+- [0] cb: (data: OrderEventType) => void
+
 **Example:**
 
 ```typescript
@@ -294,6 +300,12 @@ ws.order.onOrder((data) => {
 
 ### onOrderCreated
 
+**Description:** subscribe to order_created events
+
+**Arguments:**
+
+- [0] cb: (data: OrderCreatedEvent) => void
+
 **Example:**
 
 ```typescript
@@ -310,6 +322,12 @@ ws.order.onOrderCreated((data) => {
 ```
 
 ### onOrderInvalid
+
+**Description:** subscribe to order_invalid events
+
+**Arguments:**
+
+- [0] cb: (data: OrderInvalidEvent) => void
 
 **Example:**
 
@@ -328,6 +346,12 @@ ws.order.onOrderInvalid((data) => {
 
 ### onOrderBalanceOrAllowanceChange
 
+**Description:** subscribe to order_balance_or_allowance_change events
+
+**Arguments:**
+
+- [0] cb: (data: OrderBalanceOrAllowanceChangeEvent) => void
+
 **Example:**
 
 ```typescript
@@ -345,6 +369,12 @@ ws.order.onOrderBalanceOrAllowanceChange((data) => {
 
 ### onOrderFilled
 
+**Description:** subscribe to order_filled events
+
+**Arguments:**
+
+- [0] cb: (data: OrderFilledEvent) => void
+
 **Example:**
 
 ```typescript
@@ -361,6 +391,12 @@ ws.order.onOrderFilled((data) => {
 ```
 
 ### onOrderFilledPartially
+
+**Description:** subscribe to order_filled_partially events
+
+**Arguments:**
+
+- [0] cb: (data: OrderFilledPartiallyEvent) => void
 
 **Example:**
 
@@ -381,6 +417,12 @@ ws.order.onOrderFilledPartially((data) => {
 
 ### onPong
 
+**Description:** subscribe to ping response
+
+**Arguments:**
+
+- [0] cb: (data: string) => void
+
 **Example:**
 
 ```typescript
@@ -398,6 +440,8 @@ ws.rpc.onPong((data) => {
 
 ### ping
 
+**Description:** ping healthcheck
+
 **Example:**
 
 ```typescript
@@ -412,6 +456,8 @@ ws.rpc.ping()
 ```
 
 ### getAllowedMethods
+
+**Description:** get the list of allowed methods
 
 **Example:**
 
@@ -428,6 +474,12 @@ ws.rpc.getAllowedMethods()
 
 ### onGetAllowedMethods
 
+**Description:** subscribe to get allowed methods response
+
+**Arguments:**
+
+- [0] cb: (data: RpcMethod[]) => void
+
 **Example:**
 
 ```typescript
@@ -442,3 +494,63 @@ ws.rpc.onGetAllowedMethods((data) => {
     // do something
 })
 ```
+
+## Types
+
+### OrderEventType
+
+```typescript
+type Event<K extends string, T> = {event: K; data: T}
+
+type OrderEventType =
+    | OrderCreatedEvent
+    | OrderInvalidEvent
+    | OrderBalanceOrAllowanceChangeEvent
+    | OrderFilledEvent
+    | OrderFilledPartiallyEvent
+
+type OrderCreatedEvent = Event<
+    'order_created',
+    {
+        orderHash: string
+        signature: string
+        order: LimitOrderV3Struct
+        deadline: string
+        auctionStartDate: string
+        auctionEndDate: string
+        remainingMakerAmount: string
+    }
+>
+
+type OrderBalanceOrAllowanceChangeEvent = Event<
+    'order_balance_or_allowance_change',
+    {
+        orderHash: string
+        remainingMakerAmount: string
+        balance: string
+        allowance: string
+    }
+>
+
+type OrderInvalidEvent = Event<
+    'order_invalid',
+    {
+        orderHash: string
+    }
+>
+
+type OrderFilledEvent = Event<'order_filled', {orderHash: string}>
+
+type OrderFilledPartiallyEvent = Event<
+    'order_filled_partially',
+    {orderHash: string; remainingMakerAmount: string}
+>
+```
+
+### RpcMethod
+
+```typescript
+type RpcMethod = 'getAllowedMethods' | 'ping'
+```
+
+
