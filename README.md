@@ -21,6 +21,7 @@ yarn add @1inch/fusion-sdk
 -   [auction-suffix](src/auction-suffix/README.md)
 -   [fusion-order](src/fusion-order/README.md)
 -   [sdk](src/sdk/README.md)
+-   [ws-api](src/ws-api/README.md)
 
 ## How to swap with Fusion Mode
 
