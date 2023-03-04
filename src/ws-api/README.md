@@ -276,7 +276,7 @@ ws.onError((error) => {
 
 **Arguments:**
 
-- [0] cb: (data: OrderEventType) => void
+-   [0] cb: (data: OrderEventType) => void
 
 **Example:**
 
@@ -291,8 +291,8 @@ const ws = new WebSocketApi({
 ws.order.onOrder((data) => {
     if (data.event === 'order_created') {
         // do something
-    } 
-    if (data.event === 'order_invalid')  {
+    }
+    if (data.event === 'order_invalid') {
         // do something
     }
 })
@@ -304,7 +304,7 @@ ws.order.onOrder((data) => {
 
 **Arguments:**
 
-- [0] cb: (data: OrderCreatedEvent) => void
+-   [0] cb: (data: OrderCreatedEvent) => void
 
 **Example:**
 
@@ -327,7 +327,7 @@ ws.order.onOrderCreated((data) => {
 
 **Arguments:**
 
-- [0] cb: (data: OrderInvalidEvent) => void
+-   [0] cb: (data: OrderInvalidEvent) => void
 
 **Example:**
 
@@ -350,7 +350,7 @@ ws.order.onOrderInvalid((data) => {
 
 **Arguments:**
 
-- [0] cb: (data: OrderBalanceOrAllowanceChangeEvent) => void
+-   [0] cb: (data: OrderBalanceOrAllowanceChangeEvent) => void
 
 **Example:**
 
@@ -373,7 +373,7 @@ ws.order.onOrderBalanceOrAllowanceChange((data) => {
 
 **Arguments:**
 
-- [0] cb: (data: OrderFilledEvent) => void
+-   [0] cb: (data: OrderFilledEvent) => void
 
 **Example:**
 
@@ -396,7 +396,7 @@ ws.order.onOrderFilled((data) => {
 
 **Arguments:**
 
-- [0] cb: (data: OrderFilledPartiallyEvent) => void
+-   [0] cb: (data: OrderFilledPartiallyEvent) => void
 
 **Example:**
 
@@ -421,7 +421,7 @@ ws.order.onOrderFilledPartially((data) => {
 
 **Arguments:**
 
-- [0] cb: (data: string) => void
+-   [0] cb: (data: string) => void
 
 **Example:**
 
@@ -478,7 +478,7 @@ ws.rpc.getAllowedMethods()
 
 **Arguments:**
 
-- [0] cb: (data: RpcMethod[]) => void
+-   [0] cb: (data: RpcMethod[]) => void
 
 **Example:**
 
@@ -552,5 +552,3 @@ type OrderFilledPartiallyEvent = Event<
 ```typescript
 type RpcMethod = 'getAllowedMethods' | 'ping'
 ```
-
-
