@@ -2,6 +2,7 @@
 import {WebSocketApi} from './ws-api'
 import {WebSocketServer, WebSocket} from 'ws'
 import {
+    GetActiveOrdersRpcEvent,
     OrderBalanceOrAllowanceChangeEvent,
     OrderCreatedEvent,
     OrderEventType,
@@ -277,6 +278,75 @@ describe(__filename, () => {
                 wsSdk.close()
                 wss.close()
                 done()
+            })
+        })
+
+        it('getActiveOrders success', (done) => {
+            const response: GetActiveOrdersRpcEvent = {
+                method: 'getActiveOrders',
+                result: {
+                    items: [],
+                    meta: {
+                        totalItems: 0,
+                        totalPages: 0,
+                        itemsPerPage: 0,
+                        currentPage: 0
+                    }
+                }
+            }
+            const {url, wss} = createWebsocketRpcServerMock((ws, data) => {
+                const parsedData = JSON.parse(data)
+
+                if (parsedData.method === 'getActiveOrders') {
+                    ws.send(JSON.stringify(response))
+                }
+            })
+
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
+
+            wsSdk.onOpen(() => {
+                wsSdk.rpc.getActiveOrders()
+            })
+
+            wsSdk.rpc.onGetActiveOrders((data) => {
+                expect(data).toEqual(response.result)
+                wsSdk.close()
+                wss.close()
+                done()
+            })
+        })
+
+        it('getActiveOrders throws error', (done) => {
+            const response: GetActiveOrdersRpcEvent = {
+                method: 'getActiveOrders',
+                result: {
+                    items: [],
+                    meta: {
+                        totalItems: 0,
+                        totalPages: 0,
+                        itemsPerPage: 0,
+                        currentPage: 0
+                    }
+                }
+            }
+            const {url, wss} = createWebsocketRpcServerMock((ws, data) => {
+                const parsedData = JSON.parse(data)
+
+                if (parsedData.method === 'getActiveOrders') {
+                    ws.send(JSON.stringify(response))
+                }
+            })
+
+            const wsSdk = new WebSocketApi({url, network: NetworkEnum.ETHEREUM})
+
+            wsSdk.onOpen(() => {
+                try {
+                    wsSdk.rpc.getActiveOrders({page: -1})
+                } catch (error) {
+                    wsSdk.close()
+                    wss.close()
+                    done()
+                }
             })
         })
     })

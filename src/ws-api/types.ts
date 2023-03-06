@@ -1,6 +1,8 @@
 import {LimitOrderV3Struct} from '../limit-order'
 import {NetworkEnum} from '../constants'
 import {WsApiConfig} from '../connector/ws'
+import {PaginationOutput} from '../api/types'
+import {ActiveOrder} from '../api/orders'
 
 export type Event<K extends string, T> = {event: K; data: T}
 
@@ -70,14 +72,26 @@ export type RpcEvent<T extends RpcMethod, K> = {method: T; result: K}
 
 export type GetAllowMethodsRpcEvent = RpcEvent<'getAllowedMethods', RpcMethod[]>
 
-export type RpcMethod = 'getAllowedMethods' | 'ping'
+export type RpcMethod = 'getAllowedMethods' | 'ping' | 'getActiveOrders'
 
-export type RpcEventType = PingRpcEvent | GetAllowMethodsRpcEvent
+export type RpcEventType =
+    | PingRpcEvent
+    | GetAllowMethodsRpcEvent
+    | GetActiveOrdersRpcEvent
 
 export type PingRpcEvent = RpcEvent<'ping', string>
+
+export type GetActiveOrdersRpcEvent = RpcEvent<
+    'getActiveOrders',
+    PaginationOutput<ActiveOrder>
+>
 
 export type OnPongCb = (data: PingRpcEvent['result']) => any
 
 export type OnGetAllowedMethodsCb = (
     data: GetAllowMethodsRpcEvent['result']
+) => any
+
+export type OnGetActiveOrdersCb = (
+    data: GetActiveOrdersRpcEvent['result']
 ) => any

@@ -1,5 +1,11 @@
+import {PaginationParams, PaginationRequest} from '../api/pagination'
 import {WsProviderConnector} from '../connector/ws'
-import {OnGetAllowedMethodsCb, OnPongCb, RpcEventType} from './types'
+import {
+    OnGetActiveOrdersCb,
+    OnGetAllowedMethodsCb,
+    OnPongCb,
+    RpcEventType
+} from './types'
 
 export class RpcWebsocketApi {
     public readonly provider: WsProviderConnector
@@ -18,6 +24,25 @@ export class RpcWebsocketApi {
 
     ping(): void {
         this.provider.send({method: 'ping'})
+    }
+
+    getActiveOrders({limit, page}: PaginationParams = {}): void {
+        const paginationRequest = new PaginationRequest(page, limit)
+        const err = paginationRequest.validate()
+
+        if (err) {
+            throw new Error(err)
+        }
+
+        this.provider.send({method: 'getActiveOrders', param: {limit, page}})
+    }
+
+    onGetActiveOrders(cb: OnGetActiveOrdersCb): void {
+        this.provider.onMessage((data: RpcEventType) => {
+            if (data.method === 'getActiveOrders') {
+                cb(data.result)
+            }
+        })
     }
 
     getAllowedMethods(): void {
