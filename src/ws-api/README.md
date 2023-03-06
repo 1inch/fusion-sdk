@@ -518,7 +518,7 @@ ws.rpc.getActiveOrders()
 
 **Arguments:**
 
--   [0] cb: (data: PaginationOutput<ActiveOrder>) => void
+-   [0] cb: (data: PaginationOutput\<ActiveOrder\>) => void
 
 **Example:**
 
