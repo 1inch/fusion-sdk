@@ -535,7 +535,6 @@ ws.rpc.onGetActiveOrders((data) => {
 })
 ```
 
-
 ## Types
 
 ### OrderEventType
