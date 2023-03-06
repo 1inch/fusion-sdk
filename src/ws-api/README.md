@@ -495,6 +495,47 @@ ws.rpc.onGetAllowedMethods((data) => {
 })
 ```
 
+### getActiveOrders
+
+**Description:** get the list of active orders
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.rpc.getActiveOrders()
+```
+
+### onGetActiveOrders
+
+**Description:** subscribe to get active orders events
+
+**Arguments:**
+
+-   [0] cb: (data: PaginationOutput<ActiveOrder>) => void
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://fusion.1inch.io/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.rpc.onGetActiveOrders((data) => {
+    // do something
+})
+```
+
+
 ## Types
 
 ### OrderEventType
