@@ -1,7 +1,8 @@
 import {toSec} from '../utils'
 import {AuctionPoint, AuctionWhitelistItem, SettlementSuffixData} from './types'
-import {ZERO_ADDRESS} from '../constants'
+import {ZERO_ADDRESS, ZERO_NUMBER} from '../constants'
 import {
+    bpsToRatioFormat,
     encodeAuctionParams,
     encodeFlags,
     encodePublicResolvingDeadline,
@@ -29,8 +30,8 @@ export class AuctionSuffix {
         this.publicResolvingDeadline =
             suffix.publicResolvingDeadline || toSec(NoPublicResolvingDeadline)
 
-        this.takerFeeReceiver = suffix.takerFeeReceiver || ZERO_ADDRESS
-        this.takerFeeRatio = suffix.takerFeeRatio || '0'
+        this.takerFeeReceiver = suffix?.fee?.takingFeeReceiver || ZERO_ADDRESS
+        this.takerFeeRatio = suffix?.fee?.takingFeeRatio || ZERO_NUMBER
     }
 
     static decode(interactions: string): AuctionSuffix {
@@ -39,8 +40,10 @@ export class AuctionSuffix {
         return new AuctionSuffix({
             publicResolvingDeadline: suffix.publicResolvingDeadline,
             points: suffix.points,
-            takerFeeRatio: suffix.takerFeeRatio,
-            takerFeeReceiver: suffix.takerFeeReceiver,
+            fee: {
+                takingFeeReceiver: suffix.takerFeeReceiver,
+                takingFeeRatio: suffix.takerFeeRatio
+            },
             whitelist: suffix.whitelist
         })
     }
@@ -56,7 +59,7 @@ export class AuctionSuffix {
 
         const takingFeeData = encodeTakingFeeData(
             this.takerFeeReceiver,
-            this.takerFeeRatio
+            bpsToRatioFormat(this.takerFeeRatio) // we receive in bps format, 100 bps is 1%
         )
 
         const flags = encodeFlags(this.whitelist, this.points, takingFeeData)

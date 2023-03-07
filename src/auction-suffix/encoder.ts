@@ -1,7 +1,7 @@
 import {BigNumber} from '@ethersproject/bignumber'
 import {trim0x} from '../utils'
 import {AuctionPoint, AuctionWhitelistItem} from './types'
-import {ZERO_ADDRESS} from '../constants'
+import {BPS_POINTS, ZERO_ADDRESS, ZERO_NUMBER} from '../constants'
 
 export function encodeAuctionParams(points: AuctionPoint[]): string {
     return points
@@ -27,10 +27,10 @@ export function encodePublicResolvingDeadline(deadline: number): string {
 }
 
 export function encodeTakingFeeData(
-    takerFeeReceiver: string,
-    takerFeeRatio: string
+    takerFeeReceiver: string = ZERO_ADDRESS,
+    takerFeeRatio: string = ZERO_NUMBER
 ): string {
-    if (takerFeeReceiver === ZERO_ADDRESS || takerFeeRatio === '0') {
+    if (takerFeeReceiver === ZERO_ADDRESS || takerFeeRatio === ZERO_NUMBER) {
         return ''
     }
 
@@ -40,6 +40,10 @@ export function encodeTakingFeeData(
             .substring(2)
             .padStart(24, '0') + trim0x(takerFeeReceiver)
     )
+}
+
+export function bpsToRatioFormat(bps: string): string {
+    return BigNumber.from(bps).mul(BPS_POINTS).toString() // convert bps to percentage
 }
 
 export function encodeFlags(

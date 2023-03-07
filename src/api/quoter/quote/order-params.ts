@@ -1,6 +1,7 @@
 import {PresetEnum} from '../types'
 import {ZERO_ADDRESS} from '../../../constants'
 import {FusionOrderParamsData} from './types'
+import {TakingFeeInfo} from '../../../sdk'
 
 export class FusionOrderParams {
     public readonly preset: PresetEnum = PresetEnum.fast
@@ -8,6 +9,8 @@ export class FusionOrderParams {
     public readonly receiver: string = ZERO_ADDRESS
 
     public readonly permit: string | undefined
+
+    public readonly fee: TakingFeeInfo | undefined
 
     public readonly nonce: number | string | undefined
 
@@ -23,6 +26,8 @@ export class FusionOrderParams {
         this.nonce = params.nonce
 
         this.permit = params.permit
+
+        this.fee = params.fee
     }
 
     static new(params?: FusionOrderParamsData): FusionOrderParams {
