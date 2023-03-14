@@ -137,7 +137,7 @@ export class Quote {
         }
 
         return InteractionsFactory.unwrap(
-            WRAPPER_ADDRESS_MAP[this.network],
+            UNWRAPPER_CONTRACT_ADDRESS_MAP[this.network],
             receiver || this.params.walletAddress
         )
     }
