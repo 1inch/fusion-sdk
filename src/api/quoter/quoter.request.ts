@@ -2,7 +2,6 @@ import {QuoterRequestParams} from './types'
 import {isNativeCurrency} from '../../utils'
 import {NATIVE_CURRENCY, ZERO_ADDRESS} from '../../constants'
 import {isValidAddress, isValidAmount} from '../../validations'
-import {TakingFeeInfo} from '../../sdk'
 
 export class QuoterRequest {
     public readonly fromTokenAddress: string
@@ -17,8 +16,6 @@ export class QuoterRequest {
 
     public readonly permit: string | undefined
 
-    public readonly fee: TakingFeeInfo | undefined
-
     constructor(params: QuoterRequestParams) {
         this.fromTokenAddress = params.fromTokenAddress.toLowerCase()
         this.toTokenAddress = params.toTokenAddress.toLowerCase()
@@ -26,7 +23,6 @@ export class QuoterRequest {
         this.walletAddress = params.walletAddress.toLowerCase()
         this.enableEstimate = params.enableEstimate || false
         this.permit = params.permit
-        this.fee = params.fee
     }
 
     static new(params: QuoterRequestParams): QuoterRequest {
@@ -68,7 +64,7 @@ export class QuoterRequest {
         return null
     }
 
-    build(): Omit<QuoterRequestParams, 'fee'> {
+    build(): QuoterRequestParams {
         return {
             fromTokenAddress: this.fromTokenAddress,
             toTokenAddress: this.toTokenAddress,

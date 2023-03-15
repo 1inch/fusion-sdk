@@ -1,5 +1,4 @@
 import {NetworkEnum} from '../../constants'
-import {TakingFeeInfo} from '../../sdk'
 
 export type QuoterRequestParams = {
     fromTokenAddress: string
@@ -8,7 +7,6 @@ export type QuoterRequestParams = {
     walletAddress: string
     enableEstimate?: boolean
     permit?: string
-    fee?: TakingFeeInfo
 }
 
 export type QuoterApiConfig = {

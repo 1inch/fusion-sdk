@@ -1,7 +1,6 @@
 export const NATIVE_CURRENCY = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const ZERO_NUMBER = '0'
-export const BPS_POINTS = 100_000
 export const ZX = '0x'
 
 export enum NetworkEnum {
