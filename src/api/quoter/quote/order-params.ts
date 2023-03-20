@@ -1,7 +1,7 @@
 import {PresetEnum} from '../types'
-import {ZERO_ADDRESS} from '../../../constants'
 import {FusionOrderParamsData} from './types'
 import {TakingFeeInfo} from '../../../sdk'
+import {ZERO_ADDRESS} from '../../../constants'
 
 export class FusionOrderParams {
     public readonly preset: PresetEnum = PresetEnum.fast
