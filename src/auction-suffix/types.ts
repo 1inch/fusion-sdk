@@ -12,6 +12,10 @@ export type SettlementSuffixData = {
     points: AuctionPoint[]
     whitelist: AuctionWhitelistItem[]
     publicResolvingDeadline?: number // represents deadline in seconds
-    takerFeeReceiver?: string
-    takerFeeRatio?: string
+    fee?: TakingFee
+}
+
+export type TakingFee = {
+    takingFeeRatio: string
+    takingFeeReceiver: string
 }

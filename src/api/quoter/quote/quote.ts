@@ -6,13 +6,16 @@ import {isNativeCurrency} from '../../../utils'
 import {
     NetworkEnum,
     UNWRAPPER_CONTRACT_ADDRESS_MAP,
-    WRAPPER_ADDRESS_MAP
+    WRAPPER_ADDRESS_MAP,
+    ZERO_ADDRESS,
+    ZERO_NUMBER
 } from '../../../constants'
 import {InteractionsFactory} from '../../../limit-order/interactions-factory'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData, PredicateParams} from './types'
 import {PredicateFactory} from '../../../limit-order/predicate-factory'
+import {bpsToRatioFormat} from '../../../sdk/utils'
 
 export class Quote {
     public readonly fromTokenAmount: string
@@ -73,7 +76,12 @@ export class Quote {
             whitelist: this.whitelist.map((resolver) => ({
                 address: resolver,
                 allowance: 0
-            }))
+            })),
+            fee: {
+                takingFeeRatio:
+                    bpsToRatioFormat(this.params.fee) || ZERO_NUMBER,
+                takingFeeReceiver: paramsData?.takingFeeReceiver || ZERO_ADDRESS
+            }
         })
 
         const takerAsset = isNativeCurrency(this.params.toTokenAddress)

@@ -17,6 +17,7 @@ export type QuoteParams = {
     toTokenAddress: string
     amount: string
     permit?: string
+    takingFeeBps?: number // 100 == 1%
 }
 
 export type OrderParams = {
@@ -28,6 +29,12 @@ export type OrderParams = {
     receiver?: string // by default: walletAddress (makerAddress)
     preset?: PresetEnum // by default: recommended preset
     nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
+    fee?: TakingFeeInfo
+}
+
+export type TakingFeeInfo = {
+    takingFeeBps: number // 100 == 1%
+    takingFeeReceiver: string
 }
 
 export type OrderInfo = {

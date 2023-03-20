@@ -6,6 +6,7 @@ export type FusionOrderParamsData = {
     receiver?: string
     nonce?: number | string
     permit?: string
+    takingFeeReceiver?: string
 }
 
 export type PredicateParams = {

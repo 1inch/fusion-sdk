@@ -16,6 +16,8 @@ export class QuoterRequest {
 
     public readonly permit: string | undefined
 
+    public readonly fee: number | undefined
+
     constructor(params: QuoterRequestParams) {
         this.fromTokenAddress = params.fromTokenAddress.toLowerCase()
         this.toTokenAddress = params.toTokenAddress.toLowerCase()
@@ -23,6 +25,7 @@ export class QuoterRequest {
         this.walletAddress = params.walletAddress.toLowerCase()
         this.enableEstimate = params.enableEstimate || false
         this.permit = params.permit
+        this.fee = params.fee
     }
 
     static new(params: QuoterRequestParams): QuoterRequest {
@@ -71,7 +74,8 @@ export class QuoterRequest {
             amount: this.amount,
             walletAddress: this.walletAddress,
             enableEstimate: this.enableEstimate,
-            permit: this.permit
+            permit: this.permit,
+            fee: this.fee
         }
     }
 }
