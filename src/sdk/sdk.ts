@@ -67,7 +67,8 @@ export class FusionSDK {
             amount: params.amount,
             walletAddress: ZERO_ADDRESS,
             permit: params.permit,
-            enableEstimate: false
+            enableEstimate: false,
+            fee: params?.takingFeeBps
         })
 
         return this.api.getQuote(request)
@@ -81,7 +82,7 @@ export class FusionSDK {
             walletAddress: params.walletAddress,
             permit: params.permit,
             enableEstimate: true,
-            fee: params.fee?.takingFeeRatio
+            fee: params.fee?.takingFeeBps
         })
 
         const quote = await this.api.getQuote(quoterRequest)
@@ -96,7 +97,7 @@ export class FusionSDK {
             preset: params.preset,
             nonce,
             permit: params.permit,
-            fee: params.fee
+            takingFeeReceiver: params.fee?.takingFeeReceiver
         })
 
         const domain = getLimitOrderV3Domain(this.config.network)

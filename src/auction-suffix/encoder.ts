@@ -42,10 +42,6 @@ export function encodeTakingFeeData(
     )
 }
 
-export function bpsToRatioFormat(bps: string): string {
-    return BigNumber.from(bps).mul(100000).toString() // convert bps to percentage
-}
-
 export function encodeFlags(
     whitelist: AuctionWhitelistItem[],
     points: AuctionPoint[],

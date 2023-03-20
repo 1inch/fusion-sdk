@@ -17,6 +17,7 @@ export type QuoteParams = {
     toTokenAddress: string
     amount: string
     permit?: string
+    takingFeeBps?: number // 100 == 1%
 }
 
 export type OrderParams = {
@@ -32,7 +33,7 @@ export type OrderParams = {
 }
 
 export type TakingFeeInfo = {
-    takingFeeRatio: string
+    takingFeeBps: number // 100 == 1%
     takingFeeReceiver: string
 }
 

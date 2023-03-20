@@ -7,7 +7,7 @@ export type QuoterRequestParams = {
     walletAddress: string
     enableEstimate?: boolean
     permit?: string
-    fee?: string
+    fee?: number
 }
 
 export type QuoterApiConfig = {

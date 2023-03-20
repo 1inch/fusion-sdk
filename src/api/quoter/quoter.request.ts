@@ -2,7 +2,6 @@ import {QuoterRequestParams} from './types'
 import {isNativeCurrency} from '../../utils'
 import {NATIVE_CURRENCY, ZERO_ADDRESS} from '../../constants'
 import {isValidAddress, isValidAmount} from '../../validations'
-import {TakingFeeInfo} from '../../sdk'
 
 export class QuoterRequest {
     public readonly fromTokenAddress: string
@@ -17,7 +16,7 @@ export class QuoterRequest {
 
     public readonly permit: string | undefined
 
-    public readonly fee: string | undefined
+    public readonly fee: number | undefined
 
     constructor(params: QuoterRequestParams) {
         this.fromTokenAddress = params.fromTokenAddress.toLowerCase()

@@ -1,5 +1,3 @@
-import {TakingFeeInfo} from '../sdk'
-
 export type AuctionPoint = {
     delay: number
     coefficient: number
@@ -14,5 +12,10 @@ export type SettlementSuffixData = {
     points: AuctionPoint[]
     whitelist: AuctionWhitelistItem[]
     publicResolvingDeadline?: number // represents deadline in seconds
-    fee?: TakingFeeInfo
+    fee?: TakingFee
+}
+
+export type TakingFee = {
+    takingFeeRatio: string
+    takingFeeReceiver: string
 }
