@@ -167,7 +167,7 @@ sdk.placeOrder({
     walletAddress: makerAddress,
     // fee is an optional field
     fee: {
-        takingFeeRatio: 100, // 1% as we use bps format, 1% is equal to 100bps
+        takingFeeBps: 100, // 1% as we use bps format, 1% is equal to 100bps
         takingFeeReceiver: '0x0000000000000000000000000000000000000000' //  fee receiver address
     }
 }).then(console.log)
@@ -192,6 +192,7 @@ type QuoteParams = {
     toTokenAddress: string
     amount: string
     permit?: string // a permit (EIP-2612) call data, user approval sign
+    takingFeeBps?: number // 100 == 1%
 }
 ```
 
@@ -212,5 +213,12 @@ type OrderParams = {
     permit?: string // a permit (EIP-2612) call data, user approval sign
     receiver?: string // address
     preset?: PresetEnum
+    nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
+    fee?: TakingFeeInfo
+}
+
+export type TakingFeeInfo = {
+    takingFeeBps: number // 100 == 1%
+    takingFeeReceiver: string
 }
 ```
