@@ -4,7 +4,7 @@ import {WsApiConfig} from '../connector/ws'
 import {PaginationOutput} from '../api/types'
 import {ActiveOrder} from '../api/orders'
 
-export type Event<K extends string, T> = {event: K; data: T}
+export type Event<K extends string, T> = {event: K; result: T}
 
 export type OrderEventType =
     | OrderCreatedEvent

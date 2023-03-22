@@ -355,7 +355,7 @@ describe(__filename, () => {
         it('can subscribe to order events', (done) => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -386,7 +386,7 @@ describe(__filename, () => {
 
             const message2: OrderInvalidEvent = {
                 event: 'order_invalid',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4'
                 }
@@ -415,7 +415,7 @@ describe(__filename, () => {
         it('can subscribe to order created events', (done) => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -446,7 +446,7 @@ describe(__filename, () => {
 
             const message2: OrderInvalidEvent = {
                 event: 'order_invalid',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4'
                 }
@@ -476,7 +476,7 @@ describe(__filename, () => {
         it('can subscribe to order invalid events', (done) => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -507,7 +507,7 @@ describe(__filename, () => {
 
             const message2: OrderInvalidEvent = {
                 event: 'order_invalid',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4'
                 }
@@ -537,7 +537,7 @@ describe(__filename, () => {
         it('can subscribe to order_balance_or_allowance_change events', (done) => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -568,7 +568,7 @@ describe(__filename, () => {
 
             const message2: OrderBalanceOrAllowanceChangeEvent = {
                 event: 'order_balance_or_allowance_change',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     remainingMakerAmount: '57684207067582695',
@@ -601,7 +601,7 @@ describe(__filename, () => {
         it('can subscribe to order filled events', (done) => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -632,7 +632,7 @@ describe(__filename, () => {
 
             const message2: OrderFilledEvent = {
                 event: 'order_filled',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4'
                 }
@@ -662,7 +662,7 @@ describe(__filename, () => {
         it('can subscribe to order filled partially events', (done) => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -693,7 +693,7 @@ describe(__filename, () => {
 
             const message2: OrderFilledPartiallyEvent = {
                 event: 'order_filled_partially',
-                data: {
+                result: {
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     remainingMakerAmount: '57684207067582695'
