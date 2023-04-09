@@ -44,7 +44,7 @@ describe('Auction Suffix', () => {
         )
     })
 
-    it.only('should create suffix with specified taker fee', () => {
+    it('should create suffix with specified taker fee', () => {
         const suffix = new AuctionSuffix({
             points: [
                 {
@@ -79,7 +79,7 @@ describe('Auction Suffix', () => {
         expect(suffix.build()).toBe(encodedSuffix)
     })
 
-    it.only('should decode auction suffix with taker fee', () => {
+    it('should decode auction suffix with taker fee', () => {
         const encodedSuffix =
             '000c004e200000000000000000219ab540356cbb839cbe05303d7705fa63c0566a00000000000000000000006400000000219ab540356cbb839cbe05303d7705fa89'.toLowerCase()
 
