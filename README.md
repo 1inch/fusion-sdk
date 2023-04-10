@@ -58,4 +58,4 @@ sdk.placeOrder({
 
 | Language | Link                                       | Type             |
 | -------- | ------------------------------------------ | ---------------- |
-| rust     | https://github.com/frolovdev/fusion-sdk-rs | Community driven |
+| rust     | [frolovdev/fusion-sdk-rs](https://github.com/fusion-sdk-rs) | Community driven |
