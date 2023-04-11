@@ -1,6 +1,5 @@
 import BN from 'bn.js'
 import {NATIVE_CURRENCY} from './constants'
-import {webcrypto} from 'crypto'
 
 export const isNativeCurrency = (address: string): boolean =>
     address.toLowerCase() === NATIVE_CURRENCY
@@ -47,6 +46,7 @@ export function getCrypto(): Crypto {
     if (typeof window !== 'undefined') {
         return window.crypto
     } else {
-        return webcrypto as unknown as Crypto
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        return require('crypto').webcrypto as unknown as Crypto
     }
 }
