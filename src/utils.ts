@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 import {NATIVE_CURRENCY} from './constants'
+import {webcrypto} from 'crypto'
 
 export const isNativeCurrency = (address: string): boolean =>
     address.toLowerCase() === NATIVE_CURRENCY
@@ -40,4 +41,12 @@ export function add0x(data: string): string {
     }
 
     return '0x' + data
+}
+
+export function getCrypto(): Crypto {
+    if (typeof window !== 'undefined') {
+        return window.crypto
+    } else {
+        return webcrypto as unknown as Crypto
+    }
 }

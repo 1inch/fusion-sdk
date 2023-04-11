@@ -2,7 +2,9 @@ import {AuctionSalt} from './auction-salt'
 import crypto from 'crypto'
 
 describe('Auction Salt', () => {
-    jest.spyOn(crypto, 'randomInt').mockImplementation(() => 1000)
+    jest.spyOn(crypto.webcrypto, 'getRandomValues').mockImplementation(
+        () => new Int8Array([9, 10, 10, 10])
+    )
 
     it('should create salt', () => {
         const salt = new AuctionSalt({
