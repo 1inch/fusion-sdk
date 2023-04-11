@@ -41,3 +41,12 @@ export function add0x(data: string): string {
 
     return '0x' + data
 }
+
+export function getCrypto(): Crypto {
+    if (typeof window !== 'undefined') {
+        return window.crypto
+    } else {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        return require('crypto').webcrypto as unknown as Crypto
+    }
+}

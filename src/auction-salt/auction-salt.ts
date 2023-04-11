@@ -1,7 +1,6 @@
 import assert from 'assert'
 import {toBN} from '../utils'
 import {AuctionSaltData} from './types'
-import {randomInt} from 'crypto'
 import {
     getDuration,
     getFee,
@@ -10,6 +9,7 @@ import {
     getStartTime,
     SALT_MASK
 } from './parser'
+import {randomIntString} from './rand'
 
 export class AuctionSalt {
     public readonly auctionStartTime: number
@@ -27,7 +27,7 @@ export class AuctionSalt {
             throw new Error('salt should be less 18 bytes')
         }
 
-        this.salt = auction.salt || randomInt(10000).toString()
+        this.salt = auction.salt || randomIntString(5)
         this.auctionStartTime = auction.auctionStartTime
         this.initialRateBump = auction.initialRateBump
         this.duration = auction.duration

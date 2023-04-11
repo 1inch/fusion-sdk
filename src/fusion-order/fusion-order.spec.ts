@@ -4,7 +4,9 @@ import {AuctionSuffix} from '../auction-suffix'
 import crypto from 'crypto'
 
 describe('Fusion Order', () => {
-    jest.spyOn(crypto, 'randomInt').mockImplementation(() => 10000)
+    jest.spyOn(crypto.webcrypto, 'getRandomValues').mockImplementation(
+        () => new Int8Array([9, 10, 10, 10, 10])
+    )
 
     it('should create fusion order', () => {
         const salt = new AuctionSalt({
