@@ -56,6 +56,6 @@ sdk.placeOrder({
 
 ## Other language implementations
 
-| Language | Link                                                        | Type             |
-| -------- | ----------------------------------------------------------- | ---------------- |
+| Language | Link                                                                  | Type             |
+| -------- | --------------------------------------------------------------------- | ---------------- |
 | rust     | [frolovdev/fusion-sdk-rs](https://github.com/frolovdev/fusion-sdk-rs) | Community driven |
