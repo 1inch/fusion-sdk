@@ -5,6 +5,19 @@ import {Quote} from './quote'
 import {PresetEnum} from './types'
 
 describe('Quoter API', () => {
+    let httpProvider: HttpProviderConnector
+
+    beforeEach(() => {
+        httpProvider = {
+            get: jest.fn().mockImplementationOnce(() => {
+                return Promise.resolve(ResponseMock)
+            }),
+            post: jest.fn().mockImplementation(() => {
+                return Promise.resolve(null)
+            })
+        }
+    })
+
     const params = QuoterRequest.new({
         fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
         toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -86,15 +99,6 @@ describe('Quoter API', () => {
 
     const QuoterResponseMock = new Quote(1, params, ResponseMock)
 
-    const httpProvider: HttpProviderConnector = {
-        get: jest.fn().mockImplementationOnce(() => {
-            return Promise.resolve(ResponseMock)
-        }),
-        post: jest.fn().mockImplementation(() => {
-            return Promise.resolve(null)
-        })
-    }
-
     it('should get quote with disabled estimate', async () => {
         const quoter = QuoterApi.new(
             {
@@ -108,7 +112,55 @@ describe('Quoter API', () => {
 
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.get).toHaveBeenCalledWith(
-            'https://test.com/quoter/v1.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa'
+            'https://test.com/quoter/v1.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&source=sdk'
+        )
+    })
+
+    it('should throw error if fee is exist but source isnt added ', async () => {
+        const quoter = QuoterApi.new(
+            {
+                url: 'https://test.com/quoter',
+                network: 1
+            },
+            httpProvider
+        )
+
+        const params = QuoterRequest.new({
+            fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            amount: '1000000000000000000000',
+            walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+            fee: 1
+        })
+
+        const res$ = quoter.getQuote(params)
+
+        expect(res$).rejects.toThrowError('cannot use fee without source')
+    })
+
+    it('should not throw error with fee and source added', async () => {
+        const quoter = QuoterApi.new(
+            {
+                url: 'https://test.com/quoter',
+                network: 1
+            },
+            httpProvider
+        )
+
+        const params = QuoterRequest.new({
+            fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            amount: '1000000000000000000000',
+            walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+            fee: 1,
+            source: '0x6b175474e89094c44da98b954eedeac495271d0f'
+        })
+
+        const QuoterResponseMock = new Quote(1, params, ResponseMock)
+        const res = await quoter.getQuote(params)
+        expect(res).toStrictEqual(QuoterResponseMock)
+        expect(httpProvider.get).toHaveBeenCalledWith(
+            'https://test.com/quoter/v1.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f'
         )
     })
 })

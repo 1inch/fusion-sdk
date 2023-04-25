@@ -18,6 +18,8 @@ export class QuoterRequest {
 
     public readonly fee: number | undefined
 
+    public readonly source: string
+
     constructor(params: QuoterRequestParams) {
         this.fromTokenAddress = params.fromTokenAddress.toLowerCase()
         this.toTokenAddress = params.toTokenAddress.toLowerCase()
@@ -26,6 +28,7 @@ export class QuoterRequest {
         this.enableEstimate = params.enableEstimate || false
         this.permit = params.permit
         this.fee = params.fee
+        this.source = params.source || 'sdk'
     }
 
     static new(params: QuoterRequestParams): QuoterRequest {
@@ -64,6 +67,10 @@ export class QuoterRequest {
             return `${this.amount} is invalid amount`
         }
 
+        if (this.fee && this.source === 'sdk') {
+            return 'cannot use fee without source'
+        }
+
         return null
     }
 
@@ -75,7 +82,8 @@ export class QuoterRequest {
             walletAddress: this.walletAddress,
             enableEstimate: this.enableEstimate,
             permit: this.permit,
-            fee: this.fee
+            fee: this.fee,
+            source: this.source
         }
     }
 }

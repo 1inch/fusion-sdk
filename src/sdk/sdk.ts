@@ -68,7 +68,8 @@ export class FusionSDK {
             walletAddress: ZERO_ADDRESS,
             permit: params.permit,
             enableEstimate: false,
-            fee: params?.takingFeeBps
+            fee: params?.takingFeeBps,
+            source: params.source
         })
 
         return this.api.getQuote(request)
@@ -82,7 +83,8 @@ export class FusionSDK {
             walletAddress: params.walletAddress,
             permit: params.permit,
             enableEstimate: true,
-            fee: params.fee?.takingFeeBps
+            fee: params.fee?.takingFeeBps,
+            source: params.source
         })
 
         const quote = await this.api.getQuote(quoterRequest)

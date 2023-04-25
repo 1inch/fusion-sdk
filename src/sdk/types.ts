@@ -18,6 +18,7 @@ export type QuoteParams = {
     amount: string
     permit?: string
     takingFeeBps?: number // 100 == 1%
+    source?: string
 }
 
 export type OrderParams = {
@@ -30,6 +31,7 @@ export type OrderParams = {
     preset?: PresetEnum // by default: recommended preset
     nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
     fee?: TakingFeeInfo
+    source?: string
 }
 
 export type TakingFeeInfo = {

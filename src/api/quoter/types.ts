@@ -8,6 +8,7 @@ export type QuoterRequestParams = {
     enableEstimate?: boolean
     permit?: string
     fee?: number
+    source?: string
 }
 
 export type QuoterApiConfig = {
