@@ -8,7 +8,8 @@ export enum NetworkEnum {
     POLYGON = 137,
     BINANCE = 56,
     ARBITRUM = 42161,
-    AVALANCHE = 43114
+    AVALANCHE = 43114,
+    OPTIMISM = 10
 }
 
 export const WRAPPER_ADDRESS_MAP: Record<NetworkEnum, string> = {
@@ -16,7 +17,8 @@ export const WRAPPER_ADDRESS_MAP: Record<NetworkEnum, string> = {
     [NetworkEnum.BINANCE]: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
     [NetworkEnum.POLYGON]: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     [NetworkEnum.ARBITRUM]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-    [NetworkEnum.AVALANCHE]: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'
+    [NetworkEnum.AVALANCHE]: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+    [NetworkEnum.OPTIMISM]: '0x4200000000000000000000000000000000000006'
 }
 
 export const UNWRAPPER_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
@@ -24,7 +26,8 @@ export const UNWRAPPER_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
     [NetworkEnum.BINANCE]: '0x0eee00137d807a461702e9e0640c599de663e7e4',
     [NetworkEnum.POLYGON]: '0x18d410f651289bb978fc32f90d2d7e608f4f4560',
     [NetworkEnum.ARBITRUM]: '0x3e57c682c72f3bd255ebf439b74c784bc82029ee',
-    [NetworkEnum.AVALANCHE]: '0x5d0ec1f843c1233d304b96dbde0cab9ec04d71ef'
+    [NetworkEnum.AVALANCHE]: '0x5d0ec1f843c1233d304b96dbde0cab9ec04d71ef',
+    [NetworkEnum.OPTIMISM]: '0xb33839e05ce9fc53236ae325324a27612f4d110d'
 }
 
 export const SETTLEMENT_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
@@ -32,7 +35,8 @@ export const SETTLEMENT_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
     [NetworkEnum.BINANCE]: '0x1d0ae300eec4093cee4367c00b228d10a5c7ac63',
     [NetworkEnum.POLYGON]: '0x1e8ae092651e7b14e4d0f93611267c5be19b8b9f',
     [NetworkEnum.ARBITRUM]: '0x4bc3e539aaa5b18a82f6cd88dc9ab0e113c63377',
-    [NetworkEnum.AVALANCHE]: '0x7731f8df999a9441ae10519617c24568dc82f697'
+    [NetworkEnum.AVALANCHE]: '0x7731f8df999a9441ae10519617c24568dc82f697',
+    [NetworkEnum.OPTIMISM]: '0xd89adc20c400b6c45086a7f6ab2dca19745b89c2'
 }
 
 export const ONE_INCH_ROUTER_V5 = '0x1111111254eeb25477b68fb85ed929f73a960582'
