@@ -46,7 +46,8 @@ describe('Fusion Order', () => {
         )
 
         expect(order.build()).toStrictEqual({
-            allowedSender: SETTLEMENT_CONTRACT_ADDRESS_MAP[NetworkEnum.ETHEREUM],
+            allowedSender:
+                SETTLEMENT_CONTRACT_ADDRESS_MAP[NetworkEnum.ETHEREUM],
             interactions:
                 '0x000c004e200000000000000000219ab540356cbb839cbe05303d7705faf486570009',
             maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
