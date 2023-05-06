@@ -2,7 +2,7 @@ import {FusionOrder} from './fusion-order'
 import {AuctionSalt} from '../auction-salt'
 import {AuctionSuffix} from '../auction-suffix'
 import crypto from 'crypto'
-import {NetworkEnum} from '../constants'
+import {NetworkEnum, SETTLEMENT_CONTRACT_ADDRESS_MAP} from '../constants'
 
 describe('Fusion Order', () => {
     jest.spyOn(crypto.webcrypto, 'getRandomValues').mockImplementation(
@@ -46,7 +46,7 @@ describe('Fusion Order', () => {
         )
 
         expect(order.build()).toStrictEqual({
-            allowedSender: '0x0000000000000000000000000000000000000000',
+            allowedSender: SETTLEMENT_CONTRACT_ADDRESS_MAP[NetworkEnum.ETHEREUM],
             interactions:
                 '0x000c004e200000000000000000219ab540356cbb839cbe05303d7705faf486570009',
             maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
