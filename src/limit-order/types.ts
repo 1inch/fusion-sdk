@@ -1,3 +1,5 @@
+import {NetworkEnum} from '../constants'
+
 export type OrderInfoData = {
     makerAsset: string
     takerAsset: string
@@ -7,6 +9,10 @@ export type OrderInfoData = {
     salt?: string
     allowedSender?: string
     receiver?: string
+}
+
+export type OrderInfoDataFusion = Exclude<OrderInfoData, 'allowedSender'> & {
+    network: NetworkEnum
 }
 
 export type InteractionsData = {
