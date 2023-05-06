@@ -2,6 +2,7 @@ import {FusionOrder} from './fusion-order'
 import {AuctionSalt} from '../auction-salt'
 import {AuctionSuffix} from '../auction-suffix'
 import crypto from 'crypto'
+import {NetworkEnum} from '../constants'
 
 describe('Fusion Order', () => {
     jest.spyOn(crypto.webcrypto, 'getRandomValues').mockImplementation(
@@ -37,7 +38,8 @@ describe('Fusion Order', () => {
                 takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
                 makingAmount: '1000000000000000000',
                 takingAmount: '1420000000',
-                maker: '0x00000000219ab540356cbb839cbe05303d7705fa'
+                maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
+                network: NetworkEnum.ETHEREUM
             },
             salt,
             suffix
