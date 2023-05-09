@@ -100,7 +100,7 @@ export class Quote {
                 takingAmount: preset.auctionEndAmount,
                 maker: this.params.walletAddress,
                 receiver: takerAssetReceiver,
-                allowedSender: this.settlementAddress
+                network: this.network
             },
             salt,
             suffix,
