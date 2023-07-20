@@ -1,6 +1,6 @@
 {
     "name": "@1inch/fusion-sdk",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "1inch Fusion Mode SDK",
     "private": false,
     "main": "index.js",
@@ -8,10 +8,6 @@
     "repository": {
         "type": "git",
         "url": "ssh://git@github.com:1inch/fusion-sdk.git"
-    },
-    "publishConfig": {
-        "access": "public",
-        "registry": "https://registry.npmjs.org/"
     },
     "scripts": {
         "prebuild": "rm -rf dist && yarn run test:coverage",
