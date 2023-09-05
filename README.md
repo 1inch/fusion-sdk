@@ -37,9 +37,10 @@ const blockchainProvider = new PrivateKeyProviderConnector(
 )
 
 const sdk = new FusionSDK({
-    url: 'https://fusion.1inch.io',
+    url: 'https://api.1inch.dev/fusion',
     network: 1,
-    blockchainProvider
+    blockchainProvider,
+    authKey: 'your-auth-key'
 })
 
 sdk.placeOrder({
