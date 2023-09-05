@@ -10,5 +10,5 @@ export type RelayerRequestParams = {
 export type RelayerApiConfig = {
     network: NetworkEnum
     url: string
-    authKey: string
+    authKey?: string
 }

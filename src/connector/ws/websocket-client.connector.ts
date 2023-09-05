@@ -14,7 +14,7 @@ export class WebsocketClient implements WsProviderConnector {
 
     private readonly initialized: boolean
 
-    private readonly authKey: string
+    private readonly authKey?: string
 
     constructor(config: WsApiConfig) {
         this.url = config.url
@@ -24,11 +24,16 @@ export class WebsocketClient implements WsProviderConnector {
 
         if (!lazyInit) {
             this.initialized = true
-            this.ws = new WebSocket(this.url, {
-                headers: {
-                    Authorization: `Bearer ${this.authKey}`
-                }
-            })
+            this.ws = new WebSocket(
+                this.url,
+                this.authKey
+                    ? {
+                          headers: {
+                              Authorization: `Bearer ${this.authKey}`
+                          }
+                      }
+                    : undefined
+            )
 
             return
         }
@@ -44,7 +49,16 @@ export class WebsocketClient implements WsProviderConnector {
         // @ts-expect-error hack for readonly property
         this.initialized = true
         // @ts-expect-error hack for readonly property
-        this.ws = new WebSocket(this.url)
+        this.ws = new WebSocket(
+            this.url,
+            this.authKey
+                ? {
+                      headers: {
+                          Authorization: `Bearer ${this.authKey}`
+                      }
+                  }
+                : undefined
+        )
     }
 
     on(event: string, cb: AnyFunctionWithThis): void {

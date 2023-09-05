@@ -7,7 +7,7 @@
 ```typescript
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
-const ws = new WebSocketApi({
+const wsSdk = new WebSocketApi({
     url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM,
     authKey: 'your-auth-key'

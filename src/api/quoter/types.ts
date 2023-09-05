@@ -14,7 +14,7 @@ export type QuoterRequestParams = {
 export type QuoterApiConfig = {
     network: NetworkEnum
     url: string
-    authKey: string
+    authKey?: string
 }
 
 export type QuoterResponse = {
