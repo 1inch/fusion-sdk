@@ -8,8 +8,9 @@
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
-    network: NetworkEnum.ETHEREUM
+    url: 'wss://api.1inch.dev/fusion/ws',
+    network: NetworkEnum.ETHEREUM,
+    authKey: 'your-auth-key'
 })
 
 wsSdk.order.onOrder((data) => {
@@ -25,8 +26,9 @@ wsSdk.order.onOrder((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
-    network: NetworkEnum.ETHEREUM
+    url: 'wss://api.1inch.dev/fusion/ws',
+    network: NetworkEnum.ETHEREUM,
+    authKey: 'your-auth-key'
 })
 ```
 
@@ -41,7 +43,7 @@ class MyFancyProvider implements WsProviderConnector {
     // ... user implementation
 }
 
-const url = 'wss://fusion.1inch.io/ws/v1.0/1'
+const url = 'wss://api.1inch.dev/fusion/ws/v1.0/1'
 const provider = new MyFancyProvider({url})
 
 const wsSdk = new WebSocketApi(provider)
@@ -53,7 +55,7 @@ const wsSdk = new WebSocketApi(provider)
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = WebSocketApi.new({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 ```
@@ -66,7 +68,7 @@ By default when user creates an instance of WebSocketApi, it automatically opens
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM,
     lazyInit: true
 })
@@ -93,7 +95,7 @@ ws.init()
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -123,7 +125,7 @@ ws.on('message', function message(data) {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -156,7 +158,7 @@ ws.off('message', message)
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -179,7 +181,7 @@ ws.onOpen(() => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -196,7 +198,7 @@ ws.send('my message')
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -217,7 +219,7 @@ ws.close()
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -236,7 +238,7 @@ ws.onMessage((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -259,7 +261,7 @@ ws.onClose(() => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -284,7 +286,7 @@ ws.onError((error) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -312,7 +314,7 @@ ws.order.onOrder((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -335,7 +337,7 @@ ws.order.onOrderCreated((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -358,7 +360,7 @@ ws.order.onOrderInvalid((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -381,7 +383,7 @@ ws.order.onOrderBalanceOrAllowanceChange((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -404,7 +406,7 @@ ws.order.onOrderFilled((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -429,7 +431,7 @@ ws.order.onOrderFilledPartially((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -448,7 +450,7 @@ ws.rpc.onPong((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -465,7 +467,7 @@ ws.rpc.ping()
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -486,7 +488,7 @@ ws.rpc.getAllowedMethods()
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -505,7 +507,7 @@ ws.rpc.onGetAllowedMethods((data) => {
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -526,7 +528,7 @@ ws.rpc.getActiveOrders()
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
 
 const ws = new WebSocketApi({
-    url: 'wss://fusion.1inch.io/ws',
+    url: 'wss://api.1inch.dev/fusion/ws',
     network: NetworkEnum.ETHEREUM
 })
 
