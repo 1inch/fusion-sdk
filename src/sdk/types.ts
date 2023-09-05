@@ -8,6 +8,7 @@ import {FusionOrder} from '../fusion-order'
 export type FusionSDKConfigParams = {
     url: string
     network: NetworkEnum
+    authKey: string
     blockchainProvider?: BlockchainProviderConnector
     httpProvider?: HttpProviderConnector
 }

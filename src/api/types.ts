@@ -4,6 +4,7 @@ import {HttpProviderConnector} from '../connector'
 export type FusionApiConfig = {
     url: string
     network: NetworkEnum
+    authKey: string
     httpProvider?: HttpProviderConnector
 }
 

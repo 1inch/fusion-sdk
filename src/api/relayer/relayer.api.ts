@@ -10,7 +10,9 @@ export class RelayerApi {
 
     static new(
         config: RelayerApiConfig,
-        httpClient = new AxiosProviderConnector()
+        httpClient: HttpProviderConnector = new AxiosProviderConnector(
+            config.authKey
+        )
     ): RelayerApi {
         return new RelayerApi(config, httpClient)
     }

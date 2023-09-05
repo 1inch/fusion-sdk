@@ -14,14 +14,21 @@ export class WebsocketClient implements WsProviderConnector {
 
     private readonly initialized: boolean
 
+    private readonly authKey: string
+
     constructor(config: WsApiConfig) {
         this.url = config.url
+        this.authKey = config.authKey
 
         const lazyInit = config.lazyInit || false
 
         if (!lazyInit) {
             this.initialized = true
-            this.ws = new WebSocket(this.url)
+            this.ws = new WebSocket(this.url, {
+                headers: {
+                    Authorization: `Bearer ${this.authKey}`
+                }
+            })
 
             return
         }
