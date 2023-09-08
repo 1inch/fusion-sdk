@@ -5,7 +5,7 @@ describe('Axios Http provider connector', () => {
     let httpConnector: AxiosProviderConnector
 
     beforeEach(() => {
-        httpConnector = new AxiosProviderConnector()
+        httpConnector = new AxiosProviderConnector('test-key')
     })
 
     it('should make get() request', async () => {
@@ -18,7 +18,9 @@ describe('Axios Http provider connector', () => {
         )
         const res = await httpConnector.get(url)
         expect(res).toStrictEqual(returnedValue.data)
-        expect(axios.get).toHaveBeenCalledWith(url)
+        expect(axios.get).toHaveBeenCalledWith(url, {
+            headers: {Authorization: 'Bearer test-key'}
+        })
     })
 
     it('should make post() request', async () => {
@@ -32,6 +34,8 @@ describe('Axios Http provider connector', () => {
         )
         const res = await httpConnector.post(url, body)
         expect(res).toStrictEqual(returnedValue.data)
-        expect(axios.post).toHaveBeenCalledWith(url, body)
+        expect(axios.post).toHaveBeenCalledWith(url, body, {
+            headers: {Authorization: 'Bearer test-key'}
+        })
     })
 })

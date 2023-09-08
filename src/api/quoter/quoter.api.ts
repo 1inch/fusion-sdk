@@ -12,7 +12,9 @@ export class QuoterApi {
 
     static new(
         config: QuoterApiConfig,
-        httpClient = new AxiosProviderConnector()
+        httpClient: HttpProviderConnector = new AxiosProviderConnector(
+            config.authKey
+        )
     ): QuoterApi {
         return new QuoterApi(config, httpClient)
     }

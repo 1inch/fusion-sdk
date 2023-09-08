@@ -31,7 +31,8 @@ export class FusionSDK {
         this.api = FusionApi.new({
             url: config.url,
             network: config.network,
-            httpProvider: config.httpProvider
+            httpProvider: config.httpProvider,
+            authKey: config.authKey
         })
     }
 

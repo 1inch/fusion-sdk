@@ -24,7 +24,8 @@ export class FusionApi {
         this.quoterApi = QuoterApi.new(
             {
                 url: `${config.url}/quoter`,
-                network: config.network
+                network: config.network,
+                authKey: config.authKey
             },
             config.httpProvider
         )
@@ -32,13 +33,18 @@ export class FusionApi {
         this.relayerApi = RelayerApi.new(
             {
                 url: `${config.url}/relayer`,
-                network: config.network
+                network: config.network,
+                authKey: config.authKey
             },
             config.httpProvider
         )
 
         this.ordersApi = OrdersApi.new(
-            {url: `${config.url}/orders`, network: config.network},
+            {
+                url: `${config.url}/orders`,
+                network: config.network,
+                authKey: config.authKey
+            },
             config.httpProvider
         )
     }
@@ -47,7 +53,10 @@ export class FusionApi {
         return new FusionApi({
             network: config.network,
             url: config.url,
-            httpProvider: config.httpProvider || new AxiosProviderConnector()
+            authKey: config.authKey,
+            httpProvider:
+                config.httpProvider ||
+                new AxiosProviderConnector(config.authKey)
         })
     }
 

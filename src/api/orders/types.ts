@@ -7,6 +7,7 @@ import {PaginationParams} from '../pagination'
 export type OrdersApiConfig = {
     network: NetworkEnum
     url: string
+    authKey?: string
 }
 
 export type ActiveOrdersRequestParams = PaginationParams

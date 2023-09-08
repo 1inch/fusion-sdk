@@ -20,7 +20,9 @@ export class OrdersApi {
 
     static new(
         config: OrdersApiConfig,
-        httpClient = new AxiosProviderConnector()
+        httpClient: HttpProviderConnector = new AxiosProviderConnector(
+            config.authKey
+        )
     ): OrdersApi {
         return new OrdersApi(config, httpClient)
     }
