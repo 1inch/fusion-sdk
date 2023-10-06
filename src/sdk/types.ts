@@ -1,7 +1,7 @@
 import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
 import {NetworkEnum} from '../constants'
 import {LimitOrderV3Struct} from '../limit-order'
-import {PresetEnum} from '../api'
+import {CustomPreset, PresetEnum} from '../api'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
 
@@ -22,6 +22,10 @@ export type QuoteParams = {
     source?: string
 }
 
+export type QuoteWithCustomPresetBodyParams = {
+    customPreset: CustomPreset
+}
+
 export type OrderParams = {
     fromTokenAddress: string
     toTokenAddress: string
@@ -33,6 +37,7 @@ export type OrderParams = {
     nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
     fee?: TakingFeeInfo
     source?: string
+    customPreset?: CustomPreset
 }
 
 export type TakingFeeInfo = {

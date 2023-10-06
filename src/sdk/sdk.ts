@@ -5,7 +5,8 @@ import {
     OrderInfo,
     OrderParams,
     PreparedOrder,
-    QuoteParams
+    QuoteParams,
+    QuoteWithCustomPresetBodyParams
 } from './types'
 import {ZERO_ADDRESS} from '../constants'
 import {getLimitOrderV3Domain} from '../limit-order'
@@ -23,6 +24,7 @@ import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
 import {encodeCancelOrder} from './encoders'
+import {QuoterWithCustomPresetBodyRequest} from 'src/api/quoter/quoter-with-custom-preset.request'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -76,19 +78,30 @@ export class FusionSDK {
         return this.api.getQuote(request)
     }
 
-    async createOrder(params: OrderParams): Promise<PreparedOrder> {
-        const quoterRequest = QuoterRequest.new({
+    async getQuoteWithCustomPreset(
+        params: QuoteParams,
+        body: QuoteWithCustomPresetBodyParams
+    ): Promise<Quote> {
+        const paramsRequest = QuoterRequest.new({
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
             amount: params.amount,
-            walletAddress: params.walletAddress,
+            walletAddress: ZERO_ADDRESS,
             permit: params.permit,
-            enableEstimate: true,
-            fee: params.fee?.takingFeeBps,
+            enableEstimate: false,
+            fee: params?.takingFeeBps,
             source: params.source
         })
 
-        const quote = await this.api.getQuote(quoterRequest)
+        const bodyRequest = QuoterWithCustomPresetBodyRequest.new({
+            customPreset: body.customPreset
+        })
+
+        return this.api.getQuoteWithCustomPreset(paramsRequest, bodyRequest)
+    }
+
+    async createOrder(params: OrderParams): Promise<PreparedOrder> {
+        const quote = await this.getQuote(params)
 
         if (!quote.quoteId) {
             throw new Error('quoter has not returned quoteId')
@@ -171,6 +184,37 @@ export class FusionSDK {
             salt: order.salt,
             offsets: order.offsets
         })
+    }
+
+    private async getQuote(params: OrderParams) {
+        const quoterRequest = QuoterRequest.new({
+            fromTokenAddress: params.fromTokenAddress,
+            toTokenAddress: params.toTokenAddress,
+            amount: params.amount,
+            walletAddress: params.walletAddress,
+            permit: params.permit,
+            enableEstimate: true,
+            fee: params.fee?.takingFeeBps,
+            source: params.source
+        })
+
+        if (!params.customPreset) {
+            const quote = await this.api.getQuote(quoterRequest)
+
+            return quote
+        }
+
+        const quoterWithCustomPresetBodyRequest =
+            QuoterWithCustomPresetBodyRequest.new({
+                customPreset: params.customPreset
+            })
+
+        const quote = await this.api.getQuoteWithCustomPreset(
+            quoterRequest,
+            quoterWithCustomPresetBodyRequest
+        )
+
+        return quote
     }
 
     private async getNonce(
