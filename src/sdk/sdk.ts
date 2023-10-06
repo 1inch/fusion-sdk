@@ -101,7 +101,7 @@ export class FusionSDK {
     }
 
     async createOrder(params: OrderParams): Promise<PreparedOrder> {
-        const quote = await this.getQuote(params)
+        const quote = await this.getQuoteResult(params)
 
         if (!quote.quoteId) {
             throw new Error('quoter has not returned quoteId')
@@ -186,7 +186,7 @@ export class FusionSDK {
         })
     }
 
-    private async getQuote(params: OrderParams) {
+    private async getQuoteResult(params: OrderParams): Promise<Quote> {
         const quoterRequest = QuoterRequest.new({
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
