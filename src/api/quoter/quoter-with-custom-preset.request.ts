@@ -58,7 +58,7 @@ export class QuoterWithCustomPresetBodyRequest {
         return null
     }
 
-    validateAuctionDuration(duration: unknown): string | null {
+    private validateAuctionDuration(duration: unknown): string | null {
         if (typeof duration !== 'number' || isNaN(duration)) {
             return 'auctionDuration should be integer'
         }
@@ -70,7 +70,7 @@ export class QuoterWithCustomPresetBodyRequest {
         return null
     }
 
-    validatePoints(
+    private validatePoints(
         points?: CustomPresetPoint[],
         auctionStartAmount?: string,
         auctionEndAmount?: string

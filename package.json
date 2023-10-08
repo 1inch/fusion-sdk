@@ -11,7 +11,7 @@
     },
     "scripts": {
         "prebuild": "rm -rf dist && yarn run test:coverage",
-        "build": "tsc --module commonjs",
+        "build": "tsc --module commonjs -p tsconfig.build.json",
         "postbuild": "cp package.json dist && cp README.md dist",
         "lint": "eslint ./src --ext .js,.ts",
         "release": "standard-version",

@@ -24,7 +24,7 @@ import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
 import {encodeCancelOrder} from './encoders'
-import {QuoterWithCustomPresetBodyRequest} from 'src/api/quoter/quoter-with-custom-preset.request'
+import {QuoterWithCustomPresetBodyRequest} from '../api/quoter/quoter-with-custom-preset.request'
 
 export class FusionSDK {
     public readonly api: FusionApi
