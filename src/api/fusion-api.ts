@@ -12,6 +12,7 @@ import {
     OrderStatusResponse,
     OrdersByMakerResponse
 } from './orders'
+import {QuoterCustomPresetRequest} from './quoter/quoter-custom-preset.request'
 
 export class FusionApi {
     private readonly quoterApi: QuoterApi
@@ -62,6 +63,13 @@ export class FusionApi {
 
     getQuote(params: QuoterRequest): Promise<Quote> {
         return this.quoterApi.getQuote(params)
+    }
+
+    getQuoteWithCustomPreset(
+        params: QuoterRequest,
+        body: QuoterCustomPresetRequest
+    ): Promise<Quote> {
+        return this.quoterApi.getQuoteWithCustomPreset(params, body)
     }
 
     getActiveOrders(

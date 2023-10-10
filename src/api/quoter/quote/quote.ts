@@ -22,7 +22,12 @@ export class Quote {
 
     public readonly feeToken: string
 
-    public readonly presets: Record<PresetEnum, Preset>
+    public readonly presets: {
+        [PresetEnum.fast]: Preset
+        [PresetEnum.slow]: Preset
+        [PresetEnum.medium]: Preset
+        [PresetEnum.custom]?: Preset
+    }
 
     public readonly recommendedPreset: PresetEnum
 
@@ -48,7 +53,10 @@ export class Quote {
         this.presets = {
             [PresetEnum.fast]: new Preset(response.presets.fast),
             [PresetEnum.medium]: new Preset(response.presets.medium),
-            [PresetEnum.slow]: new Preset(response.presets.slow)
+            [PresetEnum.slow]: new Preset(response.presets.slow),
+            [PresetEnum.custom]: response.presets.custom
+                ? new Preset(response.presets.custom)
+                : undefined
         }
         this.toTokenAmount = response.toTokenAmount
         this.prices = response.prices
@@ -122,7 +130,7 @@ export class Quote {
     }
 
     getPreset(type = PresetEnum.fast): Preset {
-        return this.presets[type]
+        return this.presets[type] as Preset
     }
 
     private handlePredicate(params: PredicateParams): string {

@@ -11,6 +11,10 @@ export type QuoterRequestParams = {
     source?: string
 }
 
+export type QuoterCustomPresetRequestParams = {
+    customPreset: CustomPreset
+}
+
 export type QuoterApiConfig = {
     network: NetworkEnum
     url: string
@@ -34,6 +38,7 @@ export type QuoterPresets = {
     fast: PresetData
     medium: PresetData
     slow: PresetData
+    custom?: PresetData
 }
 
 export type PresetData = {
@@ -62,5 +67,15 @@ export type Cost = {
 export enum PresetEnum {
     fast = 'fast',
     medium = 'medium',
-    slow = 'slow'
+    slow = 'slow',
+    custom = 'custom'
 }
+
+export type CustomPreset = {
+    auctionDuration: number
+    auctionStartAmount: string
+    auctionEndAmount: string
+    points?: CustomPresetPoint[]
+}
+
+export type CustomPresetPoint = {toTokenAmount: string; delay: number}

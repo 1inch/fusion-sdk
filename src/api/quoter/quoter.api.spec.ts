@@ -3,6 +3,7 @@ import {QuoterRequest} from './quoter.request'
 import {HttpProviderConnector} from '../../connector'
 import {Quote} from './quote'
 import {PresetEnum} from './types'
+import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
 
 describe('Quoter API', () => {
     let httpProvider: HttpProviderConnector
@@ -13,7 +14,7 @@ describe('Quoter API', () => {
                 return Promise.resolve(ResponseMock)
             }),
             post: jest.fn().mockImplementation(() => {
-                return Promise.resolve(null)
+                return Promise.resolve(ResponseMock)
             })
         }
     })
@@ -161,6 +162,45 @@ describe('Quoter API', () => {
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.get).toHaveBeenCalledWith(
             'https://test.com/quoter/v1.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f'
+        )
+    })
+
+    it('getQuoteWithCustomPreset', async () => {
+        const quoter = QuoterApi.new(
+            {
+                url: 'https://test.com/quoter',
+                network: 1
+            },
+            httpProvider
+        )
+
+        const params = QuoterRequest.new({
+            fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            amount: '1000000000000000000000',
+            walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+            fee: 1,
+            source: '0x6b175474e89094c44da98b954eedeac495271d0f'
+        })
+
+        const body = QuoterCustomPresetRequest.new({
+            customPreset: {
+                auctionDuration: 180,
+                auctionStartAmount: '100000',
+                auctionEndAmount: '50000',
+                points: [
+                    {toTokenAmount: '90000', delay: 20},
+                    {toTokenAmount: '70000', delay: 40}
+                ]
+            }
+        })
+
+        const QuoterResponseMock = new Quote(1, params, ResponseMock)
+        const res = await quoter.getQuoteWithCustomPreset(params, body)
+        expect(res).toStrictEqual(QuoterResponseMock)
+        expect(httpProvider.post).toHaveBeenCalledWith(
+            'https://test.com/quoter/v1.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f',
+            body.build()
         )
     })
 })
