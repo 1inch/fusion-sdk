@@ -3,18 +3,18 @@ import {isValidAmount} from '../../validations'
 import {
     CustomPreset,
     CustomPresetPoint,
-    QuoterWithCustomPresetBodyRequestParams
+    QuoterCustomPresetRequestParams
 } from './types'
 
 export class QuoterCustomPresetRequest {
     public readonly customPreset: CustomPreset
 
-    constructor(params: QuoterWithCustomPresetBodyRequestParams) {
+    constructor(params: QuoterCustomPresetRequestParams) {
         this.customPreset = params.customPreset
     }
 
     static new(
-        params: QuoterWithCustomPresetBodyRequestParams
+        params: QuoterCustomPresetRequestParams
     ): QuoterCustomPresetRequest {
         return new QuoterCustomPresetRequest(params)
     }

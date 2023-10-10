@@ -11,7 +11,7 @@ export type QuoterRequestParams = {
     source?: string
 }
 
-export type QuoterWithCustomPresetBodyRequestParams = {
+export type QuoterCustomPresetRequestParams = {
     customPreset: CustomPreset
 }
 
