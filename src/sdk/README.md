@@ -134,6 +134,44 @@ const params = {
 const quote = await sdk.getQuote(params)
 ```
 
+### getQuoteWithCustomPreset
+
+**Description**: Get quote details with custom preset
+
+**Arguments:**
+
+-   [0] params: QuoteParams
+-   [1] body params: QuoteCustomPresetParams
+
+```typescript
+import {FusionSDK, NetworkEnum, QuoteParams} from '@1inch/fusion-sdk'
+const sdk = new FusionSDK({
+    url: 'https://api.1inch.dev/fusion',
+    network: NetworkEnum.ETHEREUM
+})
+
+const params = {
+    fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+    toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    amount: '1000000000000000000000'
+}
+
+const body = {
+    customPreset: {
+        auctionDuration: 180,
+        auctionStartAmount: '100000',
+        auctionEndAmount: '50000',
+        // you can pass points to get custom non linear curve
+        points: [
+            {toTokenAmount: '90000', delay: 20}, // auctionStartAmount >= toTokenAmount >= auctionEndAmount
+            {toTokenAmount: '70000', delay: 40}
+        ]
+    }
+}
+
+const quote = await sdk.getQuoteWithCustomPreset(params, body)
+```
+
 ### placeOrder
 
 **Description:** used to create a fusion order
