@@ -1,8 +1,8 @@
-import {QuoterWithCustomPresetBodyRequest} from './quoter-with-custom-preset.request'
+import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
 
 describe(__filename, () => {
     it('auctionStartAmount should be valid', () => {
-        const body = QuoterWithCustomPresetBodyRequest.new({
+        const body = QuoterCustomPresetRequest.new({
             customPreset: {
                 auctionDuration: 180,
                 auctionStartAmount: 'ama bad string',
@@ -20,7 +20,7 @@ describe(__filename, () => {
     })
 
     it('auctionEndAmount should be valid', () => {
-        const body = QuoterWithCustomPresetBodyRequest.new({
+        const body = QuoterCustomPresetRequest.new({
             customPreset: {
                 auctionDuration: 180,
                 auctionStartAmount: '100000',
@@ -38,7 +38,7 @@ describe(__filename, () => {
     })
 
     it('auctionDuration should be valid', () => {
-        const body = QuoterWithCustomPresetBodyRequest.new({
+        const body = QuoterCustomPresetRequest.new({
             customPreset: {
                 auctionDuration: 0.1,
                 auctionStartAmount: '100000',
@@ -56,7 +56,7 @@ describe(__filename, () => {
     })
 
     it('points should be in range', () => {
-        const body1 = QuoterWithCustomPresetBodyRequest.new({
+        const body1 = QuoterCustomPresetRequest.new({
             customPreset: {
                 auctionDuration: 180,
                 auctionStartAmount: '100000',
@@ -68,7 +68,7 @@ describe(__filename, () => {
             }
         })
 
-        const body2 = QuoterWithCustomPresetBodyRequest.new({
+        const body2 = QuoterCustomPresetRequest.new({
             customPreset: {
                 auctionDuration: 180,
                 auctionStartAmount: '100000',
@@ -89,7 +89,7 @@ describe(__filename, () => {
     })
 
     it('points should be an array of valid amounts', () => {
-        const body = QuoterWithCustomPresetBodyRequest.new({
+        const body = QuoterCustomPresetRequest.new({
             customPreset: {
                 auctionDuration: 180,
                 auctionStartAmount: '100000',

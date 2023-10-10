@@ -6,7 +6,7 @@ import {
     OrderParams,
     PreparedOrder,
     QuoteParams,
-    QuoteWithCustomPresetBodyParams
+    QuoteCustomPresetParams
 } from './types'
 import {ZERO_ADDRESS} from '../constants'
 import {getLimitOrderV3Domain} from '../limit-order'
@@ -24,7 +24,7 @@ import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
 import {encodeCancelOrder} from './encoders'
-import {QuoterWithCustomPresetBodyRequest} from '../api/quoter/quoter-with-custom-preset.request'
+import {QuoterCustomPresetRequest} from '../api/quoter/quoter-custom-preset.request'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -80,7 +80,7 @@ export class FusionSDK {
 
     async getQuoteWithCustomPreset(
         params: QuoteParams,
-        body: QuoteWithCustomPresetBodyParams
+        body: QuoteCustomPresetParams
     ): Promise<Quote> {
         const paramsRequest = QuoterRequest.new({
             fromTokenAddress: params.fromTokenAddress,
@@ -93,7 +93,7 @@ export class FusionSDK {
             source: params.source
         })
 
-        const bodyRequest = QuoterWithCustomPresetBodyRequest.new({
+        const bodyRequest = QuoterCustomPresetRequest.new({
             customPreset: body.customPreset
         })
 
@@ -204,10 +204,11 @@ export class FusionSDK {
             return quote
         }
 
-        const quoterWithCustomPresetBodyRequest =
-            QuoterWithCustomPresetBodyRequest.new({
+        const quoterWithCustomPresetBodyRequest = QuoterCustomPresetRequest.new(
+            {
                 customPreset: params.customPreset
-            })
+            }
+        )
 
         const quote = await this.api.getQuoteWithCustomPreset(
             quoterRequest,

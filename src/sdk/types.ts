@@ -22,7 +22,7 @@ export type QuoteParams = {
     source?: string
 }
 
-export type QuoteWithCustomPresetBodyParams = {
+export type QuoteCustomPresetParams = {
     customPreset: CustomPreset
 }
 

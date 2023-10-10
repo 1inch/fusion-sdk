@@ -3,7 +3,7 @@ import {QuoterRequest} from './quoter.request'
 import {HttpProviderConnector} from '../../connector'
 import {Quote} from './quote'
 import {PresetEnum} from './types'
-import {QuoterWithCustomPresetBodyRequest} from './quoter-with-custom-preset.request'
+import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
 
 describe('Quoter API', () => {
     let httpProvider: HttpProviderConnector
@@ -183,7 +183,7 @@ describe('Quoter API', () => {
             source: '0x6b175474e89094c44da98b954eedeac495271d0f'
         })
 
-        const body = QuoterWithCustomPresetBodyRequest.new({
+        const body = QuoterCustomPresetRequest.new({
             customPreset: {
                 auctionDuration: 180,
                 auctionStartAmount: '100000',

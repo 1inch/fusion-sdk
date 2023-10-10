@@ -12,7 +12,7 @@ import {
     OrderStatusResponse,
     OrdersByMakerResponse
 } from './orders'
-import {QuoterWithCustomPresetBodyRequest} from './quoter/quoter-with-custom-preset.request'
+import {QuoterCustomPresetRequest} from './quoter/quoter-custom-preset.request'
 
 export class FusionApi {
     private readonly quoterApi: QuoterApi
@@ -67,7 +67,7 @@ export class FusionApi {
 
     getQuoteWithCustomPreset(
         params: QuoterRequest,
-        body: QuoterWithCustomPresetBodyRequest
+        body: QuoterCustomPresetRequest
     ): Promise<Quote> {
         return this.quoterApi.getQuoteWithCustomPreset(params, body)
     }

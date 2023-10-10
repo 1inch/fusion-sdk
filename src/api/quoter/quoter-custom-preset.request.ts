@@ -6,7 +6,7 @@ import {
     QuoterWithCustomPresetBodyRequestParams
 } from './types'
 
-export class QuoterWithCustomPresetBodyRequest {
+export class QuoterCustomPresetRequest {
     public readonly customPreset: CustomPreset
 
     constructor(params: QuoterWithCustomPresetBodyRequestParams) {
@@ -15,8 +15,8 @@ export class QuoterWithCustomPresetBodyRequest {
 
     static new(
         params: QuoterWithCustomPresetBodyRequestParams
-    ): QuoterWithCustomPresetBodyRequest {
-        return new QuoterWithCustomPresetBodyRequest(params)
+    ): QuoterCustomPresetRequest {
+        return new QuoterCustomPresetRequest(params)
     }
 
     build(): CustomPreset {

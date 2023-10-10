@@ -3,7 +3,7 @@ import {QuoterRequest} from './quoter.request'
 import {QuoterApiConfig, QuoterResponse} from './types'
 import {concatQueryParams} from '../params'
 import {Quote} from './quote'
-import {QuoterWithCustomPresetBodyRequest} from './quoter-with-custom-preset.request'
+import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
 
 export class QuoterApi {
     constructor(
@@ -37,7 +37,7 @@ export class QuoterApi {
 
     async getQuoteWithCustomPreset(
         params: QuoterRequest,
-        body: QuoterWithCustomPresetBodyRequest
+        body: QuoterCustomPresetRequest
     ): Promise<Quote> {
         const paramsErr = params.validate()
         const bodyErr = body.validate()
