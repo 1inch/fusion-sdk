@@ -11,7 +11,8 @@ export enum NetworkEnum {
     AVALANCHE = 43114,
     OPTIMISM = 10,
     FANTOM = 250,
-    GNOSIS = 100
+    GNOSIS = 100,
+    COINBASE = 8453
 }
 
 export const WRAPPER_ADDRESS_MAP: Record<NetworkEnum, string> = {
@@ -22,7 +23,8 @@ export const WRAPPER_ADDRESS_MAP: Record<NetworkEnum, string> = {
     [NetworkEnum.AVALANCHE]: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
     [NetworkEnum.OPTIMISM]: '0x4200000000000000000000000000000000000006',
     [NetworkEnum.FANTOM]: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
-    [NetworkEnum.GNOSIS]: '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d'
+    [NetworkEnum.GNOSIS]: '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d',
+    [NetworkEnum.COINBASE]: '0x4200000000000000000000000000000000000006'
 }
 
 export const UNWRAPPER_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
@@ -33,7 +35,8 @@ export const UNWRAPPER_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
     [NetworkEnum.AVALANCHE]: '0x5d0ec1f843c1233d304b96dbde0cab9ec04d71ef',
     [NetworkEnum.OPTIMISM]: '0xb33839e05ce9fc53236ae325324a27612f4d110d',
     [NetworkEnum.FANTOM]: '0x94bc2a1c732bcad7343b25af48385fe76e08734f',
-    [NetworkEnum.GNOSIS]: '0xd41b24bba51fac0e4827b6f94c0d6ddeb183cd64'
+    [NetworkEnum.GNOSIS]: '0xd41b24bba51fac0e4827b6f94c0d6ddeb183cd64',
+    [NetworkEnum.COINBASE]: '0xb33839e05ce9fc53236ae325324a27612f4d110d'
 }
 
 export const SETTLEMENT_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
@@ -44,7 +47,8 @@ export const SETTLEMENT_CONTRACT_ADDRESS_MAP: Record<NetworkEnum, string> = {
     [NetworkEnum.AVALANCHE]: '0x7731f8df999a9441ae10519617c24568dc82f697',
     [NetworkEnum.OPTIMISM]: '0xd89adc20c400b6c45086a7f6ab2dca19745b89c2',
     [NetworkEnum.FANTOM]: '0xa218543cc21ee9388fa1e509f950fd127ca82155',
-    [NetworkEnum.GNOSIS]: '0xcbdb7490968d4dbf183c60fc899c2e9fbd445308'
+    [NetworkEnum.GNOSIS]: '0xcbdb7490968d4dbf183c60fc899c2e9fbd445308',
+    [NetworkEnum.COINBASE]: '0x7f069df72b7a39bce9806e3afaf579e54d8cf2b9'
 }
 
 export const ONE_INCH_ROUTER_V5 = '0x1111111254eeb25477b68fb85ed929f73a960582'
