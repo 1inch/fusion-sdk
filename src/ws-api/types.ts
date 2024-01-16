@@ -12,6 +12,7 @@ export type OrderEventType =
     | OrderBalanceOrAllowanceChangeEvent
     | OrderFilledEvent
     | OrderFilledPartiallyEvent
+    | OrderCancelledEvent
 
 export type OrderCreatedEvent = Event<
     'order_created',
@@ -43,6 +44,13 @@ export type OrderInvalidEvent = Event<
     }
 >
 
+export type OrderCancelledEvent = Event<
+    'order_cancelled',
+    {
+        orderHash: string
+    }
+>
+
 export type OrderFilledEvent = Event<'order_filled', {orderHash: string}>
 
 export type OrderFilledPartiallyEvent = Event<
@@ -55,6 +63,8 @@ export type OnOrderCb = (data: OrderEventType) => any
 export type OnOrderCreatedCb = (data: OrderCreatedEvent) => any
 
 export type OnOrderInvalidCb = (data: OrderInvalidEvent) => any
+
+export type OnOrderCancelledCb = (data: OrderCancelledEvent) => any
 
 export type OnOrderNotEnoughBalanceOrAllowanceCb = (
     data: OrderBalanceOrAllowanceChangeEvent

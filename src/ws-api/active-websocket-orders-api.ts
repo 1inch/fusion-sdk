@@ -1,6 +1,7 @@
 import {WsProviderConnector} from '../connector/ws'
 import {orderEvents} from './constants'
 import {
+    OnOrderCancelledCb,
     OnOrderCb,
     OnOrderCreatedCb,
     OnOrderFilledCb,
@@ -54,6 +55,14 @@ export class ActiveOrdersWebSocketApi {
     onOrderFilled(cb: OnOrderFilledCb): void {
         this.provider.onMessage((data: OrderEventType) => {
             if (data.event === 'order_filled') {
+                cb(data)
+            }
+        })
+    }
+
+    onOrderCancelled(cb: OnOrderCancelledCb): void {
+        this.provider.onMessage((data: OrderEventType) => {
+            if (data.event === 'order_cancelled') {
                 cb(data)
             }
         })
