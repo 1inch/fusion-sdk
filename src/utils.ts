@@ -50,3 +50,12 @@ export function getCrypto(): Crypto {
         return require('crypto').webcrypto as unknown as Crypto
     }
 }
+
+/**
+ * Throws `err` if `condition` is `false`
+ */
+export function assert(condition: boolean, err: Error | string): void {
+    if (!condition) {
+        throw typeof err === 'string' ? new Error(err) : err
+    }
+}
