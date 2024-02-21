@@ -394,6 +394,7 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
+                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -458,6 +459,7 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
+                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -523,6 +525,7 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
+                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -588,6 +591,7 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
+                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -656,6 +660,7 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
+                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -721,6 +726,7 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
+                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
@@ -787,6 +793,7 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
+                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                     orderHash:
                         '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
