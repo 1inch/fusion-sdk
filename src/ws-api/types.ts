@@ -17,6 +17,7 @@ export type OrderEventType =
 export type OrderCreatedEvent = Event<
     'order_created',
     {
+        quoteId: string
         orderHash: string
         signature: string
         order: LimitOrderV3Struct
