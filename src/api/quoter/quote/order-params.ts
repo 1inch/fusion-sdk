@@ -1,11 +1,11 @@
 import {PresetEnum} from '../types'
 import {FusionOrderParamsData} from './types'
-import {ZERO_ADDRESS} from '../../../constants'
+import {Address} from '../../../address'
 
 export class FusionOrderParams {
     public readonly preset: PresetEnum = PresetEnum.fast
 
-    public readonly receiver: string = ZERO_ADDRESS
+    public readonly receiver: Address = Address.ZERO_ADDRESS
 
     public readonly permit: string | undefined
 

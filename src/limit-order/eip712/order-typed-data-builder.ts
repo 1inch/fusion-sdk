@@ -2,12 +2,12 @@ import {SignTypedDataVersion, TypedDataUtils} from '@metamask/eth-sig-util'
 import {
     EIP712Domain,
     LimitOrderV3TypeDataName,
-    LimitOrderV3TypeDataVersion,
+    LimitOrderV4TypeDataVersion,
     Order,
     VerifyingContract
 } from './domain'
 import {EIP712DomainType, EIP712TypedData} from './eip712.types'
-import {LimitOrderV3Struct} from '../types'
+import {LimitOrderV4Struct} from '../types'
 
 export function getOrderHash(data: EIP712TypedData): string {
     return (
@@ -20,12 +20,12 @@ export function getOrderHash(data: EIP712TypedData): string {
     )
 }
 
-export function buildOrderData(
+export function buildOrderTypedData(
     chainId: number,
     verifyingContract: string,
     name: string,
     version: string,
-    order: LimitOrderV3Struct
+    order: LimitOrderV4Struct
 ): EIP712TypedData {
     return {
         primaryType: 'Order',
@@ -35,7 +35,7 @@ export function buildOrderData(
     }
 }
 
-export function domainSeparator(
+export function getDomainSeparator(
     name: string,
     version: string,
     chainId: number,
@@ -55,7 +55,7 @@ export function domainSeparator(
 export function getLimitOrderV3Domain(chainId: number): EIP712DomainType {
     return {
         name: LimitOrderV3TypeDataName,
-        version: LimitOrderV3TypeDataVersion,
+        version: LimitOrderV4TypeDataVersion,
         chainId,
         verifyingContract: VerifyingContract
     }

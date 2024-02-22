@@ -19,6 +19,7 @@ export interface EIP712Parameter {
 export declare type EIP712ObjectValue =
     | BigNumber
     | string
+    | bigint
     | number
     | EIP712Object
 

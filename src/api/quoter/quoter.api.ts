@@ -21,12 +21,6 @@ export class QuoterApi {
     }
 
     async getQuote(params: QuoterRequest): Promise<Quote> {
-        const err = params.validate()
-
-        if (err) {
-            throw new Error(err)
-        }
-
         const queryParams = concatQueryParams(params.build())
         const url = `${this.config.url}/v1.0/${this.config.network}/quote/receive/${queryParams}`
 
@@ -39,12 +33,7 @@ export class QuoterApi {
         params: QuoterRequest,
         body: QuoterCustomPresetRequest
     ): Promise<Quote> {
-        const paramsErr = params.validate()
         const bodyErr = body.validate()
-
-        if (paramsErr) {
-            throw new Error(paramsErr)
-        }
 
         if (bodyErr) {
             throw new Error(bodyErr)

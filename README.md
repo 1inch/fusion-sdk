@@ -17,8 +17,8 @@ yarn add @1inch/fusion-sdk
 ## Modules docs
 
 -   [auction-calculator](src/auction-calculator/README.md)
--   [auction-salt](src/auction-salt/README.md)
--   [auction-suffix](src/auction-suffix/README.md)
+-   [auction-salt](src/auction-details/README.md)
+-   [auction-suffix](src/post-interaction-data/README.md)
 -   [fusion-order](src/fusion-order/README.md)
 -   [sdk](src/sdk/README.md)
 -   [ws-api](src/ws-api/README.md)

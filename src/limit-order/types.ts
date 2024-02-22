@@ -1,40 +1,33 @@
 import {NetworkEnum} from '../constants'
+import {Address} from '../address'
+import {Extension} from './extension'
 
 export type OrderInfoData = {
-    makerAsset: string
-    takerAsset: string
-    makingAmount: string
-    takingAmount: string
-    maker: string
-    salt?: string
-    allowedSender?: string
-    receiver?: string
+    makerAsset: Address
+    takerAsset: Address
+    makingAmount: bigint
+    takingAmount: bigint
+    maker: Address
+    salt?: bigint
+    allowedSender?: Address
+    receiver?: Address
 }
 
 export type OrderInfoDataFusion = Exclude<OrderInfoData, 'allowedSender'> & {
     network: NetworkEnum
 }
 
-export type InteractionsData = {
-    makerAssetData?: string
-    takerAssetData?: string
-    getMakingAmount?: string
-    getTakingAmount?: string
-    predicate?: string
-    permit?: string
-    preInteraction?: string
-    postInteraction?: string
-}
-
-export type LimitOrderV3Struct = {
+export type LimitOrderV4Struct = {
     salt: string
-    makerAsset: string
-    takerAsset: string
     maker: string
     receiver: string
-    allowedSender: string
+    makerAsset: string
+    takerAsset: string
     makingAmount: string
     takingAmount: string
-    offsets: string
-    interactions: string
+    makerTraits: string
+}
+
+export interface IExtensionBuilder {
+    build(): Extension
 }

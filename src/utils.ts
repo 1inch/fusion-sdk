@@ -1,8 +1,6 @@
 import BN from 'bn.js'
-import {NATIVE_CURRENCY} from './constants'
-
-export const isNativeCurrency = (address: string): boolean =>
-    address.toLowerCase() === NATIVE_CURRENCY
+import assert from 'assert'
+import {isHexBytes} from './validations'
 
 export function toSec(time: number | string | Date): number {
     const t = time instanceof Date ? time.getTime() : time
@@ -42,20 +40,8 @@ export function add0x(data: string): string {
     return '0x' + data
 }
 
-export function getCrypto(): Crypto {
-    if (typeof window !== 'undefined') {
-        return window.crypto
-    } else {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        return require('crypto').webcrypto as unknown as Crypto
-    }
-}
+export function getBytesCount(hex: string): bigint {
+    assert(isHexBytes(hex), 'invalid hex')
 
-/**
- * Throws `err` if `condition` is `false`
- */
-export function assert(condition: boolean, err: Error | string): void {
-    if (!condition) {
-        throw typeof err === 'string' ? new Error(err) : err
-    }
+    return BigInt(trim0x(hex).length / 2)
 }

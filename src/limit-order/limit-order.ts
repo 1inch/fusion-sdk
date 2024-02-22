@@ -1,159 +1,134 @@
-import {toBN, trim0x} from '../utils'
 import {
-    buildOrderData,
+    buildOrderTypedData,
     getLimitOrderV3Domain,
     getOrderHash,
     EIP712TypedData
 } from './eip712'
-import {ZERO_ADDRESS, ZX} from '../constants'
-import {buildSalt} from './utils'
-import {InteractionsData, LimitOrderV3Struct, OrderInfoData} from './types'
-import {parseInteractions} from './parser'
+import {LimitOrderV4Struct, OrderInfoData} from './types'
+import {MakerTraits} from './maker-traits'
+import {isHexString} from '../validations'
+import {Address} from '../address'
+import {AbiCoder} from 'ethers'
+import assert from 'assert'
+import {Extension} from './extension'
+import {UINT_160_MAX} from '../constants'
 
 export class LimitOrder {
-    public readonly makerAsset: string
+    private static readonly Web3Type = `tuple(${[
+        'uint256 salt',
+        'address maker',
+        'address receiver',
+        'address makerAsset',
+        'address takerAsset',
+        'uint256 makingAmount',
+        'uint256 takingAmount',
+        'uint256 makerTraits'
+    ]})`
 
-    public readonly takerAsset: string
+    public readonly salt: bigint
 
-    public readonly makingAmount: string
+    public readonly maker: Address
 
-    public readonly takingAmount: string
+    public readonly receiver: Address
 
-    public readonly from: string
+    public readonly makerAsset: Address
 
-    public readonly allowedSender: string
+    public readonly takerAsset: Address
 
-    public readonly receiver: string
+    public readonly makingAmount: bigint
 
-    public readonly makerAssetData: string
+    public readonly takingAmount: bigint
 
-    public readonly takerAssetData: string
+    public readonly makerTraits: MakerTraits
 
-    public readonly getMakingAmount: string
-
-    public readonly getTakingAmount: string
-
-    public readonly predicate: string
-
-    public readonly permit: string
-
-    public readonly preInteraction: string
-
-    public readonly postInteraction: string
-
-    protected salt: string
-
-    constructor(orderInfo: OrderInfoData, interactions?: InteractionsData) {
+    constructor(
+        orderInfo: OrderInfoData,
+        makerTraits?: MakerTraits,
+        extension: Extension = Extension.default()
+    ) {
         this.makerAsset = orderInfo.makerAsset
         this.takerAsset = orderInfo.takerAsset
         this.makingAmount = orderInfo.makingAmount
         this.takingAmount = orderInfo.takingAmount
-        this.salt = orderInfo.salt || buildSalt()
-        this.from = orderInfo.maker
-        this.allowedSender = orderInfo.allowedSender || ZERO_ADDRESS
-        this.receiver = orderInfo.receiver || ZERO_ADDRESS
-        this.makerAssetData = interactions?.makerAssetData || ZX
-        this.takerAssetData = interactions?.takerAssetData || ZX
+        this.salt = orderInfo.salt || LimitOrder.buildSalt(extension)
+        this.maker = orderInfo.maker
+        this.receiver = orderInfo.receiver || Address.ZERO_ADDRESS
+        this.makerTraits = makerTraits || new MakerTraits(0n)
 
-        this.getMakingAmount = interactions?.getMakingAmount || ZX
-
-        this.getTakingAmount = interactions?.getTakingAmount || ZX
-
-        this.predicate = interactions?.predicate || ZX
-        this.permit = interactions?.permit || ZX
-        this.preInteraction = interactions?.preInteraction || ZX
-        this.postInteraction = interactions?.postInteraction || ZX
+        if (!extension.isEmpty()) {
+            this.makerTraits.withExtension()
+        }
     }
 
-    static getOrderHash(
-        order: LimitOrderV3Struct,
-        domain = getLimitOrderV3Domain(1)
-    ): string {
-        return getOrderHash(LimitOrder.getTypedData(order, domain))
+    /**
+     * Build correct salt for order
+     *
+     * If order has extension - it is crucial to build correct salt
+     * otherwise order won't be ever filled
+     *
+     * @see https://github.com/1inch/limit-order-protocol/blob/7bc5129ae19832338169ca21e4cf6331e8ff44f6/contracts/OrderLib.sol#L153
+     *
+     */
+    static buildSalt(
+        extension: Extension,
+        baseSalt = BigInt(Math.round(Math.random() * Date.now()))
+    ): bigint {
+        if (extension.isEmpty()) {
+            return baseSalt
+        }
+
+        return (baseSalt << 160n) | (extension.keccak256() & UINT_160_MAX)
     }
 
-    static getTypedData(
-        order: LimitOrderV3Struct,
-        domain = getLimitOrderV3Domain(1)
-    ): EIP712TypedData {
-        return buildOrderData(
-            domain.chainId,
-            domain.verifyingContract,
-            domain.name,
-            domain.version,
-            order
+    static fromCalldata(bytes: string): LimitOrder {
+        assert(
+            isHexString(bytes),
+            'Bytes should be valid hex string with 0x prefix'
         )
-    }
 
-    static decode(struct: LimitOrderV3Struct): LimitOrder {
-        const interactions = parseInteractions(
-            struct.offsets,
-            struct.interactions
+        const info = AbiCoder.defaultAbiCoder().decode(
+            [LimitOrder.Web3Type],
+            bytes
         )
+
+        const order = info[0]
 
         return new LimitOrder(
             {
-                makerAsset: struct.makerAsset,
-                takerAsset: struct.takerAsset,
-                maker: struct.maker,
-                takingAmount: struct.takingAmount,
-                makingAmount: struct.makingAmount,
-                allowedSender: struct.allowedSender,
-                receiver: struct.receiver,
-                salt: struct.salt
+                salt: order.salt && BigInt(order.salt),
+                maker: new Address(order.maker),
+                receiver: new Address(order.receiver),
+                takingAmount: BigInt(order.takingAmount),
+                makingAmount: BigInt(order.makingAmount),
+                takerAsset: new Address(order.takerAsset),
+                makerAsset: new Address(order.makerAsset)
             },
-            interactions
+            new MakerTraits(BigInt(order.makerTraits))
         )
     }
 
-    build(): LimitOrderV3Struct {
-        const allInteractions = [
-            this.makerAssetData,
-            this.takerAssetData,
-            this.getMakingAmount,
-            this.getTakingAmount,
-            this.predicate,
-            this.permit,
-            this.preInteraction,
-            this.postInteraction
-        ]
+    public toCalldata(): string {
+        return AbiCoder.defaultAbiCoder().encode(
+            [LimitOrder.Web3Type],
+            [this.build()]
+        )
+    }
 
-        // https://stackoverflow.com/a/55261098/440168
-        const cumulativeSum = (
-            (sum) =>
-            (value: number): number => {
-                sum += value
-
-                return sum
-            }
-        )(0)
-
-        const offsets = allInteractions
-            .map((a) => a.length / 2 - 1)
-            .map(cumulativeSum)
-            .reduce(
-                (acc, a, i) => acc.add(toBN(a as number).shln(32 * i)),
-                toBN(0)
-            )
-
-        const interactions = '0x' + allInteractions.map(trim0x).join('')
-
+    public build(): LimitOrderV4Struct {
         return {
-            salt: this.salt,
-            makerAsset: this.makerAsset,
-            takerAsset: this.takerAsset,
-            maker: this.from,
-            receiver: this.receiver,
-            allowedSender: this.allowedSender,
-            makingAmount: this.makingAmount,
-            takingAmount: this.takingAmount,
-            offsets: offsets.toString(),
-            interactions
+            maker: this.maker.toString(),
+            makerAsset: this.makerAsset.toString(),
+            takerAsset: this.takerAsset.toString(),
+            makerTraits: (this.makerTraits?.asBigInt() || 0n).toString(),
+            salt: this.salt.toString(),
+            makingAmount: this.makingAmount.toString(),
+            takingAmount: this.takingAmount.toString(),
+            receiver: this.receiver.toString()
         }
     }
 
     getTypedData(domain = getLimitOrderV3Domain(1)): EIP712TypedData {
-        return buildOrderData(
+        return buildOrderTypedData(
             domain.chainId,
             domain.verifyingContract,
             domain.name,

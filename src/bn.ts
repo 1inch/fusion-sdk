@@ -1,4 +1,6 @@
 import {add0x} from './utils'
+import {BitMask} from './bit-mask'
+import assert from 'assert'
 
 export class BN {
     constructor(public readonly value: bigint) {}
@@ -49,7 +51,25 @@ export class BN {
         return this.value === 1n
     }
 
-    public toHex(): string {
-        return add0x(this.value.toString(16))
+    public getMask(mask: BitMask): BN {
+        return this.shiftRight(mask.offset).and(mask.mask)
+    }
+
+    public setMask(mask: BitMask, value: BN | bigint): BN {
+        const raw = typeof value === 'bigint' ? value : value.value
+        assert(
+            raw <= mask.mask,
+            `Value 0x${raw.toString(16)} to big for mask ${mask}`
+        )
+
+        return new BN(this.clearMask(mask).value | (raw << mask.offset))
+    }
+
+    public clearMask(mask: BitMask): BN {
+        return new BN(this.value - (mask.toBigInt() & this.value))
+    }
+
+    public toHex(pad = 0): string {
+        return add0x(this.value.toString(16).padStart(pad, '0'))
     }
 }

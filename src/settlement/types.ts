@@ -1,12 +1,13 @@
-import {LimitOrderV3Struct} from '../limit-order'
+import {LimitOrderV4Struct} from '../limit-order'
+import {Address} from '../address'
 
 export type SettlementConfig = {
-    resolverContract: string
-    settlementContract: string
+    resolverContract: Address
+    settlementExtension: Address
 }
 
 export type FillOrderParams = {
-    order: LimitOrderV3Struct
+    order: LimitOrderV4Struct
     signature: string
     makingAmount: string
     takingAmount: string

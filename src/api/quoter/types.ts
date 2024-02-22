@@ -32,6 +32,7 @@ export type QuoterResponse = {
     settlementAddress: string
     whitelist: string[]
     quoteId: string | null
+    bankFee: string | number
 }
 
 export type QuoterPresets = {

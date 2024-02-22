@@ -8,7 +8,6 @@ import {
     QuoteParams,
     QuoteCustomPresetParams
 } from './types'
-import {ZERO_ADDRESS} from '../constants'
 import {getLimitOrderV3Domain} from '../limit-order'
 import {
     ActiveOrdersRequest,
@@ -24,7 +23,9 @@ import {NonceManager} from '../nonce-manager/nonce-manager'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
 import {encodeCancelOrder} from './encoders'
-import {QuoterCustomPresetRequest} from '../api/quoter/quoter-custom-preset.request'
+import {QuoterCustomPresetRequest} from '../api'
+import {Address} from '../address'
+import {MakerTraits} from '../limit-order/maker-traits'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -68,7 +69,7 @@ export class FusionSDK {
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
             amount: params.amount,
-            walletAddress: ZERO_ADDRESS,
+            walletAddress: Address.ZERO_ADDRESS.toString(),
             permit: params.permit,
             enableEstimate: false,
             fee: params?.takingFeeBps,
@@ -86,7 +87,7 @@ export class FusionSDK {
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
             amount: params.amount,
-            walletAddress: ZERO_ADDRESS,
+            walletAddress: Address.ZERO_ADDRESS.toString(),
             permit: params.permit,
             enableEstimate: false,
             fee: params?.takingFeeBps,
@@ -109,11 +110,17 @@ export class FusionSDK {
 
         const nonce = await this.getNonce(params.walletAddress, params.nonce)
         const order = quote.createFusionOrder({
-            receiver: params.receiver,
+            receiver: params.receiver
+                ? new Address(params.receiver)
+                : undefined,
             preset: params.preset,
             nonce,
             permit: params.permit,
-            takingFeeReceiver: params.fee?.takingFeeReceiver
+            takingFeeReceiver: params.fee?.takingFeeReceiver,
+            allowPartialFills:
+                params.allowPartialFills === undefined
+                    ? true
+                    : params.allowPartialFills
         })
 
         const domain = getLimitOrderV3Domain(this.config.network)
@@ -172,18 +179,10 @@ export class FusionSDK {
 
         const {order} = orderData
 
-        return encodeCancelOrder({
-            makerAsset: order.makerAsset,
-            takerAsset: order.takerAsset,
-            maker: order.maker,
-            receiver: order.receiver,
-            allowedSender: order.allowedSender,
-            interactions: order.interactions,
-            makingAmount: order.makingAmount,
-            takingAmount: order.takingAmount,
-            salt: order.salt,
-            offsets: order.offsets
-        })
+        return encodeCancelOrder(
+            orderHash,
+            new MakerTraits(BigInt(order.makerTraits))
+        )
     }
 
     private async getQuoteResult(params: OrderParams): Promise<Quote> {
@@ -199,9 +198,7 @@ export class FusionSDK {
         })
 
         if (!params.customPreset) {
-            const quote = await this.api.getQuote(quoterRequest)
-
-            return quote
+            return this.api.getQuote(quoterRequest)
         }
 
         const quoterWithCustomPresetBodyRequest = QuoterCustomPresetRequest.new(
@@ -210,12 +207,10 @@ export class FusionSDK {
             }
         )
 
-        const quote = await this.api.getQuoteWithCustomPreset(
+        return this.api.getQuoteWithCustomPreset(
             quoterRequest,
             quoterWithCustomPresetBodyRequest
         )
-
-        return quote
     }
 
     private async getNonce(

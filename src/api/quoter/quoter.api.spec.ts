@@ -95,7 +95,8 @@ describe('Quoter API', () => {
         whitelist: [
             '0x84d99aa569d93a9ca187d83734c8c4a519c4e9b1',
             '0xcfa62f77920d6383be12c91c71bd403599e1116f'
-        ]
+        ],
+        bankFee: 0
     }
 
     const QuoterResponseMock = new Quote(1, params, ResponseMock)
@@ -115,28 +116,6 @@ describe('Quoter API', () => {
         expect(httpProvider.get).toHaveBeenCalledWith(
             'https://test.com/quoter/v1.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&source=sdk'
         )
-    })
-
-    it('should throw error if fee is exist but source isnt added ', async () => {
-        const quoter = QuoterApi.new(
-            {
-                url: 'https://test.com/quoter',
-                network: 1
-            },
-            httpProvider
-        )
-
-        const params = QuoterRequest.new({
-            fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-            amount: '1000000000000000000000',
-            walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
-            fee: 1
-        })
-
-        const res$ = quoter.getQuote(params)
-
-        expect(res$).rejects.toThrowError('cannot use fee without source')
     })
 
     it('should not throw error with fee and source added', async () => {

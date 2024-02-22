@@ -1,5 +1,5 @@
 import {AuctionPoint, PresetData} from './types'
-import {AuctionSalt} from '../../auction-salt'
+import {AuctionDetails} from '../../auction-details'
 
 export class Preset {
     public readonly auctionDuration: number
@@ -10,11 +10,11 @@ export class Preset {
 
     public readonly initialRateBump: number
 
-    public readonly auctionStartAmount: string
+    public readonly auctionStartAmount: bigint
 
-    public readonly auctionEndAmount: string
+    public readonly auctionEndAmount: bigint
 
-    public readonly tokenFee: string
+    public readonly tokenFee: bigint
 
     public readonly points: AuctionPoint[]
 
@@ -23,26 +23,26 @@ export class Preset {
         this.startAuctionIn = preset.startAuctionIn
         this.bankFee = preset.bankFee
         this.initialRateBump = preset.initialRateBump
-        this.auctionStartAmount = preset.auctionStartAmount
-        this.auctionEndAmount = preset.auctionEndAmount
-        this.tokenFee = preset.tokenFee
+        this.auctionStartAmount = BigInt(preset.auctionStartAmount)
+        this.auctionEndAmount = BigInt(preset.auctionEndAmount)
+        this.tokenFee = BigInt(preset.tokenFee)
         this.points = preset.points
     }
 
-    createAuctionSalt(additionalWaitPeriod = 0): AuctionSalt {
-        return new AuctionSalt({
+    createAuctionDetails(additionalWaitPeriod = 0): AuctionDetails {
+        return new AuctionDetails({
             duration: this.auctionDuration,
             auctionStartTime: this.calcAuctionStartTime(additionalWaitPeriod),
             initialRateBump: this.initialRateBump,
-            bankFee: this.bankFee
+            points: this.points
         })
     }
 
-    calcAuctionStartTime(additionalWaitPeriod = 0): number {
-        return (
+    private calcAuctionStartTime(additionalWaitPeriod = 0): bigint {
+        return BigInt(
             Math.floor(Date.now() / 1000) +
-            additionalWaitPeriod +
-            this.startAuctionIn
+                additionalWaitPeriod +
+                this.startAuctionIn
         )
     }
 }

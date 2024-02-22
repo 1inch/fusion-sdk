@@ -1,4 +1,4 @@
-import {LimitOrderV3Struct} from '../../limit-order'
+import {LimitOrderV4Struct} from '../../limit-order'
 import {NetworkEnum} from '../../constants'
 import {PaginationOutput} from '../types'
 import {AuctionPoint} from '../quoter'
@@ -19,7 +19,7 @@ export type ActiveOrder = {
     auctionStartDate: string
     auctionEndDate: string
     remainingMakerAmount: string
-    order: LimitOrderV3Struct
+    order: LimitOrderV4Struct
 }
 
 export type ActiveOrdersResponse = PaginationOutput<ActiveOrder>
@@ -48,7 +48,7 @@ export type Fill = {
 
 export type OrderStatusResponse = {
     status: OrderStatus
-    order: LimitOrderV3Struct
+    order: LimitOrderV4Struct
     points: AuctionPoint[] | null
     fills: Fill[]
     auctionStartDate: number

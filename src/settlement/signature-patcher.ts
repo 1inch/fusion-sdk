@@ -1,4 +1,4 @@
-import BN from 'bn.js'
+import {BN} from '../bn'
 
 export function patchSignature(signature: string): string {
     const isGnosisSafe = signature === '0x'
@@ -16,16 +16,14 @@ export function patchSignature(signature: string): string {
         return signature
     }
 
-    const sig = signature.substr(0, 130)
-    const lastByte = signature.substr(130, 2)
+    const sig = signature.slice(0, 130)
+    const lastByte = signature.slice(130, 132)
 
     if (lastByte.toLowerCase() === '1b' || lastByte === '00') {
         return sig
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const bnSig = new BN(sig.substring(2 + 64), 'hex').setn(255, true)
+    const bnSig = new BN(BigInt(sig.substring(64))).setBit(255n, 1)
 
-    return sig.substring(0, 2 + 64) + bnSig.toString('hex')
+    return sig.substring(0, 2 + 64) + bnSig.value.toString(16)
 }

@@ -1,6 +1,6 @@
 import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
 import {NetworkEnum} from '../constants'
-import {LimitOrderV3Struct} from '../limit-order'
+import {LimitOrderV4Struct} from '../limit-order'
 import {CustomPreset, PresetEnum} from '../api'
 import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
@@ -31,13 +31,17 @@ export type OrderParams = {
     toTokenAddress: string
     amount: string
     walletAddress: string
-    permit?: string // without first 20 bytes of token address
+    permit?: string // without the first 20 bytes of token address
     receiver?: string // by default: walletAddress (makerAddress)
     preset?: PresetEnum // by default: recommended preset
     nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
     fee?: TakingFeeInfo
     source?: string
     customPreset?: CustomPreset
+    /**
+     * true by default
+     */
+    allowPartialFills?: boolean
 }
 
 export type TakingFeeInfo = {
@@ -46,7 +50,7 @@ export type TakingFeeInfo = {
 }
 
 export type OrderInfo = {
-    order: LimitOrderV3Struct
+    order: LimitOrderV4Struct
     signature: string
     quoteId: string
     orderHash: string

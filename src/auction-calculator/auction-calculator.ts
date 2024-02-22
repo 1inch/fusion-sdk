@@ -1,42 +1,29 @@
-import {
-    AuctionPoint,
-    AuctionSuffix,
-    CONTRACT_TAKER_FEE_PRECISION
-} from '../auction-suffix'
-import {LimitOrderV3Struct} from '../limit-order'
-import {AuctionSalt} from '../auction-salt'
+import {PostInteractionData} from '../post-interaction-data'
+import {AuctionDetails, AuctionPoint} from '../auction-details'
 import {BigNumber} from '@ethersproject/bignumber'
 import {linearInterpolation} from './calc'
 import {RATE_BUMP_DENOMINATOR} from './constants'
+import {addRatioToAmount} from '../sdk'
 
 export class AuctionCalculator {
     constructor(
-        private readonly startTime: number,
-        private readonly duration: number,
-        private readonly initialRateBump: number,
+        private readonly startTime: bigint,
+        private readonly duration: bigint,
+        private readonly initialRateBump: bigint,
         private readonly points: AuctionPoint[],
-        private readonly takerFeeRatio: string
+        private readonly takerFeeRatio: bigint
     ) {}
 
-    static fromLimitOrderV3Struct(
-        order: LimitOrderV3Struct
-    ): AuctionCalculator {
-        const suffix = AuctionSuffix.decode(order.interactions)
-        const salt = AuctionSalt.decode(order.salt)
-
-        return AuctionCalculator.fromAuctionData(suffix, salt)
-    }
-
     static fromAuctionData(
-        suffix: AuctionSuffix,
-        salt: AuctionSalt
+        data: PostInteractionData,
+        details: AuctionDetails
     ): AuctionCalculator {
         return new AuctionCalculator(
-            salt.auctionStartTime,
-            salt.duration,
-            salt.initialRateBump,
-            suffix.points,
-            suffix.takerFeeRatio
+            data.auctionStartTime,
+            details.duration,
+            details.initialRateBump,
+            details.points,
+            data.integratorFee?.ratio || 0n
         )
     }
 
@@ -45,17 +32,14 @@ export class AuctionCalculator {
             .mul(BigNumber.from(rate).add(RATE_BUMP_DENOMINATOR))
             .div(RATE_BUMP_DENOMINATOR)
 
-        if (this.takerFeeRatio === '0') {
+        if (this.takerFeeRatio === 0n) {
             return auctionTakingAmount.toString()
         }
 
-        return auctionTakingAmount
-            .add(
-                auctionTakingAmount
-                    .mul(this.takerFeeRatio)
-                    .div(CONTRACT_TAKER_FEE_PRECISION)
-            )
-            .toString()
+        return addRatioToAmount(
+            auctionTakingAmount.toBigInt(),
+            this.takerFeeRatio
+        ).toString()
     }
 
     /**
@@ -70,7 +54,7 @@ export class AuctionCalculator {
         const currentTime = BigNumber.from(time)
 
         if (currentTime.lte(cumulativeTime)) {
-            return this.initialRateBump
+            return Number(this.initialRateBump)
         } else if (currentTime.gte(lastTime)) {
             return 0
         }

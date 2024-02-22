@@ -1,6 +1,6 @@
 import {decodeNonce, encodeNonce} from './utils'
 import {NonceManagerConfig} from './types'
-import {ONE_INCH_ROUTER_V5} from '../constants'
+import {ONE_INCH_LIMIT_ORDER_V4} from '../constants'
 
 export class NonceManager {
     constructor(private readonly config: NonceManagerConfig) {}
@@ -16,7 +16,7 @@ export class NonceManager {
         const encodedCall = encodeNonce(maker)
 
         const nonceHex = await this.config.provider.ethCall(
-            this.config.limitOrderProtocolContract || ONE_INCH_ROUTER_V5,
+            this.config.limitOrderProtocolContract || ONE_INCH_LIMIT_ORDER_V4,
             encodedCall
         )
 

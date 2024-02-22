@@ -1,16 +1,11 @@
 import {PresetEnum} from '../types'
+import {Address} from '../../../address'
 
-// todo: add deadline
 export type FusionOrderParamsData = {
     preset?: PresetEnum
-    receiver?: string
+    receiver?: Address
     nonce?: number | string
     permit?: string
     takingFeeReceiver?: string
-}
-
-export type PredicateParams = {
-    address: string
-    nonce?: number | string
-    deadline: number
+    allowPartialFills?: boolean
 }
