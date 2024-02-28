@@ -2,7 +2,7 @@ import {IntegratorFee, SettlementSuffixData} from './types'
 import assert from 'assert'
 import {isHexBytes} from '../validations'
 import {ethers} from 'ethers'
-import {BytesIter} from '../bytes-iter'
+import {BytesIter} from '../utils/bytes/bytes-iter'
 import {Address} from '../address'
 import {add0x} from '../utils'
 

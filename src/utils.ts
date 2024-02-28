@@ -1,6 +1,6 @@
-import BN from 'bn.js'
 import assert from 'assert'
 import {isHexBytes} from './validations'
+import {BN} from './utils/bytes/bn'
 
 export function toSec(time: number | string | Date): number {
     const t = time instanceof Date ? time.getTime() : time
@@ -13,15 +13,9 @@ export function toBN(val: number | string): BN {
         if (!Number.isSafeInteger(val)) {
             throw new Error('integer is not safe')
         }
-
-        return new BN(val)
     }
 
-    if (val.startsWith('0x')) {
-        return new BN(trim0x(val), 'hex')
-    }
-
-    return new BN(val)
+    return new BN(BigInt(val))
 }
 
 export function trim0x(data: string): string {

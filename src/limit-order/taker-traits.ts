@@ -1,18 +1,18 @@
 import {Address} from '../address'
 import {Extension} from './extension'
-import {BN} from '../bn'
-import {BitMask} from '../bit-mask'
+import {BN} from '../utils/bytes/bn'
+import {BitMask} from '../utils/bytes/bit-mask'
 import {getBytesCount, trim0x} from '../utils'
 import {Interaction} from './interaction'
 
 export enum AmountMode {
     /**
-     * Amount provided to fill function treat as `takingAmount` and `makingAmount` calculated based on it
+     * Amount provided to fill function treated as `takingAmount` and `makingAmount` calculated based on it
      */
     taker,
 
     /**
-     * Amount provided to fill function treat as `makingAmount` and `takingAmount` calculated based on it
+     * Amount provided to fill function treated as `makingAmount` and `takingAmount` calculated based on it
      */
     maker
 }
@@ -58,14 +58,14 @@ export class TakerTraits {
     private interaction?: Interaction
 
     constructor(
-        val: bigint,
+        flag: bigint,
         data: {
             receiver?: Address
             extension?: Extension
             interaction?: Interaction
         }
     ) {
-        this.flags = new BN(val)
+        this.flags = new BN(flag)
         this.receiver = data.receiver
         this.extension = data.extension
 
@@ -76,6 +76,11 @@ export class TakerTraits {
         return new TakerTraits(0n, {})
     }
 
+    /**
+     * Returns enabled amount mode, it defines how to treat passed amount in `fillContractOrderArgs` function
+     *
+     * @see AmountMode
+     */
     public getAmountMode(): AmountMode {
         return this.flags.getBit(TakerTraits.MAKER_AMOUNT_FLAG)
     }

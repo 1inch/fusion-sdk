@@ -1,5 +1,3 @@
-import {BigNumber} from '@ethersproject/bignumber'
-
 export interface EIP712TypedData {
     types: EIP712Types
     domain: EIP712Object
@@ -16,12 +14,7 @@ export interface EIP712Parameter {
     type: string
 }
 
-export declare type EIP712ObjectValue =
-    | BigNumber
-    | string
-    | bigint
-    | number
-    | EIP712Object
+export declare type EIP712ObjectValue = string | bigint | number | EIP712Object
 
 export interface EIP712Object {
     [key: string]: EIP712ObjectValue

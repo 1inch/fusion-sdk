@@ -1,6 +1,5 @@
 import {PostInteractionData} from '../post-interaction-data'
 import {AuctionDetails, AuctionPoint} from '../auction-details'
-import {BigNumber} from '@ethersproject/bignumber'
 import {linearInterpolation} from './calc'
 import {RATE_BUMP_DENOMINATOR} from './constants'
 import {addRatioToAmount} from '../sdk'
@@ -27,35 +26,38 @@ export class AuctionCalculator {
         )
     }
 
+    /**
+     * @see https://github.com/1inch/limit-order-settlement/blob/1b6757eecb2574953b543821db6f7bbff5afee48/contracts/extensions/BaseExtension.sol#L56
+     */
     calcAuctionTakingAmount(takingAmount: string, rate: number): string {
-        const auctionTakingAmount = BigNumber.from(takingAmount)
-            .mul(BigNumber.from(rate).add(RATE_BUMP_DENOMINATOR))
-            .div(RATE_BUMP_DENOMINATOR)
+        const auctionTakingAmount =
+            (BigInt(takingAmount) * (BigInt(rate) + RATE_BUMP_DENOMINATOR)) /
+            RATE_BUMP_DENOMINATOR
 
         if (this.takerFeeRatio === 0n) {
             return auctionTakingAmount.toString()
         }
 
         return addRatioToAmount(
-            auctionTakingAmount.toBigInt(),
+            auctionTakingAmount,
             this.takerFeeRatio
         ).toString()
     }
 
     /**
-     * @see https://github.com/1inch/limit-order-settlement/blob/3c7cf9eacbaf7a60624d7a6f069c59d809f2204a/contracts/libraries/OrderSuffix.sol#L75
+     * @see https://github.com/1inch/limit-order-settlement/blob/1b6757eecb2574953b543821db6f7bbff5afee48/contracts/extensions/BaseExtension.sol#L121
      * @param time auction timestamp in seconds
      */
     calcRateBump(time: number): number {
-        let cumulativeTime = BigNumber.from(this.startTime)
-        const lastTime = BigNumber.from(this.duration).add(cumulativeTime)
-        const startBump = BigNumber.from(this.initialRateBump)
+        let cumulativeTime = BigInt(this.startTime)
+        const lastTime = BigInt(this.duration) + cumulativeTime
+        const startBump = BigInt(this.initialRateBump)
 
-        const currentTime = BigNumber.from(time)
+        const currentTime = BigInt(time)
 
-        if (currentTime.lte(cumulativeTime)) {
+        if (currentTime <= cumulativeTime) {
             return Number(this.initialRateBump)
-        } else if (currentTime.gte(lastTime)) {
+        } else if (currentTime >= lastTime) {
             return 0
         }
 
@@ -65,10 +67,10 @@ export class AuctionCalculator {
         for (let i = this.points.length - 1; i >= 0; i--) {
             const {coefficient, delay} = this.points[i]
 
-            cumulativeTime = cumulativeTime.add(delay)
-            const coefficientBN = BigNumber.from(coefficient)
+            cumulativeTime = cumulativeTime + BigInt(delay)
+            const coefficientBN = BigInt(coefficient)
 
-            if (cumulativeTime.gt(currentTime)) {
+            if (cumulativeTime >= currentTime) {
                 const rate = linearInterpolation(
                     prevCumulativeTime,
                     cumulativeTime,
@@ -77,7 +79,7 @@ export class AuctionCalculator {
                     currentTime
                 )
 
-                return rate.toNumber()
+                return Number(rate)
             }
 
             prevCumulativeTime = cumulativeTime
@@ -88,10 +90,10 @@ export class AuctionCalculator {
             prevCumulativeTime,
             lastTime,
             prevCoefficient,
-            BigNumber.from(0),
+            0n,
             currentTime
         )
 
-        return rate.toNumber()
+        return Number(rate)
     }
 }

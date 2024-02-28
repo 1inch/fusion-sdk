@@ -1,7 +1,7 @@
 import {add0x} from '../utils'
-import {BN} from '../bn'
+import {BN} from '../utils/bytes/bn'
 import {Address} from '../address'
-import {BitMask} from '../bit-mask'
+import {BitMask} from '../utils/bytes/bit-mask'
 
 /**
  * The MakerTraits type is an uint256, and different parts of the number are used to encode different traits.

@@ -1,4 +1,3 @@
-import {BigNumber} from '@ethersproject/bignumber'
 import {isValidAmount} from '../../validations'
 import {
     CustomPreset,
@@ -71,23 +70,21 @@ export class QuoterCustomPresetRequest {
     }
 
     private validatePoints(
-        points?: CustomPresetPoint[],
-        auctionStartAmount?: string,
-        auctionEndAmount?: string
+        points: CustomPresetPoint[] = [],
+        auctionStartAmount: string,
+        auctionEndAmount: string
     ): string | null {
         if (!points) {
             return null
         }
 
         try {
-            const toTokenAmounts = points.map((p) =>
-                BigNumber.from(p.toTokenAmount)
-            )
+            const toTokenAmounts = points.map((p) => BigInt(p.toTokenAmount))
 
             const isValid = toTokenAmounts.every(
                 (amount) =>
-                    amount.lte(BigNumber.from(auctionStartAmount)) &&
-                    amount.gte(BigNumber.from(auctionEndAmount))
+                    amount <= BigInt(auctionStartAmount) &&
+                    amount >= BigInt(auctionEndAmount)
             )
 
             if (!isValid) {

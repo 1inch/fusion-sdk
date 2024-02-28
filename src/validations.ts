@@ -1,7 +1,7 @@
-import Web3 from 'web3'
+import {isAddress} from 'ethers'
 
 export function isValidAddress(address: string): boolean {
-    return Web3.utils.isAddress(address)
+    return isAddress(address)
 }
 
 export function isValidAmount(value: string | bigint): boolean {

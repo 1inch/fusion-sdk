@@ -3,12 +3,13 @@ import {Address} from '../address'
 import {ExtensionBuilder} from '../limit-order/extension-builder'
 import {AuctionDetails} from '../auction-details'
 import {PostInteractionData} from '../post-interaction-data'
+import {Interaction} from '../limit-order/interaction'
 
 export class FusionExtension extends ExtensionBuilder {
     constructor(
-        private readonly address: Address,
-        private readonly details: AuctionDetails,
-        private readonly postInteractionData: PostInteractionData
+        public readonly address: Address,
+        public readonly details: AuctionDetails,
+        public readonly postInteractionData: PostInteractionData
     ) {
         super()
     }
@@ -19,8 +20,7 @@ export class FusionExtension extends ExtensionBuilder {
         this.withMakingAmountData(this.address, detailsBytes)
             .withTakingAmountData(this.address, detailsBytes)
             .withPostInteraction(
-                this.address,
-                this.postInteractionData.encode()
+                new Interaction(this.address, this.postInteractionData.encode())
             )
 
         return super.build()

@@ -1,26 +1,28 @@
 import {SETTLEMENT_EXTENSION_ADDRESS_MAP} from '../constants'
 import {AuctionDetails} from '../auction-details'
 import {PostInteractionData} from '../post-interaction-data'
-import {LimitOrder, OrderInfoDataFusion} from '../limit-order'
-import {MakerTraits} from '../limit-order/maker-traits'
+import {LimitOrder, OrderInfoDataFusion, MakerTraits} from '../limit-order'
 import {FusionExtension} from './fusion-extension'
 import assert from 'assert'
+import {AuctionCalculator} from '../auction-calculator'
 
 export class FusionOrder extends LimitOrder {
+    public readonly extension: FusionExtension
+
     constructor(
         orderInfo: OrderInfoDataFusion,
         auctionDetails: AuctionDetails,
         postInteractionData: PostInteractionData,
         flags: {
-            unwrapWETH: boolean
-            deadline: bigint
+            unwrapWETH?: boolean
             nonce?: bigint
             permit?: string
             allowPartialFills?: boolean
-        }
+        } = {},
+        deadline = auctionDetails.auctionStartTime + 120n
     ) {
         const makerTraits = MakerTraits.default()
-            .withExpiration(flags.deadline)
+            .withExpiration(deadline)
             .allowMultipleFills()
 
         if (flags.allowPartialFills) {
@@ -29,7 +31,10 @@ export class FusionOrder extends LimitOrder {
             makerTraits.disablePartialFills()
         }
 
-        if (flags.unwrapWETH) {
+        const unwrapWETH =
+            flags.unwrapWETH === undefined ? false : flags.unwrapWETH
+
+        if (unwrapWETH) {
             makerTraits.enableNativeUnwrap()
         }
 
@@ -64,6 +69,15 @@ export class FusionOrder extends LimitOrder {
             },
             makerTraits,
             builtExtension
+        )
+
+        this.extension = extension
+    }
+
+    public getCalculator(): AuctionCalculator {
+        return AuctionCalculator.fromAuctionData(
+            this.extension.postInteractionData,
+            this.extension.details
         )
     }
 }

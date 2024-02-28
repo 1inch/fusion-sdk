@@ -1,5 +1,4 @@
 import {instance, mock} from 'ts-mockito'
-import Web3 from 'web3'
 import {PrivateKeyProviderConnector} from './private-key-provider.connector'
 import {
     EIP712Domain,
@@ -10,9 +9,10 @@ import {
     Order,
     VerifyingContract
 } from '../../limit-order'
+import {Web3Like} from './web3-provider-connector'
 
 describe('Private Key provider connector', () => {
-    let web3Provider: Web3
+    let web3Provider: Web3Like
     let privateKeyProviderConnector: PrivateKeyProviderConnector
 
     const testPrivateKey =
@@ -45,7 +45,7 @@ describe('Private Key provider connector', () => {
     }
 
     beforeEach(() => {
-        web3Provider = mock<Web3>()
+        web3Provider = mock<Web3Like>()
         privateKeyProviderConnector = new PrivateKeyProviderConnector(
             testPrivateKey,
             instance(web3Provider)
@@ -61,7 +61,7 @@ describe('Private Key provider connector', () => {
         )
 
         expect(signature).toBe(
-            '0x5fdfd550d904462654cfa830e8c88fccf814ab27b1da38ca3950df078ab30d2728181b56123d530f091552a77b0ebb0c6327467ab5abb34117112531e2bac9771b'
+            '0x8e1cbdc41ebb253aea91bfa41a028e735be4a5b25d93da0e3a6817070f40dcd31dfbc38bd3800ce2ff88089c77ca2f442dc84637006808aab0af00d966c917b11b'
         )
     })
 })

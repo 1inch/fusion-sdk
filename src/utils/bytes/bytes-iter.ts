@@ -1,6 +1,6 @@
 import assert from 'assert'
-import {isHexBytes} from './validations'
-import {add0x} from './utils'
+import {isHexBytes} from '../../validations'
+import {add0x} from '../../utils'
 
 export class BytesIter {
     private bytes: string

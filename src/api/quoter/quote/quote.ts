@@ -39,8 +39,6 @@ export class Quote {
 
     public readonly quoteId: string | null
 
-    public readonly bankFee: bigint
-
     constructor(
         private readonly network: NetworkEnum,
         private readonly params: QuoterRequest,
@@ -63,7 +61,6 @@ export class Quote {
         this.whitelist = response.whitelist
         this.settlementAddress = response.settlementAddress
         this.recommendedPreset = response.recommended_preset
-        this.bankFee = BigInt(response.bankFee || 0)
     }
 
     createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
@@ -78,7 +75,7 @@ export class Quote {
 
         const auctionDetails = preset.createAuctionDetails()
 
-        const suffix = PostInteractionData.new({
+        const postInteractionData = PostInteractionData.new({
             whitelist: this.whitelist.map((resolver) => ({
                 address: new Address(resolver),
                 allowance: 0
@@ -89,7 +86,7 @@ export class Quote {
                     ? new Address(paramsData?.takingFeeReceiver)
                     : Address.ZERO_ADDRESS
             },
-            bankFee: this.bankFee,
+            bankFee: preset.bankFee,
             auctionStartTime: auctionDetails.auctionStartTime
         })
 
@@ -112,12 +109,8 @@ export class Quote {
                 network: this.network
             },
             auctionDetails,
-            suffix,
+            postInteractionData,
             {
-                deadline:
-                    auctionDetails.auctionStartTime +
-                    auctionDetails.duration +
-                    32n,
                 nonce:
                     params.nonce === undefined
                         ? undefined
@@ -127,7 +120,8 @@ export class Quote {
                     ? this.params.fromTokenAddress + params.permit.substring(2)
                     : undefined,
                 allowPartialFills: paramsData?.allowPartialFills
-            }
+            },
+            auctionDetails.auctionStartTime + auctionDetails.duration + 32n
         )
     }
 

@@ -1,5 +1,5 @@
-import {BigNumber} from '@ethersproject/bignumber'
 import {add0x, toBN} from '../utils'
+import {BN} from '../utils/bytes/bn'
 
 export class PredicateFactory {
     /**
@@ -16,10 +16,7 @@ export class PredicateFactory {
      * @param deadline timestamp in seconds (order expiration time)
      */
     static timestampBelow(deadline: number): string {
-        const timeHex = BigNumber.from(deadline)
-            .toHexString()
-            .substring(2)
-            .padStart(64, '0')
+        const timeHex = BN.fromNumber(deadline).toHex(64).slice(2)
 
         return add0x(PredicateFactory.TIMESTAMP_BELOW_SELECTOR) + timeHex
     }
@@ -35,10 +32,10 @@ export class PredicateFactory {
         deadline: number
     ): string {
         const timeNonceAccountHex = toBN(address)
-            .or(toBN(nonce).shln(160))
-            .or(toBN(deadline).shln(208))
-            .toString('hex')
-            .padStart(64, '0')
+            .or(toBN(nonce).shiftLeft(160n))
+            .or(toBN(deadline).shiftLeft(208n))
+            .toHex(64)
+            .slice(2)
 
         return (
             add0x(PredicateFactory.TIMESTAMP_BELOW_AND_NONCE_EQUALS_SELECTOR) +
@@ -55,7 +52,7 @@ export class PredicateFactory {
             const dataAfterSelector = predicate.split(
                 PredicateFactory.TIMESTAMP_BELOW_SELECTOR
             )[1]
-            const deadlineSec = BigNumber.from(
+            const deadlineSec = BigInt(
                 '0x' + dataAfterSelector.substring(0, 64)
             ).toString()
 
@@ -72,9 +69,8 @@ export class PredicateFactory {
             )[1]
             const funcData = '0x' + dataAfterSelector.substring(0, 64)
             const info = toBN(funcData)
-            const dateSec = info.shrn(160 + (208 - 160)).toString()
 
-            return +dateSec
+            return info.shiftRight(160n + (208n - 160n)).toNumber()
         }
 
         return null

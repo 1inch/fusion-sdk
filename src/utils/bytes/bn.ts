@@ -1,9 +1,13 @@
-import {add0x} from './utils'
+import {add0x} from '../../utils'
 import {BitMask} from './bit-mask'
 import assert from 'assert'
 
 export class BN {
     constructor(public readonly value: bigint) {}
+
+    static fromNumber(n: number): BN {
+        return new BN(BigInt(n))
+    }
 
     public setBit(n: bigint, value: 1 | 0): BN {
         if (value) {
@@ -71,5 +75,9 @@ export class BN {
 
     public toHex(pad = 0): string {
         return add0x(this.value.toString(16).padStart(pad, '0'))
+    }
+
+    public toNumber(): number {
+        return Number(this.value)
     }
 }

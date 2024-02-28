@@ -1,10 +1,9 @@
-import {isValidAddress} from '../../validations'
+import {isHexString, isValidAddress} from '../../validations'
 import {
     ActiveOrdersRequestParams,
     OrdersByMakerParams,
     OrderStatusParams
 } from './types'
-import Web3 from 'web3'
 import {PaginationParams, PaginationRequest} from '../pagination'
 
 export class ActiveOrdersRequest {
@@ -52,7 +51,7 @@ export class OrderStatusRequest {
             return `orderHash length should be equals 66`
         }
 
-        if (!Web3.utils.isHex(this.orderHash)) {
+        if (!isHexString(this.orderHash)) {
             return `orderHash have to be hex`
         }
 

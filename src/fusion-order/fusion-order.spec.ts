@@ -50,10 +50,8 @@ describe('Fusion Order', () => {
             },
             auctionDetails,
             postInteractionData,
-            {
-                deadline: auctionStartTime + 180n,
-                unwrapWETH: false
-            }
+            {},
+            auctionStartTime + 180n
         )
 
         expect(order.build()).toStrictEqual({
@@ -65,7 +63,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '87748692625153679344424887076896305170056162277626525237169529665166579335168',
-            salt: '15899499410621535437654919479712770641313696078058'
+            salt: '15789007877680932694984109183015996704174250167756'
         })
     })
 })
