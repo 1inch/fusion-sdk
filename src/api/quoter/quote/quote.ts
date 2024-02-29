@@ -119,9 +119,12 @@ export class Quote {
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
                     : undefined,
-                allowPartialFills: paramsData?.allowPartialFills
-            },
-            auctionDetails.auctionStartTime + auctionDetails.duration + 32n
+                allowPartialFills: paramsData?.allowPartialFills,
+                deadline:
+                    auctionDetails.auctionStartTime +
+                    auctionDetails.duration +
+                    32n
+            }
         )
     }
 

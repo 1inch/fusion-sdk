@@ -81,29 +81,22 @@ export class MakerTraits {
     /**
      * If null is return than order has no expiration
      */
-    public expiration(): Date | null {
+    public expiration(): bigint | null {
         const timestampSec = this.value.getMask(MakerTraits.EXPIRATION_MASK)
 
         if (timestampSec.isZero()) {
             return null
         }
 
-        return new Date(Number(timestampSec.value * 1000n))
+        return timestampSec.value
     }
 
-    public withExpiration(expiration: Date | null | bigint): this {
-        const expirationSec =
-            expiration === null
-                ? 0
-                : expiration instanceof Date
-                ? Math.floor(expiration.getTime() / 1000)
-                : expiration
-
-        const timestampSec = BigInt(expirationSec)
+    public withExpiration(expiration: bigint): this {
+        const expirationSec = expiration === null ? 0n : expiration
 
         this.value = this.value.setMask(
             MakerTraits.EXPIRATION_MASK,
-            timestampSec
+            expirationSec
         )
 
         return this

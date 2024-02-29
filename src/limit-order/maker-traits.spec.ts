@@ -31,8 +31,7 @@ describe('MakerTraits', () => {
 
     test('expiration', () => {
         const traits = MakerTraits.default()
-        const expiration = new Date(Date.now() + 10_000)
-        expiration.setMilliseconds(0)
+        const expiration = 1000000n
 
         traits.withExpiration(expiration)
         expect(traits.expiration()).toEqual(expiration)

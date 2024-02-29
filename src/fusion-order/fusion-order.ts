@@ -13,33 +13,50 @@ export class FusionOrder extends LimitOrder {
         orderInfo: OrderInfoDataFusion,
         auctionDetails: AuctionDetails,
         postInteractionData: PostInteractionData,
-        flags: {
+        extra: {
             unwrapWETH?: boolean
+            /**
+             * Required if `allowPartialFills` is false
+             */
             nonce?: bigint
             permit?: string
+            /**
+             * Default is true
+             */
             allowPartialFills?: boolean
-        } = {},
-        deadline = auctionDetails.auctionStartTime + 120n
+            /**
+             * Default deadline is 2m
+             */
+            deadline?: bigint
+        } = {}
     ) {
         const makerTraits = MakerTraits.default()
-            .withExpiration(deadline)
+            .withExpiration(
+                extra.deadline || auctionDetails.auctionStartTime + 120n
+            )
             .allowMultipleFills()
 
-        if (flags.allowPartialFills) {
+        const allowPartialFills = extra.allowPartialFills ?? true
+
+        if (allowPartialFills) {
             makerTraits.allowPartialFills()
         } else {
             makerTraits.disablePartialFills()
+
+            assert(
+                extra.nonce !== undefined,
+                'Nonce required, when partial fills disabled'
+            )
         }
 
-        const unwrapWETH =
-            flags.unwrapWETH === undefined ? false : flags.unwrapWETH
+        const unwrapWETH = extra.unwrapWETH ?? false
 
         if (unwrapWETH) {
             makerTraits.enableNativeUnwrap()
         }
 
-        if (flags.nonce !== undefined) {
-            makerTraits.withNonce(flags.nonce).enableEpochManagerCheck()
+        if (extra.nonce !== undefined) {
+            makerTraits.withNonce(extra.nonce)
         }
 
         const extensionAddress =
@@ -56,8 +73,8 @@ export class FusionOrder extends LimitOrder {
             postInteractionData
         )
 
-        if (flags.permit) {
-            extension.withMakerPermit(orderInfo.makerAsset, flags.permit)
+        if (extra.permit) {
+            extension.withMakerPermit(orderInfo.makerAsset, extra.permit)
         }
 
         const builtExtension = extension.build()
