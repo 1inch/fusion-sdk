@@ -1,6 +1,6 @@
 import {LimitOrder, TakerTraits} from '../limit-order'
 import {Interface, Signature} from 'ethers'
-import LOP_V4_ABI from '../abi/AggregationRouterV5.abi.json'
+import LOP_V4_ABI from '../abi/AggregationRouterV6.abi.json'
 
 const lopContract = new Interface(LOP_V4_ABI)
 
