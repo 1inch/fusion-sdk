@@ -1,7 +1,6 @@
 import {FusionApi, Quote, QuoterRequest, RelayerRequest} from '../api'
 import {
     FusionSDKConfigParams,
-    Nonce,
     OrderInfo,
     OrderParams,
     PreparedOrder,
@@ -19,8 +18,6 @@ import {
     OrderStatusRequest,
     OrderStatusResponse
 } from '../api/orders'
-import {NonceManager} from '../nonce-manager/nonce-manager'
-import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
 import {encodeCancelOrder} from './encoders'
 import {QuoterCustomPresetRequest} from '../api'
@@ -108,19 +105,15 @@ export class FusionSDK {
             throw new Error('quoter has not returned quoteId')
         }
 
-        const nonce = await this.getNonce(params.walletAddress, params.nonce)
         const order = quote.createFusionOrder({
             receiver: params.receiver
                 ? new Address(params.receiver)
                 : undefined,
             preset: params.preset,
-            nonce,
+            nonce: params.nonce,
             permit: params.permit,
             takingFeeReceiver: params.fee?.takingFeeReceiver,
-            allowPartialFills:
-                params.allowPartialFills === undefined
-                    ? true
-                    : params.allowPartialFills
+            allowPartialFills: params.allowPartialFills
         })
 
         const domain = getLimitOrderV3Domain(this.config.network)
@@ -211,25 +204,5 @@ export class FusionSDK {
             quoterRequest,
             quoterWithCustomPresetBodyRequest
         )
-    }
-
-    private async getNonce(
-        walletAddress: string,
-        nonce?: OrderNonce | number | string
-    ): Promise<Nonce> {
-        if (!this.config.blockchainProvider) {
-            throw new Error('blockchainProvider has not set to config')
-        }
-
-        // in case of auto request from node
-        if (nonce === OrderNonce.Auto) {
-            const nonceManager = NonceManager.new({
-                provider: this.config.blockchainProvider
-            })
-
-            return nonceManager.getNonce(walletAddress)
-        }
-
-        return nonce
     }
 }

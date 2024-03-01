@@ -2,9 +2,9 @@ import {AuctionPoint, PresetData} from './types'
 import {AuctionDetails} from '../../auction-details'
 
 export class Preset {
-    public readonly auctionDuration: number
+    public readonly auctionDuration: bigint
 
-    public readonly startAuctionIn: number
+    public readonly startAuctionIn: bigint
 
     public readonly bankFee: bigint
 
@@ -24,8 +24,8 @@ export class Preset {
     }
 
     constructor(preset: PresetData) {
-        this.auctionDuration = preset.auctionDuration
-        this.startAuctionIn = preset.startAuctionIn
+        this.auctionDuration = BigInt(preset.auctionDuration)
+        this.startAuctionIn = BigInt(preset.startAuctionIn)
         this.bankFee = BigInt(preset.bankFee)
         this.initialRateBump = preset.initialRateBump
         this.auctionStartAmount = BigInt(preset.auctionStartAmount)
@@ -38,7 +38,7 @@ export class Preset {
         }
     }
 
-    createAuctionDetails(additionalWaitPeriod = 0): AuctionDetails {
+    createAuctionDetails(additionalWaitPeriod = 0n): AuctionDetails {
         return new AuctionDetails({
             duration: this.auctionDuration,
             auctionStartTime: this.calcAuctionStartTime(additionalWaitPeriod),
@@ -48,11 +48,11 @@ export class Preset {
         })
     }
 
-    private calcAuctionStartTime(additionalWaitPeriod = 0): bigint {
-        return BigInt(
-            Math.floor(Date.now() / 1000) +
-                additionalWaitPeriod +
-                this.startAuctionIn
+    private calcAuctionStartTime(additionalWaitPeriod = 0n): bigint {
+        return (
+            BigInt(Math.floor(Date.now() / 1000)) +
+            additionalWaitPeriod +
+            this.startAuctionIn
         )
     }
 }

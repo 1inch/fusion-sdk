@@ -4,8 +4,9 @@ import {Address} from '../../../address'
 export type FusionOrderParamsData = {
     preset?: PresetEnum
     receiver?: Address
-    nonce?: number | string
+    nonce?: bigint
     permit?: string
     takingFeeReceiver?: string
     allowPartialFills?: boolean
+    delayAuctionStartTimeBy?: bigint
 }

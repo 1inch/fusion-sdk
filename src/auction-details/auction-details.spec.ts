@@ -3,7 +3,7 @@ import {AuctionDetails} from './auction-details'
 describe('Auction details', () => {
     it('Should encode/decode details', () => {
         const details = new AuctionDetails({
-            duration: 180,
+            duration: 180n,
             auctionStartTime: 1673548149n,
             initialRateBump: 50000,
             points: [

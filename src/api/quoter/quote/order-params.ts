@@ -9,7 +9,9 @@ export class FusionOrderParams {
 
     public readonly permit: string | undefined
 
-    public readonly nonce: number | string | undefined
+    public readonly nonce: bigint | undefined
+
+    public readonly delayAuctionStartTimeBy: bigint
 
     constructor(params: FusionOrderParamsData) {
         if (params.preset) {
@@ -21,8 +23,8 @@ export class FusionOrderParams {
         }
 
         this.nonce = params.nonce
-
         this.permit = params.permit
+        this.delayAuctionStartTimeBy = params.delayAuctionStartTimeBy || 0n
     }
 
     static new(params?: FusionOrderParamsData): FusionOrderParams {

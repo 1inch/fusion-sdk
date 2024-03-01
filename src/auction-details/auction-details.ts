@@ -29,7 +29,7 @@ export class AuctionDetails {
     constructor(auction: {
         auctionStartTime: bigint
         initialRateBump: number
-        duration: number
+        duration: bigint
         points: AuctionPoint[]
         /**
          * Allows to scale estimate gas costs to actual gas costs
@@ -48,7 +48,7 @@ export class AuctionDetails {
     }) {
         this.auctionStartTime = BigInt(auction.auctionStartTime)
         this.initialRateBump = BigInt(auction.initialRateBump)
-        this.duration = BigInt(auction.duration)
+        this.duration = auction.duration
         this.points = auction.points
         this.gasCost = auction.gasCost || {
             gasBumpEstimate: 0n,
@@ -84,7 +84,7 @@ export class AuctionDetails {
         const gasBumpEstimate = iter.nextUint24()
         const gasPriceEstimate = iter.nextUint32()
         const start = iter.nextUint32()
-        const duration = Number(iter.nextUint24())
+        const duration = iter.nextUint24()
         const rateBump = Number(iter.nextUint24())
         const points = [] as AuctionPoint[]
 

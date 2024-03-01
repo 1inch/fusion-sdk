@@ -2,7 +2,6 @@ import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
 import {NetworkEnum} from '../constants'
 import {LimitOrderV4Struct} from '../limit-order'
 import {CustomPreset, PresetEnum} from '../api'
-import {OrderNonce} from '../nonce-manager/types'
 import {FusionOrder} from '../fusion-order'
 
 export type FusionSDKConfigParams = {
@@ -34,7 +33,12 @@ export type OrderParams = {
     permit?: string // without the first 20 bytes of token address
     receiver?: string // by default: walletAddress (makerAddress)
     preset?: PresetEnum // by default: recommended preset
-    nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
+    /**
+     * Unique for `walletAddress`, can be serial or random generated
+     *
+     * @see randBigInt
+     */
+    nonce?: bigint
     fee?: TakingFeeInfo
     source?: string
     customPreset?: CustomPreset

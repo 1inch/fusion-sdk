@@ -39,3 +39,7 @@ export function getBytesCount(hex: string): bigint {
 
     return BigInt(trim0x(hex).length / 2)
 }
+
+export function randBigInt(max: number): bigint {
+    return BigInt(Math.floor(Math.random() * max))
+}

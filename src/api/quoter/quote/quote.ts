@@ -73,7 +73,9 @@ export class Quote {
 
         const preset = this.getPreset(params.preset)
 
-        const auctionDetails = preset.createAuctionDetails()
+        const auctionDetails = preset.createAuctionDetails(
+            params.delayAuctionStartTimeBy
+        )
 
         const postInteractionData = PostInteractionData.new({
             whitelist: this.whitelist.map((resolver) => ({
@@ -111,19 +113,14 @@ export class Quote {
             auctionDetails,
             postInteractionData,
             {
-                nonce:
-                    params.nonce === undefined
-                        ? undefined
-                        : BigInt(params.nonce),
+                nonce: params.nonce,
                 unwrapWETH: this.params.toTokenAddress.isNative(),
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
                     : undefined,
                 allowPartialFills: paramsData?.allowPartialFills,
                 deadline:
-                    auctionDetails.auctionStartTime +
-                    auctionDetails.duration +
-                    32n
+                    auctionDetails.auctionStartTime + auctionDetails.duration
             }
         )
     }
