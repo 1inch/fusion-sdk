@@ -23,4 +23,21 @@ export class LimitOrderContract {
             args
         ])
     }
+
+    static getFillContractOrderArgsCalldata(
+        order: LimitOrder,
+        signature: string,
+        takerTraits: TakerTraits,
+        amount: bigint
+    ): string {
+        const {args, trait} = takerTraits.encode()
+
+        return lopContract.encodeFunctionData('fillContractOrderArgs', [
+            order.build(),
+            signature,
+            amount,
+            trait,
+            args
+        ])
+    }
 }
