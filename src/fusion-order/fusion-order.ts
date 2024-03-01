@@ -39,11 +39,13 @@ export class FusionOrder extends LimitOrder {
              * Default 12s
              */
             orderExpirationDelay?: bigint
+            enablePermit2?: boolean
         } = {}
     ) {
         const allowPartialFills = extra.allowPartialFills ?? true
         const allowMultipleFills = extra.allowMultipleFills ?? true
         const unwrapWETH = extra.unwrapWETH ?? false
+        const enablePermit2 = extra.enablePermit2 ?? false
 
         const deadline =
             auctionDetails.auctionStartTime +
@@ -64,6 +66,10 @@ export class FusionOrder extends LimitOrder {
 
         if (unwrapWETH) {
             makerTraits.enableNativeUnwrap()
+        }
+
+        if (enablePermit2) {
+            makerTraits.enablePermit2()
         }
 
         if (extra.nonce !== undefined) {
