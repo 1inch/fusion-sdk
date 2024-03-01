@@ -7,6 +7,14 @@ import {AuctionCalculator} from '../auction-calculator'
 import {Address} from '../address'
 
 export class FusionOrder extends LimitOrder {
+    private static defaultExtra = {
+        allowPartialFills: true,
+        allowMultipleFills: true,
+        unwrapWETH: false,
+        enablePermit2: false,
+        orderExpirationDelay: 12n
+    }
+
     public readonly fusionExtension: FusionExtension
 
     constructor(
@@ -40,17 +48,25 @@ export class FusionOrder extends LimitOrder {
              */
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
-        } = {}
+        } = FusionOrder.defaultExtra
     ) {
-        const allowPartialFills = extra.allowPartialFills ?? true
-        const allowMultipleFills = extra.allowMultipleFills ?? true
-        const unwrapWETH = extra.unwrapWETH ?? false
-        const enablePermit2 = extra.enablePermit2 ?? false
+        const {
+            allowPartialFills,
+            allowMultipleFills,
+            unwrapWETH,
+            enablePermit2,
+            orderExpirationDelay,
+            nonce,
+            permit
+        } = {
+            ...FusionOrder.defaultExtra,
+            ...extra
+        }
 
         const deadline =
             auctionDetails.auctionStartTime +
             auctionDetails.duration +
-            (extra.orderExpirationDelay || 12n)
+            orderExpirationDelay
 
         const makerTraits = MakerTraits.default()
             .withExpiration(deadline)
@@ -59,7 +75,7 @@ export class FusionOrder extends LimitOrder {
 
         if (makerTraits.isBitInvalidated()) {
             assert(
-                extra.nonce !== undefined,
+                nonce !== undefined,
                 'Nonce required, when partial fill or multiple fill disallowed'
             )
         }
@@ -72,8 +88,8 @@ export class FusionOrder extends LimitOrder {
             makerTraits.enablePermit2()
         }
 
-        if (extra.nonce !== undefined) {
-            makerTraits.withNonce(extra.nonce)
+        if (nonce !== undefined) {
+            makerTraits.withNonce(nonce)
         }
 
         const extension = new FusionExtension(
@@ -82,8 +98,8 @@ export class FusionOrder extends LimitOrder {
             postInteractionData
         )
 
-        if (extra.permit) {
-            extension.withMakerPermit(orderInfo.makerAsset, extra.permit)
+        if (permit) {
+            extension.withMakerPermit(orderInfo.makerAsset, permit)
         }
 
         const builtExtension = extension.build()
