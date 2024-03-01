@@ -7,10 +7,10 @@ interface TransactionConfig {
 }
 
 export interface Web3Like {
-    extend(extension: unknown): any
     eth: {
         call(transactionConfig: TransactionConfig): Promise<string>
     }
+    extend(extension: unknown): any
 }
 
 interface ExtendedWeb3 extends Web3Like {
