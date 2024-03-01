@@ -27,7 +27,7 @@ export class FusionOrderParams {
         this.delayAuctionStartTimeBy = params.delayAuctionStartTimeBy || 0n
     }
 
-    static new(params?: FusionOrderParamsData): FusionOrderParams {
-        return new FusionOrderParams(params || {})
+    static new(params: FusionOrderParamsData): FusionOrderParams {
+        return new FusionOrderParams(params)
     }
 }

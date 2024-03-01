@@ -1,12 +1,10 @@
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {PostInteractionData} from '../../../post-interaction-data'
-import {FusionOrder} from '../../../fusion-order'
 import {
-    NetworkEnum,
-    UNWRAPPER_CONTRACT_ADDRESS_MAP,
-    WRAPPER_ADDRESS_MAP
-} from '../../../constants'
+    AuctionWhitelistItem,
+    PostInteractionData
+} from '../../../post-interaction-data'
+import {FusionOrder} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData} from './types'
@@ -14,6 +12,12 @@ import {bpsToRatioFormat} from '../../../sdk/utils'
 import {Address} from '../../../address'
 
 export class Quote {
+    /**
+     * Fusion extension address
+     * @see https://github.com/1inch/limit-order-settlement
+     */
+    public readonly extension: Address
+
     public readonly fromTokenAmount: bigint
 
     public readonly feeToken: string
@@ -33,14 +37,13 @@ export class Quote {
 
     public readonly volume: Cost
 
-    public readonly whitelist: string[]
+    public readonly whitelist: Address[]
 
     public readonly settlementAddress: string
 
     public readonly quoteId: string | null
 
     constructor(
-        private readonly network: NetworkEnum,
         private readonly params: QuoterRequest,
         response: QuoterResponse
     ) {
@@ -58,12 +61,13 @@ export class Quote {
         this.prices = response.prices
         this.volume = response.volume
         this.quoteId = response.quoteId
-        this.whitelist = response.whitelist
+        this.whitelist = response.whitelist.map((a) => new Address(a))
         this.settlementAddress = response.settlementAddress
         this.recommendedPreset = response.recommended_preset
+        this.extension = new Address(response.extension)
     }
 
-    createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
+    createFusionOrder(paramsData: FusionOrderParamsData): FusionOrder {
         const params = FusionOrderParams.new({
             preset: paramsData?.preset || this.recommendedPreset,
             receiver: paramsData?.receiver,
@@ -78,10 +82,10 @@ export class Quote {
         )
 
         const postInteractionData = PostInteractionData.new({
-            whitelist: this.whitelist.map((resolver) => ({
-                address: new Address(resolver),
-                allowance: 0
-            })),
+            whitelist: this.getWhitelist(
+                auctionDetails.auctionStartTime,
+                preset.exclusiveResolver
+            ),
             integratorFee: {
                 ratio: bpsToRatioFormat(this.params.fee) || 0n,
                 receiver: paramsData?.takingFeeReceiver
@@ -92,23 +96,15 @@ export class Quote {
             auctionStartTime: auctionDetails.auctionStartTime
         })
 
-        const takerAsset = this.params.toTokenAddress.isNative()
-            ? WRAPPER_ADDRESS_MAP[this.network]
-            : this.params.toTokenAddress
-
-        const takerAssetReceiver = this.params.toTokenAddress.isNative()
-            ? UNWRAPPER_CONTRACT_ADDRESS_MAP[this.network]
-            : params.receiver
-
         return new FusionOrder(
+            this.extension,
             {
                 makerAsset: this.params.fromTokenAddress,
-                takerAsset,
+                takerAsset: this.params.toTokenAddress,
                 makingAmount: this.fromTokenAmount,
                 takingAmount: preset.auctionEndAmount,
                 maker: this.params.walletAddress,
-                receiver: takerAssetReceiver,
-                network: this.network
+                receiver: params.receiver
             },
             auctionDetails,
             postInteractionData,
@@ -119,13 +115,33 @@ export class Quote {
                     ? this.params.fromTokenAddress + params.permit.substring(2)
                     : undefined,
                 allowPartialFills: paramsData?.allowPartialFills,
-                deadline:
-                    auctionDetails.auctionStartTime + auctionDetails.duration
+                orderExpirationDelay: paramsData?.orderExpirationDelay
             }
         )
     }
 
     getPreset(type = PresetEnum.fast): Preset {
         return this.presets[type] as Preset
+    }
+
+    private getWhitelist(
+        auctionStartTime: bigint,
+        exclusiveResolver?: Address
+    ): AuctionWhitelistItem[] {
+        if (exclusiveResolver) {
+            this.whitelist.map((resolver) => {
+                const isExclusive = resolver.equal(exclusiveResolver)
+
+                return {
+                    address: resolver,
+                    allowance: isExclusive ? 0n : auctionStartTime
+                }
+            })
+        }
+
+        return this.whitelist.map((resolver) => ({
+            address: resolver,
+            delay: 0n
+        }))
     }
 }

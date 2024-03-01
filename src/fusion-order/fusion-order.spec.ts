@@ -1,15 +1,17 @@
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from '../auction-details'
 import {PostInteractionData} from '../post-interaction-data'
-import {NetworkEnum} from '../constants'
 import {Address} from '../address'
 import {MakerTraits} from '../limit-order'
 
 describe('Fusion Order', () => {
     it('should create fusion order', () => {
+        const extensionContract = new Address(
+            '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
+        )
         const auctionStartTime = 1673548149n
         const auctionDetails = new AuctionDetails({
-            duration: 180,
+            duration: 180n,
             auctionStartTime,
             initialRateBump: 50000,
             points: [
@@ -26,15 +28,15 @@ describe('Fusion Order', () => {
                     address: new Address(
                         '0x00000000219ab540356cbb839cbe05303d7705fa'
                     ),
-                    allowance: 0
+                    delay: 0n
                 }
             ],
             auctionStartTime,
             bankFee: 0n
         })
 
-        const deadline = auctionStartTime + 180n
         const order = new FusionOrder(
+            extensionContract,
             {
                 makerAsset: new Address(
                     '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
@@ -47,12 +49,10 @@ describe('Fusion Order', () => {
                 maker: new Address(
                     '0x00000000219ab540356cbb839cbe05303d7705fa'
                 ),
-                network: NetworkEnum.ETHEREUM,
                 salt: 10n
             },
             auctionDetails,
-            postInteractionData,
-            {deadline}
+            postInteractionData
         )
 
         const builtOrder = order.build()
@@ -64,14 +64,13 @@ describe('Fusion Order', () => {
             takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
             takingAmount: '1420000000',
             makerTraits:
-                '29852648006495581632639394572552351243421169944806243217440737661210014515200',
+                '29852648006495581632639394572552351243421169944806257724550573036760110989312',
             salt: '14832508939800728556409473652845244531014097925085'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
         expect(makerTraits.isNativeUnwrapEnabled()).toEqual(false)
-        expect(makerTraits.expiration()).toEqual(deadline)
         expect(makerTraits.nonceOrEpoch()).toEqual(0n)
-        expect(makerTraits.isPartialFilledAllowed()).toEqual(true)
+        expect(makerTraits.isPartialFillAllowed()).toEqual(true)
     })
 })

@@ -1,11 +1,10 @@
 ## PostInteractionData
 
-Contains data for whitelist validation and fee charging 
+Contains data for whitelist validation and fee charging
 
 **Examples:**
 
 ```typescript
-
 type AuctionWhitelistItem = {
     /**
      * Address which can perform resolving
@@ -23,12 +22,12 @@ type SettlementSuffixData = {
      * fee to charge from taker in takerAsset
      */
     integratorFee: {
-     /**
-      * 10000000 = 1%
-      */
-      ratio: bigint,
-      receiver: Address  
-    },
+        /**
+         * 10000000 = 1%
+         */
+        ratio: bigint
+        receiver: Address
+    }
     /**
      * Fee charged from resolver in favor of DAO
      */

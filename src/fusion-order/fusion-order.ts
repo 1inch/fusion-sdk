@@ -1,16 +1,21 @@
-import {SETTLEMENT_EXTENSION_ADDRESS_MAP} from '../constants'
 import {AuctionDetails} from '../auction-details'
 import {PostInteractionData} from '../post-interaction-data'
-import {LimitOrder, OrderInfoDataFusion, MakerTraits} from '../limit-order'
+import {LimitOrder, MakerTraits, OrderInfoData} from '../limit-order'
 import {FusionExtension} from './fusion-extension'
 import assert from 'assert'
 import {AuctionCalculator} from '../auction-calculator'
+import {Address} from '../address'
 
 export class FusionOrder extends LimitOrder {
-    public readonly extension: FusionExtension
+    public readonly fusionExtension: FusionExtension
 
     constructor(
-        orderInfo: OrderInfoDataFusion,
+        /**
+         * Fusion extension address
+         * @see https://github.com/1inch/limit-order-settlement
+         */
+        extensionContract: Address,
+        orderInfo: OrderInfoData,
         auctionDetails: AuctionDetails,
         postInteractionData: PostInteractionData,
         extra: {
@@ -24,32 +29,38 @@ export class FusionOrder extends LimitOrder {
              * Default is true
              */
             allowPartialFills?: boolean
+
             /**
-             * Default deadline is 2m
+             * Default is true
              */
-            deadline?: bigint
+            allowMultipleFills?: boolean
+            /**
+             * Order will expire in `orderExpirationDelay` after auction ends
+             * Default 12s
+             */
+            orderExpirationDelay?: bigint
         } = {}
     ) {
-        const makerTraits = MakerTraits.default()
-            .withExpiration(
-                extra.deadline || auctionDetails.auctionStartTime + 120n
-            )
-            .allowMultipleFills()
-
         const allowPartialFills = extra.allowPartialFills ?? true
+        const allowMultipleFills = extra.allowMultipleFills ?? true
+        const unwrapWETH = extra.unwrapWETH ?? false
 
-        if (allowPartialFills) {
-            makerTraits.allowPartialFills()
-        } else {
-            makerTraits.disablePartialFills()
+        const deadline =
+            auctionDetails.auctionStartTime +
+            auctionDetails.duration +
+            (extra.orderExpirationDelay || 12n)
 
+        const makerTraits = MakerTraits.default()
+            .withExpiration(deadline)
+            .setPartialFills(allowPartialFills)
+            .setMultipleFills(allowMultipleFills)
+
+        if (makerTraits.isBitInvalidated()) {
             assert(
                 extra.nonce !== undefined,
-                'Nonce required, when partial fills disabled'
+                'Nonce required, when partial fill or multiple fill disallowed'
             )
         }
-
-        const unwrapWETH = extra.unwrapWETH ?? false
 
         if (unwrapWETH) {
             makerTraits.enableNativeUnwrap()
@@ -59,16 +70,8 @@ export class FusionOrder extends LimitOrder {
             makerTraits.withNonce(extra.nonce)
         }
 
-        const extensionAddress =
-            SETTLEMENT_EXTENSION_ADDRESS_MAP[orderInfo.network]
-
-        assert(
-            extensionAddress,
-            `Fusion extension not exists on chain ${orderInfo.network}`
-        )
-
         const extension = new FusionExtension(
-            extensionAddress,
+            extensionContract,
             auctionDetails,
             postInteractionData
         )
@@ -88,13 +91,13 @@ export class FusionOrder extends LimitOrder {
             builtExtension
         )
 
-        this.extension = extension
+        this.fusionExtension = extension
     }
 
     public getCalculator(): AuctionCalculator {
         return AuctionCalculator.fromAuctionData(
-            this.extension.postInteractionData,
-            this.extension.details
+            this.fusionExtension.postInteractionData,
+            this.fusionExtension.details
         )
     }
 }

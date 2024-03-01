@@ -32,6 +32,7 @@ export type QuoterResponse = {
     settlementAddress: string
     whitelist: string[]
     quoteId: string | null
+    extension: string
 }
 
 export type QuoterPresets = {
@@ -54,6 +55,7 @@ export type PresetData = {
         gasBumpEstimate: string
         gasPriceEstimate: string
     }
+    exclusiveResolver?: string
 }
 
 export type AuctionPoint = {

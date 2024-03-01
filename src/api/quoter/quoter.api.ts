@@ -26,7 +26,7 @@ export class QuoterApi {
 
         const res = await this.httpClient.get<QuoterResponse>(url)
 
-        return new Quote(this.config.network, params, res)
+        return new Quote(params, res)
     }
 
     async getQuoteWithCustomPreset(
@@ -45,6 +45,6 @@ export class QuoterApi {
 
         const res = await this.httpClient.post<QuoterResponse>(url, bodyParams)
 
-        return new Quote(this.config.network, params, res)
+        return new Quote(params, res)
     }
 }

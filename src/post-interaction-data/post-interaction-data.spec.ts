@@ -20,7 +20,7 @@ describe('PostInteractionData', () => {
             whitelist: [
                 {
                     address: Address.ZERO_ADDRESS,
-                    allowance: 0
+                    delay: 0n
                 }
             ],
             integratorFee: {

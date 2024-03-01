@@ -27,6 +27,7 @@ describe('Quoter API', () => {
     })
 
     const ResponseMock = {
+        extension: '0x8273f37417da37c4a6c3995e82cf442f87a25d9c',
         fromTokenAmount: '1000000000000000000000',
         recommended_preset: PresetEnum.medium,
         feeToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -99,7 +100,7 @@ describe('Quoter API', () => {
         bankFee: 0
     }
 
-    const QuoterResponseMock = new Quote(1, params, ResponseMock)
+    const QuoterResponseMock = new Quote(params, ResponseMock)
 
     it('should get quote with disabled estimate', async () => {
         const quoter = QuoterApi.new(
@@ -136,7 +137,7 @@ describe('Quoter API', () => {
             source: '0x6b175474e89094c44da98b954eedeac495271d0f'
         })
 
-        const QuoterResponseMock = new Quote(1, params, ResponseMock)
+        const QuoterResponseMock = new Quote(params, ResponseMock)
         const res = await quoter.getQuote(params)
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.get).toHaveBeenCalledWith(
@@ -174,7 +175,7 @@ describe('Quoter API', () => {
             }
         })
 
-        const QuoterResponseMock = new Quote(1, params, ResponseMock)
+        const QuoterResponseMock = new Quote(params, ResponseMock)
         const res = await quoter.getQuoteWithCustomPreset(params, body)
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.post).toHaveBeenCalledWith(

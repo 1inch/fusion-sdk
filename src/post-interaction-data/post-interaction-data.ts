@@ -32,7 +32,7 @@ export class PostInteractionData {
             ...data,
             whitelist: data.whitelist.map((d) => ({
                 addressHalf: d.address.toString().slice(-20),
-                allowance: d.allowance
+                delay: d.delay
             }))
         })
     }
@@ -87,11 +87,11 @@ export class PostInteractionData {
                 .nextBytes(10)
                 .toString(16)
                 .padStart(20, '0')
-            const allowance = Number(iter.nextUint16())
+            const allowance = iter.nextUint16()
 
             whitelist.push({
                 addressHalf,
-                allowance
+                delay: allowance
             })
         }
 
@@ -158,7 +158,7 @@ export class PostInteractionData {
                 },
                 {
                     type: 'uint16',
-                    value: BigInt(wl.allowance)
+                    value: BigInt(wl.delay)
                 }
             )
         }
@@ -178,5 +178,5 @@ type WhitelistItem = {
     /**
      * Delay from auction start in seconds
      */
-    allowance: number
+    delay: bigint
 }

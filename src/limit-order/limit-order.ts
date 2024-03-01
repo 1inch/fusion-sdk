@@ -43,8 +43,8 @@ export class LimitOrder {
 
     constructor(
         orderInfo: OrderInfoData,
-        makerTraits?: MakerTraits,
-        extension: Extension = Extension.default()
+        makerTraits = new MakerTraits(0n),
+        public readonly extension: Extension = Extension.default()
     ) {
         this.makerAsset = orderInfo.makerAsset
         this.takerAsset = orderInfo.takerAsset
@@ -53,7 +53,7 @@ export class LimitOrder {
         this.salt = orderInfo.salt || LimitOrder.buildSalt(extension)
         this.maker = orderInfo.maker
         this.receiver = orderInfo.receiver || Address.ZERO_ADDRESS
-        this.makerTraits = makerTraits || new MakerTraits(0n)
+        this.makerTraits = makerTraits
 
         if (!extension.isEmpty()) {
             this.makerTraits.withExtension()

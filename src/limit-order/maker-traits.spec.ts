@@ -54,13 +54,13 @@ describe('MakerTraits', () => {
 
     test('partial fills', () => {
         const traits = MakerTraits.default()
-        expect(traits.isPartialFilledAllowed()).toEqual(true)
+        expect(traits.isPartialFillAllowed()).toEqual(true)
 
         traits.disablePartialFills()
-        expect(traits.isPartialFilledAllowed()).toEqual(false)
+        expect(traits.isPartialFillAllowed()).toEqual(false)
 
         traits.allowPartialFills()
-        expect(traits.isPartialFilledAllowed()).toEqual(true)
+        expect(traits.isPartialFillAllowed()).toEqual(true)
     })
 
     test('multiple fills', () => {

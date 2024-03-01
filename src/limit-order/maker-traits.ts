@@ -136,7 +136,7 @@ export class MakerTraits {
         return this
     }
 
-    public isPartialFilledAllowed(): boolean {
+    public isPartialFillAllowed(): boolean {
         return this.value.getBit(MakerTraits.NO_PARTIAL_FILLS_FLAG) === 0
     }
 
@@ -150,6 +150,10 @@ export class MakerTraits {
         this.value = this.value.setBit(MakerTraits.NO_PARTIAL_FILLS_FLAG, 0)
 
         return this
+    }
+
+    public setPartialFills(val: boolean): this {
+        return val ? this.allowPartialFills() : this.disablePartialFills()
     }
 
     public isMultipleFillsAllowed(): boolean {
@@ -166,6 +170,10 @@ export class MakerTraits {
         this.value = this.value.setBit(MakerTraits.ALLOW_MULTIPLE_FILLS_FLAG, 0)
 
         return this
+    }
+
+    public setMultipleFills(val: boolean): this {
+        return val ? this.allowMultipleFills() : this.disableMultipleFills()
     }
 
     public hasPreInteraction(): boolean {
@@ -264,5 +272,9 @@ export class MakerTraits {
 
     public asBigInt(): bigint {
         return this.value.value
+    }
+
+    public isBitInvalidated(): boolean {
+        return !this.isPartialFillAllowed() || !this.isMultipleFillsAllowed()
     }
 }

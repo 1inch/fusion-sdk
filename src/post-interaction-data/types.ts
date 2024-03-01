@@ -5,7 +5,7 @@ export type AuctionWhitelistItem = {
     /**
      * Delay from auction start in seconds
      */
-    allowance: number
+    delay: bigint
 }
 
 export type SettlementSuffixData = {

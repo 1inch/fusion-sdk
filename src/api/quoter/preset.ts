@@ -1,5 +1,6 @@
 import {AuctionPoint, PresetData} from './types'
 import {AuctionDetails} from '../../auction-details'
+import {Address} from '../../address'
 
 export class Preset {
     public readonly auctionDuration: bigint
@@ -23,6 +24,8 @@ export class Preset {
         gasPriceEstimate: bigint
     }
 
+    public readonly exclusiveResolver?: Address
+
     constructor(preset: PresetData) {
         this.auctionDuration = BigInt(preset.auctionDuration)
         this.startAuctionIn = BigInt(preset.startAuctionIn)
@@ -36,6 +39,9 @@ export class Preset {
             gasPriceEstimate: BigInt(preset.gasCost?.gasPriceEstimate || 0n),
             gasBumpEstimate: BigInt(preset.gasCost?.gasBumpEstimate || 0n)
         }
+        this.exclusiveResolver = preset.exclusiveResolver
+            ? new Address(preset.exclusiveResolver)
+            : undefined
     }
 
     createAuctionDetails(additionalWaitPeriod = 0n): AuctionDetails {
