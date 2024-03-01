@@ -1,5 +1,4 @@
 import {anything, instance, mock, when} from 'ts-mockito'
-import Web3 from 'web3'
 import {
     EIP712Domain,
     EIP712TypedData,
@@ -9,10 +8,10 @@ import {
     Order,
     VerifyingContract
 } from '../../limit-order'
-import {Web3ProviderConnector} from './web3-provider-connector'
+import {Web3Like, Web3ProviderConnector} from './web3-provider-connector'
 
 describe('Web3 provider connector', () => {
-    let web3Provider: Web3
+    let web3Provider: Web3Like
     let web3ProviderConnector: Web3ProviderConnector
 
     const limitOrder: LimitOrderV4Struct = {
@@ -42,7 +41,7 @@ describe('Web3 provider connector', () => {
     }
 
     beforeEach(() => {
-        web3Provider = mock<Web3>()
+        web3Provider = mock<Web3Like>()
         web3ProviderConnector = new Web3ProviderConnector(
             instance(web3Provider)
         )

@@ -21,7 +21,7 @@ describe('Auction Calculator', () => {
         const auctionDetails = new AuctionDetails({
             auctionStartTime,
             initialRateBump: 50000,
-            duration: 120,
+            duration: 120n,
             points: []
         })
 

@@ -1,7 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import Web3 from 'web3'
 import {instance, mock} from 'ts-mockito'
-import {HttpProviderConnector, Web3ProviderConnector} from '../../connector'
+import {
+    HttpProviderConnector,
+    Web3Like,
+    Web3ProviderConnector
+} from '../../connector'
 import {NetworkEnum} from '../../constants'
 import {FusionSDK} from '../../sdk'
 
@@ -19,11 +22,11 @@ function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
 }
 
 describe(__filename, () => {
-    let web3Provider: Web3
+    let web3Provider: Web3Like
     let web3ProviderConnector: Web3ProviderConnector
 
     beforeEach(() => {
-        web3Provider = mock<Web3>()
+        web3Provider = mock<Web3Like>()
         web3ProviderConnector = new Web3ProviderConnector(
             instance(web3Provider)
         )
