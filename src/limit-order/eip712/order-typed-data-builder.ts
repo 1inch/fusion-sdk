@@ -1,7 +1,7 @@
 import {SignTypedDataVersion, TypedDataUtils} from '@metamask/eth-sig-util'
 import {
     EIP712Domain,
-    LimitOrderV3TypeDataName,
+    LimitOrderV4TypeDataName,
     LimitOrderV4TypeDataVersion,
     Order,
     VerifyingContract
@@ -52,9 +52,9 @@ export function getDomainSeparator(
     )
 }
 
-export function getLimitOrderV3Domain(chainId: number): EIP712DomainType {
+export function getLimitOrderV4Domain(chainId: number): EIP712DomainType {
     return {
-        name: LimitOrderV3TypeDataName,
+        name: LimitOrderV4TypeDataName,
         version: LimitOrderV4TypeDataVersion,
         chainId,
         verifyingContract: VerifyingContract

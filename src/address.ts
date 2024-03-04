@@ -23,6 +23,10 @@ export class Address {
         return new Address(add0x(val.toString(16).padStart(40, '0')))
     }
 
+    static fromFirstBytes(bytes: string): Address {
+        return new Address(bytes.slice(0, 42))
+    }
+
     public toString(): string {
         return this.val
     }

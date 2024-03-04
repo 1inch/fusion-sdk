@@ -3,38 +3,12 @@
 **Example:**
 
 ```typescript
-import {PostInteractionData, AuctionDetails, FusionOrder} from '@1inch/fusion-sdk'
+import {AuctionDetails, FusionOrder} from '@1inch/fusion-sdk'
 
 const extensionContract = new Address(
     '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
 )
-const auctionStartTime = 1673548149n
-const auctionDetails = new AuctionDetails({
-    duration: 180n,
-    auctionStartTime,
-    initialRateBump: 50000,
-    points: [
-        {
-            coefficient: 20000,
-            delay: 12
-        }
-    ]
-})
-
-const postInteractionData = PostInteractionData.new({
-    whitelist: [
-        {
-            address: new Address(
-                '0x00000000219ab540356cbb839cbe05303d7705fa'
-            ),
-            delay: 0n
-        }
-    ],
-    auctionStartTime,
-    bankFee: 0n
-})
-
-const order = new FusionOrder(
+const order = FusionOrder.new(
     extensionContract,
     {
         makerAsset: new Address(
@@ -50,8 +24,27 @@ const order = new FusionOrder(
         ),
         salt: 10n
     },
-    auctionDetails,
-    postInteractionData
+    {
+        auction: new AuctionDetails({
+            duration: 180n,
+            startTime: 1673548149n,
+            initialRateBump: 50000,
+            points: [
+                {
+                    coefficient: 20000,
+                    delay: 12
+                }
+            ]
+        }),
+        whitelist: [
+            {
+                address: new Address(
+                    '0x00000000219ab540356cbb839cbe05303d7705fa'
+                ),
+                delay: 0n
+            }
+        ]
+    },
 )
 
 const builtOrder = order.build()

@@ -4,7 +4,7 @@ import {
     EIP712Domain,
     EIP712TypedData,
     LimitOrderV4Struct,
-    LimitOrderV3TypeDataName,
+    LimitOrderV4TypeDataName,
     LimitOrderV4TypeDataVersion,
     Order,
     VerifyingContract
@@ -36,7 +36,7 @@ describe('Private Key provider connector', () => {
             Order: Order
         },
         domain: {
-            name: LimitOrderV3TypeDataName,
+            name: LimitOrderV4TypeDataName,
             version: LimitOrderV4TypeDataVersion,
             chainId: 1,
             verifyingContract: VerifyingContract

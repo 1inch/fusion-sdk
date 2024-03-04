@@ -18,7 +18,7 @@ describe('Limit Order', () => {
             maker: new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
         })
 
-        expect(LimitOrder.fromCalldata(order.toCalldata())).toEqual(order)
+        expect(LimitOrder.decode(order.encode())).toEqual(order)
     })
     //
     // it('should create limit order with timestampBelow predicate', () => {

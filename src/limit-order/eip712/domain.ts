@@ -18,6 +18,6 @@ export const Order = [
     {name: 'makerTraits', type: 'uint256'}
 ]
 
-export const LimitOrderV3TypeDataName = '1inch Aggregation Router'
+export const LimitOrderV4TypeDataName = '1inch Aggregation Router'
 export const LimitOrderV4TypeDataVersion = '6'
 export const VerifyingContract = ONE_INCH_LIMIT_ORDER_V4

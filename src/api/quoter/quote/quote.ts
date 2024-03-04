@@ -1,9 +1,6 @@
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {
-    AuctionWhitelistItem,
-    PostInteractionData
-} from '../../../post-interaction-data'
+import {AuctionWhitelistItem} from '../../../fusion-order/settlement-post-interaction-data'
 import {FusionOrder} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
@@ -81,22 +78,7 @@ export class Quote {
             params.delayAuctionStartTimeBy
         )
 
-        const postInteractionData = PostInteractionData.new({
-            whitelist: this.getWhitelist(
-                auctionDetails.auctionStartTime,
-                preset.exclusiveResolver
-            ),
-            integratorFee: {
-                ratio: bpsToRatioFormat(this.params.fee) || 0n,
-                receiver: paramsData?.takingFeeReceiver
-                    ? new Address(paramsData?.takingFeeReceiver)
-                    : Address.ZERO_ADDRESS
-            },
-            bankFee: preset.bankFee,
-            auctionStartTime: auctionDetails.auctionStartTime
-        })
-
-        return new FusionOrder(
+        return FusionOrder.new(
             this.extension,
             {
                 makerAsset: this.params.fromTokenAddress,
@@ -106,8 +88,22 @@ export class Quote {
                 maker: this.params.walletAddress,
                 receiver: params.receiver
             },
-            auctionDetails,
-            postInteractionData,
+            {
+                auction: auctionDetails,
+                fees: {
+                    integratorFee: {
+                        ratio: bpsToRatioFormat(this.params.fee) || 0n,
+                        receiver: paramsData?.takingFeeReceiver
+                            ? new Address(paramsData?.takingFeeReceiver)
+                            : Address.ZERO_ADDRESS
+                    },
+                    bankFee: preset.bankFee
+                },
+                whitelist: this.getWhitelist(
+                    auctionDetails.startTime,
+                    preset.exclusiveResolver
+                )
+            },
             {
                 nonce: params.nonce,
                 unwrapWETH: this.params.toTokenAddress.isNative(),

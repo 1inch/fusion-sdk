@@ -1,5 +1,5 @@
 import {AuctionPoint, PresetData} from './types'
-import {AuctionDetails} from '../../auction-details'
+import {AuctionDetails} from '../../fusion-order/auction-details'
 import {Address} from '../../address'
 
 export class Preset {
@@ -47,7 +47,7 @@ export class Preset {
     createAuctionDetails(additionalWaitPeriod = 0n): AuctionDetails {
         return new AuctionDetails({
             duration: this.auctionDuration,
-            auctionStartTime: this.calcAuctionStartTime(additionalWaitPeriod),
+            startTime: this.calcAuctionStartTime(additionalWaitPeriod),
             initialRateBump: this.initialRateBump,
             points: this.points,
             gasCost: this.gasCostInfo

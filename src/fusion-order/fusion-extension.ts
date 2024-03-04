@@ -1,15 +1,15 @@
 import {Extension} from 'src/limit-order/extension'
 import {Address} from '../address'
 import {ExtensionBuilder} from '../limit-order/extension-builder'
-import {AuctionDetails} from '../auction-details'
-import {PostInteractionData} from '../post-interaction-data'
+import {AuctionDetails} from './auction-details'
+import {SettlementPostInteractionData} from './settlement-post-interaction-data'
 import {Interaction} from '../limit-order/interaction'
 
 export class FusionExtension extends ExtensionBuilder {
     constructor(
         public readonly address: Address,
         public readonly details: AuctionDetails,
-        public readonly postInteractionData: PostInteractionData
+        public readonly postInteractionData: SettlementPostInteractionData
     ) {
         super()
     }

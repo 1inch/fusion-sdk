@@ -1,6 +1,6 @@
-import {AuctionDetails} from '../auction-details'
+import {AuctionDetails} from '../fusion-order/auction-details'
 import {AuctionCalculator} from './auction-calculator'
-import {PostInteractionData} from '../post-interaction-data'
+import {SettlementPostInteractionData} from '../fusion-order/settlement-post-interaction-data'
 import {bpsToRatioFormat} from '../sdk'
 import {Address} from '../address'
 
@@ -8,7 +8,7 @@ describe('Auction Calculator', () => {
     it('should be created successfully from suffix and salt', () => {
         const auctionStartTime = 1708448252n
 
-        const postInteraction = PostInteractionData.new({
+        const postInteraction = SettlementPostInteractionData.new({
             integratorFee: {
                 ratio: bpsToRatioFormat(1),
                 receiver: Address.fromBigInt(1n)
@@ -19,7 +19,7 @@ describe('Auction Calculator', () => {
         })
 
         const auctionDetails = new AuctionDetails({
-            auctionStartTime,
+            startTime: auctionStartTime,
             initialRateBump: 50000,
             duration: 120n,
             points: []

@@ -1,20 +1,22 @@
-import {PostInteractionData} from './post-interaction-data'
-import {Address} from '../address'
-import {bpsToRatioFormat} from '../sdk/utils'
+import {SettlementPostInteractionData} from './settlement-post-interaction-data'
+import {Address} from '../../address'
+import {bpsToRatioFormat} from '../../sdk/utils'
 
 describe('PostInteractionData', () => {
     it('Should encode/decode with no fees and whitelist', () => {
-        const data = PostInteractionData.new({
+        const data = SettlementPostInteractionData.new({
             bankFee: 0n,
             auctionStartTime: 1708117482n,
             whitelist: []
         })
 
-        expect(PostInteractionData.decode(data.encode())).toStrictEqual(data)
+        expect(
+            SettlementPostInteractionData.decode(data.encode())
+        ).toStrictEqual(data)
     })
 
     it('Should encode/decode with fees and whitelist', () => {
-        const data = PostInteractionData.new({
+        const data = SettlementPostInteractionData.new({
             bankFee: 0n,
             auctionStartTime: 1708117482n,
             whitelist: [
@@ -29,6 +31,8 @@ describe('PostInteractionData', () => {
             }
         })
 
-        expect(PostInteractionData.decode(data.encode())).toStrictEqual(data)
+        expect(
+            SettlementPostInteractionData.decode(data.encode())
+        ).toStrictEqual(data)
     })
 })

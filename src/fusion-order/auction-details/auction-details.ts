@@ -1,13 +1,13 @@
-import {trim0x} from '../utils'
+import {trim0x} from '../../utils'
 import {ethers} from 'ethers'
 import assert from 'assert'
-import {isHexBytes} from '../validations'
-import {AuctionPoint} from './types'
-import {BytesIter} from '../utils/bytes/bytes-iter'
-import {UINT_24_MAX, UINT_32_MAX} from '../constants'
+import {isHexBytes} from '../../validations'
+import {AuctionGasCostInfo, AuctionPoint} from './types'
+import {BytesIter} from '../../utils/bytes/bytes-iter'
+import {UINT_24_MAX, UINT_32_MAX} from '../../constants'
 
 export class AuctionDetails {
-    public readonly auctionStartTime: bigint
+    public readonly startTime: bigint
 
     public readonly duration: bigint
 
@@ -27,26 +27,16 @@ export class AuctionDetails {
     }
 
     constructor(auction: {
-        auctionStartTime: bigint
+        startTime: bigint
         initialRateBump: number
         duration: bigint
         points: AuctionPoint[]
         /**
          * Allows to scale estimate gas costs to actual gas costs
          */
-        gasCost?: {
-            /**
-             * Rate bump to cover gas price. 10_000_000 means 100%
-             */
-            gasBumpEstimate: bigint
-
-            /**
-             * Gas price at estimation time. 1000 means 1 Gwei
-             */
-            gasPriceEstimate: bigint
-        }
+        gasCost?: AuctionGasCostInfo
     }) {
-        this.auctionStartTime = BigInt(auction.auctionStartTime)
+        this.startTime = BigInt(auction.startTime)
         this.initialRateBump = BigInt(auction.initialRateBump)
         this.duration = auction.duration
         this.points = auction.points
@@ -57,7 +47,7 @@ export class AuctionDetails {
 
         assert(this.gasCost.gasBumpEstimate <= UINT_24_MAX)
         assert(this.gasCost.gasPriceEstimate <= UINT_32_MAX)
-        assert(this.auctionStartTime <= UINT_32_MAX)
+        assert(this.startTime <= UINT_32_MAX)
         assert(this.duration <= UINT_24_MAX)
         assert(this.initialRateBump <= UINT_24_MAX)
     }
@@ -96,7 +86,7 @@ export class AuctionDetails {
         }
 
         return new AuctionDetails({
-            auctionStartTime: start,
+            startTime: start,
             duration: duration,
             initialRateBump: rateBump,
             points,
@@ -116,7 +106,7 @@ export class AuctionDetails {
             [
                 this.gasCost.gasBumpEstimate,
                 this.gasCost.gasPriceEstimate,
-                this.auctionStartTime,
+                this.startTime,
                 this.duration,
                 this.initialRateBump
             ]

@@ -7,7 +7,7 @@ import {
     QuoteParams,
     QuoteCustomPresetParams
 } from './types'
-import {getLimitOrderV3Domain} from '../limit-order'
+import {getLimitOrderV4Domain} from '../limit-order'
 import {
     ActiveOrdersRequest,
     ActiveOrdersRequestParams,
@@ -116,7 +116,7 @@ export class FusionSDK {
             allowPartialFills: params.allowPartialFills
         })
 
-        const domain = getLimitOrderV3Domain(this.config.network)
+        const domain = getLimitOrderV4Domain(this.config.network)
         const hash = order.getOrderHash(domain)
 
         return {order, hash, quoteId: quote.quoteId}
@@ -131,7 +131,7 @@ export class FusionSDK {
         }
 
         const orderStruct = order.build()
-        const domain = getLimitOrderV3Domain(this.config.network)
+        const domain = getLimitOrderV4Domain(this.config.network)
 
         const signature = await this.config.blockchainProvider.signTypedData(
             orderStruct.maker,

@@ -1,12 +1,12 @@
 import {IntegratorFee, SettlementSuffixData} from './types'
 import assert from 'assert'
-import {isHexBytes} from '../validations'
+import {isHexBytes} from '../../validations'
 import {ethers} from 'ethers'
-import {BytesIter} from '../utils/bytes/bytes-iter'
-import {Address} from '../address'
-import {add0x} from '../utils'
+import {BytesIter} from '../../utils/bytes/bytes-iter'
+import {Address} from '../../address'
+import {add0x} from '../../utils'
 
-export class PostInteractionData {
+export class SettlementPostInteractionData {
     public readonly whitelist: WhitelistItem[]
 
     public readonly integratorFee?: IntegratorFee
@@ -27,8 +27,8 @@ export class PostInteractionData {
         this.auctionStartTime = data.auctionStartTime
     }
 
-    static new(data: SettlementSuffixData): PostInteractionData {
-        return new PostInteractionData({
+    static new(data: SettlementSuffixData): SettlementPostInteractionData {
+        return new SettlementPostInteractionData({
             ...data,
             whitelist: data.whitelist.map((d) => ({
                 addressHalf: d.address.toString().slice(-20),
@@ -48,9 +48,9 @@ export class PostInteractionData {
      *
      * All data is tight packed
      *
-     * @see PostInteractionData.encode
+     * @see SettlementPostInteractionData.encode
      */
-    static decode(data: string): PostInteractionData {
+    static decode(data: string): SettlementPostInteractionData {
         assert(
             isHexBytes(data),
             'Post interaction data must be valid bytes string'
@@ -95,7 +95,7 @@ export class PostInteractionData {
             })
         }
 
-        return new PostInteractionData({
+        return new SettlementPostInteractionData({
             integratorFee,
             bankFee,
             auctionStartTime,
@@ -104,7 +104,7 @@ export class PostInteractionData {
     }
 
     /**
-     * Serialize post interaction data to bytes
+     * Serialize post-interaction data to bytes
      */
     public encode(): string {
         const fee = {

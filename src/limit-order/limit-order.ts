@@ -1,12 +1,12 @@
 import {
     buildOrderTypedData,
-    getLimitOrderV3Domain,
+    getLimitOrderV4Domain,
     getOrderHash,
     EIP712TypedData
 } from './eip712'
 import {LimitOrderV4Struct, OrderInfoData} from './types'
 import {MakerTraits} from './maker-traits'
-import {isHexString} from '../validations'
+import {isHexBytes} from '../validations'
 import {Address} from '../address'
 import {AbiCoder} from 'ethers'
 import assert from 'assert'
@@ -80,9 +80,9 @@ export class LimitOrder {
         return (baseSalt << 160n) | (extension.keccak256() & UINT_160_MAX)
     }
 
-    static fromCalldata(bytes: string): LimitOrder {
+    static decode(bytes: string, extension = Extension.default()): LimitOrder {
         assert(
-            isHexString(bytes),
+            isHexBytes(bytes),
             'Bytes should be valid hex string with 0x prefix'
         )
 
@@ -103,11 +103,34 @@ export class LimitOrder {
                 takerAsset: new Address(order.takerAsset),
                 makerAsset: new Address(order.makerAsset)
             },
-            new MakerTraits(BigInt(order.makerTraits))
+            new MakerTraits(BigInt(order.makerTraits)),
+            extension
         )
     }
 
-    public toCalldata(): string {
+    static fromBuiltStruct(
+        data: LimitOrderV4Struct,
+        extension = Extension.default()
+    ): LimitOrder {
+        return new LimitOrder(
+            {
+                /**
+                 * @see LimitOrder.buildSalt
+                 */
+                salt: BigInt(data.salt) >> 160n,
+                maker: new Address(data.maker),
+                receiver: new Address(data.receiver),
+                makerAsset: new Address(data.makerAsset),
+                takerAsset: new Address(data.takerAsset),
+                makingAmount: BigInt(data.makingAmount),
+                takingAmount: BigInt(data.takingAmount)
+            },
+            new MakerTraits(BigInt(data.makerTraits)),
+            extension
+        )
+    }
+
+    public encode(): string {
         return AbiCoder.defaultAbiCoder().encode(
             [LimitOrder.Web3Type],
             [this.build()]
@@ -127,7 +150,7 @@ export class LimitOrder {
         }
     }
 
-    getTypedData(domain = getLimitOrderV3Domain(1)): EIP712TypedData {
+    getTypedData(domain = getLimitOrderV4Domain(1)): EIP712TypedData {
         return buildOrderTypedData(
             domain.chainId,
             domain.verifyingContract,
@@ -137,7 +160,7 @@ export class LimitOrder {
         )
     }
 
-    getOrderHash(domain = getLimitOrderV3Domain(1)): string {
+    getOrderHash(domain = getLimitOrderV4Domain(1)): string {
         return getOrderHash(this.getTypedData(domain))
     }
 }
