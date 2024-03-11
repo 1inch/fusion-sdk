@@ -1,11 +1,11 @@
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {AuctionWhitelistItem} from '../../../fusion-order/settlement-post-interaction-data'
+import {AuctionWhitelistItem} from '../../../fusion-order'
 import {FusionOrder} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData} from './types'
-import {bpsToRatioFormat} from '../../../sdk/utils'
+import {bpsToRatioFormat} from '../../../sdk'
 import {Address} from '@1inch/limit-order-sdk'
 
 export class Quote {
@@ -13,7 +13,7 @@ export class Quote {
      * Fusion extension address
      * @see https://github.com/1inch/limit-order-settlement
      */
-    public readonly extension: Address
+    public readonly settlementAddress: Address
 
     public readonly fromTokenAmount: bigint
 
@@ -36,8 +36,6 @@ export class Quote {
 
     public readonly whitelist: Address[]
 
-    public readonly settlementAddress: string
-
     public readonly quoteId: string | null
 
     constructor(
@@ -59,9 +57,8 @@ export class Quote {
         this.volume = response.volume
         this.quoteId = response.quoteId
         this.whitelist = response.whitelist.map((a) => new Address(a))
-        this.settlementAddress = response.settlementAddress
         this.recommendedPreset = response.recommended_preset
-        this.extension = new Address(response.extension)
+        this.settlementAddress = new Address(response.settlementAddress)
     }
 
     createFusionOrder(paramsData: FusionOrderParamsData): FusionOrder {
@@ -79,7 +76,7 @@ export class Quote {
         )
 
         return FusionOrder.new(
-            this.extension,
+            this.settlementAddress,
             {
                 makerAsset: this.params.fromTokenAddress,
                 takerAsset: this.params.toTokenAddress,
