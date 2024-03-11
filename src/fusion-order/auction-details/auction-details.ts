@@ -58,7 +58,7 @@ export class AuctionDetails {
      * @param data bytes with 0x prefix in next format:
      * - uint24 gasBumpEstimate
      * - uint32 gasPriceEstimate
-     * - uint32 auctionStartTime
+     * - uint32 startTime
      * - uint24 duration
      * - uint24 initialRateBump
      * - [uint24 rate, uint16 delay] * N points
