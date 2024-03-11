@@ -1,5 +1,5 @@
-import {BlockchainProviderConnector} from './blockchain-provider.connector'
 import {EIP712TypedData} from '@1inch/limit-order-sdk'
+import {BlockchainProviderConnector} from './blockchain-provider.connector'
 
 interface TransactionConfig {
     data?: string

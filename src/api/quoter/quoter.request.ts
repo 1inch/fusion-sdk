@@ -1,6 +1,6 @@
+import {Address} from '@1inch/limit-order-sdk'
 import {QuoterRequestParams} from './types'
 import {isValidAmount} from '../../validations'
-import {Address} from '@1inch/limit-order-sdk'
 
 export class QuoterRequest {
     public readonly fromTokenAddress: Address

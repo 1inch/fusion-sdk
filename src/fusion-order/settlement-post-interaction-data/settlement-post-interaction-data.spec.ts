@@ -1,6 +1,6 @@
+import {Address} from '@1inch/limit-order-sdk'
 import {SettlementPostInteractionData} from './settlement-post-interaction-data'
 import {bpsToRatioFormat} from '../../sdk/utils'
-import {Address} from '@1inch/limit-order-sdk'
 
 describe('PostInteractionData', () => {
     it('Should encode/decode with no fees and whitelist', () => {

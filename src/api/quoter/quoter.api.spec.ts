@@ -1,9 +1,9 @@
 import {QuoterApi} from './quoter.api'
 import {QuoterRequest} from './quoter.request'
-import {HttpProviderConnector} from '../../connector'
 import {Quote} from './quote'
 import {PresetEnum} from './types'
 import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
+import {HttpProviderConnector} from '../../connector'
 
 describe('Quoter API', () => {
     let httpProvider: HttpProviderConnector

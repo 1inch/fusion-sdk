@@ -1,12 +1,11 @@
-import {Cost, PresetEnum, QuoterResponse} from '../types'
-import {Preset} from '../preset'
-import {AuctionWhitelistItem} from '../../../fusion-order'
-import {FusionOrder} from '../../../fusion-order'
-import {QuoterRequest} from '../quoter.request'
+import {Address} from '@1inch/limit-order-sdk'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData} from './types'
+import {Cost, PresetEnum, QuoterResponse} from '../types'
+import {Preset} from '../preset'
+import {AuctionWhitelistItem, FusionOrder} from '../../../fusion-order'
+import {QuoterRequest} from '../quoter.request'
 import {bpsToRatioFormat} from '../../../sdk'
-import {Address} from '@1inch/limit-order-sdk'
 
 export class Quote {
     /**

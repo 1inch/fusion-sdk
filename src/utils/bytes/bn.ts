@@ -1,6 +1,6 @@
-import {add0x} from '../../utils'
-import {BitMask} from './bit-mask'
 import assert from 'assert'
+import {BitMask} from './bit-mask'
+import {add0x} from '../../utils'
 
 export class BN {
     constructor(public readonly value: bigint) {}

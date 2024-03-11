@@ -1,5 +1,4 @@
 import {instance, mock} from 'ts-mockito'
-import {PrivateKeyProviderConnector} from './private-key-provider.connector'
 import {
     EIP712Domain,
     EIP712TypedData,
@@ -9,6 +8,7 @@ import {
     LimitOrderV4TypeDataVersion,
     Order
 } from '@1inch/limit-order-sdk'
+import {PrivateKeyProviderConnector} from './private-key-provider.connector'
 import {Web3Like} from './web3-provider-connector'
 
 describe('Private Key provider connector', () => {

@@ -1,4 +1,8 @@
-import {FusionApi, Quote, QuoterRequest, RelayerRequest} from '../api'
+import {
+    Address,
+    getLimitOrderV4Domain,
+    MakerTraits
+} from '@1inch/limit-order-sdk'
 import {
     FusionSDKConfigParams,
     OrderInfo,
@@ -7,6 +11,14 @@ import {
     QuoteParams,
     QuoteCustomPresetParams
 } from './types'
+import {encodeCancelOrder} from './encoders'
+import {
+    FusionApi,
+    Quote,
+    QuoterRequest,
+    RelayerRequest,
+    QuoterCustomPresetRequest
+} from '../api'
 import {
     ActiveOrdersRequest,
     ActiveOrdersRequestParams,
@@ -18,13 +30,6 @@ import {
     OrderStatusResponse
 } from '../api/orders'
 import {FusionOrder} from '../fusion-order'
-import {encodeCancelOrder} from './encoders'
-import {QuoterCustomPresetRequest} from '../api'
-import {
-    Address,
-    getLimitOrderV4Domain,
-    MakerTraits
-} from '@1inch/limit-order-sdk'
 
 export class FusionSDK {
     public readonly api: FusionApi

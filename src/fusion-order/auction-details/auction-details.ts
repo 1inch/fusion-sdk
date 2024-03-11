@@ -1,8 +1,8 @@
-import {trim0x} from '../../utils'
 import {ethers} from 'ethers'
 import assert from 'assert'
-import {isHexBytes} from '../../validations'
 import {AuctionGasCostInfo, AuctionPoint} from './types'
+import {isHexBytes} from '../../validations'
+import {trim0x} from '../../utils'
 import {BytesIter} from '../../utils/bytes/bytes-iter'
 import {UINT_24_MAX, UINT_32_MAX} from '../../constants'
 

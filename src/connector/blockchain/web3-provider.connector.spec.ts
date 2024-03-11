@@ -1,5 +1,4 @@
 import {anything, instance, mock, when} from 'ts-mockito'
-import {Web3Like, Web3ProviderConnector} from './web3-provider-connector'
 import {
     EIP712Domain,
     EIP712TypedData,
@@ -8,6 +7,7 @@ import {
     LimitOrderV4TypeDataVersion,
     Order
 } from '@1inch/limit-order-sdk'
+import {Web3Like, Web3ProviderConnector} from './web3-provider-connector'
 import {VerifyingContract} from '../../../dist'
 
 describe('Web3 provider connector', () => {

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import {WebSocketApi} from './ws-api'
 import {WebSocketServer, WebSocket} from 'ws'
+import {WebSocketApi} from './ws-api'
 import {
     GetActiveOrdersRpcEvent,
     OrderBalanceOrAllowanceChangeEvent,
@@ -11,8 +11,8 @@ import {
     OrderFilledPartiallyEvent,
     OrderInvalidEvent
 } from './types'
-import {NetworkEnum} from '../constants'
 import {castUrl} from './url'
+import {NetworkEnum} from '../constants'
 import {WebsocketClient} from '../connector'
 
 jest.setTimeout(5 * 60 * 1000)

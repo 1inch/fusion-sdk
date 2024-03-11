@@ -1,9 +1,9 @@
-import {isHexString, isValidAddress} from '../../validations'
 import {
     ActiveOrdersRequestParams,
     OrdersByMakerParams,
     OrderStatusParams
 } from './types'
+import {isHexString, isValidAddress} from '../../validations'
 import {PaginationParams, PaginationRequest} from '../pagination'
 
 export class ActiveOrdersRequest {

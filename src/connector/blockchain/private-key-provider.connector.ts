@@ -1,7 +1,7 @@
-import {BlockchainProviderConnector} from './blockchain-provider.connector'
 import {signTypedData, SignTypedDataVersion} from '@metamask/eth-sig-util'
-import {Web3Like} from './web3-provider-connector'
 import {EIP712TypedData} from '@1inch/limit-order-sdk'
+import {BlockchainProviderConnector} from './blockchain-provider.connector'
+import {Web3Like} from './web3-provider-connector'
 
 export class PrivateKeyProviderConnector
     implements BlockchainProviderConnector

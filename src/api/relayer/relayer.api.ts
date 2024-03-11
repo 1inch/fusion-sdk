@@ -1,6 +1,6 @@
-import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 import {RelayerRequest} from './relayer.request'
 import {RelayerApiConfig} from './types'
+import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 
 export class RelayerApi {
     constructor(

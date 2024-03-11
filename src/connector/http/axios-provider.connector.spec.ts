@@ -1,5 +1,5 @@
-import {AxiosProviderConnector} from './axios-provider.connector'
 import axios from 'axios'
+import {AxiosProviderConnector} from './axios-provider.connector'
 
 describe('Axios Http provider connector', () => {
     let httpConnector: AxiosProviderConnector

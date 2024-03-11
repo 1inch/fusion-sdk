@@ -1,4 +1,3 @@
-import {WsProviderConnector} from '../connector/ws'
 import {orderEvents} from './constants'
 import {
     OnOrderCancelledCb,
@@ -10,6 +9,7 @@ import {
     OnOrderNotEnoughBalanceOrAllowanceCb,
     OrderEventType
 } from './types'
+import {WsProviderConnector} from '../connector/ws'
 
 export class ActiveOrdersWebSocketApi {
     public readonly provider!: WsProviderConnector

@@ -1,14 +1,3 @@
-import {FusionExtension} from './fusion-extension'
-import assert from 'assert'
-import {AuctionCalculator} from '../auction-calculator'
-import {AuctionDetails} from './auction-details'
-import {
-    AuctionWhitelistItem,
-    IntegratorFee,
-    SettlementPostInteractionData
-} from './settlement-post-interaction-data'
-import {add0x} from '../utils'
-import {ZX} from '../constants'
 import {
     Address,
     EIP712TypedData,
@@ -19,6 +8,17 @@ import {
     MakerTraits,
     OrderInfoData
 } from '@1inch/limit-order-sdk'
+import assert from 'assert'
+import {FusionExtension} from './fusion-extension'
+import {AuctionDetails} from './auction-details'
+import {
+    AuctionWhitelistItem,
+    IntegratorFee,
+    SettlementPostInteractionData
+} from './settlement-post-interaction-data'
+import {AuctionCalculator} from '../auction-calculator'
+import {add0x} from '../utils'
+import {ZX} from '../constants'
 
 export class FusionOrder {
     private static defaultExtra = {
@@ -130,6 +130,10 @@ export class FusionOrder {
         )
 
         this.fusionExtension = extension
+    }
+
+    get extension(): Extension {
+        return this.inner.extension
     }
 
     static new(
@@ -270,9 +274,5 @@ export class FusionOrder {
             this.fusionExtension.postInteractionData,
             this.fusionExtension.details
         )
-    }
-
-    get extension(): Extension {
-        return this.inner.extension
     }
 }

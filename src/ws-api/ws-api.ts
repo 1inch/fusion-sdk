@@ -1,3 +1,7 @@
+import {ActiveOrdersWebSocketApi} from './active-websocket-orders-api'
+import {RpcWebsocketApi} from './rpc-websocket-api'
+import {WsApiConfigWithNetwork} from './types'
+import {castUrl} from './url'
 import {
     AnyFunction,
     AnyFunctionWithThis,
@@ -5,10 +9,6 @@ import {
     WebsocketClient,
     WsProviderConnector
 } from '../connector/ws'
-import {ActiveOrdersWebSocketApi} from './active-websocket-orders-api'
-import {RpcWebsocketApi} from './rpc-websocket-api'
-import {WsApiConfigWithNetwork} from './types'
-import {castUrl} from './url'
 
 export class WebSocketApi {
     public readonly rpc: RpcWebsocketApi

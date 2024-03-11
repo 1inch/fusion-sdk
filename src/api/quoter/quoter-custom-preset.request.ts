@@ -1,9 +1,9 @@
-import {isValidAmount} from '../../validations'
 import {
     CustomPreset,
     CustomPresetPoint,
     QuoterCustomPresetRequestParams
 } from './types'
+import {isValidAmount} from '../../validations'
 
 export class QuoterCustomPresetRequest {
     public readonly customPreset: CustomPreset

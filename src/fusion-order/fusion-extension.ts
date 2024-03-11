@@ -1,11 +1,11 @@
-import {AuctionDetails} from './auction-details'
-import {SettlementPostInteractionData} from './settlement-post-interaction-data'
 import {
     Address,
     Extension,
     ExtensionBuilder,
     Interaction
 } from '@1inch/limit-order-sdk'
+import {AuctionDetails} from './auction-details'
+import {SettlementPostInteractionData} from './settlement-post-interaction-data'
 
 export class FusionExtension extends ExtensionBuilder {
     constructor(

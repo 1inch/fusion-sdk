@@ -1,7 +1,7 @@
-import {SettlementPostInteractionData} from '../fusion-order/settlement-post-interaction-data'
-import {AuctionDetails, AuctionPoint} from '../fusion-order/auction-details'
 import {linearInterpolation} from './calc'
 import {RATE_BUMP_DENOMINATOR} from './constants'
+import {SettlementPostInteractionData} from '../fusion-order/settlement-post-interaction-data'
+import {AuctionDetails, AuctionPoint} from '../fusion-order/auction-details'
 import {addRatioToAmount} from '../sdk'
 
 export class AuctionCalculator {

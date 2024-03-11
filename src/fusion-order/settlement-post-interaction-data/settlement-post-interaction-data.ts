@@ -1,10 +1,10 @@
-import {IntegratorFee, SettlementSuffixData} from './types'
-import assert from 'assert'
-import {isHexBytes} from '../../validations'
 import {ethers} from 'ethers'
+import {Address} from '@1inch/limit-order-sdk'
+import assert from 'assert'
+import {IntegratorFee, SettlementSuffixData} from './types'
+import {isHexBytes} from '../../validations'
 import {BytesIter} from '../../utils/bytes/bytes-iter'
 import {add0x} from '../../utils'
-import {Address} from '@1inch/limit-order-sdk'
 
 export class SettlementPostInteractionData {
     public readonly whitelist: WhitelistItem[]
