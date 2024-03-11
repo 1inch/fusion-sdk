@@ -34,7 +34,7 @@ export type OrderParams = {
     receiver?: string // by default: walletAddress (makerAddress)
     preset?: PresetEnum // by default: recommended preset
     /**
-     * Unique for `walletAddress`, can be serial or random generated
+     * Unique for `walletAddress` can be serial or random generated
      *
      * @see randBigInt
      */
@@ -46,6 +46,11 @@ export type OrderParams = {
      * true by default
      */
     allowPartialFills?: boolean
+
+    /**
+     * true by default
+     */
+    allowMultipleFills?: boolean
 }
 
 export type TakingFeeInfo = {
@@ -65,5 +70,3 @@ export type PreparedOrder = {
     hash: string
     quoteId: string
 }
-
-export type Nonce = string | number | undefined

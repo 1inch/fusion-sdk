@@ -115,7 +115,8 @@ export class FusionSDK {
             nonce: params.nonce,
             permit: params.permit,
             takingFeeReceiver: params.fee?.takingFeeReceiver,
-            allowPartialFills: params.allowPartialFills
+            allowPartialFills: params.allowPartialFills,
+            allowMultipleFills: params.allowMultipleFills
         })
 
         const domain = getLimitOrderV4Domain(this.config.network)
