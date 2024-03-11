@@ -14,7 +14,7 @@ import {AuctionDetails} from '@1inch/fusion-sdk'
 
 const details = new AuctionDetails({
     duration: 180, // in seconds,
-    auctionStartTime: 1673548149n, // unix timestamp (in sec),
+    startTime: 1673548149n, // unix timestamp (in sec),
     initialRateBump: 50000, // difference between max and min amount in percents, 10000000 = 100%
     /**
      * Points which define price curve.
