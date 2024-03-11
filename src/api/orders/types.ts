@@ -13,6 +13,7 @@ export type OrdersApiConfig = {
 export type ActiveOrdersRequestParams = PaginationParams
 
 export type ActiveOrder = {
+    quoteId: string
     orderHash: string
     signature: string
     deadline: string

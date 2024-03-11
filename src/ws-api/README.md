@@ -415,6 +415,29 @@ ws.order.onOrderFilledPartially((data) => {
 })
 ```
 
+### onOrderCancelled
+
+**Description:** subscribe to order_cancelled events
+
+**Arguments:**
+
+-   [0] cb: (data: OrderCancelledEvent) => void
+
+**Example:**
+
+```typescript
+import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
+
+const ws = new WebSocketApi({
+    url: 'wss://api.1inch.dev/fusion/ws',
+    network: NetworkEnum.ETHEREUM
+})
+
+ws.order.onOrderCancelled((data) => {
+    // do something
+})
+```
+
 **Rpc namespace**
 
 ### onPong
@@ -550,6 +573,7 @@ type OrderEventType =
     | OrderBalanceOrAllowanceChangeEvent
     | OrderFilledEvent
     | OrderFilledPartiallyEvent
+    | OrderCancelledEvent
 
 type OrderCreatedEvent = Event<
     'order_created',
@@ -576,6 +600,13 @@ type OrderBalanceOrAllowanceChangeEvent = Event<
 
 type OrderInvalidEvent = Event<
     'order_invalid',
+    {
+        orderHash: string
+    }
+>
+
+type OrderCancelledEvent = Event<
+    'order_cancelled',
     {
         orderHash: string
     }

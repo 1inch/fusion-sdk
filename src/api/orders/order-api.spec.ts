@@ -35,6 +35,7 @@ describe(__filename, () => {
             const expected = {
                 items: [
                     {
+                        quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                         orderHash:
                             '0xe07193d683bb70f7c9a45001b863dd9058146849bdd47951b6d0ed13b1fd8396',
                         signature:
@@ -57,6 +58,7 @@ describe(__filename, () => {
                         }
                     },
                     {
+                        quoteId: '1f872857-c456-4f4f-aff0-84f7bebb7df2',
                         orderHash:
                             '0xc359131e97c4cd1e01e1cd0ddeb16dd636c34fb294f53fd2f3e3ce8cb1c8482e',
                         signature:
@@ -108,6 +110,7 @@ describe(__filename, () => {
             const expected = {
                 items: [
                     {
+                        quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
                         orderHash:
                             '0xe07193d683bb70f7c9a45001b863dd9058146849bdd47951b6d0ed13b1fd8396',
                         signature:
@@ -129,6 +132,7 @@ describe(__filename, () => {
                         }
                     },
                     {
+                        quoteId: '1f872857-c456-4f4f-aff0-84f7bebb7df2',
                         orderHash:
                             '0xc359131e97c4cd1e01e1cd0ddeb16dd636c34fb294f53fd2f3e3ce8cb1c8482e',
                         signature:
