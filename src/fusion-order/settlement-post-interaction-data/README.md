@@ -1,4 +1,4 @@
-## PostInteractionData
+## SettlementPostInteractionData
 
 Contains data for whitelist validation and fee charging
 
@@ -38,9 +38,9 @@ type SettlementSuffixData = {
 **Example:**
 
 ```typescript
-import {PostInteractionData} from '@1inch/fusion-sdk'
+import {SettlementPostInteractionData} from '@1inch/fusion-sdk'
 
-const data = PostInteractionData.new({
+const data = SettlementPostInteractionData.new({
     bankFee: 0n,
     auctionStartTime: 1708117482n,
     whitelist: [
@@ -59,17 +59,17 @@ data.encode()
 // #=> '0x020000000000000000000000000000000000000000000f424065cfcdea000000000000000000000000'
 ```
 
-### static PostInteractionData.decode
+### static SettlementPostInteractionData.decode
 
 **Arguments:** interactions: string
 
 **Example:**
 
 ```typescript
-import {PostInteractionData} from '@1inch/fusion-sdk'
+import {SettlementPostInteractionData} from '@1inch/fusion-sdk'
 
 const encodedData =
     '0x020000000000000000000000000000000000000000000f424065cfcdea000000000000000000000000'
 
-const data = PostInteractionData.decode(encodedData)
+const data = SettlementPostInteractionData.decode(encodedData)
 ```
