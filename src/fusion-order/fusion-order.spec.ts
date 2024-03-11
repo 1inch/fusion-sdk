@@ -1,7 +1,6 @@
 import {FusionOrder} from './fusion-order'
-import {Address} from '../address'
-import {MakerTraits} from '../limit-order'
 import {AuctionDetails} from './auction-details'
+import {Address, MakerTraits} from '@1inch/limit-order-sdk'
 
 describe('Fusion Order', () => {
     it('should create fusion order', () => {

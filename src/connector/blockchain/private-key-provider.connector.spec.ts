@@ -3,12 +3,12 @@ import {PrivateKeyProviderConnector} from './private-key-provider.connector'
 import {
     EIP712Domain,
     EIP712TypedData,
+    getLimitOrderContract,
     LimitOrderV4Struct,
     LimitOrderV4TypeDataName,
     LimitOrderV4TypeDataVersion,
-    Order,
-    VerifyingContract
-} from '../../limit-order'
+    Order
+} from '@1inch/limit-order-sdk'
 import {Web3Like} from './web3-provider-connector'
 
 describe('Private Key provider connector', () => {
@@ -39,7 +39,7 @@ describe('Private Key provider connector', () => {
             name: LimitOrderV4TypeDataName,
             version: LimitOrderV4TypeDataVersion,
             chainId: 1,
-            verifyingContract: VerifyingContract
+            verifyingContract: getLimitOrderContract(1)
         },
         message: limitOrder
     }

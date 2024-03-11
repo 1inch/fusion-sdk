@@ -1,8 +1,8 @@
-import {LimitOrderV4Struct} from '../../limit-order'
 import {NetworkEnum} from '../../constants'
 import {PaginationOutput} from '../types'
 import {AuctionPoint} from '../quoter'
 import {PaginationParams} from '../pagination'
+import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 
 export type OrdersApiConfig = {
     network: NetworkEnum

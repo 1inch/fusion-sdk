@@ -1,8 +1,8 @@
 import LimitOrderABI from '../../abi/AggregationRouterV6.abi.json'
 import {Interface} from 'ethers'
-import {MakerTraits} from '../../limit-order/maker-traits'
 import assert from 'assert'
 import {isHexBytes} from '../../validations'
+import {MakerTraits} from '@1inch/limit-order-sdk'
 
 const lopAbi = new Interface(LimitOrderABI)
 

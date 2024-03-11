@@ -23,6 +23,7 @@
         "ci-pipeline": "yarn run lint && yarn run test && yarn run typecheck"
     },
     "dependencies": {
+        "@1inch/limit-order-sdk": "4.0.1",
         "@metamask/eth-sig-util": "^5.0.2",
         "bn.js": "^5.2.1",
         "ethers": "6.11.0",
@@ -30,6 +31,7 @@
         "ws": "^8.12.1"
     },
     "devDependencies": {
+        "@1inch/tsconfig": "1.0.7",
         "@babel/core": "^7.13.16",
         "@babel/preset-env": "^7.13.15",
         "@babel/preset-typescript": "^7.13.0",
@@ -75,7 +77,7 @@
         ]
     },
     "volta": {
-        "node": "16.19.0",
+        "node": "18.16.0",
         "yarn": "1.22.17"
     }
 }

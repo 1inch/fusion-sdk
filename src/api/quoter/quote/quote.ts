@@ -6,7 +6,7 @@ import {QuoterRequest} from '../quoter.request'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData} from './types'
 import {bpsToRatioFormat} from '../../../sdk/utils'
-import {Address} from '../../../address'
+import {Address} from '@1inch/limit-order-sdk'
 
 export class Quote {
     /**

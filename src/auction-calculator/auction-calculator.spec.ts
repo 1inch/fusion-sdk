@@ -1,8 +1,7 @@
-import {AuctionDetails} from '../fusion-order/auction-details'
 import {AuctionCalculator} from './auction-calculator'
-import {SettlementPostInteractionData} from '../fusion-order/settlement-post-interaction-data'
+import {SettlementPostInteractionData, AuctionDetails} from '../fusion-order'
 import {bpsToRatioFormat} from '../sdk'
-import {Address} from '../address'
+import {Address} from '@1inch/limit-order-sdk'
 
 describe('Auction Calculator', () => {
     it('should be created successfully from suffix and salt', () => {

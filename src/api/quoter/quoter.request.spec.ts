@@ -1,5 +1,5 @@
 import {QuoterRequest} from './quoter.request'
-import {Address} from '../../address'
+import {Address} from '@1inch/limit-order-sdk'
 
 describe(__filename, () => {
     it('should return error if native currency', () => {

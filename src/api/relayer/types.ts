@@ -1,5 +1,5 @@
 import {NetworkEnum} from '../../constants'
-import {LimitOrderV4Struct} from '../../limit-order'
+import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 
 export type RelayerRequestParams = {
     order: LimitOrderV4Struct

@@ -1,1 +1,1 @@
-export * from './limit-order-contract'
+export {LimitOrderContract} from '@1inch/limit-order-sdk'

@@ -1,6 +1,6 @@
 import {PresetEnum} from '../types'
 import {FusionOrderParamsData} from './types'
-import {Address} from '../../../address'
+import {Address} from '@1inch/limit-order-sdk'
 
 export class FusionOrderParams {
     public readonly preset: PresetEnum = PresetEnum.fast

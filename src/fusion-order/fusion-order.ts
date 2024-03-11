@@ -1,16 +1,6 @@
-import {
-    EIP712TypedData,
-    Extension,
-    getLimitOrderV4Domain,
-    LimitOrder,
-    LimitOrderV4Struct,
-    MakerTraits,
-    OrderInfoData
-} from '../limit-order'
 import {FusionExtension} from './fusion-extension'
 import assert from 'assert'
 import {AuctionCalculator} from '../auction-calculator'
-import {Address} from '../address'
 import {AuctionDetails} from './auction-details'
 import {
     AuctionWhitelistItem,
@@ -19,6 +9,16 @@ import {
 } from './settlement-post-interaction-data'
 import {add0x} from '../utils'
 import {ZX} from '../constants'
+import {
+    Address,
+    EIP712TypedData,
+    Extension,
+    getLimitOrderV4Domain,
+    LimitOrder,
+    LimitOrderV4Struct,
+    MakerTraits,
+    OrderInfoData
+} from '@1inch/limit-order-sdk'
 
 export class FusionOrder {
     private static defaultExtra = {
@@ -89,7 +89,7 @@ export class FusionOrder {
             .setPartialFills(allowPartialFills)
             .setMultipleFills(allowMultipleFills)
 
-        if (makerTraits.isBitInvalidated()) {
+        if (makerTraits.isBitInvalidatorMode()) {
             assert(
                 nonce !== undefined,
                 'Nonce required, when partial fill or multiple fill disallowed'

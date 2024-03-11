@@ -1,5 +1,5 @@
 import {PresetEnum} from '../types'
-import {Address} from '../../../address'
+import {Address} from '@1inch/limit-order-sdk'
 
 export type FusionOrderParamsData = {
     preset?: PresetEnum

@@ -1,4 +1,4 @@
-import {Address} from '../../address'
+import {Address} from '@1inch/limit-order-sdk'
 
 export type AuctionWhitelistItem = {
     address: Address

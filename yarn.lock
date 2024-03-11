@@ -2,6 +2,27 @@
 # yarn lockfile v1
 
 
+"@1inch/byte-utils@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@1inch/byte-utils/-/byte-utils-1.0.1.tgz#31b9eb9abb72923bf1a4aa60f63b98e2678b4ff5"
+  integrity sha512-f8w5upJ+rv04GLTCm9xn7huFTuQLU6docxkkRBF7T5FS3DRzvK+U/qdVNt+icsmWzqIVk+h01p4GgipEdUC81w==
+
+"@1inch/limit-order-sdk@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@1inch/limit-order-sdk/-/limit-order-sdk-4.0.1.tgz#9ceee157e90e98bd8555e170c35a5aeec6682154"
+  integrity sha512-fT7XoV6vvcM7bX1522QxGHKsVrZz7BnkN7nS9gU75HpEH9T6zXtAlmDCrpmryVgpUmBgzT/HQiazNDylDNpDJg==
+  dependencies:
+    "@1inch/byte-utils" "1.0.1"
+    "@metamask/eth-sig-util" "^5.0.2"
+    ethers "6.11.0"
+
+"@1inch/tsconfig@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@1inch/tsconfig/-/tsconfig-1.0.7.tgz#948920928f70c706075b76ee401fe1ab628a4a59"
+  integrity sha512-uPV9toGicSHysWJANdVZTzEOX+ePKLNQybWKMKOtVBJRpHZmLGq9il5FgUOyIFXlTHBDDQXjrAwgKBhZ5mlMuw==
+  dependencies:
+    semver "^7.5.4"
+
 "@aashutoshrathi/word-wrap@^1.2.3":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
@@ -5198,7 +5219,7 @@ semver@^6.1.0, semver@^6.3.0, semver@^6.3.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
-semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@^7.5.3:
+semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@^7.5.3, semver@^7.5.4:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.0.tgz#1a46a4db4bffcccd97b743b5005c8325f23d4e2d"
   integrity sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==

@@ -3,8 +3,8 @@ import assert from 'assert'
 import {isHexBytes} from '../../validations'
 import {ethers} from 'ethers'
 import {BytesIter} from '../../utils/bytes/bytes-iter'
-import {Address} from '../../address'
 import {add0x} from '../../utils'
+import {Address} from '@1inch/limit-order-sdk'
 
 export class SettlementPostInteractionData {
     public readonly whitelist: WhitelistItem[]

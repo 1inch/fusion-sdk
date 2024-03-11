@@ -1,8 +1,8 @@
-import {LimitOrderV4Struct} from '../limit-order'
 import {NetworkEnum} from '../constants'
 import {WsApiConfig} from '../connector/ws'
 import {PaginationOutput} from '../api/types'
 import {ActiveOrder} from '../api/orders'
+import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 
 export type Event<K extends string, T> = {event: K; result: T}
 

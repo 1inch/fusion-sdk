@@ -7,7 +7,6 @@ import {
     QuoteParams,
     QuoteCustomPresetParams
 } from './types'
-import {getLimitOrderV4Domain} from '../limit-order'
 import {
     ActiveOrdersRequest,
     ActiveOrdersRequestParams,
@@ -21,8 +20,11 @@ import {
 import {FusionOrder} from '../fusion-order'
 import {encodeCancelOrder} from './encoders'
 import {QuoterCustomPresetRequest} from '../api'
-import {Address} from '../address'
-import {MakerTraits} from '../limit-order/maker-traits'
+import {
+    Address,
+    getLimitOrderV4Domain,
+    MakerTraits
+} from '@1inch/limit-order-sdk'
 
 export class FusionSDK {
     public readonly api: FusionApi
