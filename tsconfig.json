@@ -1,15 +1,11 @@
 {
-  "extends": "@1inch/tsconfig",
-  "compilerOptions": {
-    "moduleResolution": "NodeNext",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "lib": [
-      "ES2021"
-    ],
-    "target": "ES2021"
-  },
-  "include": [
-    "./src"
-  ]
+    "extends": "@1inch/tsconfig",
+    "compilerOptions": {
+        "moduleResolution": "NodeNext",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "lib": ["ES2021"],
+        "target": "ES2021"
+    },
+    "include": ["./src"]
 }

@@ -2,13 +2,13 @@ import {anything, instance, mock, when} from 'ts-mockito'
 import {
     EIP712Domain,
     EIP712TypedData,
+    getLimitOrderContract,
     LimitOrderV4Struct,
     LimitOrderV4TypeDataName,
     LimitOrderV4TypeDataVersion,
     Order
 } from '@1inch/limit-order-sdk'
 import {Web3Like, Web3ProviderConnector} from './web3-provider-connector'
-import {VerifyingContract} from '../../../dist'
 
 describe('Web3 provider connector', () => {
     let web3Provider: Web3Like
@@ -35,7 +35,7 @@ describe('Web3 provider connector', () => {
             name: LimitOrderV4TypeDataName,
             version: LimitOrderV4TypeDataVersion,
             chainId: 1,
-            verifyingContract: VerifyingContract
+            verifyingContract: getLimitOrderContract(1)
         },
         message: limitOrder
     }
