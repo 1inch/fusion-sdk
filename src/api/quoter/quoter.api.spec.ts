@@ -27,7 +27,6 @@ describe('Quoter API', () => {
     })
 
     const ResponseMock = {
-        extension: '0x8273f37417da37c4a6c3995e82cf442f87a25d9c',
         fromTokenAmount: '1000000000000000000000',
         recommended_preset: PresetEnum.medium,
         feeToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -45,7 +44,9 @@ describe('Quoter API', () => {
                         delay: 24,
                         coefficient: 50461
                     }
-                ]
+                ],
+                allowPartialFills: true,
+                allowMultipleFills: true
             },
             medium: {
                 auctionDuration: 180,
@@ -60,7 +61,9 @@ describe('Quoter API', () => {
                         delay: 24,
                         coefficient: 50461
                     }
-                ]
+                ],
+                allowPartialFills: true,
+                allowMultipleFills: true
             },
             slow: {
                 auctionDuration: 600,
@@ -75,7 +78,9 @@ describe('Quoter API', () => {
                         delay: 24,
                         coefficient: 50461
                     }
-                ]
+                ],
+                allowPartialFills: true,
+                allowMultipleFills: true
             }
         },
         toTokenAmount: '626772029219852913',
