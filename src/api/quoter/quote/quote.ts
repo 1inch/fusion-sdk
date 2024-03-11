@@ -110,7 +110,10 @@ export class Quote {
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
                     : undefined,
-                allowPartialFills: paramsData?.allowPartialFills,
+                allowPartialFills:
+                    paramsData?.allowPartialFills ?? preset.allowPartialFills,
+                allowMultipleFills:
+                    paramsData?.allowMultipleFills ?? preset.allowMultipleFills,
                 orderExpirationDelay: paramsData?.orderExpirationDelay
             }
         )

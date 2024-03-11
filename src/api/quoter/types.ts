@@ -51,6 +51,8 @@ export type PresetData = {
     auctionEndAmount: string
     tokenFee: string
     points: AuctionPoint[]
+    allowPartialFills: boolean
+    allowMultipleFills: boolean
     gasCost?: {
         gasBumpEstimate: string
         gasPriceEstimate: string

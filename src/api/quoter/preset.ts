@@ -1,5 +1,5 @@
 import {AuctionPoint, PresetData} from './types'
-import {AuctionDetails} from '../../fusion-order/auction-details'
+import {AuctionDetails} from '../../fusion-order'
 import {Address} from '@1inch/limit-order-sdk'
 
 export class Preset {
@@ -26,6 +26,10 @@ export class Preset {
 
     public readonly exclusiveResolver?: Address
 
+    public readonly allowPartialFills: boolean
+
+    public readonly allowMultipleFills: boolean
+
     constructor(preset: PresetData) {
         this.auctionDuration = BigInt(preset.auctionDuration)
         this.startAuctionIn = BigInt(preset.startAuctionIn)
@@ -42,6 +46,8 @@ export class Preset {
         this.exclusiveResolver = preset.exclusiveResolver
             ? new Address(preset.exclusiveResolver)
             : undefined
+        this.allowPartialFills = preset.allowPartialFills
+        this.allowMultipleFills = preset.allowMultipleFills
     }
 
     createAuctionDetails(additionalWaitPeriod = 0n): AuctionDetails {
