@@ -10,10 +10,6 @@ on:
       - main
 
 jobs:
-  setup:
-    name: Setup
-    runs-on: ubuntu-20.04
-
   static-checks:
     name: Static checks
     needs: setup
