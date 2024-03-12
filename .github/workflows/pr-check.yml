@@ -5,6 +5,7 @@ on:
 
 jobs:
   check:
+    name: Lint, Types & Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
