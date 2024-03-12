@@ -2,25 +2,29 @@
     "name": "@1inch/fusion-sdk",
     "version": "0.1.14",
     "description": "1inch Fusion Mode SDK",
+    "author": "@1inch",
     "private": false,
-    "main": "index.js",
-    "types": "index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "LICENSE",
+        "README.md",
+        "package.json"
+    ],
     "repository": {
         "type": "git",
         "url": "ssh://git@github.com:1inch/fusion-sdk.git"
     },
     "scripts": {
-        "prebuild": "rm -rf dist && yarn run test:coverage",
-        "build": "tsc --module commonjs -p tsconfig.build.json",
-        "postbuild": "cp package.json dist && cp README.md dist",
-        "lint": "eslint ./src --ext .js,.ts",
-        "release": "standard-version",
+        "build": "tsc",
+        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "lint:ci": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+        "lint": "eslint  \"{src,apps,libs,test}/**/*.ts\" --ignore-path .eslintignore --fix",
+        "lint:types": "tsc --noEmit",
         "test": "jest",
-        "test:coverage": "jest --collectCoverage",
-        "typecheck": "tsc --noEmit --skipLibCheck",
-        "prettier": "prettier --write .",
-        "prettier:check": "prettier --check .",
-        "ci-pipeline": "yarn run lint && yarn run test && yarn run typecheck"
+        "test:watch": "jest --watch",
+        "changelog:generate": "changelog generate -a"
     },
     "dependencies": {
         "@1inch/limit-order-sdk": "4.0.1",
