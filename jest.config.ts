@@ -20,7 +20,7 @@ export default {
     // collectCoverage: false,
 
     // An array of glob patterns indicating a set of files for which coverage information should be collected
-    // collectCoverageFrom: undefined,
+    collectCoverageFrom: ['**/*.(t|j)s'],
 
     // The directory where Jest should output its coverage files
     coverageDirectory: 'coverage',
@@ -70,14 +70,8 @@ export default {
     // ],
 
     // An array of file extensions your modules use
-    // moduleFileExtensions: [
-    //   "js",
-    //   "json",
-    //   "jsx",
-    //   "ts",
-    //   "tsx",
-    //   "node"
-    // ],
+    moduleFileExtensions: ['js', 'json', 'ts'],
+
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     // moduleNameMapper: {},
@@ -113,7 +107,7 @@ export default {
     // restoreMocks: false,
 
     // The root directory that Jest should scan for tests and modules within
-    // rootDir: undefined,
+    rootDir: 'src',
 
     // A list of paths to directories that Jest should use to search for files in
     // roots: [
@@ -169,13 +163,14 @@ export default {
     // timers: "real",
 
     // A map from regular expressions to paths to transformers
-    // transform: undefined,
-
+    transform: {
+        '^.+\\.(t|j)s$': '@swc/jest'
+    },
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
     transformIgnorePatterns: [
         // "/node_modules/",
         // "\\.pnp\\.[^\\/]+$",
-        'node_modules/(?!axios)'
+        'node_modules/.pnpm/(?!axios)'
     ]
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
