@@ -13,7 +13,7 @@
 import {AuctionDetails} from '@1inch/fusion-sdk'
 
 const details = new AuctionDetails({
-    duration: 180, // in seconds,
+    duration: 180n, // in seconds,
     startTime: 1673548149n, // unix timestamp (in sec),
     initialRateBump: 50000, // difference between max and min amount in percents, 10000000 = 100%
     /**

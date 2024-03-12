@@ -38,7 +38,7 @@ type SettlementSuffixData = {
 **Example:**
 
 ```typescript
-import {SettlementPostInteractionData} from '@1inch/fusion-sdk'
+import {SettlementPostInteractionData, Address, bpsToRatioFormat} from '@1inch/fusion-sdk'
 
 const data = SettlementPostInteractionData.new({
     bankFee: 0n,
@@ -46,7 +46,7 @@ const data = SettlementPostInteractionData.new({
     whitelist: [
         {
             address: new Address('0x111111111117dc0aa78b770fa6a738034120c302'),
-            allowance: 0
+            delay: 0n
         }
     ],
     integratorFee: {
