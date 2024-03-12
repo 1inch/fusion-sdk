@@ -124,12 +124,12 @@ export class Quote {
         exclusiveResolver?: Address
     ): AuctionWhitelistItem[] {
         if (exclusiveResolver) {
-            this.whitelist.map((resolver) => {
+            return this.whitelist.map((resolver) => {
                 const isExclusive = resolver.equal(exclusiveResolver)
 
                 return {
                     address: resolver,
-                    allowance: isExclusive ? 0n : auctionStartTime
+                    delay: isExclusive ? 0n : auctionStartTime
                 }
             })
         }
