@@ -1,11 +1,11 @@
-import {PaginationParams, PaginationRequest} from '../api/pagination'
-import {WsProviderConnector} from '../connector/ws'
 import {
     OnGetActiveOrdersCb,
     OnGetAllowedMethodsCb,
     OnPongCb,
     RpcEventType
 } from './types'
+import {PaginationParams, PaginationRequest} from '../api/pagination'
+import {WsProviderConnector} from '../connector/ws'
 
 export class RpcWebsocketApi {
     public readonly provider: WsProviderConnector

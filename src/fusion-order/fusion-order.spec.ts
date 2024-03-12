@@ -1,63 +1,116 @@
+import {Address, MakerTraits} from '@1inch/limit-order-sdk'
 import {FusionOrder} from './fusion-order'
-import {AuctionSalt} from '../auction-salt'
-import {AuctionSuffix} from '../auction-suffix'
-import crypto from 'crypto'
-import {NetworkEnum, SETTLEMENT_CONTRACT_ADDRESS_MAP} from '../constants'
+import {AuctionDetails} from './auction-details'
 
 describe('Fusion Order', () => {
-    jest.spyOn(crypto.webcrypto, 'getRandomValues').mockImplementation(
-        () => new Int8Array([9, 10, 10, 10, 10])
-    )
-
     it('should create fusion order', () => {
-        const salt = new AuctionSalt({
-            duration: 180,
-            auctionStartTime: 1673548149,
-            initialRateBump: 50000,
-            bankFee: '0'
-        })
-
-        const suffix = new AuctionSuffix({
-            points: [
-                {
-                    coefficient: 20000,
-                    delay: 12
-                }
-            ],
-            whitelist: [
-                {
-                    address: '0x00000000219ab540356cbb839cbe05303d7705fa',
-                    allowance: 0
-                }
-            ]
-        })
-
-        const order = new FusionOrder(
-            {
-                makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-                takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-                makingAmount: '1000000000000000000',
-                takingAmount: '1420000000',
-                maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
-                network: NetworkEnum.ETHEREUM
-            },
-            salt,
-            suffix
+        const extensionContract = new Address(
+            '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
         )
 
-        expect(order.build()).toStrictEqual({
-            allowedSender:
-                SETTLEMENT_CONTRACT_ADDRESS_MAP[NetworkEnum.ETHEREUM],
-            interactions:
-                '0x000c004e200000000000000000219ab540356cbb839cbe05303d7705faf486570009',
+        const order = FusionOrder.new(
+            extensionContract,
+            {
+                makerAsset: new Address(
+                    '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+                ),
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker: new Address(
+                    '0x00000000219ab540356cbb839cbe05303d7705fa'
+                ),
+                salt: 10n
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [
+                        {
+                            coefficient: 20000,
+                            delay: 12
+                        }
+                    ]
+                }),
+                whitelist: [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        delay: 0n
+                    }
+                ]
+            }
+        )
+
+        const builtOrder = order.build()
+        expect(builtOrder).toStrictEqual({
             maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
             makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
             makingAmount: '1000000000000000000',
-            offsets: '0',
             receiver: '0x0000000000000000000000000000000000000000',
-            salt: '45118768841948961586167738353692277076075522015101619148498725069326976558864',
             takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-            takingAmount: '1420000000'
+            takingAmount: '1420000000',
+            makerTraits:
+                '29852648006495581632639394572552351243421169944806257724550573036760110989312',
+            salt: '14832508939800728556409473652845244531014097925085'
         })
+
+        const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
+        expect(makerTraits.isNativeUnwrapEnabled()).toEqual(false)
+        expect(makerTraits.nonceOrEpoch()).toEqual(0n)
+        expect(makerTraits.isPartialFillAllowed()).toEqual(true)
+    })
+    it('should decode fusion order from order + extension', () => {
+        const extensionContract = new Address(
+            '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
+        )
+
+        const order = FusionOrder.new(
+            extensionContract,
+            {
+                makerAsset: new Address(
+                    '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+                ),
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker: new Address(
+                    '0x00000000219ab540356cbb839cbe05303d7705fa'
+                ),
+                salt: 10n
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [
+                        {
+                            coefficient: 20000,
+                            delay: 12
+                        }
+                    ]
+                }),
+                whitelist: [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        delay: 0n
+                    }
+                ]
+            }
+        )
+
+        expect(
+            FusionOrder.fromDataAndExtension(order.build(), order.extension)
+        ).toStrictEqual(order)
     })
 })

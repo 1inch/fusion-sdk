@@ -1,7 +1,7 @@
-import {BlockchainProviderConnector} from './blockchain-provider.connector'
-import Web3 from 'web3'
 import {signTypedData, SignTypedDataVersion} from '@metamask/eth-sig-util'
-import {EIP712TypedData} from '../../limit-order'
+import {EIP712TypedData} from '@1inch/limit-order-sdk'
+import {BlockchainProviderConnector} from './blockchain-provider.connector'
+import {Web3Like} from './web3-provider-connector'
 
 export class PrivateKeyProviderConnector
     implements BlockchainProviderConnector
@@ -10,7 +10,7 @@ export class PrivateKeyProviderConnector
 
     constructor(
         readonly privateKey: string,
-        protected readonly web3Provider: Web3
+        protected readonly web3Provider: Web3Like
     ) {
         this.privateKeyBuffer = Buffer.from(privateKey.replace('0x', ''), 'hex')
     }

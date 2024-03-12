@@ -3,55 +3,55 @@
 **Example:**
 
 ```typescript
-import {AuctionSalt, AuctionSuffix, FusionOrder} from '@1inch/fusion-sdk'
+import {AuctionDetails, FusionOrder} from '@1inch/fusion-sdk'
 
-const salt = new AuctionSalt({
-    duration: 180,
-    auctionStartTime: 1673548149,
-    initialRateBump: 50000,
-    bankFee: '0'
-})
-
-const suffix = new AuctionSuffix({
-    points: [
-        {
-            coefficient: 20000,
-            delay: 12
-        }
-    ],
-    whitelist: [
-        {
-            address: '0x00000000219ab540356cbb839cbe05303d7705fa',
-            allowance: 0
-        }
-    ]
-})
-
-const order = new FusionOrder(
+const extensionContract = new Address(
+    '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
+)
+const order = FusionOrder.new(
+    extensionContract,
     {
-        makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-        takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        makingAmount: '1000000000000000000',
-        takingAmount: '1420000000',
-        maker: '0x00000000219ab540356cbb839cbe05303d7705fa'
+        makerAsset: new Address('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'),
+        takerAsset: new Address('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'),
+        makingAmount: 1000000000000000000n,
+        takingAmount: 1420000000n,
+        maker: new Address('0x00000000219ab540356cbb839cbe05303d7705fa'),
+        salt: 10n
     },
-    salt,
-    suffix
+    {
+        auction: new AuctionDetails({
+            duration: 180n,
+            startTime: 1673548149n,
+            initialRateBump: 50000,
+            points: [
+                {
+                    coefficient: 20000,
+                    delay: 12
+                }
+            ]
+        }),
+        whitelist: [
+            {
+                address: new Address(
+                    '0x00000000219ab540356cbb839cbe05303d7705fa'
+                ),
+                delay: 0n
+            }
+        ]
+    }
 )
 
-order.build()
+const builtOrder = order.build()
 /* #=> {
-            allowedSender: '0x0000000000000000000000000000000000000000',
-            interactions:
-                '0x000c004e200000000000000000219ab540356cbb839cbe05303d7705faf486570009',
             maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
             makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
             makingAmount: '1000000000000000000',
-            offsets: '0',
             receiver: '0x0000000000000000000000000000000000000000',
-            salt: '45118768841948961586167738353692277076075522015101619148498725069326976558864',
             takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-            takingAmount: '1420000000'
+            takingAmount: '1420000000',
+            makerTraits:
+                '29852648006495581632639394572552351243421169944806257724550573036760110989312',
+            salt: '14832508939800728556409473652845244531014097925085'
         }
 */
 ```

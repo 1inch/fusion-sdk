@@ -1,24 +1,20 @@
+import {Address} from '@1inch/limit-order-sdk'
+import {FusionOrderParams} from './order-params'
+import {FusionOrderParamsData} from './types'
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {AuctionSuffix} from '../../../auction-suffix'
-import {FusionOrder} from '../../../fusion-order'
-import {isNativeCurrency} from '../../../utils'
-import {
-    NetworkEnum,
-    UNWRAPPER_CONTRACT_ADDRESS_MAP,
-    WRAPPER_ADDRESS_MAP,
-    ZERO_ADDRESS,
-    ZERO_NUMBER
-} from '../../../constants'
-import {InteractionsFactory} from '../../../limit-order/interactions-factory'
+import {AuctionWhitelistItem, FusionOrder} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
-import {FusionOrderParams} from './order-params'
-import {FusionOrderParamsData, PredicateParams} from './types'
-import {PredicateFactory} from '../../../limit-order/predicate-factory'
-import {bpsToRatioFormat} from '../../../sdk/utils'
+import {bpsToRatioFormat} from '../../../sdk'
 
 export class Quote {
-    public readonly fromTokenAmount: string
+    /**
+     * Fusion extension address
+     * @see https://github.com/1inch/limit-order-settlement
+     */
+    public readonly settlementAddress: Address
+
+    public readonly fromTokenAmount: bigint
 
     public readonly feeToken: string
 
@@ -37,18 +33,15 @@ export class Quote {
 
     public readonly volume: Cost
 
-    public readonly whitelist: string[]
-
-    public readonly settlementAddress: string
+    public readonly whitelist: Address[]
 
     public readonly quoteId: string | null
 
     constructor(
-        private readonly network: NetworkEnum,
         private readonly params: QuoterRequest,
         response: QuoterResponse
     ) {
-        this.fromTokenAmount = response.fromTokenAmount
+        this.fromTokenAmount = BigInt(response.fromTokenAmount)
         this.feeToken = response.feeToken
         this.presets = {
             [PresetEnum.fast]: new Preset(response.presets.fast),
@@ -62,12 +55,12 @@ export class Quote {
         this.prices = response.prices
         this.volume = response.volume
         this.quoteId = response.quoteId
-        this.whitelist = response.whitelist
-        this.settlementAddress = response.settlementAddress
+        this.whitelist = response.whitelist.map((a) => new Address(a))
         this.recommendedPreset = response.recommended_preset
+        this.settlementAddress = new Address(response.settlementAddress)
     }
 
-    createFusionOrder(paramsData?: FusionOrderParamsData): FusionOrder {
+    createFusionOrder(paramsData: FusionOrderParamsData): FusionOrder {
         const params = FusionOrderParams.new({
             preset: paramsData?.preset || this.recommendedPreset,
             receiver: paramsData?.receiver,
@@ -77,54 +70,47 @@ export class Quote {
 
         const preset = this.getPreset(params.preset)
 
-        const salt = preset.createAuctionSalt()
+        const auctionDetails = preset.createAuctionDetails(
+            params.delayAuctionStartTimeBy
+        )
 
-        const suffix = new AuctionSuffix({
-            points: preset.points,
-            whitelist: this.whitelist.map((resolver) => ({
-                address: resolver,
-                allowance: 0
-            })),
-            fee: {
-                takingFeeRatio:
-                    bpsToRatioFormat(this.params.fee) || ZERO_NUMBER,
-                takingFeeReceiver: paramsData?.takingFeeReceiver || ZERO_ADDRESS
-            }
-        })
-
-        const takerAsset = isNativeCurrency(this.params.toTokenAddress)
-            ? WRAPPER_ADDRESS_MAP[this.network]
-            : this.params.toTokenAddress
-
-        const takerAssetReceiver = isNativeCurrency(this.params.toTokenAddress)
-            ? UNWRAPPER_CONTRACT_ADDRESS_MAP[this.network]
-            : params.receiver
-
-        return new FusionOrder(
+        return FusionOrder.new(
+            this.settlementAddress,
             {
                 makerAsset: this.params.fromTokenAddress,
-                takerAsset,
+                takerAsset: this.params.toTokenAddress,
                 makingAmount: this.fromTokenAmount,
                 takingAmount: preset.auctionEndAmount,
                 maker: this.params.walletAddress,
-                receiver: takerAssetReceiver,
-                network: this.network
+                receiver: params.receiver
             },
-            salt,
-            suffix,
             {
-                postInteraction: this.buildUnwrapPostInteractionIfNeeded(
-                    params.receiver
-                ),
-                // todo: change hardcoded extended deadline
-                predicate: this.handlePredicate({
-                    deadline: salt.auctionStartTime + salt.duration + 32,
-                    address: this.params.walletAddress,
-                    nonce: params.nonce
-                }),
+                auction: auctionDetails,
+                fees: {
+                    integratorFee: {
+                        ratio: bpsToRatioFormat(this.params.fee) || 0n,
+                        receiver: paramsData?.takingFeeReceiver
+                            ? new Address(paramsData?.takingFeeReceiver)
+                            : Address.ZERO_ADDRESS
+                    },
+                    bankFee: preset.bankFee
+                },
+                whitelist: this.getWhitelist(
+                    auctionDetails.startTime,
+                    preset.exclusiveResolver
+                )
+            },
+            {
+                nonce: params.nonce,
+                unwrapWETH: this.params.toTokenAddress.isNative(),
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
-                    : undefined
+                    : undefined,
+                allowPartialFills:
+                    paramsData?.allowPartialFills ?? preset.allowPartialFills,
+                allowMultipleFills:
+                    paramsData?.allowMultipleFills ?? preset.allowMultipleFills,
+                orderExpirationDelay: paramsData?.orderExpirationDelay
             }
         )
     }
@@ -133,28 +119,24 @@ export class Quote {
         return this.presets[type] as Preset
     }
 
-    private handlePredicate(params: PredicateParams): string {
-        if (params?.nonce) {
-            return PredicateFactory.timestampBelowAndNonceEquals(
-                params.address,
-                params.nonce,
-                params.deadline
-            )
+    private getWhitelist(
+        auctionStartTime: bigint,
+        exclusiveResolver?: Address
+    ): AuctionWhitelistItem[] {
+        if (exclusiveResolver) {
+            return this.whitelist.map((resolver) => {
+                const isExclusive = resolver.equal(exclusiveResolver)
+
+                return {
+                    address: resolver,
+                    delay: isExclusive ? 0n : auctionStartTime
+                }
+            })
         }
 
-        return PredicateFactory.timestampBelow(params.deadline)
-    }
-
-    private buildUnwrapPostInteractionIfNeeded(
-        receiver: string | undefined
-    ): string | undefined {
-        if (!isNativeCurrency(this.params.toTokenAddress)) {
-            return undefined
-        }
-
-        return InteractionsFactory.unwrap(
-            UNWRAPPER_CONTRACT_ADDRESS_MAP[this.network],
-            receiver || this.params.walletAddress
-        )
+        return this.whitelist.map((resolver) => ({
+            address: resolver,
+            delay: 0n
+        }))
     }
 }

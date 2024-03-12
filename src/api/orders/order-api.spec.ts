@@ -1,12 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import Web3 from 'web3'
 import {instance, mock} from 'ts-mockito'
-import {HttpProviderConnector, Web3ProviderConnector} from '../../connector'
+import {
+    HttpProviderConnector,
+    Web3Like,
+    Web3ProviderConnector
+} from '../../connector'
 import {NetworkEnum} from '../../constants'
 import {FusionSDK} from '../../sdk'
 
 function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
-    const httpProvider: HttpProviderConnector = {
+    return {
         get: jest.fn().mockImplementationOnce(() => {
             return Promise.resolve(mock)
         }),
@@ -14,16 +17,14 @@ function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
             return Promise.resolve(null)
         })
     }
-
-    return httpProvider
 }
 
 describe(__filename, () => {
-    let web3Provider: Web3
+    let web3Provider: Web3Like
     let web3ProviderConnector: Web3ProviderConnector
 
     beforeEach(() => {
-        web3Provider = mock<Web3>()
+        web3Provider = mock<Web3Like>()
         web3ProviderConnector = new Web3ProviderConnector(
             instance(web3Provider)
         )
@@ -46,20 +47,14 @@ describe(__filename, () => {
                         order: {
                             salt: '45162296565521316310143660684688589556990590668045350709106347387233721386087',
                             maker: '0x84d99aa569d93a9ca187d83734c8c4a519c4e9b1',
-                            offsets:
-                                '2048955946929424286921227713067743020696385405755235979139736848564224',
                             receiver:
                                 '0x08b067ad41e45babe5bbb52fc2fe7f692f628b06',
                             makerAsset:
                                 '0xe68a2c0eef74b5d8d2975bbf7a681226e4d7473c',
                             takerAsset:
                                 '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-                            interactions:
-                                '0x63592c2b0000000000000000000000000000000000000000000000000000000063d8f4ee08b067ad41e45babe5bbb52fc2fe7f692f628b06315b47a8c3780434b153667588db4ca628526e20006c00c26a001800c44c63d8f41684d99aa569d93a9ca187d83734c8c4a519c4e9b163d8f416cfa62f77920d6383be12c91c71bd403599e1116ff486570012',
                             makingAmount: '57684207067582695',
-                            takingAmount: '116032349855081688885',
-                            allowedSender:
-                                '0xa88800cd213da5ae406ce248380802bd53b47647'
+                            takingAmount: '116032349855081688885'
                         }
                     },
                     {
@@ -75,20 +70,14 @@ describe(__filename, () => {
                         order: {
                             salt: '45162296808160836322731793320280672051161012167252717657723413939965365979370',
                             maker: '0xe2b43fbd64f4bb4dc99a8d48ad41cfab90621567',
-                            offsets:
-                                '970558080243398695134547109586957793750899628853613079895592438595584',
                             receiver:
                                 '0x0000000000000000000000000000000000000000',
                             makerAsset:
                                 '0x2e85ae1c47602f7927bcabc2ff99c40aa222ae15',
                             takerAsset:
                                 '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-                            interactions:
-                                '0x2cc2878d000063d8f4f2000000000000e2b43fbd64f4bb4dc99a8d48ad41cfab906215670000000084d99aa569d93a9ca187d83734c8c4a519c4e9b163d8f475cfa62f77920d6383be12c91c71bd403599e1116fffffffff10',
                             makingAmount: '470444951856649710700841',
-                            takingAmount: '363417063831796476',
-                            allowedSender:
-                                '0xa88800cd213da5ae406ce248380802bd53b47647'
+                            takingAmount: '363417063831796476'
                         }
                     }
                 ],
@@ -132,20 +121,14 @@ describe(__filename, () => {
                         order: {
                             salt: '45162296565521316310143660684688589556990590668045350709106347387233721386087',
                             maker: '0x84d99aa569d93a9ca187d83734c8c4a519c4e9b1',
-                            offsets:
-                                '2048955946929424286921227713067743020696385405755235979139736848564224',
                             receiver:
                                 '0x08b067ad41e45babe5bbb52fc2fe7f692f628b06',
                             makerAsset:
                                 '0xe68a2c0eef74b5d8d2975bbf7a681226e4d7473c',
                             takerAsset:
                                 '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-                            interactions:
-                                '0x63592c2b0000000000000000000000000000000000000000000000000000000063d8f4ee08b067ad41e45babe5bbb52fc2fe7f692f628b06315b47a8c3780434b153667588db4ca628526e20006c00c26a001800c44c63d8f41684d99aa569d93a9ca187d83734c8c4a519c4e9b163d8f416cfa62f77920d6383be12c91c71bd403599e1116ff486570012',
                             makingAmount: '57684207067582695',
-                            takingAmount: '116032349855081688885',
-                            allowedSender:
-                                '0xa88800cd213da5ae406ce248380802bd53b47647'
+                            takingAmount: '116032349855081688885'
                         }
                     },
                     {
@@ -160,20 +143,14 @@ describe(__filename, () => {
                         order: {
                             salt: '45162296808160836322731793320280672051161012167252717657723413939965365979370',
                             maker: '0xe2b43fbd64f4bb4dc99a8d48ad41cfab90621567',
-                            offsets:
-                                '970558080243398695134547109586957793750899628853613079895592438595584',
                             receiver:
                                 '0x0000000000000000000000000000000000000000',
                             makerAsset:
                                 '0x2e85ae1c47602f7927bcabc2ff99c40aa222ae15',
                             takerAsset:
                                 '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-                            interactions:
-                                '0x2cc2878d000063d8f4f2000000000000e2b43fbd64f4bb4dc99a8d48ad41cfab906215670000000084d99aa569d93a9ca187d83734c8c4a519c4e9b163d8f475cfa62f77920d6383be12c91c71bd403599e1116fffffffff10',
                             makingAmount: '470444951856649710700841',
-                            takingAmount: '363417063831796476',
-                            allowedSender:
-                                '0xa88800cd213da5ae406ce248380802bd53b47647'
+                            takingAmount: '363417063831796476'
                         }
                     }
                 ],
@@ -211,16 +188,11 @@ describe(__filename, () => {
                 order: {
                     salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                     maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                    offsets:
-                        '970558080243398695134547109586957793750899628853613079895592438595584',
                     receiver: '0x0000000000000000000000000000000000000000',
                     makerAsset: '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                     takerAsset: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                    interactions:
-                        '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                     makingAmount: '2246481050155000',
-                    takingAmount: '349837736598',
-                    allowedSender: '0xa88800cd213da5ae406ce248380802bd53b47647'
+                    takingAmount: '349837736598'
                 },
                 cancelTx: null,
                 points: null,
@@ -264,16 +236,11 @@ describe(__filename, () => {
                 order: {
                     salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                     maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                    offsets:
-                        '970558080243398695134547109586957793750899628853613079895592438595584',
                     receiver: '0x0000000000000000000000000000000000000000',
                     makerAsset: '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                     takerAsset: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                    interactions:
-                        '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                     makingAmount: '2246481050155000',
-                    takingAmount: '349837736598',
-                    allowedSender: '0xa88800cd213da5ae406ce248380802bd53b47647'
+                    takingAmount: '349837736598'
                 },
                 cancelTx: null,
                 points: null,
@@ -314,16 +281,11 @@ describe(__filename, () => {
                 order: {
                     salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                     maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                    offsets:
-                        '970558080243398695134547109586957793750899628853613079895592438595584',
                     receiver: '0x0000000000000000000000000000000000000000',
                     makerAsset: '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                     takerAsset: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                    interactions:
-                        '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                     makingAmount: '2246481050155000',
-                    takingAmount: '349837736598',
-                    allowedSender: '0xa88800cd213da5ae406ce248380802bd53b47647'
+                    takingAmount: '349837736598'
                 },
                 cancelTx: null,
                 points: null,

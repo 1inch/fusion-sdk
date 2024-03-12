@@ -1,16 +1,18 @@
+import {Address} from '@1inch/limit-order-sdk'
 import {PresetEnum} from '../types'
 
-// todo: add deadline
 export type FusionOrderParamsData = {
     preset?: PresetEnum
-    receiver?: string
-    nonce?: number | string
+    receiver?: Address
+    nonce?: bigint
     permit?: string
     takingFeeReceiver?: string
-}
-
-export type PredicateParams = {
-    address: string
-    nonce?: number | string
-    deadline: number
+    allowPartialFills?: boolean
+    allowMultipleFills?: boolean
+    delayAuctionStartTimeBy?: bigint
+    /**
+     * Order will expire in `orderExpirationDelay` after auction ends
+     * Default 12s
+     */
+    orderExpirationDelay?: bigint
 }

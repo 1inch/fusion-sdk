@@ -1,8 +1,8 @@
+import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 import {RelayerRequestParams} from './types'
-import {LimitOrderV3Struct} from '../../limit-order'
 
 export class RelayerRequest {
-    public readonly order: LimitOrderV3Struct
+    public readonly order: LimitOrderV4Struct
 
     public readonly signature: string
 

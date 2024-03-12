@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import {WebSocketApi} from './ws-api'
 import {WebSocketServer, WebSocket} from 'ws'
+import {WebSocketApi} from './ws-api'
 import {
     GetActiveOrdersRpcEvent,
     OrderBalanceOrAllowanceChangeEvent,
@@ -11,8 +11,8 @@ import {
     OrderFilledPartiallyEvent,
     OrderInvalidEvent
 } from './types'
-import {NetworkEnum} from '../constants'
 import {castUrl} from './url'
+import {NetworkEnum} from '../constants'
 import {WebsocketClient} from '../connector'
 
 jest.setTimeout(5 * 60 * 1000)
@@ -400,19 +400,14 @@ describe(__filename, () => {
                     order: {
                         salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                         maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                        offsets:
-                            '970558080243398695134547109586957793750899628853613079895592438595584',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
                             '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                         takerAsset:
                             '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        interactions:
-                            '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                         makingAmount: '2246481050155000',
                         takingAmount: '349837736598',
-                        allowedSender:
-                            '0xa88800cd213da5ae406ce248380802bd53b47647'
+                        makerTraits: '0'
                     },
                     signature:
                         '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
@@ -465,19 +460,14 @@ describe(__filename, () => {
                     order: {
                         salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                         maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                        offsets:
-                            '970558080243398695134547109586957793750899628853613079895592438595584',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
                             '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                         takerAsset:
                             '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        interactions:
-                            '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                         makingAmount: '2246481050155000',
                         takingAmount: '349837736598',
-                        allowedSender:
-                            '0xa88800cd213da5ae406ce248380802bd53b47647'
+                        makerTraits: '0'
                     },
                     signature:
                         '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
@@ -531,19 +521,14 @@ describe(__filename, () => {
                     order: {
                         salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                         maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                        offsets:
-                            '970558080243398695134547109586957793750899628853613079895592438595584',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
                             '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                         takerAsset:
                             '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        interactions:
-                            '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                         makingAmount: '2246481050155000',
                         takingAmount: '349837736598',
-                        allowedSender:
-                            '0xa88800cd213da5ae406ce248380802bd53b47647'
+                        makerTraits: '0'
                     },
                     signature:
                         '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
@@ -597,19 +582,14 @@ describe(__filename, () => {
                     order: {
                         salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                         maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                        offsets:
-                            '970558080243398695134547109586957793750899628853613079895592438595584',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
                             '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                         takerAsset:
                             '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        interactions:
-                            '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                         makingAmount: '2246481050155000',
                         takingAmount: '349837736598',
-                        allowedSender:
-                            '0xa88800cd213da5ae406ce248380802bd53b47647'
+                        makerTraits: '0'
                     },
                     signature:
                         '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
@@ -666,19 +646,14 @@ describe(__filename, () => {
                     order: {
                         salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                         maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                        offsets:
-                            '970558080243398695134547109586957793750899628853613079895592438595584',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
                             '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                         takerAsset:
                             '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        interactions:
-                            '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                         makingAmount: '2246481050155000',
                         takingAmount: '349837736598',
-                        allowedSender:
-                            '0xa88800cd213da5ae406ce248380802bd53b47647'
+                        makerTraits: '0'
                     },
                     signature:
                         '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
@@ -732,19 +707,14 @@ describe(__filename, () => {
                     order: {
                         salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                         maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                        offsets:
-                            '970558080243398695134547109586957793750899628853613079895592438595584',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
                             '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                         takerAsset:
                             '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        interactions:
-                            '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                         makingAmount: '2246481050155000',
                         takingAmount: '349837736598',
-                        allowedSender:
-                            '0xa88800cd213da5ae406ce248380802bd53b47647'
+                        makerTraits: '0'
                     },
                     signature:
                         '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
@@ -799,19 +769,14 @@ describe(__filename, () => {
                     order: {
                         salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
                         maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
-                        offsets:
-                            '970558080243398695134547109586957793750899628853613079895592438595584',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
                             '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
                         takerAsset:
                             '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        interactions:
-                            '0x2cc2878d000063ceb60f0000000000006f250c769001617aff9bdf4b9fd878062e94af83006c00c2fe001800c44c0000000084d99aa569d93a9ca187d83734c8c4a519c4e9b1ffffffff0a',
                         makingAmount: '2246481050155000',
                         takingAmount: '349837736598',
-                        allowedSender:
-                            '0xa88800cd213da5ae406ce248380802bd53b47647'
+                        makerTraits: '0'
                     },
                     signature:
                         '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',

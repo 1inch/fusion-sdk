@@ -1,46 +1,68 @@
+import {Address} from '@1inch/limit-order-sdk'
 import {AuctionPoint, PresetData} from './types'
-import {AuctionSalt} from '../../auction-salt'
+import {AuctionDetails} from '../../fusion-order'
 
 export class Preset {
-    public readonly auctionDuration: number
+    public readonly auctionDuration: bigint
 
-    public readonly startAuctionIn: number
+    public readonly startAuctionIn: bigint
 
-    public readonly bankFee: string
+    public readonly bankFee: bigint
 
     public readonly initialRateBump: number
 
-    public readonly auctionStartAmount: string
+    public readonly auctionStartAmount: bigint
 
-    public readonly auctionEndAmount: string
+    public readonly auctionEndAmount: bigint
 
-    public readonly tokenFee: string
+    public readonly tokenFee: bigint
 
     public readonly points: AuctionPoint[]
 
-    constructor(preset: PresetData) {
-        this.auctionDuration = preset.auctionDuration
-        this.startAuctionIn = preset.startAuctionIn
-        this.bankFee = preset.bankFee
-        this.initialRateBump = preset.initialRateBump
-        this.auctionStartAmount = preset.auctionStartAmount
-        this.auctionEndAmount = preset.auctionEndAmount
-        this.tokenFee = preset.tokenFee
-        this.points = preset.points
+    public readonly gasCostInfo: {
+        gasBumpEstimate: bigint
+        gasPriceEstimate: bigint
     }
 
-    createAuctionSalt(additionalWaitPeriod = 0): AuctionSalt {
-        return new AuctionSalt({
+    public readonly exclusiveResolver?: Address
+
+    public readonly allowPartialFills: boolean
+
+    public readonly allowMultipleFills: boolean
+
+    constructor(preset: PresetData) {
+        this.auctionDuration = BigInt(preset.auctionDuration)
+        this.startAuctionIn = BigInt(preset.startAuctionIn)
+        this.bankFee = BigInt(preset.bankFee)
+        this.initialRateBump = preset.initialRateBump
+        this.auctionStartAmount = BigInt(preset.auctionStartAmount)
+        this.auctionEndAmount = BigInt(preset.auctionEndAmount)
+        this.tokenFee = BigInt(preset.tokenFee)
+        this.points = preset.points
+        this.gasCostInfo = {
+            gasPriceEstimate: BigInt(preset.gasCost?.gasPriceEstimate || 0n),
+            gasBumpEstimate: BigInt(preset.gasCost?.gasBumpEstimate || 0n)
+        }
+        this.exclusiveResolver = preset.exclusiveResolver
+            ? new Address(preset.exclusiveResolver)
+            : undefined
+        this.allowPartialFills = preset.allowPartialFills
+        this.allowMultipleFills = preset.allowMultipleFills
+    }
+
+    createAuctionDetails(additionalWaitPeriod = 0n): AuctionDetails {
+        return new AuctionDetails({
             duration: this.auctionDuration,
-            auctionStartTime: this.calcAuctionStartTime(additionalWaitPeriod),
+            startTime: this.calcAuctionStartTime(additionalWaitPeriod),
             initialRateBump: this.initialRateBump,
-            bankFee: this.bankFee
+            points: this.points,
+            gasCost: this.gasCostInfo
         })
     }
 
-    calcAuctionStartTime(additionalWaitPeriod = 0): number {
+    private calcAuctionStartTime(additionalWaitPeriod = 0n): bigint {
         return (
-            Math.floor(Date.now() / 1000) +
+            BigInt(Math.floor(Date.now() / 1000)) +
             additionalWaitPeriod +
             this.startAuctionIn
         )

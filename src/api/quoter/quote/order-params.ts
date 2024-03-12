@@ -1,15 +1,17 @@
-import {PresetEnum} from '../types'
+import {Address} from '@1inch/limit-order-sdk'
 import {FusionOrderParamsData} from './types'
-import {ZERO_ADDRESS} from '../../../constants'
+import {PresetEnum} from '../types'
 
 export class FusionOrderParams {
     public readonly preset: PresetEnum = PresetEnum.fast
 
-    public readonly receiver: string = ZERO_ADDRESS
+    public readonly receiver: Address = Address.ZERO_ADDRESS
 
     public readonly permit: string | undefined
 
-    public readonly nonce: number | string | undefined
+    public readonly nonce: bigint | undefined
+
+    public readonly delayAuctionStartTimeBy: bigint
 
     constructor(params: FusionOrderParamsData) {
         if (params.preset) {
@@ -21,11 +23,11 @@ export class FusionOrderParams {
         }
 
         this.nonce = params.nonce
-
         this.permit = params.permit
+        this.delayAuctionStartTimeBy = params.delayAuctionStartTimeBy || 0n
     }
 
-    static new(params?: FusionOrderParamsData): FusionOrderParams {
-        return new FusionOrderParams(params || {})
+    static new(params: FusionOrderParamsData): FusionOrderParams {
+        return new FusionOrderParams(params)
     }
 }

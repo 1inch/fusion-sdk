@@ -1,16 +1,15 @@
+import {Address} from '@1inch/limit-order-sdk'
 import {QuoterRequestParams} from './types'
-import {isNativeCurrency} from '../../utils'
-import {NATIVE_CURRENCY, ZERO_ADDRESS} from '../../constants'
-import {isValidAddress, isValidAmount} from '../../validations'
+import {isValidAmount} from '../../validations'
 
 export class QuoterRequest {
-    public readonly fromTokenAddress: string
+    public readonly fromTokenAddress: Address
 
-    public readonly toTokenAddress: string
+    public readonly toTokenAddress: Address
 
     public readonly amount: string
 
-    public readonly walletAddress: string
+    public readonly walletAddress: Address
 
     public readonly enableEstimate: boolean
 
@@ -21,65 +20,52 @@ export class QuoterRequest {
     public readonly source: string
 
     constructor(params: QuoterRequestParams) {
-        this.fromTokenAddress = params.fromTokenAddress.toLowerCase()
-        this.toTokenAddress = params.toTokenAddress.toLowerCase()
+        this.fromTokenAddress = new Address(params.fromTokenAddress)
+        this.toTokenAddress = new Address(params.toTokenAddress)
         this.amount = params.amount
-        this.walletAddress = params.walletAddress.toLowerCase()
+        this.walletAddress = new Address(params.walletAddress)
         this.enableEstimate = params.enableEstimate || false
         this.permit = params.permit
         this.fee = params.fee
         this.source = params.source || 'sdk'
+
+        if (this.fromTokenAddress.isNative()) {
+            throw new Error(
+                `cannot swap ${Address.NATIVE_CURRENCY}: wrap native currency to it's wrapper fist`
+            )
+        }
+
+        if (this.fromTokenAddress.isZero() || this.toTokenAddress.isZero()) {
+            throw new Error(
+                `replace ${Address.ZERO_ADDRESS} with ${Address.NATIVE_CURRENCY}`
+            )
+        }
+
+        if (this.fromTokenAddress.equal(this.toTokenAddress)) {
+            throw new Error(
+                'fromTokenAddress and toTokenAddress should be different'
+            )
+        }
+
+        if (!isValidAmount(this.amount)) {
+            throw new Error(`${this.amount} is invalid amount`)
+        }
+
+        if (this.fee && this.source === 'sdk') {
+            throw new Error('cannot use fee without source')
+        }
     }
 
     static new(params: QuoterRequestParams): QuoterRequest {
         return new QuoterRequest(params)
     }
 
-    validate(): string | null {
-        if (isNativeCurrency(this.fromTokenAddress)) {
-            return `cannot swap ${NATIVE_CURRENCY}: wrap native currency to it's wrapper fist`
-        }
-
-        if (
-            this.fromTokenAddress === ZERO_ADDRESS ||
-            this.toTokenAddress === ZERO_ADDRESS
-        ) {
-            return `replace ${ZERO_ADDRESS} with ${NATIVE_CURRENCY}`
-        }
-
-        if (this.fromTokenAddress === this.toTokenAddress) {
-            return 'fromTokenAddress and toTokenAddress should be different'
-        }
-
-        if (!isValidAddress(this.fromTokenAddress)) {
-            return `${this.fromTokenAddress} is invalid fromTokenAddress`
-        }
-
-        if (!isValidAddress(this.toTokenAddress)) {
-            return `${this.toTokenAddress} is invalid toTokenAddress`
-        }
-
-        if (!isValidAddress(this.walletAddress)) {
-            return `${this.walletAddress} is invalid walletAddress`
-        }
-
-        if (!isValidAmount(this.amount)) {
-            return `${this.amount} is invalid amount`
-        }
-
-        if (this.fee && this.source === 'sdk') {
-            return 'cannot use fee without source'
-        }
-
-        return null
-    }
-
     build(): QuoterRequestParams {
         return {
-            fromTokenAddress: this.fromTokenAddress,
-            toTokenAddress: this.toTokenAddress,
+            fromTokenAddress: this.fromTokenAddress.toString(),
+            toTokenAddress: this.toTokenAddress.toString(),
             amount: this.amount,
-            walletAddress: this.walletAddress,
+            walletAddress: this.walletAddress.toString(),
             enableEstimate: this.enableEstimate,
             permit: this.permit,
             fee: this.fee,

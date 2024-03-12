@@ -1,8 +1,8 @@
+import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 import {NetworkEnum} from '../../constants'
-import {LimitOrderV3Struct} from '../../limit-order'
 
 export type RelayerRequestParams = {
-    order: LimitOrderV3Struct
+    order: LimitOrderV4Struct
     signature: string
     quoteId: string
 }

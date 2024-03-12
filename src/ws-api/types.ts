@@ -1,4 +1,4 @@
-import {LimitOrderV3Struct} from '../limit-order'
+import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 import {NetworkEnum} from '../constants'
 import {WsApiConfig} from '../connector/ws'
 import {PaginationOutput} from '../api/types'
@@ -20,7 +20,7 @@ export type OrderCreatedEvent = Event<
         quoteId: string
         orderHash: string
         signature: string
-        order: LimitOrderV3Struct
+        order: LimitOrderV4Struct
         deadline: string
         auctionStartDate: string
         auctionEndDate: string

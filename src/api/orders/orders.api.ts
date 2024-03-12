@@ -1,5 +1,3 @@
-import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
-import {concatQueryParams} from '../params'
 import {
     ActiveOrdersRequest,
     OrdersByMakerRequest,
@@ -11,6 +9,8 @@ import {
     OrdersByMakerResponse,
     OrderStatusResponse
 } from './types'
+import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
+import {concatQueryParams} from '../params'
 
 export class OrdersApi {
     constructor(

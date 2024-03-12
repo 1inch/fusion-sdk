@@ -1,13 +1,24 @@
+import {EIP712TypedData} from '@1inch/limit-order-sdk'
 import {BlockchainProviderConnector} from './blockchain-provider.connector'
-import Web3 from 'web3'
-import {EIP712TypedData} from '../../limit-order'
 
-interface ExtendedWeb3 extends Web3 {
+interface TransactionConfig {
+    data?: string
+    to?: string
+}
+
+export interface Web3Like {
+    eth: {
+        call(transactionConfig: TransactionConfig): Promise<string>
+    }
+    extend(extension: unknown): any
+}
+
+interface ExtendedWeb3 extends Web3Like {
     signTypedDataV4(walletAddress: string, typedData: string): Promise<string>
 }
 
 export class Web3ProviderConnector implements BlockchainProviderConnector {
-    constructor(protected readonly web3Provider: Web3) {}
+    constructor(protected readonly web3Provider: Web3Like) {}
 
     signTypedData(
         walletAddress: string,
