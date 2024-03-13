@@ -1,4 +1,13 @@
-export {Address} from '@1inch/limit-order-sdk'
+export {
+    Address,
+    LimitOrderV4Struct,
+    Extension,
+    randBigInt,
+    getLimitOrderContract,
+    Interaction,
+    TakerTraits,
+    ExtensionBuilder
+} from '@1inch/limit-order-sdk'
 export * from './fusion-order/index'
 export * from './auction-calculator/index'
 export * from './connector/index'

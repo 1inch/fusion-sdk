@@ -1,9 +1,9 @@
 import {ethers} from 'ethers'
 import {Address} from '@1inch/limit-order-sdk'
+import {BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {IntegratorFee, SettlementSuffixData} from './types'
 import {isHexBytes} from '../../validations'
-import {BytesIter} from '../../utils/bytes/bytes-iter'
 import {add0x} from '../../utils'
 
 export class SettlementPostInteractionData {
@@ -56,7 +56,7 @@ export class SettlementPostInteractionData {
             'Post interaction data must be valid bytes string'
         )
 
-        const iter = new BytesIter(data)
+        const iter = BytesIter.BigInt(data)
 
         const feeType = iter.nextByte()
         let bankFee = 0n
