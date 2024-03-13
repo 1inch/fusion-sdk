@@ -136,6 +136,37 @@ export class FusionOrder {
         return this.inner.extension
     }
 
+    get maker(): Address {
+        return this.inner.maker
+    }
+
+    get takerAsset(): Address {
+        return this.inner.takerAsset
+    }
+
+    get makerAsset(): Address {
+        return this.inner.makerAsset
+    }
+
+    get takingAmount(): bigint {
+        return this.inner.takingAmount
+    }
+
+    get makingAmount(): bigint {
+        return this.inner.makingAmount
+    }
+
+    get receiver(): Address {
+        return this.inner.receiver
+    }
+
+    /**
+     * Timestamp in sec
+     */
+    get deadline(): bigint {
+        return this.inner.makerTraits.expiration() || 0n
+    }
+
     static new(
         /**
          * Fusion extension address
