@@ -1,9 +1,9 @@
 import {ethers} from 'ethers'
+import {BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {AuctionGasCostInfo, AuctionPoint} from './types'
 import {isHexBytes} from '../../validations'
 import {trim0x} from '../../utils'
-import {BytesIter} from '../../utils/bytes/bytes-iter'
 import {UINT_24_MAX, UINT_32_MAX} from '../../constants'
 
 export class AuctionDetails {
@@ -69,7 +69,7 @@ export class AuctionDetails {
      */
     static decode(data: string): AuctionDetails {
         assert(isHexBytes(data), 'Invalid auction details data')
-        const iter = new BytesIter(data)
+        const iter = BytesIter.BigInt(data)
 
         const gasBumpEstimate = iter.nextUint24()
         const gasPriceEstimate = iter.nextUint32()

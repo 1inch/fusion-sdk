@@ -5,9 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@1inch/byte-utils':
+    specifier: 2.0.0
+    version: 2.0.0
   '@1inch/limit-order-sdk':
-    specifier: 4.0.1
-    version: 4.0.1(assert@2.1.0)(axios@1.6.7)
+    specifier: 4.1.0
+    version: 4.1.0(axios@1.6.7)
   '@metamask/eth-sig-util':
     specifier: ^5.0.2
     version: 5.1.0
@@ -112,8 +115,8 @@ devDependencies:
 
 packages:
 
-  /@1inch/byte-utils@1.0.1:
-    resolution: {integrity: sha512-f8w5upJ+rv04GLTCm9xn7huFTuQLU6docxkkRBF7T5FS3DRzvK+U/qdVNt+icsmWzqIVk+h01p4GgipEdUC81w==}
+  /@1inch/byte-utils@2.0.0:
+    resolution: {integrity: sha512-CcEsI6At09oqWDFrZNUTokbiOVUG0HNkkAPIhHo6rMPG+1m4Zls+kSWtotFUpy7tp0PUby/PmrOkqZgk/hFq1A==}
     engines: {node: '>=18.16.0'}
     dev: false
 
@@ -150,8 +153,8 @@ packages:
       typescript: 4.9.4
     dev: true
 
-  /@1inch/limit-order-sdk@4.0.1(assert@2.1.0)(axios@1.6.7):
-    resolution: {integrity: sha512-fT7XoV6vvcM7bX1522QxGHKsVrZz7BnkN7nS9gU75HpEH9T6zXtAlmDCrpmryVgpUmBgzT/HQiazNDylDNpDJg==}
+  /@1inch/limit-order-sdk@4.1.0(axios@1.6.7):
+    resolution: {integrity: sha512-b1cTXcs0HVTQ70QGlSfrDObsTD2ysJ4raDEKyAR70apydrZ/QV9p2bWE3II02TzulJOj9K+IU5vVkqi35D+iug==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
@@ -162,9 +165,8 @@ packages:
       axios:
         optional: true
     dependencies:
-      '@1inch/byte-utils': 1.0.1
+      '@1inch/byte-utils': 2.0.0
       '@metamask/eth-sig-util': 5.1.0
-      assert: 2.1.0
       axios: 1.6.7
       ethers: 6.11.0
     transitivePeerDependencies:
