@@ -4,6 +4,7 @@ export {
     Extension,
     randBigInt,
     getLimitOrderContract,
+    getLimitOrderV4Domain,
     Interaction,
     TakerTraits,
     ExtensionBuilder
