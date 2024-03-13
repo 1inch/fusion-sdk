@@ -19,6 +19,7 @@ import {
 import {AuctionCalculator} from '../auction-calculator'
 import {add0x} from '../utils'
 import {ZX} from '../constants'
+import {calcTakingAmount} from '../utils/amounts'
 
 export class FusionOrder {
     private static defaultExtra = {
@@ -305,5 +306,30 @@ export class FusionOrder {
             this.fusionExtension.postInteractionData,
             this.fusionExtension.details
         )
+    }
+
+    /**
+     * Calculates required taking amount for passed `makingAmount` at block time `time`
+     *
+     * @param makingAmount maker swap amount
+     * @param time execution time in sec
+     * @param blockBaseFee block fee in wei.
+     * */
+    public calcTakingAmount(
+        makingAmount: bigint,
+        time: bigint,
+        blockBaseFee = 0n
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        const calculator = this.getCalculator()
+
+        const bump = calculator.calcRateBump(time, blockBaseFee)
+
+        return calculator.calcAuctionTakingAmount(takingAmount, bump)
     }
 }
