@@ -60,10 +60,10 @@ export class AuctionCalculator {
     /**
      * @see https://github.com/1inch/limit-order-settlement/blob/273defdf7b0f1867299dcbc306f32f035579310f/contracts/extensions/BaseExtension.sol#L121
      * @param time auction timestamp in seconds
-     * @param blockGasPrice blockGasPrice in Wei, if passed, then rate will be calculated as if order executed in block with `blockGasPrice`
+     * @param blockBaseFee blockBaseFee in Wei, if passed, then rate will be calculated as if order executed in block with `blockBaseFee`
      */
-    calcRateBump(time: bigint, blockGasPrice = 0n): number {
-        const gasBump = this.getGasPriceBump(blockGasPrice)
+    calcRateBump(time: bigint, blockBaseFee = 0n): number {
+        const gasBump = this.getGasPriceBump(blockBaseFee)
         const auctionBump = this.getAuctionBump(time)
 
         const final = auctionBump > gasBump ? auctionBump - gasBump : 0n
@@ -71,14 +71,20 @@ export class AuctionCalculator {
         return Number(final)
     }
 
-    private getGasPriceBump(blockGasPrice: bigint): bigint {
-        return this.gasCost.gasBumpEstimate === 0n ||
+    private getGasPriceBump(blockBaseFee: bigint): bigint {
+        if (
+            this.gasCost.gasBumpEstimate === 0n ||
             this.gasCost.gasPriceEstimate === 0n ||
-            blockGasPrice === 0n
-            ? 0n
-            : (this.gasCost.gasBumpEstimate * blockGasPrice) /
-                  this.gasCost.gasPriceEstimate /
-                  AuctionCalculator.GAS_PRICE_BASE
+            blockBaseFee === 0n
+        ) {
+            return 0n
+        }
+
+        return (
+            (this.gasCost.gasBumpEstimate * blockBaseFee) /
+            this.gasCost.gasPriceEstimate /
+            AuctionCalculator.GAS_PRICE_BASE
+        )
     }
 
     private getAuctionBump(time: bigint): bigint {
