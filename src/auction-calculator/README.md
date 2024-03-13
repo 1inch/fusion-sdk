@@ -46,14 +46,14 @@ const details = new AuctionDetails({
 })
 const calculator = AuctionCalculator.fromAuctionData(settlementData, details) // #=> AuctionCalculator instance
 
-const rate = calculator.calcRateBump(1673548160)
+const rate = calculator.calcRateBump(startTime + 11n)
 // #=> 40000
 
 const auctionTakingAmount = calculator.calcAuctionTakingAmount(
-    '1420000000',
+    1420000000n,
     rate
 )
-// #=> '1427105680'
+// #=> 1427105680
 ```
 
 
