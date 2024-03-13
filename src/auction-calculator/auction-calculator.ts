@@ -45,7 +45,7 @@ export class AuctionCalculator {
     /**
      * @see https://github.com/1inch/limit-order-settlement/blob/1b6757eecb2574953b543821db6f7bbff5afee48/contracts/extensions/BaseExtension.sol#L56
      */
-    calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
+    public calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
         const auctionTakingAmount =
             (BigInt(takingAmount) * (BigInt(rate) + RATE_BUMP_DENOMINATOR)) /
             RATE_BUMP_DENOMINATOR
@@ -62,7 +62,7 @@ export class AuctionCalculator {
      * @param time auction timestamp in seconds
      * @param blockBaseFee blockBaseFee in Wei, if passed, then rate will be calculated as if order executed in block with `blockBaseFee`
      */
-    calcRateBump(time: bigint, blockBaseFee = 0n): number {
+    public calcRateBump(time: bigint, blockBaseFee = 0n): number {
         const gasBump = this.getGasPriceBump(blockBaseFee)
         const auctionBump = this.getAuctionBump(time)
 
