@@ -15,7 +15,9 @@ describe('Auction Calculator', () => {
             },
             bankFee: 0n,
             resolvingStartTime: auctionStartTime,
-            whitelist: []
+            whitelist: [
+                {address: Address.ZERO_ADDRESS, allowFrom: auctionStartTime}
+            ]
         })
 
         const auctionDetails = new AuctionDetails({

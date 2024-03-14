@@ -186,8 +186,12 @@ export class FusionOrder {
                 bankFee?: bigint
             }
             whitelist: AuctionWhitelistItem[]
+            /**
+             * Time from which order can be executed
+             */
+            resolvingStartTime?: bigint
         },
-        extra: {
+        extra?: {
             unwrapWETH?: boolean
             /**
              * Required if `allowPartialFills` is false
@@ -209,7 +213,7 @@ export class FusionOrder {
              */
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
-        } = FusionOrder.defaultExtra
+        }
     ): FusionOrder {
         return new FusionOrder(
             settlementExtension,
@@ -219,7 +223,7 @@ export class FusionOrder {
                 bankFee: details.fees?.bankFee || 0n,
                 integratorFee: details.fees?.integratorFee,
                 whitelist: details.whitelist,
-                resolvingStartTime: now()
+                resolvingStartTime: details.resolvingStartTime ?? now()
             }),
             extra
         )
