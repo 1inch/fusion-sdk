@@ -1,10 +1,11 @@
 import {ethers} from 'ethers'
 import {Address} from '@1inch/limit-order-sdk'
-import {BytesIter} from '@1inch/byte-utils'
+import {BitMask, BN, BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {IntegratorFee, SettlementSuffixData} from './types'
 import {isHexBytes} from '../../validations'
 import {add0x} from '../../utils'
+import {UINT_16_MAX} from '../../constants'
 
 export class SettlementPostInteractionData {
     public readonly whitelist: WhitelistItem[]
@@ -13,41 +14,65 @@ export class SettlementPostInteractionData {
 
     public readonly bankFee: bigint
 
-    public readonly auctionStartTime: bigint
+    public readonly resolvingStartTime: bigint
 
     private constructor(data: {
         whitelist: WhitelistItem[]
         integratorFee?: IntegratorFee
-        bankFee: bigint
-        auctionStartTime: bigint
+        bankFee?: bigint
+        resolvingStartTime: bigint
     }) {
         this.whitelist = data.whitelist
         this.integratorFee = data?.integratorFee
-        this.bankFee = data.bankFee
-        this.auctionStartTime = data.auctionStartTime
+        this.bankFee = data.bankFee || 0n
+        this.resolvingStartTime = data.resolvingStartTime
     }
 
     static new(data: SettlementSuffixData): SettlementPostInteractionData {
+        assert(data.whitelist.length, 'Whitelist can not be empty')
+
+        // transform timestamps to cumulative delays
+        let sumDelay = 0n
+        const whitelist = data.whitelist
+            .map((d) => ({
+                addressHalf: d.address.toString().slice(-20),
+                allowFrom:
+                    d.allowFrom < data.resolvingStartTime
+                        ? data.resolvingStartTime
+                        : d.allowFrom
+            }))
+            .sort((a, b) => Number(a.allowFrom - b.allowFrom)) // ASC
+            .map((val) => {
+                const delay = val.allowFrom - data.resolvingStartTime - sumDelay
+                sumDelay += delay
+
+                assert(delay < UINT_16_MAX, 'Too big diff between timestamps')
+
+                return {
+                    delay,
+                    addressHalf: val.addressHalf
+                }
+            })
+
         return new SettlementPostInteractionData({
             ...data,
-            whitelist: data.whitelist.map((d) => ({
-                addressHalf: d.address.toString().slice(-20),
-                delay: d.delay
-            }))
+            whitelist
         })
     }
 
     /**
-     * Construct `PostInteractionData` from bytes
+     * Construct `SettlementPostInteractionData` from bytes
      * @param data bytes with 0x prefix in next format:
-     * - uint8 feeType, first bit enabled when fee bank exists, second bit enabled when integrator fee exists
-     * - [uint32 feeBank] only when first bit of feeType enabled
-     * - [uint160 integratorFeeReceiver, uint32 integratorFeeRation] only when second bit of feeType enabled
+     * - [uint32 feeBank] only when first bit of `bitMask` enabled
+     * - [uint160 integratorFeeReceiver, uint32 integratorFeeRation] only when second bit of `bitMask` enabled
      * - uint32 auctionStartTime
      * - (bytes10 last10bytesOfAddress, uint16 auctionDelay) * N whitelist info
+     * - uint8 bitMask:
+     *                  0b0000_0001 - fee bank mask
+     *                  0b0000_0010 - integrator fee mask
+     *                  0b1111_1000 - resolvers count mask
      *
      * All data is tight packed
-     *
      * @see SettlementPostInteractionData.encode
      */
     static decode(data: string): SettlementPostInteractionData {
@@ -58,17 +83,17 @@ export class SettlementPostInteractionData {
 
         const iter = BytesIter.BigInt(data)
 
-        const feeType = iter.nextByte()
+        const extra = iter.nextByte(BytesIter.SIDE.Back)
         let bankFee = 0n
         let integratorFee: IntegratorFee | undefined
 
         // fee bank presented
-        if ((feeType & 1n) === 1n) {
+        if ((extra & 1n) === 1n) {
             bankFee = iter.nextUint32()
         }
 
         // integrator fee presented
-        if ((feeType & 2n) === 2n) {
+        if ((extra & 2n) === 2n) {
             const integratorAddress = iter.nextUint160()
             const integratorFeeRatio = iter.nextUint32()
 
@@ -78,7 +103,7 @@ export class SettlementPostInteractionData {
             }
         }
 
-        const auctionStartTime = iter.nextUint32()
+        const resolvingStartTime = iter.nextUint32()
 
         const whitelist = [] as WhitelistItem[]
 
@@ -87,18 +112,18 @@ export class SettlementPostInteractionData {
                 .nextBytes(10)
                 .toString(16)
                 .padStart(20, '0')
-            const allowance = iter.nextUint16()
+            const delay = iter.nextUint16()
 
             whitelist.push({
                 addressHalf,
-                delay: allowance
+                delay
             })
         }
 
         return new SettlementPostInteractionData({
             integratorFee,
             bankFee,
-            auctionStartTime,
+            resolvingStartTime,
             whitelist
         })
     }
@@ -107,16 +132,18 @@ export class SettlementPostInteractionData {
      * Serialize post-interaction data to bytes
      */
     public encode(): string {
-        const fee = {
-            type: 'uint8',
-            value: 0n
-        }
+        /**
+         * 0b0000_0001 - fee bank mask
+         * 0b0000_0010 - integrator fee mask
+         * 0b1111_1000 - resolvers count mask
+         */
+        let bitMask = new BN(0n)
 
-        const data = [fee] as {type: string; value: string | bigint}[]
+        const data = [] as {type: string; value: string | bigint}[]
 
         // Add bank fee if exists
         if (this.bankFee) {
-            fee.value |= 1n
+            bitMask = bitMask.setBit(0n, 1)
             data.push({
                 type: 'uint32',
                 value: ethers.solidityPacked(['uint32'], [this.bankFee])
@@ -125,7 +152,7 @@ export class SettlementPostInteractionData {
 
         // add integrator fee if exists
         if (this.integratorFee?.ratio) {
-            fee.value |= 2n
+            bitMask = bitMask.setBit(1n, 1)
             data.push(
                 {
                     type: 'uint160',
@@ -146,7 +173,7 @@ export class SettlementPostInteractionData {
 
         data.push({
             type: 'uint32',
-            value: this.auctionStartTime
+            value: this.resolvingStartTime
         })
 
         // whitelist data
@@ -163,10 +190,44 @@ export class SettlementPostInteractionData {
             )
         }
 
+        bitMask = bitMask.setMask(
+            new BitMask(3n, 8n),
+            BigInt(this.whitelist.length)
+        )
+
+        data.push({
+            type: 'uint8',
+            value: bitMask.value
+        })
+
         return ethers.solidityPacked(
             data.map((d) => d.type),
             data.map((d) => d.value)
         )
+    }
+
+    /**
+     * Check whether address allowed to execute order at the given time
+     *
+     * @param executor address of executor
+     * @param executionTime timestamp in sec at which order planning to execute
+     */
+    public canExecuteAt(executor: Address, executionTime: bigint): boolean {
+        const addressHalf = executor.toString().slice(-20)
+
+        let allowedFrom = this.resolvingStartTime
+
+        for (const whitelist of this.whitelist) {
+            allowedFrom += whitelist.delay
+
+            if (addressHalf === whitelist.addressHalf) {
+                return executionTime >= allowedFrom
+            } else if (executionTime < allowedFrom) {
+                return false
+            }
+        }
+
+        return false
     }
 }
 
@@ -176,7 +237,8 @@ type WhitelistItem = {
      */
     addressHalf: string
     /**
-     * Delay from auction start in seconds
+     * Delay from previous resolver in seconds
+     * For first resolver delay from `resolvingStartTime`
      */
     delay: bigint
 }

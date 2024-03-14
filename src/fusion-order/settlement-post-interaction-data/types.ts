@@ -3,16 +3,16 @@ import {Address} from '@1inch/limit-order-sdk'
 export type AuctionWhitelistItem = {
     address: Address
     /**
-     * Delay from auction start in seconds
+     * Timestamp in sec at which address can start resolving
      */
-    delay: bigint
+    allowFrom: bigint
 }
 
 export type SettlementSuffixData = {
     whitelist: AuctionWhitelistItem[]
     integratorFee?: IntegratorFee
-    bankFee: bigint
-    auctionStartTime: bigint
+    bankFee?: bigint
+    resolvingStartTime: bigint
 }
 
 export type IntegratorFee = {

@@ -14,7 +14,7 @@ describe('Auction Calculator', () => {
                 receiver: Address.fromBigInt(1n)
             },
             bankFee: 0n,
-            auctionStartTime,
+            resolvingStartTime: auctionStartTime,
             whitelist: []
         })
 

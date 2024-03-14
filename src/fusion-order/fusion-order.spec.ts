@@ -41,7 +41,7 @@ describe('Fusion Order', () => {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
-                        delay: 0n
+                        allowFrom: 0n
                     }
                 ]
             }
@@ -103,7 +103,7 @@ describe('Fusion Order', () => {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
-                        delay: 0n
+                        allowFrom: 0n
                     }
                 ]
             }

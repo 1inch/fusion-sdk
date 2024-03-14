@@ -6,6 +6,7 @@ import {Preset} from '../preset'
 import {AuctionWhitelistItem, FusionOrder} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
 import {bpsToRatioFormat} from '../../../sdk'
+import {now} from '../../../utils/time'
 
 export class Quote {
     /**
@@ -129,14 +130,14 @@ export class Quote {
 
                 return {
                     address: resolver,
-                    delay: isExclusive ? 0n : auctionStartTime
+                    allowFrom: isExclusive ? now() : auctionStartTime
                 }
             })
         }
 
         return this.whitelist.map((resolver) => ({
             address: resolver,
-            delay: 0n
+            allowFrom: 0n
         }))
     }
 }
