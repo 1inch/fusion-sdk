@@ -20,6 +20,7 @@ import {AuctionCalculator} from '../auction-calculator'
 import {add0x} from '../utils'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
+import {now} from '../utils/time'
 
 export class FusionOrder {
     private static defaultExtra = {
@@ -49,6 +50,9 @@ export class FusionOrder {
              * Required if `allowPartialFills` is false
              */
             nonce?: bigint
+            /**
+             * 0x prefixed without the token address
+             */
             permit?: string
             /**
              * Default is true
@@ -182,8 +186,12 @@ export class FusionOrder {
                 bankFee?: bigint
             }
             whitelist: AuctionWhitelistItem[]
+            /**
+             * Time from which order can be executed
+             */
+            resolvingStartTime?: bigint
         },
-        extra: {
+        extra?: {
             unwrapWETH?: boolean
             /**
              * Required if `allowPartialFills` is false
@@ -205,7 +213,7 @@ export class FusionOrder {
              */
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
-        } = FusionOrder.defaultExtra
+        }
     ): FusionOrder {
         return new FusionOrder(
             settlementExtension,
@@ -215,7 +223,7 @@ export class FusionOrder {
                 bankFee: details.fees?.bankFee || 0n,
                 integratorFee: details.fees?.integratorFee,
                 whitelist: details.whitelist,
-                auctionStartTime: details.auction.startTime
+                resolvingStartTime: details.resolvingStartTime ?? now()
             }),
             extra
         )
@@ -331,5 +339,18 @@ export class FusionOrder {
         const bump = calculator.calcRateBump(time, blockBaseFee)
 
         return calculator.calcAuctionTakingAmount(takingAmount, bump)
+    }
+
+    /**
+     * Check whether address allowed to execute order at the given time
+     *
+     * @param executor address of executor
+     * @param executionTime timestamp in sec at which order planning to execute
+     */
+    public canExecuteAt(executor: Address, executionTime: bigint): boolean {
+        return this.fusionExtension.postInteractionData.canExecuteAt(
+            executor,
+            executionTime
+        )
     }
 }

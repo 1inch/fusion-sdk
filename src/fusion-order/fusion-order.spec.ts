@@ -41,9 +41,10 @@ describe('Fusion Order', () => {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
-                        delay: 0n
+                        allowFrom: 0n
                     }
-                ]
+                ],
+                resolvingStartTime: 1673548139n
             }
         )
 
@@ -57,7 +58,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '29852648006495581632639394572552351243421169944806257724550573036760110989312',
-            salt: '14832508939800728556409473652845244531014097925085'
+            salt: '14969955465678758833706505435513058355190519874774'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
@@ -103,7 +104,7 @@ describe('Fusion Order', () => {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
-                        delay: 0n
+                        allowFrom: 0n
                     }
                 ]
             }

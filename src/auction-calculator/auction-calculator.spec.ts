@@ -14,8 +14,10 @@ describe('Auction Calculator', () => {
                 receiver: Address.fromBigInt(1n)
             },
             bankFee: 0n,
-            auctionStartTime,
-            whitelist: []
+            resolvingStartTime: auctionStartTime,
+            whitelist: [
+                {address: Address.ZERO_ADDRESS, allowFrom: auctionStartTime}
+            ]
         })
 
         const auctionDetails = new AuctionDetails({
