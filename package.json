@@ -28,7 +28,7 @@
     },
     "dependencies": {
         "@1inch/byte-utils": "2.0.0",
-        "@1inch/limit-order-sdk": "4.1.0",
+        "@1inch/limit-order-sdk": "4.2.0",
         "@metamask/eth-sig-util": "^5.0.2",
         "bn.js": "^5.2.1",
         "ethers": "6.11.0",
@@ -65,8 +65,15 @@
     },
     "peerDependencies": {
         "assert": "^2.0.0",
-        "axios": ">=1 <2",
-        "stream": "^0.0.2"
+        "axios": ">=1 <2"
+    },
+    "peerDependenciesMeta": {
+        "axios": {
+            "optional": true
+        },
+        "assert": {
+            "optional": true
+        }
     },
     "volta": {
         "node": "18.16.0"
