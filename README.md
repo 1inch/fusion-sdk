@@ -1,3 +1,8 @@
+# ⚠️ Note ⚠️
+Fusion sdk `v4` over `Limit order protocol v4` is in development now. When it is ready - the current version will be deprecated. 
+
+Latest v4 version can be found at [main branch](https://github.com/1inch/fusion-sdk/tree/main) and as `rc-x` at [npm](https://www.npmjs.com/package/@1inch/fusion-sdk?activeTab=versions)
+
 # Utils library for 1inch Fusion Mode
 
 ## Installation
