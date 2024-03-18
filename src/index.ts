@@ -21,3 +21,11 @@ export * from './utils/amounts'
 export * from './validations'
 export * from './ws-api'
 export * from './errors'
+export {
+    QuoterRequest,
+    RelayerRequest,
+    QuoterCustomPresetRequest,
+    PresetEnum,
+    Preset,
+    Quote
+} from './api'
