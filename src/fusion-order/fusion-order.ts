@@ -93,6 +93,7 @@ export class FusionOrder {
             .withExpiration(deadline)
             .setPartialFills(allowPartialFills)
             .setMultipleFills(allowMultipleFills)
+            .enablePostInteraction()
 
         if (makerTraits.isBitInvalidatorMode()) {
             assert(
