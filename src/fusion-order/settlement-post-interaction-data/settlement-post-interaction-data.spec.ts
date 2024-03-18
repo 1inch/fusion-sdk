@@ -4,7 +4,7 @@ import {SettlementPostInteractionData} from './settlement-post-interaction-data'
 import {bpsToRatioFormat} from '../../sdk/utils'
 
 describe('SettlementPostInteractionData', () => {
-    it('Should encode/decode with no fees and whitelist', () => {
+    it('Should encode/decode with bank fee and whitelist', () => {
         const data = SettlementPostInteractionData.new({
             bankFee: 1n,
             resolvingStartTime: 1708117482n,
@@ -24,6 +24,24 @@ describe('SettlementPostInteractionData', () => {
         )
     })
 
+    it('Should encode/decode with no fees and whitelist', () => {
+        const data = SettlementPostInteractionData.new({
+            resolvingStartTime: 1708117482n,
+            whitelist: [
+                {
+                    address: Address.ZERO_ADDRESS,
+                    allowFrom: 0n
+                }
+            ]
+        })
+
+        const encoded = data.encode()
+
+        expect(getBytesCount(encoded)).toEqual(17n)
+        expect(SettlementPostInteractionData.decode(encoded)).toStrictEqual(
+            data
+        )
+    })
     it('Should encode/decode with fees and whitelist', () => {
         const data = SettlementPostInteractionData.new({
             bankFee: 0n,
