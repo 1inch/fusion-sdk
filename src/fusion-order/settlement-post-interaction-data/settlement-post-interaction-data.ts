@@ -1,6 +1,5 @@
-import {ethers} from 'ethers'
 import {Address} from '@1inch/limit-order-sdk'
-import {BitMask, BN, BytesIter} from '@1inch/byte-utils'
+import {BitMask, BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {IntegratorFee, SettlementSuffixData} from './types'
 import {isHexBytes} from '../../validations'
@@ -139,55 +138,27 @@ export class SettlementPostInteractionData {
          */
         let bitMask = new BN(0n)
 
-        const data = [] as {type: string; value: string | bigint}[]
+        const bytes = new BytesBuilder()
 
         // Add bank fee if exists
         if (this.bankFee) {
             bitMask = bitMask.setBit(0n, 1)
-            data.push({
-                type: 'uint32',
-                value: ethers.solidityPacked(['uint32'], [this.bankFee])
-            })
+            bytes.addUint32(this.bankFee)
         }
 
         // add integrator fee if exists
         if (this.integratorFee?.ratio) {
             bitMask = bitMask.setBit(1n, 1)
-            data.push(
-                {
-                    type: 'uint160',
-                    value: ethers.solidityPacked(
-                        ['uint160'],
-                        [this.integratorFee.receiver.toString()]
-                    )
-                },
-                {
-                    type: 'uint32',
-                    value: ethers.solidityPacked(
-                        ['uint32'],
-                        [this.integratorFee.ratio]
-                    )
-                }
-            )
+            bytes
+                .addAddress(this.integratorFee.receiver.toString())
+                .addUint32(this.integratorFee.ratio)
         }
 
-        data.push({
-            type: 'uint32',
-            value: this.resolvingStartTime
-        })
+        bytes.addUint32(this.resolvingStartTime)
 
         // whitelist data
         for (const wl of this.whitelist) {
-            data.push(
-                {
-                    type: 'bytes10',
-                    value: add0x(wl.addressHalf)
-                },
-                {
-                    type: 'uint16',
-                    value: BigInt(wl.delay)
-                }
-            )
+            bytes.addBytes(add0x(wl.addressHalf)).addUint16(wl.delay)
         }
 
         bitMask = bitMask.setMask(
@@ -195,15 +166,9 @@ export class SettlementPostInteractionData {
             BigInt(this.whitelist.length)
         )
 
-        data.push({
-            type: 'uint8',
-            value: bitMask.value
-        })
+        bytes.addUint8(bitMask.value)
 
-        return ethers.solidityPacked(
-            data.map((d) => d.type),
-            data.map((d) => d.value)
-        )
+        return bytes.asHex()
     }
 
     /**

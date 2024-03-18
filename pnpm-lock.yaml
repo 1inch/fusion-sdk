@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@1inch/byte-utils':
-    specifier: 2.1.0
-    version: 2.1.0
+    specifier: 2.2.0
+    version: 2.2.0
   '@1inch/limit-order-sdk':
     specifier: 4.2.0
     version: 4.2.0(assert@2.1.0)(axios@1.6.7)
@@ -113,12 +113,12 @@ devDependencies:
 packages:
 
   /@1inch/byte-utils@2.0.0:
-    resolution: {integrity: sha512-CcEsI6At09oqWDFrZNUTokbiOVUG0HNkkAPIhHo6rMPG+1m4Zls+kSWtotFUpy7tp0PUby/PmrOkqZgk/hFq1A==}
+    resolution: {integrity: sha512-CcEsI6At09oqWDFrZNUTokbiOVUG0HNkkAPIhHo6rMPG+1m4Zls+kSWtotFUpy7tp0PUby/PmrOkqZgk/hFq1A==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/2.0.0/63bc5159b508db321546369108eb34f1fa8eb080}
     engines: {node: '>=18.16.0'}
     dev: false
 
-  /@1inch/byte-utils@2.1.0:
-    resolution: {integrity: sha512-Exyt8hyX0SyJyikWvq9Xw8mFAf/qhYY5bHFW3KgWKpoMZKTK6BGzHptE224/i5pt1TPsWUA4M8oLHvPw9+CKjQ==}
+  /@1inch/byte-utils@2.2.0:
+    resolution: {integrity: sha512-oy9GTjIRtAXB0PGvIEONu4z7fjmiGDLcn2Oq7RehWGpd4qwU2osE4x5KQL8lTTyCaGlKXXQH2WaG1c7ezpT3YQ==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/2.2.0/d28c7bf9ca5e3805cf125de6a1a9a55670e20af7}
     engines: {node: '>=18.16.0'}
     dev: false
 

@@ -1,11 +1,12 @@
 import {Address} from '@1inch/limit-order-sdk'
+import {getBytesCount} from '@1inch/byte-utils'
 import {SettlementPostInteractionData} from './settlement-post-interaction-data'
 import {bpsToRatioFormat} from '../../sdk/utils'
 
-describe('PostInteractionData', () => {
+describe('SettlementPostInteractionData', () => {
     it('Should encode/decode with no fees and whitelist', () => {
         const data = SettlementPostInteractionData.new({
-            bankFee: 0n,
+            bankFee: 1n,
             resolvingStartTime: 1708117482n,
             whitelist: [
                 {
@@ -15,9 +16,12 @@ describe('PostInteractionData', () => {
             ]
         })
 
-        expect(
-            SettlementPostInteractionData.decode(data.encode())
-        ).toStrictEqual(data)
+        const encoded = data.encode()
+
+        expect(getBytesCount(encoded)).toEqual(21n)
+        expect(SettlementPostInteractionData.decode(encoded)).toStrictEqual(
+            data
+        )
     })
 
     it('Should encode/decode with fees and whitelist', () => {
