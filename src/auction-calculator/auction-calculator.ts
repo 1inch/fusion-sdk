@@ -6,6 +6,7 @@ import {
     AuctionPoint
 } from '../fusion-order'
 import {addRatioToAmount} from '../sdk'
+import {AuctionGasCostInfo} from '../fusion-order/auction-details/types'
 
 export class AuctionCalculator {
     private static GAS_PRICE_BASE = 1_000_000n // 1000 means 1 Gwei
@@ -16,16 +17,10 @@ export class AuctionCalculator {
         private readonly initialRateBump: bigint,
         private readonly points: AuctionPoint[],
         private readonly takerFeeRatio: bigint,
-        private readonly gasCost: {
-            /**
-             * Rate bump to cover gas price. 10_000_000 means 100%
-             */
-            gasBumpEstimate: bigint
-            /**
-             * Gas price at estimation time. 1000 means 1 Gwei
-             */
-            gasPriceEstimate: bigint
-        } = {gasBumpEstimate: 0n, gasPriceEstimate: 0n}
+        private readonly gasCost: AuctionGasCostInfo = {
+            gasBumpEstimate: 0n,
+            gasPriceEstimate: 0n
+        }
     ) {}
 
     static fromAuctionData(
@@ -42,19 +37,39 @@ export class AuctionCalculator {
         )
     }
 
+    static calcInitialRateBump(startAmount: bigint, endAmount: bigint): number {
+        const bump =
+            (RATE_BUMP_DENOMINATOR * startAmount) / endAmount -
+            RATE_BUMP_DENOMINATOR
+
+        return Number(bump)
+    }
+
     /**
      * @see https://github.com/1inch/limit-order-settlement/blob/1b6757eecb2574953b543821db6f7bbff5afee48/contracts/extensions/BaseExtension.sol#L56
      */
-    public calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
+    static calcAuctionTakingAmount(
+        takingAmount: bigint,
+        rate: number,
+        takerFeeRatio: bigint
+    ): bigint {
         const auctionTakingAmount =
             (BigInt(takingAmount) * (BigInt(rate) + RATE_BUMP_DENOMINATOR)) /
             RATE_BUMP_DENOMINATOR
 
-        if (this.takerFeeRatio === 0n) {
+        if (takerFeeRatio === 0n) {
             return auctionTakingAmount
         }
 
-        return addRatioToAmount(auctionTakingAmount, this.takerFeeRatio)
+        return addRatioToAmount(auctionTakingAmount, takerFeeRatio)
+    }
+
+    public calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
+        return AuctionCalculator.calcAuctionTakingAmount(
+            takingAmount,
+            rate,
+            this.takerFeeRatio
+        )
     }
 
     /**
