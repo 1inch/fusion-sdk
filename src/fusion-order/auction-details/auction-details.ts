@@ -1,9 +1,10 @@
 import {ethers} from 'ethers'
 import {BytesIter} from '@1inch/byte-utils'
+import {Extension} from '@1inch/limit-order-sdk'
 import assert from 'assert'
 import {AuctionGasCostInfo, AuctionPoint} from './types'
 import {isHexBytes} from '../../validations'
-import {trim0x} from '../../utils'
+import {add0x, trim0x} from '../../utils'
 import {UINT_24_MAX, UINT_32_MAX} from '../../constants'
 
 export class AuctionDetails {
@@ -95,6 +96,12 @@ export class AuctionDetails {
                 gasPriceEstimate
             }
         })
+    }
+
+    static fromExtension(extension: Extension): AuctionDetails {
+        return AuctionDetails.decode(
+            add0x(extension.makingAmountData.slice(42))
+        )
     }
 
     /**

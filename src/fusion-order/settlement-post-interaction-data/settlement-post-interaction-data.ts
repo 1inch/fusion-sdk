@@ -1,4 +1,4 @@
-import {Address} from '@1inch/limit-order-sdk'
+import {Address, Extension} from '@1inch/limit-order-sdk'
 import {BitMask, BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {IntegratorFee, SettlementSuffixData} from './types'
@@ -125,6 +125,12 @@ export class SettlementPostInteractionData {
             resolvingStartTime,
             whitelist
         })
+    }
+
+    static fromExtension(extension: Extension): SettlementPostInteractionData {
+        return SettlementPostInteractionData.decode(
+            add0x(extension.postInteraction.slice(42))
+        )
     }
 
     /**

@@ -17,7 +17,6 @@ import {
     SettlementPostInteractionData
 } from './settlement-post-interaction-data'
 import {AuctionCalculator} from '../auction-calculator'
-import {add0x} from '../utils'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
 import {now} from '../utils/time'
@@ -254,13 +253,10 @@ export class FusionOrder {
 
         const makerTraits = new MakerTraits(BigInt(order.makerTraits))
 
-        const auctionDetails = AuctionDetails.decode(
-            add0x(extension.makingAmountData.slice(42))
-        )
+        const auctionDetails = AuctionDetails.fromExtension(extension)
 
-        const postInteractionData = SettlementPostInteractionData.decode(
-            add0x(extension.postInteraction.slice(42))
-        )
+        const postInteractionData =
+            SettlementPostInteractionData.fromExtension(extension)
 
         const deadline = makerTraits.expiration()
 
