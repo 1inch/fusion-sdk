@@ -64,6 +64,26 @@ export class AuctionCalculator {
         return addRatioToAmount(auctionTakingAmount, takerFeeRatio)
     }
 
+    /**
+     * Encode estimation `baseFee` to `gasPriceEstimate` for `AuctionGasCostInfo`
+     */
+    static baseFeeToGasPriceEstimate(baseFee: bigint): bigint {
+        return BigInt(baseFee) / AuctionCalculator.GAS_PRICE_BASE
+    }
+
+    /**
+     * Calculates `gasBumpEstimate` for `AuctionGasCostInfo`
+     *
+     * @param endTakingAmount min return in destToken
+     * @param gasCostInToToken gas cost in destToken
+     */
+    static calcGasBumpEstimate(
+        endTakingAmount: bigint,
+        gasCostInToToken: bigint
+    ): bigint {
+        return (gasCostInToToken * RATE_BUMP_DENOMINATOR) / endTakingAmount
+    }
+
     public calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
         return AuctionCalculator.calcAuctionTakingAmount(
             takingAmount,
