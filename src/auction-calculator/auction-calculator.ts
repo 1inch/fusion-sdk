@@ -65,7 +65,7 @@ export class AuctionCalculator {
     }
 
     /**
-     * Encode estimation `baseFee` to `gasPriceEstimate` for `AuctionGasCostInfo`
+     * Encode estimation `baseFee` as `gasPriceEstimate` for `AuctionGasCostInfo`
      */
     static baseFeeToGasPriceEstimate(baseFee: bigint): bigint {
         return BigInt(baseFee) / AuctionCalculator.GAS_PRICE_BASE
