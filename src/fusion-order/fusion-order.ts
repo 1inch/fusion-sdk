@@ -302,8 +302,8 @@ export class FusionOrder {
         return this.inner.getOrderHash(chainId)
     }
 
-    public getTypedData(domain = getLimitOrderV4Domain(1)): EIP712TypedData {
-        return this.inner.getTypedData(domain)
+    public getTypedData(chainId: number): EIP712TypedData {
+        return this.inner.getTypedData(getLimitOrderV4Domain(chainId))
     }
 
     public getCalculator(): AuctionCalculator {
