@@ -350,4 +350,13 @@ export class FusionOrder {
             executionTime
         )
     }
+
+    /**
+     * Check is order expired at a given time
+     *
+     * @param time timestamp in seconds
+     */
+    public isExpiredAt(time: bigint): boolean {
+        return time > this.deadline
+    }
 }
