@@ -1,8 +1,4 @@
-import {
-    Address,
-    getLimitOrderV4Domain,
-    MakerTraits
-} from '@1inch/limit-order-sdk'
+import {Address, MakerTraits} from '@1inch/limit-order-sdk'
 import {
     FusionSDKConfigParams,
     OrderInfo,
@@ -118,7 +114,6 @@ export class FusionSDK {
                 : undefined,
             preset: params.preset,
             nonce: params.nonce,
-            permit: params.permit,
             takingFeeReceiver: params.fee?.takingFeeReceiver,
             allowPartialFills: params.allowPartialFills,
             allowMultipleFills: params.allowMultipleFills
@@ -138,11 +133,10 @@ export class FusionSDK {
         }
 
         const orderStruct = order.build()
-        const domain = getLimitOrderV4Domain(this.config.network)
 
         const signature = await this.config.blockchainProvider.signTypedData(
             orderStruct.maker,
-            order.getTypedData(domain)
+            order.getTypedData(this.config.network)
         )
 
         const relayerRequest = RelayerRequest.new({
