@@ -61,11 +61,13 @@ export class Quote {
         this.settlementAddress = new Address(response.settlementAddress)
     }
 
-    createFusionOrder(paramsData: FusionOrderParamsData): FusionOrder {
+    createFusionOrder(
+        paramsData: Omit<FusionOrderParamsData, 'permit'>
+    ): FusionOrder {
         const params = FusionOrderParams.new({
             preset: paramsData?.preset || this.recommendedPreset,
             receiver: paramsData?.receiver,
-            permit: paramsData?.permit,
+            permit: this.params.permit,
             nonce: paramsData?.nonce
         })
 

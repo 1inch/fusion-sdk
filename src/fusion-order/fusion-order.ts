@@ -172,6 +172,22 @@ export class FusionOrder {
         return this.inner.makerTraits.expiration() || 0n
     }
 
+    /**
+     * Timestamp in sec
+     */
+    get auctionStartTime(): bigint {
+        return this.fusionExtension.auctionDetails.startTime
+    }
+
+    /**
+     * Timestamp in sec
+     */
+    get auctionEndTime(): bigint {
+        const {startTime, duration} = this.fusionExtension.auctionDetails
+
+        return startTime + duration
+    }
+
     static new(
         /**
          * Fusion extension address
@@ -302,14 +318,14 @@ export class FusionOrder {
         return this.inner.getOrderHash(chainId)
     }
 
-    public getTypedData(domain = getLimitOrderV4Domain(1)): EIP712TypedData {
-        return this.inner.getTypedData(domain)
+    public getTypedData(chainId: number): EIP712TypedData {
+        return this.inner.getTypedData(getLimitOrderV4Domain(chainId))
     }
 
     public getCalculator(): AuctionCalculator {
         return AuctionCalculator.fromAuctionData(
             this.fusionExtension.postInteractionData,
-            this.fusionExtension.details
+            this.fusionExtension.auctionDetails
         )
     }
 
