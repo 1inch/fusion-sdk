@@ -172,6 +172,22 @@ export class FusionOrder {
         return this.inner.makerTraits.expiration() || 0n
     }
 
+    /**
+     * Timestamp in sec
+     */
+    get auctionStartTime(): bigint {
+        return this.fusionExtension.auctionDetails.startTime
+    }
+
+    /**
+     * Timestamp in sec
+     */
+    get auctionEndTime(): bigint {
+        const {startTime, duration} = this.fusionExtension.auctionDetails
+
+        return startTime + duration
+    }
+
     static new(
         /**
          * Fusion extension address
@@ -309,7 +325,7 @@ export class FusionOrder {
     public getCalculator(): AuctionCalculator {
         return AuctionCalculator.fromAuctionData(
             this.fusionExtension.postInteractionData,
-            this.fusionExtension.details
+            this.fusionExtension.auctionDetails
         )
     }
 
