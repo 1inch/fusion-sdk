@@ -53,7 +53,7 @@ export type PresetData = {
     allowPartialFills: boolean
     allowMultipleFills: boolean
     gasCost?: {
-        gasBumpEstimate: string
+        gasBumpEstimate: number
         gasPriceEstimate: string
     }
     exclusiveResolver?: string
