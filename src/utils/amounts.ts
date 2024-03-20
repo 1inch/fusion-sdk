@@ -25,7 +25,7 @@ export function calcTakingAmount(
  * @return Floored maker amount
  * @see https://github.com/1inch/limit-order-protocol/blob/23d655844191dea7960a186652307604a1ed480a/contracts/libraries/AmountCalculatorLib.sol#L6
  */
-export function calMakingAmount(
+export function calcMakingAmount(
     swapTakerAmount: bigint,
     orderMakerAmount: bigint,
     orderTakerAmount: bigint
