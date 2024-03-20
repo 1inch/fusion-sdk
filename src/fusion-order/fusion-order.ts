@@ -298,8 +298,8 @@ export class FusionOrder {
         return this.inner.build()
     }
 
-    public getOrderHash(domain = getLimitOrderV4Domain(1)): string {
-        return this.inner.getOrderHash(domain)
+    public getOrderHash(chainId: number): string {
+        return this.inner.getOrderHash(chainId)
     }
 
     public getTypedData(domain = getLimitOrderV4Domain(1)): EIP712TypedData {
