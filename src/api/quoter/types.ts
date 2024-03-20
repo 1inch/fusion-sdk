@@ -52,11 +52,11 @@ export type PresetData = {
     points: AuctionPoint[]
     allowPartialFills: boolean
     allowMultipleFills: boolean
-    gasCost?: {
+    gasCost: {
         gasBumpEstimate: number
         gasPriceEstimate: string
     }
-    exclusiveResolver?: string
+    exclusiveResolver: string | null
 }
 
 export type AuctionPoint = {

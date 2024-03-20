@@ -1,7 +1,7 @@
 import {QuoterApi} from './quoter.api'
 import {QuoterRequest} from './quoter.request'
 import {Quote} from './quote'
-import {PresetEnum} from './types'
+import {PresetEnum, QuoterResponse} from './types'
 import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
 import {HttpProviderConnector} from '../../connector'
 
@@ -46,7 +46,12 @@ describe('Quoter API', () => {
                     }
                 ],
                 allowPartialFills: true,
-                allowMultipleFills: true
+                allowMultipleFills: true,
+                exclusiveResolver: null,
+                gasCost: {
+                    gasBumpEstimate: 0,
+                    gasPriceEstimate: '0'
+                }
             },
             medium: {
                 auctionDuration: 180,
@@ -63,7 +68,12 @@ describe('Quoter API', () => {
                     }
                 ],
                 allowPartialFills: true,
-                allowMultipleFills: true
+                allowMultipleFills: true,
+                exclusiveResolver: null,
+                gasCost: {
+                    gasBumpEstimate: 0,
+                    gasPriceEstimate: '0'
+                }
             },
             slow: {
                 auctionDuration: 600,
@@ -80,7 +90,12 @@ describe('Quoter API', () => {
                     }
                 ],
                 allowPartialFills: true,
-                allowMultipleFills: true
+                allowMultipleFills: true,
+                exclusiveResolver: null,
+                gasCost: {
+                    gasBumpEstimate: 0,
+                    gasPriceEstimate: '0'
+                }
             }
         },
         toTokenAmount: '626772029219852913',
@@ -103,7 +118,7 @@ describe('Quoter API', () => {
             '0xcfa62f77920d6383be12c91c71bd403599e1116f'
         ],
         bankFee: 0
-    }
+    } as QuoterResponse
 
     const QuoterResponseMock = new Quote(params, ResponseMock)
 
