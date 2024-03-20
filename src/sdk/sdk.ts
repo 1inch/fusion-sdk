@@ -124,8 +124,7 @@ export class FusionSDK {
             allowMultipleFills: params.allowMultipleFills
         })
 
-        const domain = getLimitOrderV4Domain(this.config.network)
-        const hash = order.getOrderHash(domain)
+        const hash = order.getOrderHash(this.config.network)
 
         return {order, hash, quoteId: quote.quoteId}
     }
@@ -158,7 +157,7 @@ export class FusionSDK {
             order: orderStruct,
             signature,
             quoteId,
-            orderHash: order.getOrderHash(domain)
+            orderHash: order.getOrderHash(this.config.network)
         }
     }
 
