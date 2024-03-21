@@ -9,8 +9,8 @@ dependencies:
     specifier: 2.2.0
     version: 2.2.0
   '@1inch/limit-order-sdk':
-    specifier: 4.5.0
-    version: 4.5.0(assert@2.1.0)(axios@1.6.8)
+    specifier: 4.6.1
+    version: 4.6.1(assert@2.1.0)(axios@1.6.8)
   '@metamask/eth-sig-util':
     specifier: ^5.0.2
     version: 5.1.0
@@ -155,8 +155,8 @@ packages:
       typescript: 4.9.4
     dev: true
 
-  /@1inch/limit-order-sdk@4.5.0(assert@2.1.0)(axios@1.6.8):
-    resolution: {integrity: sha512-1wBGKc4ftcZdlLbjXudZVJ4o4x/svEugO8wcJdvAWhcCiQTADdwULVCHCSgsofIpVa0lu0sUPPBSg6rIdGKQ2A==}
+  /@1inch/limit-order-sdk@4.6.1(assert@2.1.0)(axios@1.6.8):
+    resolution: {integrity: sha512-1qgWxAhrmV3x5j+qH54fneS4iiCgV4f1thVvbObkMEQee1VRVnGmRHJRywZ4MYOM6+Wgo1Vape2b1lejx6zffg==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0

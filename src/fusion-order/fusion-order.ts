@@ -269,6 +269,8 @@ export class FusionOrder {
 
         const makerTraits = new MakerTraits(BigInt(order.makerTraits))
 
+        assert(!makerTraits.isPrivate(), 'fusion order can not be private')
+
         const auctionDetails = AuctionDetails.fromExtension(extension)
 
         const postInteractionData =
