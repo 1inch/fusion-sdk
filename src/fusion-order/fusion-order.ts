@@ -39,7 +39,7 @@ export class FusionOrder {
          * Fusion extension address
          * @see https://github.com/1inch/limit-order-settlement
          */
-        extensionContract: Address,
+        public readonly settlementExtensionContract: Address,
         orderInfo: OrderInfoData,
         auctionDetails: AuctionDetails,
         postInteractionData: SettlementPostInteractionData,
@@ -114,7 +114,7 @@ export class FusionOrder {
         }
 
         const extension = new FusionExtension(
-            extensionContract,
+            settlementExtensionContract,
             auctionDetails,
             postInteractionData
         )
