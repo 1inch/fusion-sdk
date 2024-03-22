@@ -70,18 +70,21 @@ export class FusionOrder {
             enablePermit2?: boolean
         } = FusionOrder.defaultExtra
     ) {
-        const {
-            allowPartialFills,
-            allowMultipleFills,
-            unwrapWETH,
-            enablePermit2,
-            orderExpirationDelay,
-            nonce,
-            permit
-        } = {
-            ...FusionOrder.defaultExtra,
-            ...extra
-        }
+        const allowPartialFills =
+            extra.allowPartialFills ??
+            FusionOrder.defaultExtra.allowPartialFills
+        const allowMultipleFills =
+            extra.allowMultipleFills ??
+            FusionOrder.defaultExtra.allowMultipleFills
+        const unwrapWETH =
+            extra.unwrapWETH ?? FusionOrder.defaultExtra.unwrapWETH
+        const enablePermit2 =
+            extra.enablePermit2 ?? FusionOrder.defaultExtra.enablePermit2
+        const orderExpirationDelay =
+            extra.orderExpirationDelay ??
+            FusionOrder.defaultExtra.orderExpirationDelay
+
+        const {nonce, permit} = extra
 
         const deadline =
             auctionDetails.startTime +
