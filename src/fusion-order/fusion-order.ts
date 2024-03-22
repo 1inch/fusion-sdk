@@ -22,6 +22,8 @@ import {calcTakingAmount} from '../utils/amounts'
 import {now} from '../utils/time'
 
 export class FusionOrder {
+    private static _ORDER_FEE_BASE_POINTS = 10n ** 15n
+
     private static defaultExtra = {
         allowPartialFills: true,
         allowMultipleFills: true,
@@ -383,5 +385,22 @@ export class FusionOrder {
      */
     public isExpiredAt(time: bigint): boolean {
         return time > this.deadline
+    }
+
+    /**
+     * Returns how much fee will be credited from a resolver deposit account
+     * Token of fee set in Settlement extension constructor
+     * Actual deployments can be found at https://github.com/1inch/limit-order-settlement/tree/master/deployments
+     *
+     * @param filledMakingAmount which resolver fills
+     * @see https://github.com/1inch/limit-order-settlement/blob/0e3cae3653092ebb4ea5d2a338c87a54351ad883/contracts/extensions/ResolverFeeExtension.sol#L29
+     */
+    public getResolverFee(filledMakingAmount: bigint): bigint {
+        return (
+            (this.fusionExtension.postInteractionData.bankFee *
+                FusionOrder._ORDER_FEE_BASE_POINTS *
+                filledMakingAmount) /
+            this.makingAmount
+        )
     }
 }
