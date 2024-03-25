@@ -193,6 +193,14 @@ export class FusionOrder {
         return startTime + duration
     }
 
+    get partialFillAllowed(): boolean {
+        return this.inner.makerTraits.isPartialFillAllowed()
+    }
+
+    get multipleFillsAllowed(): boolean {
+        return this.inner.makerTraits.isMultipleFillsAllowed()
+    }
+
     static new(
         /**
          * Fusion extension address
