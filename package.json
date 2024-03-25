@@ -28,7 +28,7 @@
     },
     "dependencies": {
         "@1inch/byte-utils": "2.2.0",
-        "@1inch/limit-order-sdk": "4.6.2",
+        "@1inch/limit-order-sdk": "4.7.0",
         "@metamask/eth-sig-util": "^5.0.2",
         "bn.js": "^5.2.1",
         "ethers": "6.11.0",
