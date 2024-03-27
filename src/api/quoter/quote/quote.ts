@@ -6,7 +6,6 @@ import {Preset} from '../preset'
 import {AuctionWhitelistItem, FusionOrder} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
 import {bpsToRatioFormat} from '../../../sdk'
-import {now} from '../../../utils/time'
 
 export class Quote {
     /**
@@ -132,7 +131,7 @@ export class Quote {
 
                 return {
                     address: resolver,
-                    allowFrom: isExclusive ? now() : auctionStartTime
+                    allowFrom: isExclusive ? 0n : auctionStartTime
                 }
             })
         }

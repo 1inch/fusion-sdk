@@ -413,19 +413,11 @@ export class FusionOrder {
     }
 
     /**
-     * Check if `wallet` can fill order before auction start
+     * Check if `wallet` can fill order before other
      */
     public isExclusiveResolver(wallet: Address): boolean {
-        const isAuctionDelayed =
-            this.fusionExtension.postInteractionData.resolvingStartTime <
-            this.fusionExtension.auctionDetails.startTime
-
-        return (
-            isAuctionDelayed &&
-            this.canExecuteAt(
-                wallet,
-                this.fusionExtension.postInteractionData.resolvingStartTime
-            )
+        return this.fusionExtension.postInteractionData.isExclusiveResolver(
+            wallet
         )
     }
 }
