@@ -23,6 +23,7 @@ export * from './ws-api'
 export * from './errors'
 export {
     QuoterRequest,
+    QuoterResponse,
     RelayerRequest,
     QuoterCustomPresetRequest,
     PresetEnum,
