@@ -411,4 +411,13 @@ export class FusionOrder {
             this.makingAmount
         )
     }
+
+    /**
+     * Check if `wallet` can fill order before other
+     */
+    public isExclusiveResolver(wallet: Address): boolean {
+        return this.fusionExtension.postInteractionData.isExclusiveResolver(
+            wallet
+        )
+    }
 }

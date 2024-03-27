@@ -200,6 +200,22 @@ export class SettlementPostInteractionData {
 
         return false
     }
+
+    public isExclusiveResolver(wallet: Address): boolean {
+        const addressHalf = wallet.toString().slice(-20)
+
+        // only one resolver, so check if it is the passed address
+        if (this.whitelist.length === 1) {
+            return addressHalf === this.whitelist[0].addressHalf
+        }
+
+        // more than 1 address can fill at the same time, no exclusivity
+        if (this.whitelist[0].delay === this.whitelist[1].delay) {
+            return false
+        }
+
+        return addressHalf === this.whitelist[0].addressHalf
+    }
 }
 
 type WhitelistItem = {
