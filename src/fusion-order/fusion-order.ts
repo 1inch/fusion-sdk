@@ -2,7 +2,6 @@ import {
     Address,
     EIP712TypedData,
     Extension,
-    getLimitOrderV4Domain,
     LimitOrder,
     LimitOrderV4Struct,
     MakerTraits,
@@ -347,7 +346,7 @@ export class FusionOrder {
     }
 
     public getTypedData(chainId: number): EIP712TypedData {
-        return this.inner.getTypedData(getLimitOrderV4Domain(chainId))
+        return this.inner.getTypedData(chainId)
     }
 
     public getCalculator(): AuctionCalculator {
