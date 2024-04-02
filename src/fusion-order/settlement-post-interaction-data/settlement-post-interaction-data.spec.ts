@@ -53,7 +53,7 @@ describe('SettlementPostInteractionData', () => {
                 }
             ],
             integratorFee: {
-                receiver: Address.ZERO_ADDRESS,
+                receiver: Address.fromBigInt(1n),
                 ratio: bpsToRatioFormat(10)
             }
         })
@@ -74,7 +74,7 @@ describe('SettlementPostInteractionData', () => {
                 }
             ],
             integratorFee: {
-                receiver: Address.ZERO_ADDRESS,
+                receiver: Address.fromBigInt(1n),
                 ratio: bpsToRatioFormat(10)
             },
             customReceiver: Address.fromBigInt(1337n)

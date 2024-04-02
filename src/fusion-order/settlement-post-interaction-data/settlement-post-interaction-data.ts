@@ -29,6 +29,13 @@ export class SettlementPostInteractionData {
         this.bankFee = data.bankFee || 0n
         this.resolvingStartTime = data.resolvingStartTime
         this.customReceiver = data.customReceiver
+
+        if (this.integratorFee?.ratio) {
+            assert(
+                !this.integratorFee.receiver.isZero(),
+                'Fee receiver can not be zero when fee set'
+            )
+        }
     }
 
     static new(data: SettlementSuffixData): SettlementPostInteractionData {
