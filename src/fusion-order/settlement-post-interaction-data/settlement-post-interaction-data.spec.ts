@@ -63,6 +63,28 @@ describe('SettlementPostInteractionData', () => {
         ).toStrictEqual(data)
     })
 
+    it('Should encode/decode with fees, custom receiver and whitelist', () => {
+        const data = SettlementPostInteractionData.new({
+            bankFee: 0n,
+            resolvingStartTime: 1708117482n,
+            whitelist: [
+                {
+                    address: Address.ZERO_ADDRESS,
+                    allowFrom: 0n
+                }
+            ],
+            integratorFee: {
+                receiver: Address.ZERO_ADDRESS,
+                ratio: bpsToRatioFormat(10)
+            },
+            customReceiver: Address.fromBigInt(1337n)
+        })
+
+        expect(
+            SettlementPostInteractionData.decode(data.encode())
+        ).toStrictEqual(data)
+    })
+
     it('Should generate correct whitelist', () => {
         const start = 1708117482n
 

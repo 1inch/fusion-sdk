@@ -118,6 +118,13 @@ export class FusionOrder {
             makerTraits.withNonce(nonce)
         }
 
+        /**
+         * @see https://github.com/1inch/limit-order-settlement/blob/0afb4785cb825fe959c534ff4f1a771d4d33cdf4/contracts/extensions/IntegratorFeeExtension.sol#L65
+         */
+        const receiver = postInteractionData.integratorFee?.ratio
+            ? settlementExtensionContract
+            : orderInfo.receiver
+
         const extension = new FusionExtension(
             settlementExtensionContract,
             auctionDetails,
@@ -133,6 +140,7 @@ export class FusionOrder {
         this.inner = new LimitOrder(
             {
                 ...orderInfo,
+                receiver,
                 salt: LimitOrder.buildSalt(builtExtension, orderInfo.salt)
             },
             makerTraits,
@@ -252,7 +260,8 @@ export class FusionOrder {
                 bankFee: details.fees?.bankFee || 0n,
                 integratorFee: details.fees?.integratorFee,
                 whitelist: details.whitelist,
-                resolvingStartTime: details.resolvingStartTime ?? now()
+                resolvingStartTime: details.resolvingStartTime ?? now(),
+                customReceiver: orderInfo.receiver
             }),
             extra
         )

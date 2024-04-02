@@ -15,16 +15,20 @@ export class SettlementPostInteractionData {
 
     public readonly resolvingStartTime: bigint
 
+    public readonly customReceiver?: Address
+
     private constructor(data: {
         whitelist: WhitelistItem[]
         integratorFee?: IntegratorFee
         bankFee?: bigint
         resolvingStartTime: bigint
+        customReceiver?: Address
     }) {
         this.whitelist = data.whitelist
         this.integratorFee = data?.integratorFee
         this.bankFee = data.bankFee || 0n
         this.resolvingStartTime = data.resolvingStartTime
+        this.customReceiver = data.customReceiver
     }
 
     static new(data: SettlementSuffixData): SettlementPostInteractionData {
@@ -63,12 +67,13 @@ export class SettlementPostInteractionData {
      * Construct `SettlementPostInteractionData` from bytes
      * @param data bytes with 0x prefix in next format:
      * - [uint32 feeBank] only when first bit of `bitMask` enabled
-     * - [uint160 integratorFeeReceiver, uint32 integratorFeeRation] only when second bit of `bitMask` enabled
+     * - [uint16 integratorFeeRation, uint160 integratorFeeReceiver, [uint160 customReceiver]] only when second bit of `bitMask` enabled
      * - uint32 auctionStartTime
      * - (bytes10 last10bytesOfAddress, uint16 auctionDelay) * N whitelist info
      * - uint8 bitMask:
      *                  0b0000_0001 - fee bank mask
      *                  0b0000_0010 - integrator fee mask
+     *                  0b0000_0100 - is custom receiver present (only used when integrator fee enabled)
      *                  0b1111_1000 - resolvers count mask
      *
      * All data is tight packed
@@ -82,23 +87,29 @@ export class SettlementPostInteractionData {
 
         const iter = BytesIter.BigInt(data)
 
-        const extra = iter.nextByte(BytesIter.SIDE.Back)
+        const flags = new BN(iter.nextByte(BytesIter.SIDE.Back))
         let bankFee = 0n
         let integratorFee: IntegratorFee | undefined
+        let customReceiver: Address | undefined
 
         // fee bank presented
-        if ((extra & 1n) === 1n) {
+        if (flags.getBit(0n)) {
             bankFee = iter.nextUint32()
         }
 
         // integrator fee presented
-        if ((extra & 2n) === 2n) {
+        if (flags.getBit(1n)) {
+            const integratorFeeRatio = iter.nextUint16()
             const integratorAddress = iter.nextUint160()
-            const integratorFeeRatio = iter.nextUint32()
 
             integratorFee = {
                 ratio: integratorFeeRatio,
                 receiver: Address.fromBigInt(integratorAddress)
+            }
+
+            // custom receiver presented
+            if (flags.getBit(2n)) {
+                customReceiver = Address.fromBigInt(iter.nextUint160())
             }
         }
 
@@ -123,7 +134,8 @@ export class SettlementPostInteractionData {
             integratorFee,
             bankFee,
             resolvingStartTime,
-            whitelist
+            whitelist,
+            customReceiver
         })
     }
 
@@ -140,6 +152,7 @@ export class SettlementPostInteractionData {
         /**
          * 0b0000_0001 - fee bank mask
          * 0b0000_0010 - integrator fee mask
+         * 0b0000_0100 - is custom receiver present
          * 0b1111_1000 - resolvers count mask
          */
         let bitMask = new BN(0n)
@@ -156,8 +169,13 @@ export class SettlementPostInteractionData {
         if (this.integratorFee?.ratio) {
             bitMask = bitMask.setBit(1n, 1)
             bytes
+                .addUint16(this.integratorFee.ratio)
                 .addAddress(this.integratorFee.receiver.toString())
-                .addUint32(this.integratorFee.ratio)
+
+            if (this.customReceiver && !this.customReceiver.isZero()) {
+                bitMask = bitMask.setBit(2n, 1)
+                bytes.addAddress(this.customReceiver.toString())
+            }
         }
 
         bytes.addUint32(this.resolvingStartTime)

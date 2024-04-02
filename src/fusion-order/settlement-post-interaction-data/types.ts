@@ -13,6 +13,7 @@ export type SettlementSuffixData = {
     integratorFee?: IntegratorFee
     bankFee?: bigint
     resolvingStartTime: bigint
+    customReceiver?: Address
 }
 
 export type IntegratorFee = {

@@ -3,7 +3,7 @@ export function bpsToRatioFormat(bps?: number): bigint {
         return 0n
     }
 
-    return BigInt(bps) * 100_000n
+    return BigInt(bps) * 10n
 }
 
 export function addRatioToAmount(amount: bigint, ratio: bigint): bigint {
