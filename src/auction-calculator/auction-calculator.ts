@@ -28,7 +28,7 @@ export class AuctionCalculator {
         details: AuctionDetails
     ): AuctionCalculator {
         return new AuctionCalculator(
-            data.resolvingStartTime,
+            details.startTime,
             details.duration,
             details.initialRateBump,
             details.points,
