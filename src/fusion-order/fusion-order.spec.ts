@@ -1,4 +1,5 @@
 import {Address, MakerTraits} from '@1inch/limit-order-sdk'
+import {parseUnits} from 'ethers'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 
@@ -113,5 +114,44 @@ describe('Fusion Order', () => {
         expect(
             FusionOrder.fromDataAndExtension(order.build(), order.extension)
         ).toStrictEqual(order)
+    })
+
+    it('Should calculate taking amount', () => {
+        const now = 10000n
+        const order = FusionOrder.new(
+            new Address('0x8273f37417da37c4a6c3995e82cf442f87a25d9c'),
+            {
+                makerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // USDC
+                ),
+                takerAsset: new Address(
+                    '0x111111111117dc0aa78b770fa6a738034120c302' // 1INCH
+                ),
+                maker: Address.fromBigInt(1n),
+                makingAmount: parseUnits('150', 6),
+                takingAmount: parseUnits('200')
+            },
+            {
+                auction: new AuctionDetails({
+                    startTime: now,
+                    duration: 120n,
+                    initialRateBump: 10_000_000, // 100%,
+                    points: []
+                }),
+                whitelist: [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ],
+                resolvingStartTime: 0n
+            }
+        )
+
+        expect(order.calcTakingAmount(order.makingAmount, now)).toEqual(
+            2n * order.takingAmount // because init rate bump is 100%
+        )
     })
 })
