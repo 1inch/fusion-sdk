@@ -3,6 +3,8 @@ import {RelayerApiConfig} from './types'
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 
 export class RelayerApi {
+    private static Version = 'v2.0'
+
     constructor(
         private readonly config: RelayerApiConfig,
         private readonly httpClient: HttpProviderConnector
@@ -18,13 +20,13 @@ export class RelayerApi {
     }
 
     submit(params: RelayerRequest): Promise<void> {
-        const url = `${this.config.url}/v1.0/${this.config.network}/order/submit`
+        const url = `${this.config.url}/${RelayerApi.Version}/${this.config.network}/order/submit`
 
         return this.httpClient.post(url, params)
     }
 
     submitBatch(params: RelayerRequest[]): Promise<void> {
-        const url = `${this.config.url}/v1.0/${this.config.network}/order/submit/many`
+        const url = `${this.config.url}/${RelayerApi.Version}/${this.config.network}/order/submit/many`
 
         return this.httpClient.post(url, params)
     }

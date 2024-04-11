@@ -42,7 +42,7 @@ describe('Relayer API', () => {
         await quoter.submit(params)
 
         expect(httpProvider.post).toHaveBeenCalledWith(
-            'https://test.com/relayer/v1.0/1/order/submit',
+            'https://test.com/relayer/v2.0/1/order/submit',
             orderData
         )
     })
@@ -94,7 +94,7 @@ describe('Relayer API', () => {
         await quoter.submitBatch(params)
 
         expect(httpProvider.post).toHaveBeenCalledWith(
-            'https://test.com/relayer/v1.0/1/order/submit/many',
+            'https://test.com/relayer/v2.0/1/order/submit/many',
             params
         )
     })

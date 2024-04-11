@@ -13,6 +13,8 @@ import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 import {concatQueryParams} from '../params'
 
 export class OrdersApi {
+    private static Version = 'v2.0'
+
     constructor(
         private readonly config: OrdersApiConfig,
         private readonly httpClient: HttpProviderConnector
@@ -37,7 +39,7 @@ export class OrdersApi {
         }
 
         const queryParams = concatQueryParams(params.build())
-        const url = `${this.config.url}/v1.0/${this.config.network}/order/active/${queryParams}`
+        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/active/${queryParams}`
 
         return this.httpClient.get<ActiveOrdersResponse>(url)
     }
@@ -51,7 +53,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const url = `${this.config.url}/v1.0/${this.config.network}/order/status/${params.orderHash}`
+        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/status/${params.orderHash}`
 
         return this.httpClient.get<OrderStatusResponse>(url)
     }
@@ -66,7 +68,7 @@ export class OrdersApi {
         }
 
         const queryParams = concatQueryParams(params.buildQueryParams())
-        const url = `${this.config.url}/v1.0/${this.config.network}/order/maker/${params.address}/${queryParams}`
+        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/maker/${params.address}/${queryParams}`
 
         return this.httpClient.get(url)
     }

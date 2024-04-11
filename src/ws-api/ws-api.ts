@@ -11,6 +11,8 @@ import {
 } from '../connector/ws'
 
 export class WebSocketApi {
+    private static Version = 'v2.0'
+
     public readonly rpc: RpcWebsocketApi
 
     public readonly order: ActiveOrdersWebSocketApi
@@ -22,7 +24,7 @@ export class WebSocketApi {
     ) {
         if (instanceOfWsApiConfigWithNetwork(configOrProvider)) {
             const url = castUrl(configOrProvider.url)
-            const urlWithNetwork = `${url}/v1.0/${configOrProvider.network}`
+            const urlWithNetwork = `${url}/${WebSocketApi.Version}/${configOrProvider.network}`
             const configWithUrl = {...configOrProvider, url: urlWithNetwork}
             const provider = new WebsocketClient(configWithUrl)
 
