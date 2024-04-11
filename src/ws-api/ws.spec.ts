@@ -91,7 +91,7 @@ describe(__filename, () => {
             const port = 8080
 
             const url = `ws://localhost:${port}/ws`
-            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+            const wss = new WebSocketServer({port, path: '/ws/v2.0/1'})
 
             wss.on('connection', (ws) => {
                 for (const m of [message]) {
@@ -136,7 +136,7 @@ describe(__filename, () => {
             const port = 8080
 
             const url = `ws://localhost:${port}/ws`
-            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+            const wss = new WebSocketServer({port, path: '/ws/v2.0/1'})
 
             wss.on('connection', (ws) => {
                 for (const m of [message]) {
@@ -166,7 +166,7 @@ describe(__filename, () => {
             const port = 8080
 
             const url = `ws://localhost:${port}/ws`
-            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+            const wss = new WebSocketServer({port, path: '/ws/v2.0/1'})
 
             wss.on('connection', (ws) => {
                 for (const m of [message]) {
@@ -175,7 +175,7 @@ describe(__filename, () => {
             })
 
             const castedUrl = castUrl(url)
-            const urlWithNetwork = `${castedUrl}/v1.0/1`
+            const urlWithNetwork = `${castedUrl}/v2.0/1`
             const provider = new WebsocketClient({url: urlWithNetwork})
 
             const wsSdk = new WebSocketApi(provider)
@@ -199,7 +199,7 @@ describe(__filename, () => {
             const port = 8080
 
             const url = `ws://localhost:${port}/ws`
-            const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+            const wss = new WebSocketServer({port, path: '/ws/v2.0/1'})
 
             wss.on('connection', (ws) => {
                 for (const m of [message]) {
@@ -208,7 +208,7 @@ describe(__filename, () => {
             })
 
             const castedUrl = castUrl(url)
-            const urlWithNetwork = `${castedUrl}/v1.0/1`
+            const urlWithNetwork = `${castedUrl}/v2.0/1`
             const provider = new WebsocketClient({
                 url: urlWithNetwork,
                 authKey: ''
@@ -828,7 +828,7 @@ function createWebsocketRpcServerMock(cb: (ws: WebSocket, data: any) => void): {
 } {
     const port = 8080
     const returnUrl = `ws://localhost:${port}/ws`
-    const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+    const wss = new WebSocketServer({port, path: '/ws/v2.0/1'})
 
     wss.on('connection', (ws) => {
         ws.on('message', (data) => cb(ws, data))
@@ -844,7 +844,7 @@ function createWebsocketServerMock(messages: any[]): {
     const port = 8080
 
     const returnUrl = `ws://localhost:${port}/ws`
-    const wss = new WebSocketServer({port, path: '/ws/v1.0/1'})
+    const wss = new WebSocketServer({port, path: '/ws/v2.0/1'})
 
     wss.on('connection', (ws) => {
         for (const message of messages) {

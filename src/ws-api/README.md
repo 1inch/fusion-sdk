@@ -43,7 +43,7 @@ class MyFancyProvider implements WsProviderConnector {
     // ... user implementation
 }
 
-const url = 'wss://api.1inch.dev/fusion/ws/v1.0/1'
+const url = 'wss://api.1inch.dev/fusion/ws/v2.0/1'
 const provider = new MyFancyProvider({url})
 
 const wsSdk = new WebSocketApi(provider)

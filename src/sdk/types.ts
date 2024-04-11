@@ -63,6 +63,7 @@ export type OrderInfo = {
     signature: string
     quoteId: string
     orderHash: string
+    extension: string
 }
 
 export type PreparedOrder = {

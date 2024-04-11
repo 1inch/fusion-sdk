@@ -6,6 +6,8 @@ import {concatQueryParams} from '../params'
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 
 export class QuoterApi {
+    private static Version = 'v2.0'
+
     constructor(
         private readonly config: QuoterApiConfig,
         private readonly httpClient: HttpProviderConnector
@@ -22,7 +24,7 @@ export class QuoterApi {
 
     async getQuote(params: QuoterRequest): Promise<Quote> {
         const queryParams = concatQueryParams(params.build())
-        const url = `${this.config.url}/v1.0/${this.config.network}/quote/receive/${queryParams}`
+        const url = `${this.config.url}/${QuoterApi.Version}/${this.config.network}/quote/receive/${queryParams}`
 
         const res = await this.httpClient.get<QuoterResponse>(url)
 
@@ -41,7 +43,7 @@ export class QuoterApi {
 
         const queryParams = concatQueryParams(params.build())
         const bodyParams = body.build()
-        const url = `${this.config.url}/v1.0/${this.config.network}/quote/receive/${queryParams}`
+        const url = `${this.config.url}/${QuoterApi.Version}/${this.config.network}/quote/receive/${queryParams}`
 
         const res = await this.httpClient.post<QuoterResponse>(url, bodyParams)
 

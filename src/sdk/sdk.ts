@@ -142,7 +142,8 @@ export class FusionSDK {
         const relayerRequest = RelayerRequest.new({
             order: orderStruct,
             signature,
-            quoteId
+            quoteId,
+            extension: order.extension.encode()
         })
 
         await this.api.submitOrder(relayerRequest)
@@ -151,7 +152,8 @@ export class FusionSDK {
             order: orderStruct,
             signature,
             quoteId,
-            orderHash: order.getOrderHash(this.config.network)
+            orderHash: order.getOrderHash(this.config.network),
+            extension: relayerRequest.extension
         }
     }
 

@@ -1,4 +1,5 @@
-import {Address} from '@1inch/limit-order-sdk'
+import {Address, randBigInt} from '@1inch/limit-order-sdk'
+import {UINT_40_MAX} from '@1inch/byte-utils'
 import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData} from './types'
 import {Cost, PresetEnum, QuoterResponse} from '../types'
@@ -76,6 +77,16 @@ export class Quote {
             params.delayAuctionStartTimeBy
         )
 
+        const allowPartialFills =
+            paramsData?.allowPartialFills ?? preset.allowPartialFills
+        const allowMultipleFills =
+            paramsData?.allowMultipleFills ?? preset.allowMultipleFills
+        const isNonceRequired = !allowPartialFills || !allowMultipleFills
+
+        const nonce = isNonceRequired
+            ? params.nonce ?? randBigInt(UINT_40_MAX)
+            : params.nonce
+
         return FusionOrder.new(
             this.settlementAddress,
             {
@@ -103,15 +114,13 @@ export class Quote {
                 )
             },
             {
-                nonce: params.nonce,
+                nonce,
                 unwrapWETH: this.params.toTokenAddress.isNative(),
                 permit: params.permit
                     ? this.params.fromTokenAddress + params.permit.substring(2)
                     : undefined,
-                allowPartialFills:
-                    paramsData?.allowPartialFills ?? preset.allowPartialFills,
-                allowMultipleFills:
-                    paramsData?.allowMultipleFills ?? preset.allowMultipleFills,
+                allowPartialFills,
+                allowMultipleFills,
                 orderExpirationDelay: paramsData?.orderExpirationDelay
             }
         )
