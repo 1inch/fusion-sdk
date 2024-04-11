@@ -5,6 +5,7 @@ export type RelayerRequestParams = {
     order: LimitOrderV4Struct
     signature: string
     quoteId: string
+    extension: string
 }
 
 export type RelayerApiConfig = {

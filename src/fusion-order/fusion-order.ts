@@ -47,7 +47,7 @@ export class FusionOrder {
         extra: {
             unwrapWETH?: boolean
             /**
-             * Required if `allowPartialFills` is false
+             * Required if `allowPartialFills` or `allowMultipleFills` is false
              */
             nonce?: bigint
             /**
@@ -230,7 +230,8 @@ export class FusionOrder {
         extra?: {
             unwrapWETH?: boolean
             /**
-             * Required if `allowPartialFills` is false
+             * Required if `allowPartialFills` or `allowMultipleFills` is false
+             * Max size is 40bit
              */
             nonce?: bigint
             permit?: string

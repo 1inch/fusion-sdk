@@ -34,7 +34,8 @@ describe('Relayer API', () => {
                 makerTraits: '0'
             },
             signature: '0x123signature-here789',
-            quoteId: '9a43c86d-f3d7-45b9-8cb6-803d2bdfa08b'
+            quoteId: '9a43c86d-f3d7-45b9-8cb6-803d2bdfa08b',
+            extension: '0x'
         }
 
         const params = RelayerRequest.new(orderData)
@@ -68,7 +69,8 @@ describe('Relayer API', () => {
                 makerTraits: '0'
             },
             signature: '0x123signature-here789',
-            quoteId: '9a43c86d-f3d7-45b9-8cb6-803d2bdfa08b'
+            quoteId: '9a43c86d-f3d7-45b9-8cb6-803d2bdfa08b',
+            extension: '0x'
         }
 
         const orderData2: RelayerRequestParams = {
@@ -83,7 +85,8 @@ describe('Relayer API', () => {
                 makerTraits: '0'
             },
             signature: '0x123signature-2-here789',
-            quoteId: '1a36c861-ffd7-45b9-1cb6-403d3bdfa084'
+            quoteId: '1a36c861-ffd7-45b9-1cb6-403d3bdfa084',
+            extension: '0x'
         }
 
         const params = [
