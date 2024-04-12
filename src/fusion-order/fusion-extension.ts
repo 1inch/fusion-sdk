@@ -15,7 +15,8 @@ export class FusionExtension {
     constructor(
         public readonly address: Address,
         public readonly auctionDetails: AuctionDetails,
-        public readonly postInteractionData: SettlementPostInteractionData
+        public readonly postInteractionData: SettlementPostInteractionData,
+        public readonly makerPermit?: Interaction
     ) {
         const detailsBytes = this.auctionDetails.encode()
 
@@ -25,6 +26,10 @@ export class FusionExtension {
             .withPostInteraction(
                 new Interaction(this.address, this.postInteractionData.encode())
             )
+
+        if (makerPermit) {
+            this.builder.withMakerPermit(makerPermit.target, makerPermit.data)
+        }
     }
 
     /**
@@ -54,17 +59,16 @@ export class FusionExtension {
         const postInteractionData =
             SettlementPostInteractionData.fromExtension(extension)
 
+        const permit = extension.hasMakerPermit
+            ? Interaction.decode(extension.makerPermit)
+            : undefined
+
         return new FusionExtension(
             settlementContract,
             auctionDetails,
-            postInteractionData
+            postInteractionData,
+            permit
         )
-    }
-
-    withMakerPermit(tokenFrom: Address, permitData: string): this {
-        this.builder.withMakerPermit(tokenFrom, permitData)
-
-        return this
     }
 
     public build(): Extension {
