@@ -27,8 +27,8 @@
         "changelog:generate": "changelog generate -a"
     },
     "dependencies": {
-        "@1inch/byte-utils": "2.2.0",
-        "@1inch/limit-order-sdk": "^4.8.2",
+        "@1inch/byte-utils": "2.2.1",
+        "@1inch/limit-order-sdk": "^4.8.3",
         "@metamask/eth-sig-util": "^5.1.0",
         "bn.js": "^5.2.1",
         "ethers": "6.11.0",

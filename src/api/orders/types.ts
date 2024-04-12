@@ -21,6 +21,7 @@ export type ActiveOrder = {
     auctionEndDate: string
     remainingMakerAmount: string
     order: LimitOrderV4Struct
+    extension: string
 }
 
 export type ActiveOrdersResponse = PaginationOutput<ActiveOrder>
@@ -50,6 +51,7 @@ export type Fill = {
 export type OrderStatusResponse = {
     status: OrderStatus
     order: LimitOrderV4Struct
+    extension: string
     points: AuctionPoint[] | null
     fills: Fill[]
     auctionStartDate: number
