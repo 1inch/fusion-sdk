@@ -2,6 +2,7 @@ import {
     Address,
     EIP712TypedData,
     Extension,
+    Interaction,
     LimitOrder,
     LimitOrderV4Struct,
     MakerTraits,
@@ -127,12 +128,9 @@ export class FusionOrder {
         const extension = new FusionExtension(
             settlementExtensionContract,
             auctionDetails,
-            postInteractionData
+            postInteractionData,
+            permit ? new Interaction(orderInfo.makerAsset, permit) : undefined
         )
-
-        if (permit) {
-            extension.withMakerPermit(orderInfo.makerAsset, permit)
-        }
 
         const builtExtension = extension.build()
 
