@@ -121,7 +121,8 @@ export class Quote {
                     : undefined,
                 allowPartialFills,
                 allowMultipleFills,
-                orderExpirationDelay: paramsData?.orderExpirationDelay
+                orderExpirationDelay: paramsData?.orderExpirationDelay,
+                source: this.params.source
             }
         )
     }
