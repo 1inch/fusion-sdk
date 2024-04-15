@@ -9,8 +9,8 @@ dependencies:
     specifier: 2.2.1
     version: 2.2.1
   '@1inch/limit-order-sdk':
-    specifier: ^4.8.4
-    version: 4.8.4(assert@2.1.0)(axios@1.6.8)
+    specifier: ^4.8.6
+    version: 4.8.6(assert@2.1.0)(axios@1.6.8)
   '@metamask/eth-sig-util':
     specifier: ^5.1.0
     version: 5.1.0
@@ -150,8 +150,8 @@ packages:
       typescript: 4.9.4
     dev: true
 
-  /@1inch/limit-order-sdk@4.8.4(assert@2.1.0)(axios@1.6.8):
-    resolution: {integrity: sha512-//0QRiVyqBnkkbSdGAPT1lRhEM0YgS6oH2BraXuEGIn9/MA2U+krk/ND5h/m/u9Ty2LSde7t5IuDlj1cxHMkag==}
+  /@1inch/limit-order-sdk@4.8.6(assert@2.1.0)(axios@1.6.8):
+    resolution: {integrity: sha512-Q8bLPEOvcHHUAfNeuHN3d7rwYXXaar01tXGcBwvaZkzSkHTxcarnnAblaMT96AOpItxKx1r5Ua7O0KWYneY8vQ==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
@@ -1906,8 +1906,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001609
-      electron-to-chromium: 1.4.735
+      caniuse-lite: 1.0.30001610
+      electron-to-chromium: 1.4.736
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
     dev: true
@@ -1973,8 +1973,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /caniuse-lite@1.0.30001609:
-    resolution: {integrity: sha512-JFPQs34lHKx1B5t1EpQpWH4c+29zIyn/haGsbpfq3suuV9v56enjFt23zqijxGTMwy1p/4H2tjnQMY+p1WoAyA==}
+  /caniuse-lite@1.0.30001610:
+    resolution: {integrity: sha512-QFutAY4NgaelojVMjY63o6XlZyORPaLfyMnsl3HgnWdJUcX6K0oaJymHjH8PT5Gk7sTm8rvC/c5COUQKXqmOMA==}
     dev: true
 
   /capture-exit@2.0.0:
@@ -2324,8 +2324,8 @@ packages:
       webidl-conversions: 5.0.0
     dev: true
 
-  /electron-to-chromium@1.4.735:
-    resolution: {integrity: sha512-pkYpvwg8VyOTQAeBqZ7jsmpCjko1Qc6We1ZtZCjRyYbT5v4AIUKDy5cQTRotQlSSZmMr8jqpEt6JtOj5k7lR7A==}
+  /electron-to-chromium@1.4.736:
+    resolution: {integrity: sha512-Rer6wc3ynLelKNM4lOCg7/zPQj8tPOCB2hzD32PX9wd3hgRRi9MxEbmkFCokzcEhRVMiOVLjnL9ig9cefJ+6+Q==}
     dev: true
 
   /emittery@0.7.2:
