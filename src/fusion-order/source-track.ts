@@ -8,8 +8,8 @@ function getTrackCodeForSource(source: string): bigint {
     return BigInt(add0x(id(source).slice(0, 10)))
 }
 
-export function addTrackCode(salt: bigint, source: string): bigint {
-    const track = getTrackCodeForSource(source)
+export function injectTrackCode(salt: bigint, source?: string): bigint {
+    const track = source ? getTrackCodeForSource(source) : 0n
 
     return new BN(salt).setMask(TRACK_CODE_MASK, track).value
 }

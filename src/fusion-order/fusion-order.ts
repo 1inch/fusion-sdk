@@ -16,7 +16,7 @@ import {
     IntegratorFee,
     SettlementPostInteractionData
 } from './settlement-post-interaction-data'
-import {addTrackCode} from './source-track'
+import {injectTrackCode} from './source-track'
 import {AuctionCalculator} from '../auction-calculator'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
@@ -140,7 +140,7 @@ export class FusionOrder {
             {
                 ...orderInfo,
                 receiver,
-                salt: extra.source ? addTrackCode(salt, extra.source) : salt
+                salt: injectTrackCode(salt, extra.source)
             },
             makerTraits,
             builtExtension
