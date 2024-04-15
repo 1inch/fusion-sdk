@@ -147,6 +147,9 @@ describe('Fusion Order', () => {
                     }
                 ],
                 resolvingStartTime: 0n
+            },
+            {
+                source: 'some_id'
             }
         )
 

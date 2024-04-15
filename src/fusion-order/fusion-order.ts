@@ -16,6 +16,7 @@ import {
     IntegratorFee,
     SettlementPostInteractionData
 } from './settlement-post-interaction-data'
+import {addTrackCode} from './source-track'
 import {AuctionCalculator} from '../auction-calculator'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
@@ -70,6 +71,7 @@ export class FusionOrder {
              */
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
+            source?: string
         } = FusionOrder.defaultExtra
     ) {
         const allowPartialFills =
@@ -133,12 +135,12 @@ export class FusionOrder {
         )
 
         const builtExtension = extension.build()
-
+        const salt = LimitOrder.buildSalt(builtExtension, orderInfo.salt)
         this.inner = new LimitOrder(
             {
                 ...orderInfo,
                 receiver,
-                salt: LimitOrder.buildSalt(builtExtension, orderInfo.salt)
+                salt: extra.source ? addTrackCode(salt, extra.source) : salt
             },
             makerTraits,
             builtExtension
@@ -248,6 +250,7 @@ export class FusionOrder {
              */
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
+            source?: string
         }
     ): FusionOrder {
         return new FusionOrder(
