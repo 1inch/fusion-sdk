@@ -19,6 +19,8 @@ export class QuoterRequest {
 
     public readonly source: string
 
+    public readonly isPermit2: boolean
+
     constructor(params: QuoterRequestParams) {
         this.fromTokenAddress = new Address(params.fromTokenAddress)
         this.toTokenAddress = new Address(params.toTokenAddress)
@@ -28,6 +30,7 @@ export class QuoterRequest {
         this.permit = params.permit
         this.fee = params.fee
         this.source = params.source || 'sdk'
+        this.isPermit2 = params.isPermit2 ?? false
 
         if (this.fromTokenAddress.isNative()) {
             throw new Error(
@@ -69,7 +72,8 @@ export class QuoterRequest {
             enableEstimate: this.enableEstimate,
             permit: this.permit,
             fee: this.fee,
-            source: this.source
+            source: this.source,
+            isPermit2: this.isPermit2
         }
     }
 }
