@@ -19,6 +19,7 @@ export type QuoteParams = {
     permit?: string
     takingFeeBps?: number // 100 == 1%
     source?: string
+    isPermit2?: boolean
 }
 
 export type QuoteCustomPresetParams = {

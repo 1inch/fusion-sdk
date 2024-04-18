@@ -73,7 +73,8 @@ export class FusionSDK {
             permit: params.permit,
             enableEstimate: false,
             fee: params?.takingFeeBps,
-            source: params.source
+            source: params.source,
+            isPermit2: params.isPermit2
         })
 
         return this.api.getQuote(request)
@@ -91,7 +92,8 @@ export class FusionSDK {
             permit: params.permit,
             enableEstimate: false,
             fee: params?.takingFeeBps,
-            source: params.source
+            source: params.source,
+            isPermit2: params.isPermit2
         })
 
         const bodyRequest = QuoterCustomPresetRequest.new({

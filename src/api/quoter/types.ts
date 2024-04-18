@@ -9,6 +9,7 @@ export type QuoterRequestParams = {
     permit?: string
     fee?: number
     source?: string
+    isPermit2?: boolean
 }
 
 export type QuoterCustomPresetRequestParams = {
