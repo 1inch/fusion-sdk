@@ -116,9 +116,7 @@ export class Quote {
             {
                 nonce,
                 unwrapWETH: this.params.toTokenAddress.isNative(),
-                permit: params.permit
-                    ? this.params.fromTokenAddress + params.permit.substring(2)
-                    : undefined,
+                permit: params.permit,
                 allowPartialFills,
                 allowMultipleFills,
                 orderExpirationDelay: paramsData?.orderExpirationDelay,
