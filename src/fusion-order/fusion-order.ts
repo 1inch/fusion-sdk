@@ -310,8 +310,6 @@ export class FusionOrder {
                 ? undefined
                 : deadline - auctionDetails.startTime - auctionDetails.duration
 
-        const permit = Interaction.decode(extension.makerPermit)
-
         return new FusionOrder(
             settlementContract,
             {
@@ -331,7 +329,10 @@ export class FusionOrder {
                 allowPartialFills: makerTraits.isPartialFillAllowed(),
                 enablePermit2: makerTraits.isPermit2(),
                 nonce: makerTraits.nonceOrEpoch(),
-                permit: extension.makerPermit === ZX ? undefined : permit.data,
+                permit:
+                    extension.makerPermit === ZX
+                        ? undefined
+                        : Interaction.decode(extension.makerPermit).data,
                 unwrapWETH: makerTraits.isNativeUnwrapEnabled(),
                 orderExpirationDelay
             }
