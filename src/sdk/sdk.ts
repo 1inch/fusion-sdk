@@ -192,7 +192,8 @@ export class FusionSDK {
             permit: params.permit,
             enableEstimate: true,
             fee: params.fee?.takingFeeBps,
-            source: params.source
+            source: params.source,
+            isPermit2: params.isPermit2
         })
 
         if (!params.customPreset) {

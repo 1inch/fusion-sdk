@@ -6,6 +6,7 @@ export type FusionOrderParamsData = {
     receiver?: Address
     nonce?: bigint
     permit?: string
+    isPermit2?: boolean
     takingFeeReceiver?: string
     allowPartialFills?: boolean
     allowMultipleFills?: boolean

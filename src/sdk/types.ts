@@ -42,6 +42,7 @@ export type OrderParams = {
     nonce?: bigint
     fee?: TakingFeeInfo
     source?: string
+    isPermit2?: boolean
     customPreset?: CustomPreset
     /**
      * true by default

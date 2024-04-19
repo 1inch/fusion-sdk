@@ -13,6 +13,8 @@ export class FusionOrderParams {
 
     public readonly delayAuctionStartTimeBy: bigint
 
+    public readonly isPermit2?: boolean
+
     constructor(params: FusionOrderParamsData) {
         if (params.preset) {
             this.preset = params.preset
@@ -22,6 +24,7 @@ export class FusionOrderParams {
             this.receiver = params.receiver
         }
 
+        this.isPermit2 = params.isPermit2
         this.nonce = params.nonce
         this.permit = params.permit
         this.delayAuctionStartTimeBy = params.delayAuctionStartTimeBy || 0n
