@@ -62,12 +62,13 @@ export class Quote {
     }
 
     createFusionOrder(
-        paramsData: Omit<FusionOrderParamsData, 'permit'>
+        paramsData: Omit<FusionOrderParamsData, 'permit' | 'isPermit2'>
     ): FusionOrder {
         const params = FusionOrderParams.new({
             preset: paramsData?.preset || this.recommendedPreset,
             receiver: paramsData?.receiver,
             permit: this.params.permit,
+            isPermit2: this.params.isPermit2,
             nonce: paramsData?.nonce
         })
 
@@ -120,7 +121,8 @@ export class Quote {
                 allowPartialFills,
                 allowMultipleFills,
                 orderExpirationDelay: paramsData?.orderExpirationDelay,
-                source: this.params.source
+                source: this.params.source,
+                enablePermit2: params.isPermit2
             }
         )
     }
