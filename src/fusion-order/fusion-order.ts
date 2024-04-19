@@ -332,7 +332,7 @@ export class FusionOrder {
                 permit:
                     extension.makerPermit === ZX
                         ? undefined
-                        : extension.makerPermit,
+                        : Interaction.decode(extension.makerPermit).data,
                 unwrapWETH: makerTraits.isNativeUnwrapEnabled(),
                 orderExpirationDelay
             }
