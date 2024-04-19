@@ -136,11 +136,15 @@ export class FusionOrder {
 
         const builtExtension = extension.build()
         const salt = LimitOrder.buildSalt(builtExtension, orderInfo.salt)
+        const saltWithInjectedTrackCode = orderInfo.salt
+            ? salt
+            : injectTrackCode(salt, extra.source)
+
         this.inner = new LimitOrder(
             {
                 ...orderInfo,
                 receiver,
-                salt: injectTrackCode(salt, extra.source)
+                salt: saltWithInjectedTrackCode
             },
             makerTraits,
             builtExtension
