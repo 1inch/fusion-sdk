@@ -1,4 +1,4 @@
-import abiCoder from 'web3-eth-abi'
+import {decodeParameter} from 'web3-eth-abi'
 import {NONCE_SELECTOR} from './constants'
 import {add0x} from '../utils'
 
@@ -7,5 +7,9 @@ export function encodeNonce(address: string): string {
 }
 
 export function decodeNonce(nonceHex: string): string {
-    return abiCoder.decodeParameter('uint256', nonceHex).toString()
+    return (
+        decodeParameter('uint256', nonceHex) as {
+            toString: () => string
+        }
+    ).toString()
 }

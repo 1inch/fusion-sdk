@@ -13,15 +13,14 @@ export class Web3ProviderConnector implements BlockchainProviderConnector {
         walletAddress: string,
         typedData: EIP712TypedData
     ): Promise<string> {
-        const extendedWeb3: ExtendedWeb3 = this.web3Provider.extend({
+        const extendedWeb3 = this.web3Provider.extend({
             methods: [
                 {
                     name: 'signTypedDataV4',
                     call: 'eth_signTypedData_v4',
-                    params: 2
                 }
             ]
-        })
+        }) as ExtendedWeb3
 
         return extendedWeb3.signTypedDataV4(
             walletAddress,

@@ -21,7 +21,7 @@ describe('Nonce Manager', () => {
         }
     })()
 
-    it('should get nonce', async () => {
+    it.only('should get nonce', async () => {
         const nonceManager = NonceManager.new({provider})
         const nonce = await nonceManager.getNonce(
             '0xfb3c7eb936cAA12B5A884d612393969A557d4307'

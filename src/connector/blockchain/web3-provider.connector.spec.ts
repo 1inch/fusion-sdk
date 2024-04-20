@@ -10,6 +10,7 @@ import {
     VerifyingContract
 } from '../../limit-order'
 import {Web3ProviderConnector} from './web3-provider-connector'
+import {RegisteredSubscription} from 'web3-eth'
 
 describe('Web3 provider connector', () => {
     let web3Provider: Web3
@@ -60,7 +61,9 @@ describe('Web3 provider connector', () => {
             signTypedDataV4: jest.fn()
         }
 
-        when(web3Provider.extend(anything())).thenReturn(extendedWeb3)
+        when(web3Provider.extend(anything())).thenReturn(
+            extendedWeb3 as unknown as Web3<RegisteredSubscription>
+        )
 
         await web3ProviderConnector.signTypedData(walletAddress, typedData)
 
