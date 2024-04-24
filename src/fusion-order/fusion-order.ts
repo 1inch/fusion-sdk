@@ -204,6 +204,10 @@ export class FusionOrder {
         return startTime + duration
     }
 
+    get isBitInvalidatorMode(): boolean {
+        return this.inner.makerTraits.isBitInvalidatorMode()
+    }
+
     get partialFillAllowed(): boolean {
         return this.inner.makerTraits.isPartialFillAllowed()
     }
