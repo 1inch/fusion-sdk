@@ -216,6 +216,10 @@ export class FusionOrder {
         return this.inner.makerTraits.isMultipleFillsAllowed()
     }
 
+    get nonceOrEpoch(): bigint {
+        return this.inner.makerTraits.nonceOrEpoch()
+    }
+
     static new(
         /**
          * Fusion extension address
