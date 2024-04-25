@@ -216,7 +216,11 @@ export class FusionOrder {
         return this.inner.makerTraits.isMultipleFillsAllowed()
     }
 
-    get nonceOrEpoch(): bigint {
+    get nonce(): bigint | null {
+        if (!this.isBitInvalidatorMode) {
+            return null
+        }
+
         return this.inner.makerTraits.nonceOrEpoch()
     }
 
