@@ -53,11 +53,15 @@ export type OrderStatusResponse = {
     order: LimitOrderV4Struct
     extension: string
     points: AuctionPoint[] | null
+    cancelTx: string | null
     fills: Fill[]
+    createdAt: string
     auctionStartDate: number
     auctionDuration: number
     initialRateBump: number
     isNativeCurrency: boolean
+    fromTokenToUsdPrice: string
+    toTokenToUsdPrice: string
 }
 
 export type OrdersByMakerParams = {
@@ -69,6 +73,7 @@ export type OrderFillsByMakerOutput = {
     status: OrderStatus
     makerAsset: string
     makerAmount: string
+    minTakerAmount: string
     takerAsset: string
     cancelTx: string | null
     fills: Fill[]
@@ -77,6 +82,7 @@ export type OrderFillsByMakerOutput = {
     auctionDuration: number
     initialRateBump: number
     isNativeCurrency: boolean
+    createdAt: string
 }
 
 export type OrdersByMakerResponse = PaginationOutput<OrderFillsByMakerOutput>
