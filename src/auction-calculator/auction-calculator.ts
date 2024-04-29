@@ -137,7 +137,7 @@ export class AuctionCalculator {
             return 0n
         }
 
-        let currentRateBump = BigInt(this.initialRateBump) // currentPointTime
+        let currentRateBump = BigInt(this.initialRateBump)
         let currentPointTime = cumulativeTime
 
         for (const {coefficient, delay} of this.points) {
