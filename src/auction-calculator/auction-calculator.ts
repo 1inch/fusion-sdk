@@ -1,4 +1,3 @@
-import {linearInterpolation} from './calc'
 import {RATE_BUMP_DENOMINATOR} from './constants'
 import {
     SettlementPostInteractionData,
@@ -22,6 +21,10 @@ export class AuctionCalculator {
             gasPriceEstimate: 0n
         }
     ) {}
+
+    get finishTime(): bigint {
+        return this.startTime + this.duration
+    }
 
     static fromAuctionData(
         data: SettlementPostInteractionData,
@@ -125,45 +128,36 @@ export class AuctionCalculator {
         )
     }
 
-    private getAuctionBump(time: bigint): bigint {
-        let cumulativeTime = BigInt(this.startTime)
-        const lastTime = BigInt(this.duration) + cumulativeTime
+    private getAuctionBump(blockTime: bigint): bigint {
+        const auctionFinishTime = this.finishTime
 
-        const currentTime = BigInt(time)
-
-        if (currentTime <= cumulativeTime) {
+        if (blockTime <= this.startTime) {
             return this.initialRateBump
-        } else if (currentTime >= lastTime) {
+        } else if (blockTime >= auctionFinishTime) {
             return 0n
         }
 
+        let currentPointTime = this.startTime
         let currentRateBump = BigInt(this.initialRateBump)
-        let currentPointTime = cumulativeTime
 
-        for (const {coefficient, delay} of this.points) {
-            cumulativeTime = cumulativeTime + BigInt(delay)
-            const coefficientBN = BigInt(coefficient)
+        for (const {coefficient: nextRateBump, delay} of this.points) {
+            const nextPointTime = BigInt(delay) + currentPointTime
 
-            if (cumulativeTime >= currentTime) {
-                return linearInterpolation(
-                    currentPointTime,
-                    cumulativeTime,
-                    currentRateBump,
-                    coefficientBN,
-                    currentTime
+            if (blockTime <= nextPointTime) {
+                return (
+                    ((blockTime - currentPointTime) * BigInt(nextRateBump) +
+                        (nextPointTime - blockTime) * currentRateBump) /
+                    (nextPointTime - currentPointTime)
                 )
             }
 
-            currentPointTime = cumulativeTime
-            currentRateBump = coefficientBN
+            currentPointTime = nextPointTime
+            currentRateBump = BigInt(nextRateBump)
         }
 
-        return linearInterpolation(
-            currentPointTime,
-            lastTime,
-            currentRateBump,
-            0n,
-            currentTime
+        return (
+            ((auctionFinishTime - blockTime) * currentRateBump) /
+            (auctionFinishTime - currentPointTime)
         )
     }
 }
