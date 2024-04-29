@@ -394,27 +394,30 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
-                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
+                    quoteId: 'b77da8b7-a4bb-4563-b917-03522aa609e3',
                     orderHash:
-                        '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
+                        '0xb9522c23c8667c5e76bf0b855ffabbaebca282f8e396d788c2df75e91a0391d2-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
-                        salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
-                        maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                        salt: '9445680545936410419330284706951757224702878670220689583677680607556412140293',
+                        maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
-                            '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                            '0x6b175474e89094c44da98b954eedeac495271d0f',
                         takerAsset:
-                            '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        makingAmount: '2246481050155000',
-                        takingAmount: '349837736598',
-                        makerTraits: '0'
+                            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                        makerTraits:
+                            '62419173104490761595518734106557662061518414611782227068396304425790442831872',
+                        makingAmount: '30000000000000000000',
+                        takingAmount: '7516665910385115'
                     },
                     signature:
-                        '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
-                    deadline: '2023-01-31T11:01:02.000Z',
-                    auctionStartDate: '2023-01-31T10:58:02.000Z',
-                    auctionEndDate: '2023-01-31T11:01:02.000Z',
-                    remainingMakerAmount: '57684207067582695'
+                        '0xb51731d6e62754ae75d11d13983c19b25fcc1a43fc327710a26ae291fde3d33f52dee7a4c0154256f6bb272260170128242034a89f44e7e887d1bb54a746a5941b',
+                    deadline: '2024-04-29T15:27:39.000Z',
+                    auctionStartDate: '2024-04-29T15:17:27.000Z',
+                    auctionEndDate: '2024-04-29T15:27:27.000Z',
+                    remainingMakerAmount: '30000000000000000000',
+                    extension:
+                        '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b840662fb9efb09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
                 }
             }
 
@@ -454,27 +457,30 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
-                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
+                    quoteId: 'b77da8b7-a4bb-4563-b917-03522aa609e3',
                     orderHash:
-                        '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
+                        '0xb9522c23c8667c5e76bf0b855ffabbaebca282f8e396d788c2df75e91a0391d2-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
-                        salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
-                        maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                        salt: '9445680545936410419330284706951757224702878670220689583677680607556412140293',
+                        maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
-                            '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                            '0x6b175474e89094c44da98b954eedeac495271d0f',
                         takerAsset:
-                            '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        makingAmount: '2246481050155000',
-                        takingAmount: '349837736598',
-                        makerTraits: '0'
+                            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                        makerTraits:
+                            '62419173104490761595518734106557662061518414611782227068396304425790442831872',
+                        makingAmount: '30000000000000000000',
+                        takingAmount: '7516665910385115'
                     },
                     signature:
-                        '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
-                    deadline: '2023-01-31T11:01:02.000Z',
-                    auctionStartDate: '2023-01-31T10:58:02.000Z',
-                    auctionEndDate: '2023-01-31T11:01:02.000Z',
-                    remainingMakerAmount: '57684207067582695'
+                        '0xb51731d6e62754ae75d11d13983c19b25fcc1a43fc327710a26ae291fde3d33f52dee7a4c0154256f6bb272260170128242034a89f44e7e887d1bb54a746a5941b',
+                    deadline: '2024-04-29T15:27:39.000Z',
+                    auctionStartDate: '2024-04-29T15:17:27.000Z',
+                    auctionEndDate: '2024-04-29T15:27:27.000Z',
+                    remainingMakerAmount: '30000000000000000000',
+                    extension:
+                        '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b840662fb9efb09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
                 }
             }
 
@@ -515,27 +521,30 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
-                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
+                    quoteId: 'b77da8b7-a4bb-4563-b917-03522aa609e3',
                     orderHash:
-                        '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
+                        '0xb9522c23c8667c5e76bf0b855ffabbaebca282f8e396d788c2df75e91a0391d2-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
-                        salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
-                        maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                        salt: '9445680545936410419330284706951757224702878670220689583677680607556412140293',
+                        maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
-                            '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                            '0x6b175474e89094c44da98b954eedeac495271d0f',
                         takerAsset:
-                            '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        makingAmount: '2246481050155000',
-                        takingAmount: '349837736598',
-                        makerTraits: '0'
+                            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                        makerTraits:
+                            '62419173104490761595518734106557662061518414611782227068396304425790442831872',
+                        makingAmount: '30000000000000000000',
+                        takingAmount: '7516665910385115'
                     },
                     signature:
-                        '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
-                    deadline: '2023-01-31T11:01:02.000Z',
-                    auctionStartDate: '2023-01-31T10:58:02.000Z',
-                    auctionEndDate: '2023-01-31T11:01:02.000Z',
-                    remainingMakerAmount: '57684207067582695'
+                        '0xb51731d6e62754ae75d11d13983c19b25fcc1a43fc327710a26ae291fde3d33f52dee7a4c0154256f6bb272260170128242034a89f44e7e887d1bb54a746a5941b',
+                    deadline: '2024-04-29T15:27:39.000Z',
+                    auctionStartDate: '2024-04-29T15:17:27.000Z',
+                    auctionEndDate: '2024-04-29T15:27:27.000Z',
+                    remainingMakerAmount: '30000000000000000000',
+                    extension:
+                        '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b840662fb9efb09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
                 }
             }
 
@@ -576,27 +585,30 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
-                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
+                    quoteId: 'b77da8b7-a4bb-4563-b917-03522aa609e3',
                     orderHash:
-                        '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
+                        '0xb9522c23c8667c5e76bf0b855ffabbaebca282f8e396d788c2df75e91a0391d2-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
-                        salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
-                        maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                        salt: '9445680545936410419330284706951757224702878670220689583677680607556412140293',
+                        maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
-                            '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                            '0x6b175474e89094c44da98b954eedeac495271d0f',
                         takerAsset:
-                            '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        makingAmount: '2246481050155000',
-                        takingAmount: '349837736598',
-                        makerTraits: '0'
+                            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                        makerTraits:
+                            '62419173104490761595518734106557662061518414611782227068396304425790442831872',
+                        makingAmount: '30000000000000000000',
+                        takingAmount: '7516665910385115'
                     },
                     signature:
-                        '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
-                    deadline: '2023-01-31T11:01:02.000Z',
-                    auctionStartDate: '2023-01-31T10:58:02.000Z',
-                    auctionEndDate: '2023-01-31T11:01:02.000Z',
-                    remainingMakerAmount: '57684207067582695'
+                        '0xb51731d6e62754ae75d11d13983c19b25fcc1a43fc327710a26ae291fde3d33f52dee7a4c0154256f6bb272260170128242034a89f44e7e887d1bb54a746a5941b',
+                    deadline: '2024-04-29T15:27:39.000Z',
+                    auctionStartDate: '2024-04-29T15:17:27.000Z',
+                    auctionEndDate: '2024-04-29T15:27:27.000Z',
+                    remainingMakerAmount: '30000000000000000000',
+                    extension:
+                        '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b840662fb9efb09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
                 }
             }
 
@@ -640,27 +652,30 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
-                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
+                    quoteId: 'b77da8b7-a4bb-4563-b917-03522aa609e3',
                     orderHash:
-                        '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
+                        '0xb9522c23c8667c5e76bf0b855ffabbaebca282f8e396d788c2df75e91a0391d2-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
-                        salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
-                        maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                        salt: '9445680545936410419330284706951757224702878670220689583677680607556412140293',
+                        maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
-                            '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                            '0x6b175474e89094c44da98b954eedeac495271d0f',
                         takerAsset:
-                            '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        makingAmount: '2246481050155000',
-                        takingAmount: '349837736598',
-                        makerTraits: '0'
+                            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                        makerTraits:
+                            '62419173104490761595518734106557662061518414611782227068396304425790442831872',
+                        makingAmount: '30000000000000000000',
+                        takingAmount: '7516665910385115'
                     },
                     signature:
-                        '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
-                    deadline: '2023-01-31T11:01:02.000Z',
-                    auctionStartDate: '2023-01-31T10:58:02.000Z',
-                    auctionEndDate: '2023-01-31T11:01:02.000Z',
-                    remainingMakerAmount: '57684207067582695'
+                        '0xb51731d6e62754ae75d11d13983c19b25fcc1a43fc327710a26ae291fde3d33f52dee7a4c0154256f6bb272260170128242034a89f44e7e887d1bb54a746a5941b',
+                    deadline: '2024-04-29T15:27:39.000Z',
+                    auctionStartDate: '2024-04-29T15:17:27.000Z',
+                    auctionEndDate: '2024-04-29T15:27:27.000Z',
+                    remainingMakerAmount: '30000000000000000000',
+                    extension:
+                        '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b840662fb9efb09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
                 }
             }
 
@@ -701,27 +716,30 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
-                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
+                    quoteId: 'b77da8b7-a4bb-4563-b917-03522aa609e3',
                     orderHash:
-                        '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
+                        '0xb9522c23c8667c5e76bf0b855ffabbaebca282f8e396d788c2df75e91a0391d2-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
-                        salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
-                        maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                        salt: '9445680545936410419330284706951757224702878670220689583677680607556412140293',
+                        maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
-                            '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                            '0x6b175474e89094c44da98b954eedeac495271d0f',
                         takerAsset:
-                            '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        makingAmount: '2246481050155000',
-                        takingAmount: '349837736598',
-                        makerTraits: '0'
+                            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                        makerTraits:
+                            '62419173104490761595518734106557662061518414611782227068396304425790442831872',
+                        makingAmount: '30000000000000000000',
+                        takingAmount: '7516665910385115'
                     },
                     signature:
-                        '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
-                    deadline: '2023-01-31T11:01:02.000Z',
-                    auctionStartDate: '2023-01-31T10:58:02.000Z',
-                    auctionEndDate: '2023-01-31T11:01:02.000Z',
-                    remainingMakerAmount: '57684207067582695'
+                        '0xb51731d6e62754ae75d11d13983c19b25fcc1a43fc327710a26ae291fde3d33f52dee7a4c0154256f6bb272260170128242034a89f44e7e887d1bb54a746a5941b',
+                    deadline: '2024-04-29T15:27:39.000Z',
+                    auctionStartDate: '2024-04-29T15:17:27.000Z',
+                    auctionEndDate: '2024-04-29T15:27:27.000Z',
+                    remainingMakerAmount: '30000000000000000000',
+                    extension:
+                        '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b840662fb9efb09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
                 }
             }
 
@@ -763,27 +781,30 @@ describe(__filename, () => {
             const message1: OrderCreatedEvent = {
                 event: 'order_created',
                 result: {
-                    quoteId: 'cf872857-c456-4f4f-aff0-84f7bebb7df2',
+                    quoteId: 'b77da8b7-a4bb-4563-b917-03522aa609e3',
                     orderHash:
-                        '0x1beee023ab933cf5446c298eaddb61c0-5705f2156ef5b2db36c160b36f31ce4',
+                        '0xb9522c23c8667c5e76bf0b855ffabbaebca282f8e396d788c2df75e91a0391d2-5705f2156ef5b2db36c160b36f31ce4',
                     order: {
-                        salt: '45144194282371711345892930501725766861375817078109214409479816083205610767025',
-                        maker: '0x6f250c769001617aff9bdf4b9fd878062e94af83',
+                        salt: '9445680545936410419330284706951757224702878670220689583677680607556412140293',
+                        maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                         receiver: '0x0000000000000000000000000000000000000000',
                         makerAsset:
-                            '0x6eb15148d0ea88433dd8088a3acc515d27e36c1b',
+                            '0x6b175474e89094c44da98b954eedeac495271d0f',
                         takerAsset:
-                            '0xdac17f958d2ee523a2206206994597c13d831ec7',
-                        makingAmount: '2246481050155000',
-                        takingAmount: '349837736598',
-                        makerTraits: '0'
+                            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                        makerTraits:
+                            '62419173104490761595518734106557662061518414611782227068396304425790442831872',
+                        makingAmount: '30000000000000000000',
+                        takingAmount: '7516665910385115'
                     },
                     signature:
-                        '0x21ef770f9bedbb97542033bd3b1a2ad611917567102545c93ce66668b8524b7c609bead7829113e104be41fbbd14fea027c85bc4668214b81d52f02c2f9010551b',
-                    deadline: '2023-01-31T11:01:02.000Z',
-                    auctionStartDate: '2023-01-31T10:58:02.000Z',
-                    auctionEndDate: '2023-01-31T11:01:02.000Z',
-                    remainingMakerAmount: '57684207067582695'
+                        '0xb51731d6e62754ae75d11d13983c19b25fcc1a43fc327710a26ae291fde3d33f52dee7a4c0154256f6bb272260170128242034a89f44e7e887d1bb54a746a5941b',
+                    deadline: '2024-04-29T15:27:39.000Z',
+                    auctionStartDate: '2024-04-29T15:17:27.000Z',
+                    auctionEndDate: '2024-04-29T15:27:27.000Z',
+                    remainingMakerAmount: '30000000000000000000',
+                    extension:
+                        '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662fba0700025829a7fd01ec57001827bba60018fb2809a5314473e1165f6b58018e20ed8f07b840662fb9efb09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
                 }
             }
 
