@@ -137,8 +137,8 @@ export class AuctionCalculator {
             return 0n
         }
 
-        let currentPointTime = BigInt(this.initialRateBump)
-        let currentRateBump = cumulativeTime
+        let currentRateBump = BigInt(this.initialRateBump) // currentPointTime
+        let currentPointTime = cumulativeTime
 
         for (const {coefficient, delay} of this.points) {
             cumulativeTime = cumulativeTime + BigInt(delay)
@@ -146,22 +146,22 @@ export class AuctionCalculator {
 
             if (cumulativeTime >= currentTime) {
                 return linearInterpolation(
-                    currentRateBump,
-                    cumulativeTime,
                     currentPointTime,
+                    cumulativeTime,
+                    currentRateBump,
                     coefficientBN,
                     currentTime
                 )
             }
 
-            currentRateBump = cumulativeTime
-            currentPointTime = coefficientBN
+            currentPointTime = cumulativeTime
+            currentRateBump = coefficientBN
         }
 
         return linearInterpolation(
-            currentRateBump,
-            lastTime,
             currentPointTime,
+            lastTime,
+            currentRateBump,
             0n,
             currentTime
         )
