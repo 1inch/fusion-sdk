@@ -46,7 +46,10 @@ export class AuctionCalculator {
     }
 
     /**
-     * @see https://github.com/1inch/limit-order-settlement/blob/1b6757eecb2574953b543821db6f7bbff5afee48/contracts/extensions/BaseExtension.sol#L56
+     * Important!: method implementation is different from contract implementation
+     * Because of that, sdk amount can be less than contract amount by 1 wad
+     *
+     * @see https://github.com/1inch/limit-order-settlement/blob/2eef6f86bf0142024f9a8bf054a0256b41d8362a/contracts/extensions/BaseExtension.sol#L66
      */
     static calcAuctionTakingAmount(
         takingAmount: bigint,
@@ -125,7 +128,6 @@ export class AuctionCalculator {
     private getAuctionBump(time: bigint): bigint {
         let cumulativeTime = BigInt(this.startTime)
         const lastTime = BigInt(this.duration) + cumulativeTime
-        const startBump = BigInt(this.initialRateBump)
 
         const currentTime = BigInt(time)
 
@@ -135,33 +137,31 @@ export class AuctionCalculator {
             return 0n
         }
 
-        let prevCoefficient = startBump
-        let prevCumulativeTime = cumulativeTime
+        let currentPointTime = BigInt(this.initialRateBump)
+        let currentRateBump = cumulativeTime
 
-        for (let i = this.points.length - 1; i >= 0; i--) {
-            const {coefficient, delay} = this.points[i]
-
+        for (const {coefficient, delay} of this.points) {
             cumulativeTime = cumulativeTime + BigInt(delay)
             const coefficientBN = BigInt(coefficient)
 
             if (cumulativeTime >= currentTime) {
                 return linearInterpolation(
-                    prevCumulativeTime,
+                    currentRateBump,
                     cumulativeTime,
-                    prevCoefficient,
+                    currentPointTime,
                     coefficientBN,
                     currentTime
                 )
             }
 
-            prevCumulativeTime = cumulativeTime
-            prevCoefficient = coefficientBN
+            currentRateBump = cumulativeTime
+            currentPointTime = coefficientBN
         }
 
         return linearInterpolation(
-            prevCumulativeTime,
+            currentRateBump,
             lastTime,
-            prevCoefficient,
+            currentPointTime,
             0n,
             currentTime
         )
