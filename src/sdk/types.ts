@@ -16,6 +16,8 @@ export type QuoteParams = {
     fromTokenAddress: string
     toTokenAddress: string
     amount: string
+    walletAddress?: string
+    enableEstimate?: boolean
     permit?: string
     takingFeeBps?: number // 100 == 1%
     source?: string

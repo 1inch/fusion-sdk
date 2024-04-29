@@ -69,9 +69,10 @@ export class FusionSDK {
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
             amount: params.amount,
-            walletAddress: Address.ZERO_ADDRESS.toString(),
+            walletAddress:
+                params.walletAddress || Address.ZERO_ADDRESS.toString(),
             permit: params.permit,
-            enableEstimate: false,
+            enableEstimate: !!params.enableEstimate,
             fee: params?.takingFeeBps,
             source: params.source,
             isPermit2: params.isPermit2
@@ -88,9 +89,10 @@ export class FusionSDK {
             fromTokenAddress: params.fromTokenAddress,
             toTokenAddress: params.toTokenAddress,
             amount: params.amount,
-            walletAddress: Address.ZERO_ADDRESS.toString(),
+            walletAddress:
+                params.walletAddress || Address.ZERO_ADDRESS.toString(),
             permit: params.permit,
-            enableEstimate: false,
+            enableEstimate: !!params.enableEstimate,
             fee: params?.takingFeeBps,
             source: params.source,
             isPermit2: params.isPermit2
