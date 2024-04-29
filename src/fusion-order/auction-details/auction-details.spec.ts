@@ -9,12 +9,11 @@ describe('Auction details', () => {
             points: [
                 {
                     delay: 10,
-                    coefficient: 40000
+                    coefficient: 10000
                 },
-
                 {
-                    delay: 10,
-                    coefficient: 40000
+                    delay: 20,
+                    coefficient: 5000
                 }
             ]
         })

@@ -1,4 +1,4 @@
-import {Address, MakerTraits} from '@1inch/limit-order-sdk'
+import {Address, Extension, MakerTraits} from '@1inch/limit-order-sdk'
 import {parseUnits} from 'ethers'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
@@ -208,5 +208,30 @@ describe('Fusion Order', () => {
         expect(order.calcTakingAmount(order.makingAmount, now)).toEqual(
             2n * order.takingAmount // because init rate bump is 100%
         )
+    })
+
+    it('Should calculate taking amount 2', () => {
+        const order = FusionOrder.fromDataAndExtension(
+            {
+                salt: '9445680526437905167361671445680544159946878658630243245775199089669376863246',
+                maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
+                receiver: '0x0000000000000000000000000000000000000000',
+                makerAsset: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                takerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                makerTraits:
+                    '62419173104490761595518734106245825327156011637372339461913926769802108469248',
+                makingAmount: '100000000000000000000',
+                takingAmount: '29266814473325164'
+            },
+            Extension.decode(
+                '0x000000cb0000005e0000005e0000005e0000005e0000002f0000000000000000fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662f5c9b0002580d653601a4b500180bc0800048fb2809a5314473e1165f6b58018e20ed8f07b84000000000000000662f5c9b0002580d653601a4b500180bc0800048fb2809a5314473e1165f6b58018e20ed8f07b840662f5c83b09498030ae3416b66dc00007bf29735c20c566e5a0c0000950fa635aec75b30781a0000d18bd45f0b94f54a968f000076d49414ad2b8371a4220000a59ca88d5813e693528f000038700d5181a674fdb9a2000038'
+            )
+        )
+        const now = 1714380275n
+        const baseFee = 10844562822n
+
+        expect(
+            order.calcTakingAmount(order.makingAmount, now, baseFee)
+        ).toEqual(30411732255521644n)
     })
 })

@@ -1,4 +1,3 @@
-import {linearInterpolation} from './calc'
 import {RATE_BUMP_DENOMINATOR} from './constants'
 import {
     SettlementPostInteractionData,
@@ -23,6 +22,10 @@ export class AuctionCalculator {
         }
     ) {}
 
+    get finishTime(): bigint {
+        return this.startTime + this.duration
+    }
+
     static fromAuctionData(
         data: SettlementPostInteractionData,
         details: AuctionDetails
@@ -46,7 +49,10 @@ export class AuctionCalculator {
     }
 
     /**
-     * @see https://github.com/1inch/limit-order-settlement/blob/1b6757eecb2574953b543821db6f7bbff5afee48/contracts/extensions/BaseExtension.sol#L56
+     * Important!: method implementation is different from contract implementation
+     * Because of that, sdk amount can be less than contract amount by 1 wad
+     *
+     * @see https://github.com/1inch/limit-order-settlement/blob/2eef6f86bf0142024f9a8bf054a0256b41d8362a/contracts/extensions/BaseExtension.sol#L66
      */
     static calcAuctionTakingAmount(
         takingAmount: bigint,
@@ -122,48 +128,36 @@ export class AuctionCalculator {
         )
     }
 
-    private getAuctionBump(time: bigint): bigint {
-        let cumulativeTime = BigInt(this.startTime)
-        const lastTime = BigInt(this.duration) + cumulativeTime
-        const startBump = BigInt(this.initialRateBump)
+    private getAuctionBump(blockTime: bigint): bigint {
+        const auctionFinishTime = this.finishTime
 
-        const currentTime = BigInt(time)
-
-        if (currentTime <= cumulativeTime) {
+        if (blockTime <= this.startTime) {
             return this.initialRateBump
-        } else if (currentTime >= lastTime) {
+        } else if (blockTime >= auctionFinishTime) {
             return 0n
         }
 
-        let prevCoefficient = startBump
-        let prevCumulativeTime = cumulativeTime
+        let currentPointTime = this.startTime
+        let currentRateBump = this.initialRateBump
 
-        for (let i = this.points.length - 1; i >= 0; i--) {
-            const {coefficient, delay} = this.points[i]
+        for (const {coefficient: nextRateBump, delay} of this.points) {
+            const nextPointTime = BigInt(delay) + currentPointTime
 
-            cumulativeTime = cumulativeTime + BigInt(delay)
-            const coefficientBN = BigInt(coefficient)
-
-            if (cumulativeTime >= currentTime) {
-                return linearInterpolation(
-                    prevCumulativeTime,
-                    cumulativeTime,
-                    prevCoefficient,
-                    coefficientBN,
-                    currentTime
+            if (blockTime <= nextPointTime) {
+                return (
+                    ((blockTime - currentPointTime) * BigInt(nextRateBump) +
+                        (nextPointTime - blockTime) * currentRateBump) /
+                    (nextPointTime - currentPointTime)
                 )
             }
 
-            prevCumulativeTime = cumulativeTime
-            prevCoefficient = coefficientBN
+            currentPointTime = nextPointTime
+            currentRateBump = BigInt(nextRateBump)
         }
 
-        return linearInterpolation(
-            prevCumulativeTime,
-            lastTime,
-            prevCoefficient,
-            0n,
-            currentTime
+        return (
+            ((auctionFinishTime - blockTime) * currentRateBump) /
+            (auctionFinishTime - currentPointTime)
         )
     }
 }
