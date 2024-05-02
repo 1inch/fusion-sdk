@@ -1,7 +1,11 @@
 import {FusionApiConfig} from './types'
-import {QuoterApi, QuoterRequest} from './quoter'
+import {
+    QuoterApi,
+    QuoterRequest,
+    QuoterCustomPresetRequest,
+    Quote
+} from './quoter'
 import {RelayerApi, RelayerRequest} from './relayer'
-import {Quote} from './quoter/quote/quote'
 import {
     ActiveOrdersRequest,
     ActiveOrdersResponse,
@@ -11,7 +15,6 @@ import {
     OrderStatusResponse,
     OrdersByMakerResponse
 } from './orders'
-import {QuoterCustomPresetRequest} from './quoter/quoter-custom-preset.request'
 import {AxiosProviderConnector} from '../connector'
 
 export class FusionApi {

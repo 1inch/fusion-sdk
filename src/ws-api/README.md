@@ -62,7 +62,7 @@ const ws = WebSocketApi.new({
 
 **Lazy initialization:**
 
-By default when user creates an instance of WebSocketApi, it automatically opens websocket connection which might be a problem for some use cases
+By default, when user creates an instance of WebSocketApi, it automatically opens websocket connection which might be a problem for some use cases
 
 ```typescript
 import {WebSocketApi, NetworkEnum} from '@1inch/fusion-sdk'
