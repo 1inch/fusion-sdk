@@ -1,33 +1,33 @@
-import {signTypedData, SignTypedDataVersion} from '@metamask/eth-sig-util'
 import {EIP712TypedData} from '@1inch/limit-order-sdk'
+import {Wallet} from 'ethers'
 import {BlockchainProviderConnector} from './blockchain-provider.connector'
 import {Web3Like} from './web3-provider-connector'
+import {add0x} from '../../utils'
 
 export class PrivateKeyProviderConnector
     implements BlockchainProviderConnector
 {
-    private readonly privateKeyBuffer: Buffer
+    private readonly wallet: Wallet
 
     constructor(
         readonly privateKey: string,
         protected readonly web3Provider: Web3Like
     ) {
-        this.privateKeyBuffer = Buffer.from(privateKey.replace('0x', ''), 'hex')
+        this.wallet = new Wallet(add0x(privateKey))
     }
 
     signTypedData(
         _walletAddress: string,
         typedData: EIP712TypedData
     ): Promise<string> {
-        const result = signTypedData({
-            privateKey: this.privateKeyBuffer,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            data: typedData,
-            version: SignTypedDataVersion.V4
-        })
+        const primaryTypes = {...typedData.types}
+        delete primaryTypes['EIP712Domain']
 
-        return Promise.resolve(result)
+        return this.wallet.signTypedData(
+            typedData.domain,
+            primaryTypes,
+            typedData.message
+        )
     }
 
     ethCall(contractAddress: string, callData: string): Promise<string> {

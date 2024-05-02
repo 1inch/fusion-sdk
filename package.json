@@ -1,7 +1,7 @@
 {
     "name": "@1inch/fusion-sdk",
     "version": "2.0.1",
-    "description": "1inch Fusion Mode SDK",
+    "description": "1inch Fusion SDK",
     "author": "@1inch",
     "private": false,
     "main": "dist/index.js",
@@ -29,8 +29,6 @@
     "dependencies": {
         "@1inch/byte-utils": "2.2.1",
         "@1inch/limit-order-sdk": "^4.8.7",
-        "@metamask/eth-sig-util": "^5.1.0",
-        "bn.js": "^5.2.1",
         "ethers": "6.11.0",
         "tslib": "^2.6.2",
         "ws": "^8.16.0"

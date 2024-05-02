@@ -28,5 +28,7 @@ export {
     QuoterCustomPresetRequest,
     PresetEnum,
     Preset,
-    Quote
+    Quote,
+    OrderStatusResponse,
+    OrderStatus
 } from './api'
