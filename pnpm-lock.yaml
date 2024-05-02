@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -11,15 +11,9 @@ dependencies:
   '@1inch/limit-order-sdk':
     specifier: ^4.8.7
     version: 4.8.7(assert@2.1.0)(axios@1.6.8)
-  '@metamask/eth-sig-util':
-    specifier: ^5.1.0
-    version: 5.1.0
   assert:
     specifier: ^2.0.0
     version: 2.1.0
-  bn.js:
-    specifier: ^5.2.1
-    version: 5.2.1
   ethers:
     specifier: 6.11.0
     version: 6.11.0
@@ -1859,10 +1853,6 @@ packages:
 
   /bn.js@4.12.0:
     resolution: {integrity: sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==}
-    dev: false
-
-  /bn.js@5.2.1:
-    resolution: {integrity: sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==}
     dev: false
 
   /brace-expansion@1.1.11:
