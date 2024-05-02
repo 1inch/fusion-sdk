@@ -6,10 +6,22 @@ import {isHexString} from '../validations'
 const TRACK_CODE_MASK = new BitMask(224n, 256n)
 
 function getTrackCodeForSource(source: string): bigint {
-    if (isHexString(source) && source.length === 10) {
+    if (!isHexString(source)) {
+        return createId(source)
+    }
+
+    if (source.length === 10) {
         return BigInt(source)
     }
 
+    if (source.length === 66) {
+        return BigInt(source.substring(0, 10))
+    }
+
+    return createId(source)
+}
+
+function createId(source: string): bigint {
     return BigInt(add0x(id(source).slice(0, 10)))
 }
 
