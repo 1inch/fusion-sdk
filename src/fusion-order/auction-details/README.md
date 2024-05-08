@@ -6,7 +6,7 @@
 -   duration of an auction
 -   initial rate bump
 -   auction price curve
--   gas costs
+-   gas cost
 
 **Examples:**
 
