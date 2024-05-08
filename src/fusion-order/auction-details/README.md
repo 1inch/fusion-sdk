@@ -6,6 +6,7 @@
 -   duration of an auction
 -   initial rate bump
 -   auction price curve
+-  
 
 **Examples:**
 
@@ -44,7 +45,20 @@ const details = new AuctionDetails({
             delay: 10, // relative to previous point
             coefficient: 40000
         }
-    ]
+    ],
+    /**
+     * Allows to ajust estimated gas costs to real onchain gas costs
+     */
+    gasCost: {
+        /**
+         * Rate bump to cover gas price. 10_000_000 means 100%
+         */
+        gasBumpEstimate: 10_000n,
+        /**
+         * Gas price at estimation time. 1000 means 1 Gwei
+         */
+        gasPriceEstimate: 1000n
+    }
 })
 
 details.encode()
