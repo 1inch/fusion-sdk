@@ -16,7 +16,12 @@ import {AuctionDetails} from '@1inch/fusion-sdk'
 const details = new AuctionDetails({
     duration: 180n, // in seconds,
     startTime: 1673548149n, // unix timestamp (in sec),
-    initialRateBump: 50000, // difference between max and min amount in percents, 10000000 = 100%
+    /**
+     * It defined as a ratio of startTakingAmount to endTakingAmount. 10_000_000 means 100%
+     *
+     * @see `AuctionCalculator.calcInitialRateBump`
+     */
+    initialRateBump: 50000,
     /**
      * Points which define price curve.
      * Each point contains `delay` - relative to previous point (auction start for first)
@@ -51,7 +56,10 @@ const details = new AuctionDetails({
      */
     gasCost: {
         /**
-         * Rate bump to cover gas price. 10_000_000 means 100%
+         * Rate bump to cover gas price. 
+         * It defined as a ratio of gasCostInToToken to endTakingAmount. 10_000_000 means 100%
+         * 
+         * @see `AuctionCalculator.calcGasBumpEstimate`
          */
         gasBumpEstimate: 10_000n,
         /**

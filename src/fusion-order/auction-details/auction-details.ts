@@ -29,6 +29,11 @@ export class AuctionDetails {
 
     constructor(auction: {
         startTime: bigint
+        /**
+         * It defined as a ratio of startTakingAmount to endTakingAmount. 10_000_000 means 100%
+         *
+         * @see `AuctionCalculator.calcInitialRateBump`
+         */
         initialRateBump: number
         duration: bigint
         points: AuctionPoint[]
