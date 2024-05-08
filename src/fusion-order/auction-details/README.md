@@ -6,6 +6,7 @@
 -   duration of an auction
 -   initial rate bump
 -   auction price curve
+-   gas cost
 
 **Examples:**
 
@@ -15,7 +16,12 @@ import {AuctionDetails} from '@1inch/fusion-sdk'
 const details = new AuctionDetails({
     duration: 180n, // in seconds,
     startTime: 1673548149n, // unix timestamp (in sec),
-    initialRateBump: 50000, // difference between max and min amount in percents, 10000000 = 100%
+    /**
+     * It defined as a ratio of startTakingAmount to endTakingAmount. 10_000_000 means 100%
+     *
+     * @see `AuctionCalculator.calcInitialRateBump`
+     */
+    initialRateBump: 50000,
     /**
      * Points which define price curve.
      * Each point contains `delay` - relative to previous point (auction start for first)
@@ -44,7 +50,23 @@ const details = new AuctionDetails({
             delay: 10, // relative to previous point
             coefficient: 40000
         }
-    ]
+    ],
+    /**
+     * Allows to ajust estimated gas costs to real onchain gas costs
+     */
+    gasCost: {
+        /**
+         * Rate bump to cover gas price. 
+         * It defined as a ratio of gasCostInToToken to endTakingAmount. 10_000_000 means 100%
+         * 
+         * @see `AuctionCalculator.calcGasBumpEstimate`
+         */
+        gasBumpEstimate: 10_000n,
+        /**
+         * Gas price at estimation time. 1000 means 1 Gwei
+         */
+        gasPriceEstimate: 1000n
+    }
 })
 
 details.encode()

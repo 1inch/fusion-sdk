@@ -11,7 +11,10 @@ export type AuctionPoint = {
 
 export type AuctionGasCostInfo = {
     /**
-     * Rate bump to cover gas price. 10_000_000 means 100%
+     * Rate bump to cover gas price.
+     * It defined as a ratio of gasCostInToToken to endTakingAmount. 10_000_000 means 100%
+     *
+     * @see `AuctionCalculator.calcGasBumpEstimate`
      */
     gasBumpEstimate: bigint
 
