@@ -120,7 +120,8 @@ export class FusionSDK {
             nonce: params.nonce,
             takingFeeReceiver: params.fee?.takingFeeReceiver,
             allowPartialFills: params.allowPartialFills,
-            allowMultipleFills: params.allowMultipleFills
+            allowMultipleFills: params.allowMultipleFills,
+            network: this.config.network
         })
 
         const hash = order.getOrderHash(this.config.network)

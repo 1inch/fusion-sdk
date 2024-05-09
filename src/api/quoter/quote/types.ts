@@ -1,7 +1,9 @@
 import {Address} from '@1inch/limit-order-sdk'
 import {PresetEnum} from '../types'
+import {NetworkEnum} from '../../../constants'
 
 export type FusionOrderParamsData = {
+    network: NetworkEnum
     preset?: PresetEnum
     receiver?: Address
     nonce?: bigint

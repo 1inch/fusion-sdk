@@ -7,6 +7,7 @@ import {Preset} from '../preset'
 import {AuctionWhitelistItem, FusionOrder} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
 import {bpsToRatioFormat} from '../../../sdk'
+import {CHAIN_TO_WRAPPER} from '../../../fusion-order/constants'
 
 export class Quote {
     /**
@@ -69,7 +70,8 @@ export class Quote {
             receiver: paramsData?.receiver,
             permit: this.params.permit,
             isPermit2: this.params.isPermit2,
-            nonce: paramsData?.nonce
+            nonce: paramsData?.nonce,
+            network: paramsData.network
         })
 
         const preset = this.getPreset(params.preset)
@@ -88,11 +90,15 @@ export class Quote {
             ? params.nonce ?? randBigInt(UINT_40_MAX)
             : params.nonce
 
+        const takerAsset = this.params.toTokenAddress.isNative()
+            ? CHAIN_TO_WRAPPER[paramsData.network]
+            : this.params.toTokenAddress
+
         return FusionOrder.new(
             this.settlementAddress,
             {
                 makerAsset: this.params.fromTokenAddress,
-                takerAsset: this.params.toTokenAddress,
+                takerAsset: takerAsset,
                 makingAmount: this.fromTokenAmount,
                 takingAmount: preset.auctionEndAmount,
                 maker: this.params.walletAddress,
