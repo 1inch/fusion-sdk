@@ -54,9 +54,3 @@ sdk.placeOrder({
 ## Resolvers
 
 `settleOrders` function usage and Resolver contract examples you can find [here](https://github.com/1inch/fusion-resolver-example)
-
-## Other language implementations
-
-| Language | Link                                                                  | Type             |
-| -------- | --------------------------------------------------------------------- | ---------------- |
-| rust     | [frolovdev/fusion-sdk-rs](https://github.com/frolovdev/fusion-sdk-rs) | Community driven |
