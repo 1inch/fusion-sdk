@@ -28,5 +28,8 @@ export const CHAIN_TO_WRAPPER = {
     ),
     [NetworkEnum.FANTOM]: new Address(
         '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
+    ),
+    [NetworkEnum.ZKSYNC]: new Address(
+        '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91'
     )
 }

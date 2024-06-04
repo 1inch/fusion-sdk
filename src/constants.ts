@@ -3,6 +3,7 @@ export const ZX = '0x'
 export enum NetworkEnum {
     ETHEREUM = 1,
     POLYGON = 137,
+    ZKSYNC = 324,
     BINANCE = 56,
     ARBITRUM = 42161,
     AVALANCHE = 43114,
