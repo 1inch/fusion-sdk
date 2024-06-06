@@ -236,7 +236,7 @@ export class SettlementPostInteractionData {
             return false
         }
 
-        return time <= this.resolvingStartTime + this.whitelist[0].delay
+        return time <= this.resolvingStartTime + this.whitelist[1].delay
     }
 
     public isExclusiveResolver(wallet: Address): boolean {
