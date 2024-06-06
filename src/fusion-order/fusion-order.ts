@@ -444,7 +444,7 @@ export class FusionOrder {
     }
 
     /**
-     * Check if we have exclusive resolver, and it is in the exclusivity time
+     * Check if the auction has exclusive resolver, and it is in the exclusivity time
      */
     public isExclusivityPeriod(time = now()): boolean {
         return this.fusionExtension.postInteractionData.isExclusivityPeriod(
