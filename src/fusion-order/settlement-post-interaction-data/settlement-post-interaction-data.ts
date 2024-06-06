@@ -5,6 +5,7 @@ import {IntegratorFee, SettlementSuffixData} from './types'
 import {isHexBytes} from '../../validations'
 import {add0x} from '../../utils'
 import {UINT_16_MAX} from '../../constants'
+import {now} from '../../utils/time'
 
 export class SettlementPostInteractionData {
     public readonly whitelist: WhitelistItem[]
@@ -224,6 +225,18 @@ export class SettlementPostInteractionData {
         }
 
         return false
+    }
+
+    public isExclusivityPeriod(time = now()): boolean {
+        if (this.whitelist.length === 1) {
+            return true
+        }
+
+        if (this.whitelist[0].delay === this.whitelist[1].delay) {
+            return false
+        }
+
+        return time <= this.resolvingStartTime + this.whitelist[0].delay
     }
 
     public isExclusiveResolver(wallet: Address): boolean {
