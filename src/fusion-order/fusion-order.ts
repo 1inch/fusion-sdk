@@ -442,4 +442,13 @@ export class FusionOrder {
             wallet
         )
     }
+
+    /**
+     * Check if we have exclusive resolver, and it is in the exclusivity time
+     */
+    public isExclusivityPeriod(time = now()): boolean {
+        return this.fusionExtension.postInteractionData.isExclusivityPeriod(
+            time
+        )
+    }
 }
