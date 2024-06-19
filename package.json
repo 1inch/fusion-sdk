@@ -34,10 +34,10 @@
         "ws": "^8.17.1"
     },
     "devDependencies": {
-        "@1inch/eslint-config": "1.4.3",
+        "@1inch/eslint-config": "1.5.1",
         "@1inch/tsconfig": "1.0.7",
-        "@swc/core": "1.3.66",
-        "@swc/jest": "0.2.26",
+        "@swc/core": "1.5.25",
+        "@swc/jest": "0.2.36",
         "@types/jest": "29.5.12",
         "@types/prompts": "^2.4.9",
         "@types/ws": "^8.5.10",
