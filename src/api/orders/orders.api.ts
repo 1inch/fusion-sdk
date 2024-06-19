@@ -67,8 +67,8 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const queryParams = concatQueryParams(params.buildQueryParams())
-        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/maker/${params.address}/${queryParams}`
+        const qp = concatQueryParams(params.buildQueryParams())
+        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/maker/${params.address}/${qp}`
 
         return this.httpClient.get(url)
     }
