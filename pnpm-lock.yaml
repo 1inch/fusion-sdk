@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@1inch/byte-utils':
-    specifier: 2.2.1
-    version: 2.2.1
+    specifier: 2.3.0
+    version: 2.3.0
   '@1inch/limit-order-sdk':
     specifier: ^4.9.2
     version: 4.9.2(assert@2.1.0)(axios@1.7.2)
@@ -107,7 +107,12 @@ devDependencies:
 packages:
 
   /@1inch/byte-utils@2.2.1:
-    resolution: {integrity: sha512-ESIUUGcRu8cL+rFEJedSLOMMXUmLC3A0zyHcWH1fxLAzUsY+bdjqUX/jWQIbOqg+k1XKyXBu6vkREDna3JCp6w==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/2.2.1/e542fa675fd034378e35b995823abd74f755888d}
+    resolution: {integrity: sha512-ESIUUGcRu8cL+rFEJedSLOMMXUmLC3A0zyHcWH1fxLAzUsY+bdjqUX/jWQIbOqg+k1XKyXBu6vkREDna3JCp6w==}
+    engines: {node: '>=18.16.0'}
+    dev: false
+
+  /@1inch/byte-utils@2.3.0:
+    resolution: {integrity: sha512-SKRlhemGFKc+15uTgSzsEs0T4WTpVv7lwcWdMTtUdf7tXDVCz+Dvr36pLk4UJxeKW/HqHCQXv9w1rF+yCgG4Tw==}
     engines: {node: '>=18.16.0'}
     dev: false
 

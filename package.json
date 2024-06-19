@@ -27,7 +27,7 @@
         "changelog:generate": "changelog generate -a"
     },
     "dependencies": {
-        "@1inch/byte-utils": "2.2.1",
+        "@1inch/byte-utils": "2.3.0",
         "@1inch/limit-order-sdk": "^4.9.2",
         "ethers": "^6.13.1",
         "tslib": "^2.6.3",
