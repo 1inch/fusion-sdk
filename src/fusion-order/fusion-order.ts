@@ -37,7 +37,7 @@ export class FusionOrder {
 
     private inner: LimitOrder
 
-    private constructor(
+    protected constructor(
         /**
          * Fusion extension address
          * @see https://github.com/1inch/limit-order-settlement
@@ -72,7 +72,15 @@ export class FusionOrder {
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
             source?: string
-        } = FusionOrder.defaultExtra
+        } = FusionOrder.defaultExtra,
+        extension = new FusionExtension(
+            settlementExtensionContract,
+            auctionDetails,
+            postInteractionData,
+            extra.permit
+                ? new Interaction(orderInfo.makerAsset, extra.permit)
+                : undefined
+        )
     ) {
         const allowPartialFills =
             extra.allowPartialFills ??
@@ -88,8 +96,6 @@ export class FusionOrder {
             extra.orderExpirationDelay ??
             FusionOrder.defaultExtra.orderExpirationDelay
 
-        const {nonce, permit} = extra
-
         const deadline =
             auctionDetails.startTime +
             auctionDetails.duration +
@@ -103,7 +109,7 @@ export class FusionOrder {
 
         if (makerTraits.isBitInvalidatorMode()) {
             assert(
-                nonce !== undefined,
+                extra.nonce !== undefined,
                 'Nonce required, when partial fill or multiple fill disallowed'
             )
         }
@@ -116,8 +122,8 @@ export class FusionOrder {
             makerTraits.enablePermit2()
         }
 
-        if (nonce !== undefined) {
-            makerTraits.withNonce(nonce)
+        if (extra.nonce !== undefined) {
+            makerTraits.withNonce(extra.nonce)
         }
 
         /**
@@ -126,13 +132,6 @@ export class FusionOrder {
         const receiver = postInteractionData.integratorFee?.ratio
             ? settlementExtensionContract
             : orderInfo.receiver
-
-        const extension = new FusionExtension(
-            settlementExtensionContract,
-            auctionDetails,
-            postInteractionData,
-            permit ? new Interaction(orderInfo.makerAsset, permit) : undefined
-        )
 
         const builtExtension = extension.build()
         const salt = LimitOrder.buildSalt(builtExtension, orderInfo.salt)
@@ -218,6 +217,10 @@ export class FusionOrder {
 
     get nonce(): bigint {
         return this.inner.makerTraits.nonceOrEpoch()
+    }
+
+    get salt(): bigint {
+        return this.inner.salt
     }
 
     static new(

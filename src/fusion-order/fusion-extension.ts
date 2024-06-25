@@ -40,6 +40,13 @@ export class FusionExtension {
     public static decode(bytes: string): FusionExtension {
         const extension = Extension.decode(bytes)
 
+        return FusionExtension.fromExtension(extension)
+    }
+
+    /**
+     * Create `FusionExtension` from `Extension`
+     */
+    public static fromExtension(extension: Extension): FusionExtension {
         const settlementContract = Address.fromFirstBytes(
             extension.makingAmountData
         )
