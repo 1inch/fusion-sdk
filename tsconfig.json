@@ -1,4 +1,5 @@
 {
+    "extends": "@1inch/tsconfig",
     "compilerOptions": {
         "target": "ES2021",
         "lib": ["ES2021"],
