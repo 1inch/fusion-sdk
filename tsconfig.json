@@ -1,14 +1,15 @@
 {
-    "extends": "@1inch/tsconfig",
     "compilerOptions": {
-        "moduleResolution": "NodeNext",
-        "module": "ESNext",
-        "importHelpers": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "lib": ["ES2021"],
         "target": "ES2021",
-        "removeComments": false
+        "lib": ["ES2021"],
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "baseUrl": "./src"
     },
-    "include": ["./src"]
+    "include": ["./src/**/*.ts", "./src/**/*.json"]
 }

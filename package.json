@@ -4,8 +4,6 @@
     "description": "1inch Fusion SDK",
     "author": "@1inch",
     "private": false,
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "files": [
         "dist",
         "LICENSE",
@@ -17,7 +15,7 @@
         "url": "ssh://git@github.com:1inch/fusion-sdk.git"
     },
     "scripts": {
-        "build": "tsc",
+        "build": "tsc --project ./tsconfig.types.json",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "lint:ci": "eslint \"{src,apps,libs,test}/**/*.ts\"",
         "lint": "eslint  \"{src,apps,libs,test}/**/*.ts\" --ignore-path .eslintignore --fix",
@@ -76,5 +74,12 @@
     },
     "volta": {
         "node": "18.16.0"
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/esm/index.js",
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/types/src/index.d.ts"
+        }
     }
 }
