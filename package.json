@@ -15,7 +15,10 @@
         "url": "ssh://git@github.com:1inch/fusion-sdk.git"
     },
     "scripts": {
-        "build": "tsc --project ./tsconfig.types.json",
+        "build": "npm run build:esm && npm run build:cjs && npm run build:types",
+        "build:esm": "tsc --project tsconfig.esm.json",
+        "build:cjs": "tsc --project tsconfig.cjs.json",
+        "build:types": "tsc --project tsconfig.types.json",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "lint:ci": "eslint \"{src,apps,libs,test}/**/*.ts\"",
         "lint": "eslint  \"{src,apps,libs,test}/**/*.ts\" --ignore-path .eslintignore --fix",
