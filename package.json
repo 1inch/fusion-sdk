@@ -1,6 +1,6 @@
 {
     "name": "@1inch/fusion-sdk",
-    "version": "0.1.14-rc",
+    "version": "0.1.14-rc0",
     "description": "1inch Fusion Mode SDK",
     "private": false,
     "main": "index.js",
