@@ -1,0 +1,106 @@
+name: CI
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/v1' }}
+
+on:
+  pull_request:
+    branches:
+      - v1
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        uses: volta-cli/action@v4
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn --frozen-lockfile --no-progress
+
+  static-checks:
+    name: Static checks
+    needs: setup
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        uses: volta-cli/action@v4
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn --frozen-lockfile --no-progress
+
+      - name: Prettier check
+        run: yarn prettier:check
+
+      - name: Linter
+        run: yarn lint
+
+      - name: Type check
+        run: yarn typecheck
+
+  tests:
+    name: Unit tests
+    needs: setup
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        uses: volta-cli/action@v4
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn --frozen-lockfile --no-progress
+
+      - name: Run unit tests
+        run: yarn test

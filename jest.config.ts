@@ -170,7 +170,7 @@ export default {
     transformIgnorePatterns: [
         // "/node_modules/",
         // "\\.pnp\\.[^\\/]+$",
-        'node_modules/.pnpm/(?!axios)'
+        '<rootDir>/node_modules/.pnpm/(?!(axios|@1inch\\+limit-order-sdk)@)',
     ]
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
