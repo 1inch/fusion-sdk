@@ -1,74 +1,69 @@
-name: Publish package
+name: Release new version
 
 on:
-  push:
-    tags:
-      - v*.*.*
-
+  workflow_dispatch:
+    inputs:
+      version:
+        type: choice
+        description: Version
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
 jobs:
-  publish-to-npm:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
-          scope: ${{ github.repository_owner }}
-
-      - name: Update package.json
-        run: |
-          TAG_NAME=${GITHUB_REF/refs\/tags\//}
-          PACKAGE_VERSION=${TAG_NAME#v}
-          echo "Updating package.json to version $PACKAGE_VERSION"
-          cat <<< $(jq -r ".version=\"$PACKAGE_VERSION\"" package.json) > package.json
-          cat package.json
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn build
-
-      - name: Publish
-        run: yarn publish
-        working-directory: dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
-  publish-to-github:
+  release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
+      actions: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        # Needed to make possible changelog generation only from latest tag
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
-      - uses: actions/setup-node@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-          registry-url: 'https://npm.pkg.github.com'
-          scope: ${{ github.repository_owner }}
+          cache: pnpm
 
-      - name: Update package.json
+      - name: Install Dev Dependencies
+        run: pnpm install -D
+
+      - name: Bump package.json version
+        id: version
         run: |
-          TAG_NAME=${GITHUB_REF/refs\/tags\//}
-          PACKAGE_VERSION=${TAG_NAME#v}
-          echo "Updating package.json to version $PACKAGE_VERSION"
-          cat <<< $(jq -r ".version=\"$PACKAGE_VERSION\"" package.json) > package.json
-          cat package.json
+          echo "OLD_VERSION=$(pnpm pkg get version | tr -d '"')" >> "$GITHUB_OUTPUT"
+          pnpm version ${{ github.event.inputs.version }} --preid rc --git-tag-version=false
+          echo "NEW_VERSION=$(pnpm pkg get version | tr -d '"')" >> "$GITHUB_OUTPUT"
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: Generate changelog
+        run: pnpm changelog:generate -t v${{ steps.version.outputs.OLD_VERSION }} || pnpm changelog:generate
 
-      - name: Build
-        run: yarn build
-
-      - name: Publish
-        run: yarn publish
-        working-directory: dist
+      - name: Create github release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.email ci_cd_bot@1inch.io
+          git config --global user.name "CI/CD Bot"
+          git add package.json
+          git commit -m "version v${{ steps.version.outputs.NEW_VERSION }}"
+          git tag v${{ steps.version.outputs.NEW_VERSION }}
+          git push
+          git push --tags
+          gh release create v${{ steps.version.outputs.NEW_VERSION }} --notes-file CHANGELOG.md
+
+      - name: Trigger publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run publish.yml -r v${{ steps.version.outputs.NEW_VERSION }}

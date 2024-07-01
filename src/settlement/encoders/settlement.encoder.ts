@@ -1,4 +1,4 @@
-import abiCoder from 'web3-eth-abi'
+import * as abiCoder from 'web3-eth-abi'
 import {FillOrderParamsExtended} from '../types'
 import {SETTLE_ORDERS_SELECTOR} from './constants'
 import {add0x, trim0x} from '../../utils'
