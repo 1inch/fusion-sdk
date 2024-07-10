@@ -9,8 +9,8 @@ dependencies:
     specifier: 2.3.0
     version: 2.3.0
   '@1inch/limit-order-sdk':
-    specifier: ^4.9.3-rc.0
-    version: 4.9.3-rc.0(assert@2.1.0)(axios@1.7.2)
+    specifier: ^4.9.3-rc.1
+    version: 4.9.3-rc.1(assert@2.1.0)(axios@1.7.2)
   assert:
     specifier: ^2.0.0
     version: 2.1.0
@@ -149,8 +149,8 @@ packages:
       typescript: 4.9.4
     dev: true
 
-  /@1inch/limit-order-sdk@4.9.3-rc.0(assert@2.1.0)(axios@1.7.2):
-    resolution: {integrity: sha512-wKpZ+qyvJJRHVjTlsnlB5BCOE2/l/h4ZTCMBFKZVUV2x76H4d1lDJf7FkBaYCJGVwOLNLe2x0YDBPVDOcWi2BA==}
+  /@1inch/limit-order-sdk@4.9.3-rc.1(assert@2.1.0)(axios@1.7.2):
+    resolution: {integrity: sha512-J0vQS3wpbYHzKt8LNnqgsL8lLU8misz2MrP7F2Wb1qgGNPBt5IQLMaw2JX6nqvxBSnOQ4z9nMDa6yTFpUGLeCQ==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
