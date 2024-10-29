@@ -208,7 +208,8 @@ sdk.placeOrder({
     fee: {
         takingFeeBps: 100, // 1% as we use bps format, 1% is equal to 100bps
         takingFeeReceiver: '0x0000000000000000000000000000000000000000' //  fee receiver address
-    }
+    },
+    source: 'platform-name'
 }).then(console.log)
 ```
 
