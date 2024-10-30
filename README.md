@@ -26,29 +26,77 @@ yarn add @1inch/fusion-sdk@2
 ## How to swap with Fusion Mode
 
 ```typescript
-const makerPrivateKey = '0x123....'
-const makerAddress = '0x123....'
+import {FusionSDK, NetworkEnum, OrderStatus, PrivateKeyProviderConnector, Web3Like,} from "@1inch/fusion-sdk";
+import {computeAddress, formatUnits, JsonRpcProvider} from "ethers";
 
-const nodeUrl = '....'
+const PRIVATE_KEY = 'YOUR_PRIVATE_KEY'
+const NODE_URL = 'YOUR_WEB3_NODE_URL'
+const DEV_PORTAL_API_TOKEN = 'YOUR_DEV_PORTAL_API_TOKEN'
 
-const blockchainProvider = new PrivateKeyProviderConnector(
-    makerPrivateKey,
-    new Web3(nodeUrl)
+const ethersRpcProvider = new JsonRpcProvider(NODE_URL)
+
+const ethersProviderConnector: Web3Like = {
+    eth: {
+        call(transactionConfig): Promise<string> {
+            return ethersRpcProvider.call(transactionConfig)
+        }
+    },
+    extend(): void {}
+}
+
+const connector = new PrivateKeyProviderConnector(
+    PRIVATE_KEY,
+    ethersProviderConnector
 )
 
 const sdk = new FusionSDK({
     url: 'https://api.1inch.dev/fusion',
-    network: 1,
-    blockchainProvider,
-    authKey: 'your-auth-key'
+    network: NetworkEnum.BINANCE,
+    blockchainProvider: connector,
+    authKey: DEV_PORTAL_API_TOKEN
 })
 
-sdk.placeOrder({
-    fromTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
-    toTokenAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
-    amount: '50000000000000000', // 0.05 ETH
-    walletAddress: makerAddress
-}).then(console.log)
+async function main() {
+    const params = {
+        fromTokenAddress: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', // USDC
+        toTokenAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',  // BNB
+        amount: '10000000000000000000', // 10 USDC
+        walletAddress: computeAddress(PRIVATE_KEY),
+        source: 'sdk-test'
+    }
+
+    const quote = await sdk.getQuote(params)
+
+    const dstTokenDecimals = 18
+    console.log('Auction start amount', formatUnits(quote.presets[quote.recommendedPreset].auctionStartAmount, dstTokenDecimals))
+    console.log('Auction end amount', formatUnits(quote.presets[quote.recommendedPreset].auctionEndAmount), dstTokenDecimals)
+
+    const preparedOrder = await sdk.createOrder(params)
+
+    const info = await sdk.submitOrder(preparedOrder.order, preparedOrder.quoteId)
+
+    console.log('OrderHash', info.orderHash)
+
+    const start = Date.now()
+
+    while (true) {
+        try {
+            const data = await sdk.getOrderStatus(info.orderHash)
+
+            if (data.status === OrderStatus.Filled) {
+                console.log('fills', data.fills)
+                break
+            }
+        } catch (e) {
+            console.log(e)
+        }
+
+    }
+
+    console.log('Order executed for', (Date.now() - start) / 1000, 'sec')
+}
+
+main()
 ```
 
 ## Resolvers
