@@ -87,6 +87,16 @@ async function main() {
                 console.log('fills', data.fills)
                 break
             }
+
+            if (data.status === OrderStatus.Expired) {
+                console.log('Order Expired')
+                break
+            }
+            
+            if (data.status === OrderStatus.Cancelled) {
+                console.log('Order Cancelled')
+                break
+            }
         } catch (e) {
             console.log(e)
         }
