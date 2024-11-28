@@ -121,6 +121,7 @@ export class FusionSDK {
             takingFeeReceiver: params.fee?.takingFeeReceiver,
             allowPartialFills: params.allowPartialFills,
             allowMultipleFills: params.allowMultipleFills,
+            orderExpirationDelay: params.orderExpirationDelay,
             network: this.config.network
         })
 
@@ -183,6 +184,20 @@ export class FusionSDK {
         return encodeCancelOrder(
             orderHash,
             new MakerTraits(BigInt(order.makerTraits))
+        )
+    }
+
+    async signOrder(order: FusionOrder): Promise<string> {
+        if (!this.config.blockchainProvider) {
+            throw new Error('blockchainProvider has not set to config')
+        }
+
+        const orderStruct = order.build()
+        const data = order.getTypedData(this.config.network)
+
+        return this.config.blockchainProvider.signTypedData(
+            orderStruct.maker,
+            data
         )
     }
 
