@@ -46,6 +46,7 @@ export type OrderParams = {
     source?: string
     isPermit2?: boolean
     customPreset?: CustomPreset
+    orderExpirationDelay?: bigint
     /**
      * true by default
      */
