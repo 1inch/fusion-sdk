@@ -33,6 +33,7 @@ export type QuoterResponse = {
     settlementAddress: string
     whitelist: string[]
     quoteId: string | null
+    autoK: number
 }
 
 export type QuoterPresets = {
