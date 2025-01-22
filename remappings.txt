@@ -1,2 +1,3 @@
 @1inch/solidity-utils/=contracts/lib/solidity-utils/
+@1inch/limit-order-protocol-contract/=contracts/lib/limit-order-protocol/
 @openzeppelin/=contracts/lib/openzeppelin-contracts.git/
