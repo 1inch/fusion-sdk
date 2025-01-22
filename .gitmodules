@@ -4,3 +4,6 @@
 [submodule "contracts/lib/solidity-utils"]
 	path = contracts/lib/solidity-utils
 	url = https://github.com/1inch/solidity-utils
+[submodule "contracts/lib/limit-order-protocol"]
+	path = contracts/lib/limit-order-protocol
+	url = https://github.com/1inch/limit-order-protocol
