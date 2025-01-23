@@ -315,9 +315,7 @@ export class FusionOrder {
                 // shift because of how LimitOrder.buildSalt works
                 salt: BigInt(order.salt) >> 160n,
                 maker: new Address(order.maker),
-                receiver: extra?.customReceiver
-                    ? extra?.customReceiver
-                    : new Address(order.receiver),
+                receiver: extra?.customReceiver,
                 makerAsset: new Address(order.makerAsset),
                 takerAsset: new Address(order.takerAsset),
                 makingAmount: BigInt(order.makingAmount),

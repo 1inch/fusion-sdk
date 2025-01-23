@@ -112,9 +112,11 @@ export class FusionExtension {
                 interactionData.fees.resolverFee.value,
             `invalid extension: resolver fee must be same in interaction data and in amount data`
         )
+
         assert(
-            amountData.fees.whitelistDiscount ===
-                interactionData.fees.whitelistDiscount,
+            amountData.fees.whitelistDiscount.equal(
+                interactionData.fees.whitelistDiscount
+            ),
             `invalid extension: whitelistDiscount must be same in interaction data and in amount data`
         )
 
@@ -161,7 +163,7 @@ export class FusionExtension {
     }
 
     public build(): Extension {
-        const amountData = this.buildAmountGetterData()
+        const amountData = this.buildAmountGetterData(true)
 
         const builder = new ExtensionBuilder()
             .withMakingAmountData(this.address, amountData)
@@ -350,7 +352,7 @@ export class FusionExtension {
             builder.addAddress(this.extra?.customReceiver.toString())
         }
 
-        builder.addBytes(this.buildAmountGetterData())
+        builder.addBytes(this.buildAmountGetterData(false))
 
         return builder.asHex()
     }
@@ -367,10 +369,12 @@ export class FusionExtension {
      *
      * @see https://github.com/1inch/limit-order-settlement/blob/82f0a25c969170f710825ce6aa6920062adbde88/contracts/SimpleSettlement.sol#L34
      */
-    private buildAmountGetterData(): string {
+    private buildAmountGetterData(withAuction: boolean): string {
         const builder = new BytesBuilder()
 
-        this.auctionDetails.encodeInto(builder)
+        if (withAuction) {
+            this.auctionDetails.encodeInto(builder)
+        }
 
         const integrator = {
             fee:

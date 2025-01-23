@@ -67,6 +67,7 @@ export class AuctionDetails {
      * - uint32 startTime
      * - uint24 duration
      * - uint24 initialRateBump
+     * - uint8  N = count of points
      * - [uint24 rate, uint16 delay] * N points
      *
      * All data is tight packed
@@ -81,9 +82,10 @@ export class AuctionDetails {
         const start = iter.nextUint32()
         const duration = iter.nextUint24()
         const rateBump = Number(iter.nextUint24())
-        const points = [] as AuctionPoint[]
+        const points: AuctionPoint[] = []
+        let pointsLen = BigInt(iter.nextUint8())
 
-        while (!iter.isEmpty()) {
+        while (pointsLen--) {
             points.push({
                 coefficient: Number(iter.nextUint24()),
                 delay: Number(iter.nextUint16())
@@ -126,13 +128,14 @@ export class AuctionDetails {
      */
     public encode(): string {
         let details = ethers.solidityPacked(
-            ['uint24', 'uint32', 'uint32', 'uint24', 'uint24'],
+            ['uint24', 'uint32', 'uint32', 'uint24', 'uint24', 'uint8'],
             [
                 this.gasCost.gasBumpEstimate,
                 this.gasCost.gasPriceEstimate,
                 this.startTime,
                 this.duration,
-                this.initialRateBump
+                this.initialRateBump,
+                this.points.length
             ]
         )
 
