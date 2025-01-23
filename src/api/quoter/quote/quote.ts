@@ -4,9 +4,8 @@ import {FusionOrderParams} from './order-params'
 import {FusionOrderParamsData} from './types'
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {AuctionWhitelistItem, FusionOrder} from '../../../fusion-order'
+import {FusionOrder, Whitelist} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
-import {bpsToRatioFormat} from '../../../sdk'
 import {CHAIN_TO_WRAPPER} from '../../../fusion-order/constants'
 
 export class Quote {
@@ -109,15 +108,6 @@ export class Quote {
             },
             {
                 auction: auctionDetails,
-                fees: {
-                    integratorFee: {
-                        ratio: bpsToRatioFormat(this.params.fee) || 0n,
-                        receiver: paramsData?.takingFeeReceiver
-                            ? new Address(paramsData?.takingFeeReceiver)
-                            : Address.ZERO_ADDRESS
-                    },
-                    bankFee: preset.bankFee
-                },
                 whitelist: this.getWhitelist(
                     auctionDetails.startTime,
                     preset.exclusiveResolver
@@ -131,7 +121,8 @@ export class Quote {
                 allowMultipleFills,
                 orderExpirationDelay: paramsData?.orderExpirationDelay,
                 source: this.params.source,
-                enablePermit2: params.isPermit2
+                enablePermit2: params.isPermit2,
+                fees: undefined // todo: add fees
             }
         )
     }
@@ -143,21 +134,25 @@ export class Quote {
     private getWhitelist(
         auctionStartTime: bigint,
         exclusiveResolver?: Address
-    ): AuctionWhitelistItem[] {
+    ): Whitelist {
         if (exclusiveResolver) {
-            return this.whitelist.map((resolver) => {
-                const isExclusive = resolver.equal(exclusiveResolver)
+            return Whitelist.fromNow(
+                this.whitelist.map((resolver) => {
+                    const isExclusive = resolver.equal(exclusiveResolver)
 
-                return {
-                    address: resolver,
-                    allowFrom: isExclusive ? 0n : auctionStartTime
-                }
-            })
+                    return {
+                        address: resolver,
+                        allowFrom: isExclusive ? 0n : auctionStartTime
+                    }
+                })
+            )
         }
 
-        return this.whitelist.map((resolver) => ({
-            address: resolver,
-            allowFrom: 0n
-        }))
+        return Whitelist.fromNow(
+            this.whitelist.map((resolver) => ({
+                address: resolver,
+                allowFrom: 0n
+            }))
+        )
     }
 }

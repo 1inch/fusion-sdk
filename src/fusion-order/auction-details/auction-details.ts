@@ -1,5 +1,5 @@
 import {ethers} from 'ethers'
-import {BytesIter} from '@1inch/byte-utils'
+import {BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import {Extension} from '@1inch/limit-order-sdk'
 import assert from 'assert'
 import {AuctionGasCostInfo, AuctionPoint} from './types'
@@ -59,9 +59,9 @@ export class AuctionDetails {
     }
 
     /**
-     * Construct `AuctionDetails` from bytes
+     * Construct `AuctionDetails`
      *
-     * @param data bytes with 0x prefix in next format:
+     * @param iter :
      * - uint24 gasBumpEstimate
      * - uint32 gasPriceEstimate
      * - uint32 startTime
@@ -73,10 +73,9 @@ export class AuctionDetails {
      *
      * @see AuctionDetails.encode
      */
-    static decode(data: string): AuctionDetails {
-        assert(isHexBytes(data), 'Invalid auction details data')
-        const iter = BytesIter.BigInt(data)
-
+    static decodeFrom<T extends bigint | string>(
+        iter: BytesIter<T>
+    ): AuctionDetails {
         const gasBumpEstimate = iter.nextUint24()
         const gasPriceEstimate = iter.nextUint32()
         const start = iter.nextUint32()
@@ -92,15 +91,28 @@ export class AuctionDetails {
         }
 
         return new AuctionDetails({
-            startTime: start,
-            duration: duration,
+            startTime: BigInt(start),
+            duration: BigInt(duration),
             initialRateBump: rateBump,
             points,
             gasCost: {
-                gasBumpEstimate,
-                gasPriceEstimate
+                gasBumpEstimate: BigInt(gasBumpEstimate),
+                gasPriceEstimate: BigInt(gasPriceEstimate)
             }
         })
+    }
+
+    /**
+     * Construct `AuctionDetails` from bytes
+     *
+     * @see AuctionDetails.decodeFrom
+     * @see AuctionDetails.encode
+     */
+    static decode(data: string): AuctionDetails {
+        assert(isHexBytes(data), 'Invalid auction details data')
+        const iter = BytesIter.BigInt(data)
+
+        return AuctionDetails.decodeFrom(iter)
     }
 
     static fromExtension(extension: Extension): AuctionDetails {
@@ -134,5 +146,14 @@ export class AuctionDetails {
         }
 
         return details
+    }
+
+    /**
+     * Serialize auction data into
+     */
+    public encodeInto(
+        builder: BytesBuilder = new BytesBuilder()
+    ): BytesBuilder {
+        return builder.addBytes(this.encode())
     }
 }

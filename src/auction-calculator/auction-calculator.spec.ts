@@ -1,24 +1,10 @@
-import {Address} from '@1inch/limit-order-sdk'
 import {parseEther, parseUnits} from 'ethers'
 import {AuctionCalculator} from './auction-calculator'
-import {SettlementPostInteractionData, AuctionDetails} from '../fusion-order'
-import {bpsToRatioFormat} from '../sdk'
+import {AuctionDetails} from '../fusion-order'
 
 describe('Auction Calculator', () => {
     it('should be created successfully from suffix and salt', () => {
         const auctionStartTime = 1708448252n
-
-        const postInteraction = SettlementPostInteractionData.new({
-            integratorFee: {
-                ratio: bpsToRatioFormat(1),
-                receiver: Address.fromBigInt(1n)
-            },
-            bankFee: 0n,
-            resolvingStartTime: auctionStartTime,
-            whitelist: [
-                {address: Address.ZERO_ADDRESS, allowFrom: auctionStartTime}
-            ]
-        })
 
         const auctionDetails = new AuctionDetails({
             startTime: auctionStartTime,
@@ -27,10 +13,7 @@ describe('Auction Calculator', () => {
             points: []
         })
 
-        const calculator = AuctionCalculator.fromAuctionData(
-            postInteraction,
-            auctionDetails
-        )
+        const calculator = AuctionCalculator.fromAuctionData(auctionDetails)
 
         const rate = calculator.calcRateBump(auctionStartTime + 60n)
         const auctionTakingAmount = calculator.calcAuctionTakingAmount(
@@ -51,7 +34,6 @@ describe('Auction Calculator', () => {
             duration,
             1000000n,
             [{delay: 60, coefficient: 500000}],
-            0n,
             {
                 gasBumpEstimate: 10000n, // 0.1% of taking amount
                 gasPriceEstimate: 1000n // 1gwei

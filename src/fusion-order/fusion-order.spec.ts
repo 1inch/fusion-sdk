@@ -2,6 +2,7 @@ import {Address, Extension, MakerTraits} from '@1inch/limit-order-sdk'
 import {parseUnits} from 'ethers'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
+import {Whitelist} from './whitelist'
 
 describe('Fusion Order', () => {
     it('should create fusion order', () => {
@@ -37,15 +38,14 @@ describe('Fusion Order', () => {
                         }
                     ]
                 }),
-                whitelist: [
+                whitelist: Whitelist.new(1673548139n, [
                     {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
                         allowFrom: 0n
                     }
-                ],
-                resolvingStartTime: 1673548139n
+                ])
             }
         )
 
@@ -100,14 +100,14 @@ describe('Fusion Order', () => {
                         }
                     ]
                 }),
-                whitelist: [
+                whitelist: Whitelist.new(0n, [
                     {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
                         allowFrom: 0n
                     }
-                ]
+                ])
             }
         )
 
@@ -149,14 +149,14 @@ describe('Fusion Order', () => {
                         }
                     ]
                 }),
-                whitelist: [
+                whitelist: Whitelist.new(0n, [
                     {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
                         allowFrom: 0n
                     }
-                ]
+                ])
             },
             {
                 source: 'test'
@@ -190,22 +190,27 @@ describe('Fusion Order', () => {
                     initialRateBump: 10_000_000, // 100%,
                     points: []
                 }),
-                whitelist: [
+                whitelist: Whitelist.new(0n, [
                     {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
                         allowFrom: 0n
                     }
-                ],
-                resolvingStartTime: 0n
+                ])
             },
             {
                 source: 'some_id'
             }
         )
 
-        expect(order.calcTakingAmount(order.makingAmount, now)).toEqual(
+        expect(
+            order.calcTakingAmount(
+                Address.fromBigInt(1n),
+                order.makingAmount,
+                now
+            )
+        ).toEqual(
             2n * order.takingAmount // because init rate bump is 100%
         )
     })
@@ -231,7 +236,12 @@ describe('Fusion Order', () => {
         const baseFee = 10844562822n
 
         expect(
-            order.calcTakingAmount(order.makingAmount, now, baseFee)
+            order.calcTakingAmount(
+                Address.fromBigInt(1n),
+                order.makingAmount,
+                now,
+                baseFee
+            )
         ).toEqual(30411732255521644n)
     })
 })

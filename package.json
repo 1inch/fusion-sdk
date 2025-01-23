@@ -31,8 +31,8 @@
         "changelog:generate": "changelog generate -a"
     },
     "dependencies": {
-        "@1inch/byte-utils": "2.3.0",
-        "@1inch/limit-order-sdk": "^4.9.3-rc.1",
+        "@1inch/byte-utils": "3",
+        "@1inch/limit-order-sdk": "4.11.1",
         "ethers": "^6.13.1",
         "tslib": "^2.6.3",
         "ws": "^8.17.1"
