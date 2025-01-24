@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import {instance, mock} from 'ts-mockito'
 import {
     ActiveOrdersResponse,

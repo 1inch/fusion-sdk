@@ -89,7 +89,7 @@ export class Quote {
         const isNonceRequired = !allowPartialFills || !allowMultipleFills
 
         const nonce = isNonceRequired
-            ? params.nonce ?? randBigInt(UINT_40_MAX)
+            ? (params.nonce ?? randBigInt(UINT_40_MAX))
             : params.nonce
 
         const takerAsset = this.params.toTokenAddress.isNative()
