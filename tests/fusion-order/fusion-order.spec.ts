@@ -118,6 +118,7 @@ describe('SettlementExtension', () => {
         )
     })
 
+    // eslint-disable-next-line max-lines-per-function
     describe('Fees', () => {
         it('only integrator fee', async () => {
             const integratorAddress = Address.fromBigInt(1337n)
@@ -216,7 +217,12 @@ describe('SettlementExtension', () => {
                 order.makingAmount
             )
             expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
-                order.calcTakingAmount(takerAddress, now(), 0n)
+                order.calcTakingAmount(
+                    takerAddress,
+                    order.makingAmount,
+                    now(),
+                    0n
+                )
             )
 
             expect(
@@ -319,7 +325,12 @@ describe('SettlementExtension', () => {
                 order.makingAmount
             )
             expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
-                order.calcTakingAmount(takerAddress, now(), 0n)
+                order.calcTakingAmount(
+                    takerAddress,
+                    order.makingAmount,
+                    now(),
+                    0n
+                )
             )
 
             expect(
@@ -431,7 +442,12 @@ describe('SettlementExtension', () => {
                 order.makingAmount
             )
             expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
-                order.calcTakingAmount(takerAddress, now(), 0n)
+                order.calcTakingAmount(
+                    takerAddress,
+                    order.makingAmount,
+                    now(),
+                    0n
+                )
             )
 
             expect(
@@ -566,7 +582,12 @@ describe('SettlementExtension', () => {
                 order.makingAmount
             )
             expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
-                order.calcTakingAmount(takerAddress, now(), 0n)
+                order.calcTakingAmount(
+                    takerAddress,
+                    order.makingAmount,
+                    now(),
+                    0n
+                )
             )
 
             expect(

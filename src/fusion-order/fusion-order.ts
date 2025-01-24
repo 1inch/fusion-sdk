@@ -370,9 +370,9 @@ export class FusionOrder {
      * */
     public calcTakingAmount(
         taker: Address,
+        makingAmount: bigint,
         time: bigint,
-        blockBaseFee = 0n,
-        makingAmount = this.makingAmount
+        blockBaseFee = 0n
     ): bigint {
         const takingAmount = calcTakingAmount(
             makingAmount,
