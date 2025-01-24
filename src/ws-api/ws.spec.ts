@@ -379,7 +379,7 @@ describe(__filename, () => {
             wsSdk.onOpen(() => {
                 try {
                     wsSdk.rpc.getActiveOrders({page: -1})
-                } catch (error) {
+                } catch {
                     wsSdk.close()
                     wss.close()
                     done()

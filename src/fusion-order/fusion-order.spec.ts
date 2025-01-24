@@ -1,5 +1,6 @@
-import {Address, MakerTraits} from '@1inch/limit-order-sdk'
+import {Address, Bps, MakerTraits} from '@1inch/limit-order-sdk'
 import {parseUnits} from 'ethers'
+import {Fees, IntegratorFee} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist'
@@ -54,12 +55,84 @@ describe('Fusion Order', () => {
             maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
             makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
             makingAmount: '1000000000000000000',
-            receiver: extensionContract.toString(),
+            receiver: '0x0000000000000000000000000000000000000000', // as there is no fee
             takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
             takingAmount: '1420000000',
             makerTraits:
                 '33471150795161712739625987854073848363835856965607525350783622537007396290560',
             salt: '15150891855335877009553113668813008135841821470374'
+        })
+
+        const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
+        expect(makerTraits.isNativeUnwrapEnabled()).toEqual(false)
+        expect(makerTraits.nonceOrEpoch()).toEqual(0n)
+        expect(makerTraits.isPartialFillAllowed()).toEqual(true)
+    })
+    it('should create fusion order with fees', () => {
+        const extensionContract = new Address(
+            '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
+        )
+
+        const order = FusionOrder.new(
+            extensionContract,
+            {
+                makerAsset: new Address(
+                    '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+                ),
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker: new Address(
+                    '0x00000000219ab540356cbb839cbe05303d7705fa'
+                ),
+                salt: 10n
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [
+                        {
+                            coefficient: 20000,
+                            delay: 12
+                        }
+                    ]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ])
+            },
+            {
+                fees: Fees.integratorFee(
+                    new IntegratorFee(
+                        Address.fromBigInt(1n),
+                        Address.fromBigInt(2n),
+                        Bps.fromPercent(1),
+                        Bps.fromPercent(50)
+                    )
+                )
+            }
+        )
+
+        const builtOrder = order.build()
+        expect(builtOrder).toStrictEqual({
+            maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
+            makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            makingAmount: '1000000000000000000',
+            receiver: extensionContract.toString(), // as there are fees
+            takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+            takingAmount: '1420000000',
+            makerTraits:
+                '33471150795161712739625987854073848363835856965607525350783622537007396290560',
+            salt: '15927625895819333064650069072431807310373701948678'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))

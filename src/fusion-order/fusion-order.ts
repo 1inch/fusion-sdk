@@ -15,10 +15,11 @@ import {AuctionDetails} from './auction-details'
 
 import {injectTrackCode} from './source-track'
 import {Whitelist} from './whitelist/whitelist'
-import {AuctionCalculator} from '../auction-calculator'
+import {AuctionCalculator} from '../amount-calculator/auction-calculator'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
 import {now} from '../utils/time'
+import {AmountCalculator} from '../amount-calculator/amount-calculator'
 
 export class FusionOrder {
     private static defaultExtra = {
@@ -130,7 +131,9 @@ export class FusionOrder {
         /**
          * @see https://github.com/1inch/limit-order-settlement/blob/0afb4785cb825fe959c534ff4f1a771d4d33cdf4/contracts/extensions/IntegratorFeeExtension.sol#L65
          */
-        const receiver = settlementExtensionContract
+        const receiver = extra.fees
+            ? settlementExtensionContract
+            : orderInfo.receiver
 
         const builtExtension = extension.build()
         const salt = LimitOrder.buildSalt(builtExtension, orderInfo.salt)
@@ -361,15 +364,15 @@ export class FusionOrder {
      * Calculates required taking amount for passed `makingAmount` at block time `time`
      *
      * @param taker address who fill order
-     * @param makingAmount maker swap amount
      * @param time execution time in sec
      * @param blockBaseFee block fee in wei.
+     * @param makingAmount maker swap amount
      * */
     public calcTakingAmount(
         taker: Address,
-        makingAmount: bigint,
         time: bigint,
-        blockBaseFee = 0n
+        blockBaseFee = 0n,
+        makingAmount = this.makingAmount
     ): bigint {
         const takingAmount = calcTakingAmount(
             makingAmount,
@@ -377,11 +380,100 @@ export class FusionOrder {
             this.takingAmount
         )
 
-        return this.fusionExtension.getTakingAmount(
+        return this.getAmountCalculator().getTakingAmount(
             taker,
             takingAmount,
             time,
             blockBaseFee
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which resolver pays to resolver fee receiver
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     */
+    public getResolverFee(
+        taker: Address,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getResolverFee(taker, takingAmount) ?? 0n
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which integrator gets to integrator wallet
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     */
+    public getIntegratorFee(
+        taker: Address,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getIntegratorFee(taker, takingAmount) ??
+            0n
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which protocol gets as share from integrator fee
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     */
+    public getProtocolShareOfIntegratorFee(
+        taker: Address,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getProtocolShareOfIntegratorFee(
+                taker,
+                takingAmount
+            ) ?? 0n
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which protocol gets
+     * It equals to `share from integrator fee plus resolver fee`
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     */
+    public getProtocolFee(
+        taker: Address,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getProtocolFee(taker, takingAmount) ?? 0n
         )
     }
 
@@ -419,5 +511,9 @@ export class FusionOrder {
      */
     public isExclusivityPeriod(time = now()): boolean {
         return this.fusionExtension.whitelist.isExclusivityPeriod(time)
+    }
+
+    public getAmountCalculator(): AmountCalculator {
+        return AmountCalculator.fromExtension(this.fusionExtension)
     }
 }

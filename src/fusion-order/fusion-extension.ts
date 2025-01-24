@@ -17,7 +17,6 @@ import {BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist/whitelist'
-import {AuctionCalculator} from '../auction-calculator'
 
 export class FusionExtension {
     /**
@@ -182,143 +181,6 @@ export class FusionExtension {
         return builder.build()
     }
 
-    public getTakingAmount(
-        taker: Address,
-        orderTakingAmount: bigint,
-        time: bigint,
-        blockBaseFee = 0n
-    ): bigint {
-        const withFee = this.getTakingAmountWithFee(taker, orderTakingAmount)
-
-        const rateBump = AuctionCalculator.fromAuctionData(
-            this.auctionDetails
-        ).calcRateBump(time, blockBaseFee)
-
-        return AuctionCalculator.calcAuctionTakingAmount(withFee, rateBump)
-    }
-
-    public getMakingAmount(
-        taker: Address,
-        orderMakingAmount: bigint,
-        time: bigint,
-        blockBaseFee = 0n
-    ): bigint {
-        const fees = this.getFeesForTaker(taker)
-
-        const withFee = mulDiv(
-            orderMakingAmount,
-            Fees.BASE_1E5,
-            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee
-        )
-
-        const rateBump = AuctionCalculator.fromAuctionData(
-            this.auctionDetails
-        ).calcRateBump(time, blockBaseFee)
-
-        return AuctionCalculator.calcAuctionMakingAmount(withFee, rateBump)
-    }
-
-    /**
-     * Fee in `takerAsset` which resolver pays to resolver fee receiver
-     *
-     * @param taker who will fill order
-     * @param orderTakingAmount taking amount from order struct
-     */
-    public getResolverFee(taker: Address, orderTakingAmount: bigint): bigint {
-        // the logic copied from contract to avoid calculation issues
-        // @see https://github.com/1inch/limit-order-protocol/blob/22a18f7f20acfec69d4f50ce1880e8e662477710/contracts/extensions/FeeTaker.sol#L145
-
-        const takingAmount = this.getTakingAmountWithFee(
-            taker,
-            orderTakingAmount
-        )
-        const fees = this.getFeesForTaker(taker)
-
-        return mulDiv(
-            takingAmount,
-            fees.resolverFee,
-            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee
-        )
-    }
-
-    /**
-     * Fee in `takerAsset` which integrator gets to integrator wallet
-     *
-     * @param taker who will fill order
-     * @param orderTakingAmount taking amount from order struct
-     */
-    public getIntegratorFee(taker: Address, orderTakingAmount: bigint): bigint {
-        // the logic copied from contract to avoid calculation issues
-        // @see https://github.com/1inch/limit-order-protocol/blob/22a18f7f20acfec69d4f50ce1880e8e662477710/contracts/extensions/FeeTaker.sol#L145
-
-        const takingAmount = this.getTakingAmountWithFee(
-            taker,
-            orderTakingAmount
-        )
-        const fees = this.getFeesForTaker(taker)
-
-        const total = mulDiv(
-            takingAmount,
-            fees.integratorFee,
-            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee
-        )
-
-        const integratorShare = BigInt(
-            this.extra?.fees?.integrator.share.toFraction(Fees.BASE_1E2) || 0
-        )
-
-        return mulDiv(total, integratorShare, Fees.BASE_1E2)
-    }
-
-    /**
-     * Fee in `takerAsset` which protocol gets as share from integrator fee
-     *
-     * @param taker who will fill order
-     * @param orderTakingAmount taking amount from order struct
-     */
-    public getProtocolShareOfIntegratorFee(
-        taker: Address,
-        orderTakingAmount: bigint
-    ): bigint {
-        // the logic copied from contract to avoid calculation issues
-        // @see https://github.com/1inch/limit-order-protocol/blob/22a18f7f20acfec69d4f50ce1880e8e662477710/contracts/extensions/FeeTaker.sol#L145
-
-        const takingAmount = this.getTakingAmountWithFee(
-            taker,
-            orderTakingAmount
-        )
-        const fees = this.getFeesForTaker(taker)
-
-        const total = mulDiv(
-            takingAmount,
-            fees.integratorFee,
-            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee
-        )
-
-        const integratorShare = BigInt(
-            this.extra?.fees?.integrator.share.toFraction(Fees.BASE_1E2) || 0
-        )
-
-        return mulDiv(total, Fees.BASE_1E2 - integratorShare, Fees.BASE_1E2)
-    }
-
-    /**
-     * Fee in `takerAsset` which protocol gets
-     * It equals to `share from integrator fee plus resolver fee`
-     *
-     * @param taker who will fill order
-     * @param orderTakingAmount taking amount from order struct
-     */
-    public getProtocolFee(taker: Address, orderTakingAmount: bigint): bigint {
-        const resolverFee = this.getResolverFee(taker, orderTakingAmount)
-        const integratorPart = this.getProtocolShareOfIntegratorFee(
-            taker,
-            orderTakingAmount
-        )
-
-        return integratorPart + resolverFee
-    }
-
     /**
      * Build data for `FeeTaker.postInteraction`
      *
@@ -333,9 +195,12 @@ export class FusionExtension {
      * @see https://github.com/1inch/limit-order-protocol/blob/22a18f7f20acfec69d4f50ce1880e8e662477710/contracts/extensions/FeeTaker.sol#L114
      */
     private buildInteractionData(): string {
+        const customReceiver =
+            this.extra?.customReceiver || Address.ZERO_ADDRESS
+
         const flags = new BN(0n).setBit(
             FusionExtension.CUSTOM_RECEIVER_FLAG_BIT,
-            Boolean(this.extra?.customReceiver)
+            Boolean(!customReceiver.isZero())
         )
 
         const integratorReceiver =
@@ -348,8 +213,8 @@ export class FusionExtension {
             .addAddress(integratorReceiver.toString())
             .addAddress(protocolReceiver.toString())
 
-        if (this.extra?.customReceiver) {
-            builder.addAddress(this.extra?.customReceiver.toString())
+        if (!customReceiver.isZero()) {
+            builder.addAddress(customReceiver.toString())
         }
 
         builder.addBytes(this.buildAmountGetterData(false))
@@ -373,6 +238,7 @@ export class FusionExtension {
         const builder = new BytesBuilder()
 
         if (withAuction) {
+            // auction data required only for `getMakingAmount/getTakingAmount` and not for `postInteraction`
             this.auctionDetails.encodeInto(builder)
         }
 
@@ -452,25 +318,6 @@ export class FusionExtension {
             Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee,
             Fees.BASE_1E5,
             Rounding.Ceil
-        )
-    }
-
-    /**
-     * Returns makingAmount with fee, but without auction bump
-     * @param taker
-     * @param orderMakingAmount
-     * @private
-     */
-    private getMakingAmountWithFee(
-        taker: Address,
-        orderMakingAmount: bigint
-    ): bigint {
-        const fees = this.getFeesForTaker(taker)
-
-        return mulDiv(
-            orderMakingAmount,
-            Fees.BASE_1E5,
-            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee
         )
     }
 }

@@ -38,7 +38,7 @@ export class Quote {
 
     public readonly quoteId: string | null
 
-    public readonly silippage: number
+    public readonly slippage: number
 
     constructor(
         private readonly params: QuoterRequest,
@@ -60,7 +60,7 @@ export class Quote {
         this.quoteId = response.quoteId
         this.whitelist = response.whitelist.map((a) => new Address(a))
         this.recommendedPreset = response.recommended_preset
-        this.silippage = response.autoK
+        this.slippage = response.autoK
         this.settlementAddress = new Address(response.settlementAddress)
     }
 

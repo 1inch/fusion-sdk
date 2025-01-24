@@ -1,8 +1,12 @@
 import {mulDiv, Rounding} from '@1inch/limit-order-sdk'
-import {AuctionDetails, AuctionPoint, AuctionGasCostInfo} from '../fusion-order'
+import {
+    AuctionDetails,
+    AuctionPoint,
+    AuctionGasCostInfo
+} from '../../fusion-order'
 
 export class AuctionCalculator {
-    public static RATE_BUMP_DENOMINATOR = 10_000_000n // 100%s
+    public static RATE_BUMP_DENOMINATOR = 10_000_000n // 100%
 
     private static GAS_PRICE_BASE = 1_000_000n // 1000 means 1 Gwei
 

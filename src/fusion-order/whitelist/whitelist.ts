@@ -7,7 +7,7 @@ import {now} from '../../utils/time'
 import {add0x} from '../../utils'
 
 export class Whitelist {
-    constructor(
+    private constructor(
         public readonly resolvingStartTime: bigint,
         public readonly whitelist: WhitelistItem[]
     ) {
