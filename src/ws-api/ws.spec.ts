@@ -14,7 +14,7 @@ import {castUrl} from './url'
 import {NetworkEnum} from '../constants'
 import {WebsocketClient} from '../connector'
 
-jest.setTimeout(5 * 60 * 1000)
+jest.setTimeout(10 * 1000)
 
 describe(__filename, () => {
     describe('base', () => {
@@ -79,7 +79,7 @@ describe(__filename, () => {
             })
 
             wsSdk.on('error', (error) => {
-                expect(error.message).toContain('ECONNREFUSED')
+                expect(error.code).toEqual('ECONNREFUSED')
 
                 done()
             })
