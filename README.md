@@ -1,4 +1,4 @@
-# Utils library for 1inch Fusion Mode
+# SDK for 1inch Fusion Mode
 
 ## Installation
 
