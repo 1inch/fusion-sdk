@@ -105,18 +105,3 @@ export type ResolverFeePresetRaw = {
     bps: number
     whitelistDiscountPercent: number
 }
-
-export type IntegratorFeeParamsRaw = {
-    /**
-     * Address which will receive `share` of `value` fee, other part will be sent to protocol
-     */
-    receiver: string
-    /**
-     * How much to charge
-     */
-    value: string
-    /**
-     * Integrator will receive only `share` part from charged fee
-     */
-    share: string
-}
