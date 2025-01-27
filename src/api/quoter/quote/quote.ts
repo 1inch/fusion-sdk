@@ -179,7 +179,9 @@ function buildFees(
     resolverFeePreset: ResolverFeePreset,
     integratorFee?: IntegratorFeeParams
 ): Fees | undefined {
-    if (resolverFeePreset.bps.isZero() && !integratorFee) {
+    const hasIntegratorFee = integratorFee && !integratorFee.value.isZero()
+
+    if (resolverFeePreset.bps.isZero() && !hasIntegratorFee) {
         return undefined
     }
 
