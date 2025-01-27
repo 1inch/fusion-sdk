@@ -6,9 +6,9 @@ import {
     LimitOrder,
     LimitOrderV4Struct,
     MakerTraits,
-    OrderInfoData,
-    FeeTakerExt
+    OrderInfoData
 } from '@1inch/limit-order-sdk'
+import {Fees} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import assert from 'assert'
 import {FusionExtension} from './fusion-extension'
 import {AuctionDetails} from './auction-details'
@@ -69,7 +69,7 @@ export class FusionOrder {
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
             source?: string
-            fees?: FeeTakerExt.Fees
+            fees?: Fees
         } = FusionOrder.defaultExtra,
         extension = new FusionExtension(
             settlementExtensionContract,
@@ -260,7 +260,7 @@ export class FusionOrder {
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
             source?: string
-            fees?: FeeTakerExt.Fees
+            fees?: Fees
         }
     ): FusionOrder {
         return new FusionOrder(
