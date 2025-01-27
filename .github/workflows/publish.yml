@@ -32,7 +32,13 @@ jobs:
         run: pnpm build
 
       - name: Publish 🚀
-        run: pnpm publish --no-git-checks --access=public
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" == *"-rc"* ]]; then
+            pnpm publish --no-git-checks --access=public --tag next
+          else
+            pnpm publish --no-git-checks --access=public
+          fi
         working-directory: dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -70,3 +76,4 @@ jobs:
       - name: Publish 🚀
         run: pnpm publish --no-git-checks
         working-directory: dist
+
