@@ -1,11 +1,12 @@
 import {Address, FeeTakerExt} from '@1inch/limit-order-sdk'
+import {FeeCalculator} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {AuctionCalculator} from './auction-calculator'
 import {FusionExtension} from '../fusion-order'
 
 export class AmountCalculator {
     constructor(
         private readonly auctionCalculator: AuctionCalculator,
-        private readonly feeCalculator?: FeeTakerExt.FeeCalculator
+        private readonly feeCalculator?: FeeCalculator
     ) {}
 
     static fromExtension(ext: FusionExtension): AmountCalculator {
