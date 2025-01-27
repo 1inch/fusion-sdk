@@ -6,3 +6,5 @@ yarn-error.log
 tsconfig.tsbuildinfo
 .DS_Store
 cache
+.devai
+.tmp

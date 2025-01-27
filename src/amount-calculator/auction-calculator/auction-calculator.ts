@@ -5,6 +5,8 @@ import {
     AuctionGasCostInfo
 } from '../../fusion-order'
 
+// todo: check which method to use for user amount calculation
+
 export class AuctionCalculator {
     public static RATE_BUMP_DENOMINATOR = 10_000_000n // 100%
 

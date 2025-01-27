@@ -1,3 +1,4 @@
+import {IntegratorFeeParams} from './quote'
 import {NetworkEnum} from '../../constants'
 
 export type QuoterRequestParams = {
@@ -7,9 +8,16 @@ export type QuoterRequestParams = {
     walletAddress: string
     enableEstimate?: boolean
     permit?: string
-    fee?: number
+    integratorFee?: IntegratorFeeParams
     source?: string
     isPermit2?: boolean
+}
+
+export type QuoterRequestParamsRaw = Omit<
+    QuoterRequestParams,
+    'integratorFee'
+> & {
+    fee?: number
 }
 
 export type QuoterCustomPresetRequestParams = {
@@ -24,7 +32,6 @@ export type QuoterApiConfig = {
 
 export type QuoterResponse = {
     fromTokenAmount: string
-    feeToken: string
     presets: QuoterPresets
     recommended_preset: PresetEnum
     toTokenAmount: string
@@ -34,6 +41,7 @@ export type QuoterResponse = {
     whitelist: string[]
     quoteId: string | null
     autoK: number
+    fee: ResolverFeePresetRaw
 }
 
 export type QuoterPresets = {
@@ -88,3 +96,27 @@ export type CustomPreset = {
 }
 
 export type CustomPresetPoint = {toTokenAmount: string; delay: number}
+
+export type ResolverFeePresetRaw = {
+    /**
+     * protocol address
+     */
+    receiver: string
+    bps: number
+    whitelistDiscountPercent: number
+}
+
+export type IntegratorFeeParamsRaw = {
+    /**
+     * Address which will receive `share` of `value` fee, other part will be sent to protocol
+     */
+    receiver: string
+    /**
+     * How much to charge
+     */
+    value: string
+    /**
+     * Integrator will receive only `share` part from charged fee
+     */
+    share: string
+}

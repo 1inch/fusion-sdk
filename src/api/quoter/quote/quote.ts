@@ -1,7 +1,16 @@
-import {Address, randBigInt} from '@1inch/limit-order-sdk'
+import {Address, Bps, randBigInt} from '@1inch/limit-order-sdk'
 import {UINT_40_MAX} from '@1inch/byte-utils'
+import {
+    Fees,
+    IntegratorFee,
+    ResolverFee
+} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {FusionOrderParams} from './order-params'
-import {FusionOrderParamsData} from './types'
+import {
+    FusionOrderParamsData,
+    IntegratorFeeParams,
+    ResolverFeePreset
+} from './types'
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
 import {FusionOrder, Whitelist} from '../../../fusion-order'
@@ -16,8 +25,6 @@ export class Quote {
     public readonly settlementAddress: Address
 
     public readonly fromTokenAmount: bigint
-
-    public readonly feeToken: string
 
     public readonly presets: {
         [PresetEnum.fast]: Preset
@@ -40,12 +47,13 @@ export class Quote {
 
     public readonly slippage: number
 
+    public readonly resolverFeePreset: ResolverFeePreset
+
     constructor(
         private readonly params: QuoterRequest,
         response: QuoterResponse
     ) {
         this.fromTokenAmount = BigInt(response.fromTokenAmount)
-        this.feeToken = response.feeToken
         this.presets = {
             [PresetEnum.fast]: new Preset(response.presets.fast),
             [PresetEnum.medium]: new Preset(response.presets.medium),
@@ -62,6 +70,13 @@ export class Quote {
         this.recommendedPreset = response.recommended_preset
         this.slippage = response.autoK
         this.settlementAddress = new Address(response.settlementAddress)
+        this.resolverFeePreset = {
+            receiver: new Address(response.fee.receiver),
+            whitelistDiscountPercent: Bps.fromPercent(
+                response.fee.whitelistDiscountPercent
+            ),
+            bps: new Bps(BigInt(response.fee.bps))
+        }
     }
 
     createFusionOrder(
@@ -122,7 +137,10 @@ export class Quote {
                 orderExpirationDelay: paramsData?.orderExpirationDelay,
                 source: this.params.source,
                 enablePermit2: params.isPermit2,
-                fees: undefined // todo: add fees
+                fees: buildFees(
+                    this.resolverFeePreset,
+                    this.params.integratorFee
+                )
             }
         )
     }
@@ -155,4 +173,31 @@ export class Quote {
             }))
         )
     }
+}
+
+function buildFees(
+    resolverFeePreset: ResolverFeePreset,
+    integratorFee?: IntegratorFeeParams
+): Fees | undefined {
+    if (resolverFeePreset.bps.isZero() && !integratorFee) {
+        return undefined
+    }
+
+    const hasResolverFee = !resolverFeePreset.bps.isZero()
+
+    return new Fees(
+        new ResolverFee(
+            hasResolverFee ? resolverFeePreset.receiver : Address.ZERO_ADDRESS,
+            resolverFeePreset.bps,
+            resolverFeePreset.whitelistDiscountPercent
+        ),
+        integratorFee
+            ? new IntegratorFee(
+                  integratorFee.receiver,
+                  resolverFeePreset.receiver,
+                  integratorFee.value,
+                  integratorFee.share
+              )
+            : IntegratorFee.ZERO
+    )
 }
