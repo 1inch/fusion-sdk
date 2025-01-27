@@ -1,4 +1,5 @@
 import {StartedTestContainer} from 'testcontainers'
+import {JsonRpcProvider} from 'ethers'
 import {TestWallet} from './test-wallet'
 
 /* eslint-disable no-var */

@@ -380,7 +380,35 @@ export class FusionOrder {
             this.takingAmount
         )
 
-        return this.getAmountCalculator().getTakingAmount(
+        return this.getAmountCalculator().getRequiredTakingAmount(
+            taker,
+            takingAmount,
+            time,
+            blockBaseFee
+        )
+    }
+
+    /**
+     * How much user will receive in taker asset
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getUserReceiveAmount(
+        taker: Address,
+        makingAmount: bigint,
+        time: bigint,
+        blockBaseFee = 0n
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return this.getAmountCalculator().getUserTakingAmountAmount(
             taker,
             takingAmount,
             time,
@@ -393,9 +421,13 @@ export class FusionOrder {
      *
      * @param taker who will fill order
      * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
      */
     public getResolverFee(
         taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
         makingAmount = this.makingAmount
     ): bigint {
         const takingAmount = calcTakingAmount(
@@ -405,7 +437,12 @@ export class FusionOrder {
         )
 
         return (
-            this.getAmountCalculator().getResolverFee(taker, takingAmount) ?? 0n
+            this.getAmountCalculator().getResolverFee(
+                taker,
+                takingAmount,
+                time,
+                blockBaseFee
+            ) ?? 0n
         )
     }
 
@@ -414,9 +451,13 @@ export class FusionOrder {
      *
      * @param taker who will fill order
      * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
      */
     public getIntegratorFee(
         taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
         makingAmount = this.makingAmount
     ): bigint {
         const takingAmount = calcTakingAmount(
@@ -426,8 +467,12 @@ export class FusionOrder {
         )
 
         return (
-            this.getAmountCalculator().getIntegratorFee(taker, takingAmount) ??
-            0n
+            this.getAmountCalculator().getIntegratorFee(
+                taker,
+                takingAmount,
+                time,
+                blockBaseFee
+            ) ?? 0n
         )
     }
 
@@ -436,9 +481,13 @@ export class FusionOrder {
      *
      * @param taker who will fill order
      * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
      */
     public getProtocolShareOfIntegratorFee(
         taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
         makingAmount = this.makingAmount
     ): bigint {
         const takingAmount = calcTakingAmount(
@@ -450,7 +499,9 @@ export class FusionOrder {
         return (
             this.getAmountCalculator().getProtocolShareOfIntegratorFee(
                 taker,
-                takingAmount
+                takingAmount,
+                time,
+                blockBaseFee
             ) ?? 0n
         )
     }
@@ -461,9 +512,13 @@ export class FusionOrder {
      *
      * @param taker who will fill order
      * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
      */
     public getProtocolFee(
         taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
         makingAmount = this.makingAmount
     ): bigint {
         const takingAmount = calcTakingAmount(
@@ -473,7 +528,12 @@ export class FusionOrder {
         )
 
         return (
-            this.getAmountCalculator().getProtocolFee(taker, takingAmount) ?? 0n
+            this.getAmountCalculator().getProtocolFee(
+                taker,
+                takingAmount,
+                time,
+                blockBaseFee
+            ) ?? 0n
         )
     }
 
