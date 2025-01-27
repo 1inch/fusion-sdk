@@ -240,14 +240,19 @@ export class FusionExtension {
 
         const integrator = {
             fee:
-                this.extra?.fees?.integrator.fee.toFraction(FeeTakerExt.Fees.BASE_1E5) || 0,
+                this.extra?.fees?.integrator.fee.toFraction(
+                    FeeTakerExt.Fees.BASE_1E5
+                ) || 0,
             share:
-                this.extra?.fees?.integrator.share.toFraction(FeeTakerExt.Fees.BASE_1E2) ||
-                0
+                this.extra?.fees?.integrator.share.toFraction(
+                    FeeTakerExt.Fees.BASE_1E2
+                ) || 0
         }
 
         const resolverFee =
-            this.extra?.fees?.resolver.fee.toFraction(FeeTakerExt.Fees.BASE_1E5) || 0
+            this.extra?.fees?.resolver.fee.toFraction(
+                FeeTakerExt.Fees.BASE_1E5
+            ) || 0
         const whitelistDiscount =
             this.extra?.fees?.resolver.whitelistDiscount || Bps.ZERO
 
@@ -284,11 +289,15 @@ export class FusionExtension {
 
         const resolverFee =
             discountNumerator *
-            (this.extra?.fees?.resolver.fee.toFraction(FeeTakerExt.Fees.BASE_1E5) || 0)
+            (this.extra?.fees?.resolver.fee.toFraction(
+                FeeTakerExt.Fees.BASE_1E5
+            ) || 0)
 
         const resolverFeeBN = BigInt(resolverFee)
         const integratorFeeBN = BigInt(
-            this.extra?.fees?.integrator.fee.toFraction(FeeTakerExt.Fees.BASE_1E5) || 0
+            this.extra?.fees?.integrator.fee.toFraction(
+                FeeTakerExt.Fees.BASE_1E5
+            ) || 0
         )
 
         return {
@@ -336,7 +345,10 @@ function parseAmountData(iter: BytesIter<string>): {
             Number(iter.nextUint8()),
             FeeTakerExt.Fees.BASE_1E2
         ),
-        resolverFee: Bps.fromFraction(Number(iter.nextUint16()), FeeTakerExt.Fees.BASE_1E5),
+        resolverFee: Bps.fromFraction(
+            Number(iter.nextUint16()),
+            FeeTakerExt.Fees.BASE_1E5
+        ),
         whitelistDiscount: Bps.fromFraction(
             Number(FeeTakerExt.Fees.BASE_1E2) - Number(iter.nextUint8()), // contract uses 1 - discount
             FeeTakerExt.Fees.BASE_1E2
