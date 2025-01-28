@@ -9,7 +9,6 @@ export type FusionOrderParamsData = {
     nonce?: bigint
     permit?: string
     isPermit2?: boolean
-    takingFeeReceiver?: string
     allowPartialFills?: boolean
     allowMultipleFills?: boolean
     delayAuctionStartTimeBy?: bigint
