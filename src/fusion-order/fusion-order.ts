@@ -179,7 +179,13 @@ export class FusionOrder {
     }
 
     get receiver(): Address {
-        return this.inner.receiver
+        const hasFee = Boolean(this.fusionExtension.extra?.fees)
+
+        const receiver = hasFee
+            ? this.fusionExtension.extra?.customReceiver
+            : this.inner.receiver
+
+        return receiver && !receiver.isZero() ? receiver : this.maker
     }
 
     /**
