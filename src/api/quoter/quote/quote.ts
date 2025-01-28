@@ -1,12 +1,20 @@
-import {Address, randBigInt} from '@1inch/limit-order-sdk'
+import {Address, Bps, randBigInt} from '@1inch/limit-order-sdk'
 import {UINT_40_MAX} from '@1inch/byte-utils'
+import {
+    Fees,
+    IntegratorFee,
+    ResolverFee
+} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {FusionOrderParams} from './order-params'
-import {FusionOrderParamsData} from './types'
+import {
+    FusionOrderParamsData,
+    IntegratorFeeParams,
+    ResolverFeePreset
+} from './types'
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {AuctionWhitelistItem, FusionOrder} from '../../../fusion-order'
+import {FusionOrder, Whitelist} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
-import {bpsToRatioFormat} from '../../../sdk'
 import {CHAIN_TO_WRAPPER} from '../../../fusion-order/constants'
 
 export class Quote {
@@ -17,8 +25,6 @@ export class Quote {
     public readonly settlementAddress: Address
 
     public readonly fromTokenAmount: bigint
-
-    public readonly feeToken: string
 
     public readonly presets: {
         [PresetEnum.fast]: Preset
@@ -39,14 +45,15 @@ export class Quote {
 
     public readonly quoteId: string | null
 
-    public readonly silippage: number
+    public readonly slippage: number
+
+    public readonly resolverFeePreset: ResolverFeePreset
 
     constructor(
         private readonly params: QuoterRequest,
         response: QuoterResponse
     ) {
         this.fromTokenAmount = BigInt(response.fromTokenAmount)
-        this.feeToken = response.feeToken
         this.presets = {
             [PresetEnum.fast]: new Preset(response.presets.fast),
             [PresetEnum.medium]: new Preset(response.presets.medium),
@@ -61,8 +68,15 @@ export class Quote {
         this.quoteId = response.quoteId
         this.whitelist = response.whitelist.map((a) => new Address(a))
         this.recommendedPreset = response.recommended_preset
-        this.silippage = response.autoK
+        this.slippage = response.autoK
         this.settlementAddress = new Address(response.settlementAddress)
+        this.resolverFeePreset = {
+            receiver: new Address(response.fee.receiver),
+            whitelistDiscountPercent: Bps.fromPercent(
+                response.fee.whitelistDiscountPercent
+            ),
+            bps: new Bps(BigInt(response.fee.bps))
+        }
     }
 
     createFusionOrder(
@@ -90,7 +104,7 @@ export class Quote {
         const isNonceRequired = !allowPartialFills || !allowMultipleFills
 
         const nonce = isNonceRequired
-            ? params.nonce ?? randBigInt(UINT_40_MAX)
+            ? (params.nonce ?? randBigInt(UINT_40_MAX))
             : params.nonce
 
         const takerAsset = this.params.toTokenAddress.isNative()
@@ -109,15 +123,6 @@ export class Quote {
             },
             {
                 auction: auctionDetails,
-                fees: {
-                    integratorFee: {
-                        ratio: bpsToRatioFormat(this.params.fee) || 0n,
-                        receiver: paramsData?.takingFeeReceiver
-                            ? new Address(paramsData?.takingFeeReceiver)
-                            : Address.ZERO_ADDRESS
-                    },
-                    bankFee: preset.bankFee
-                },
                 whitelist: this.getWhitelist(
                     auctionDetails.startTime,
                     preset.exclusiveResolver
@@ -131,7 +136,11 @@ export class Quote {
                 allowMultipleFills,
                 orderExpirationDelay: paramsData?.orderExpirationDelay,
                 source: this.params.source,
-                enablePermit2: params.isPermit2
+                enablePermit2: params.isPermit2,
+                fees: buildFees(
+                    this.resolverFeePreset,
+                    this.params.integratorFee
+                )
             }
         )
     }
@@ -143,21 +152,54 @@ export class Quote {
     private getWhitelist(
         auctionStartTime: bigint,
         exclusiveResolver?: Address
-    ): AuctionWhitelistItem[] {
+    ): Whitelist {
         if (exclusiveResolver) {
-            return this.whitelist.map((resolver) => {
-                const isExclusive = resolver.equal(exclusiveResolver)
+            return Whitelist.fromNow(
+                this.whitelist.map((resolver) => {
+                    const isExclusive = resolver.equal(exclusiveResolver)
 
-                return {
-                    address: resolver,
-                    allowFrom: isExclusive ? 0n : auctionStartTime
-                }
-            })
+                    return {
+                        address: resolver,
+                        allowFrom: isExclusive ? 0n : auctionStartTime
+                    }
+                })
+            )
         }
 
-        return this.whitelist.map((resolver) => ({
-            address: resolver,
-            allowFrom: 0n
-        }))
+        return Whitelist.fromNow(
+            this.whitelist.map((resolver) => ({
+                address: resolver,
+                allowFrom: 0n
+            }))
+        )
     }
+}
+
+function buildFees(
+    resolverFeePreset: ResolverFeePreset,
+    integratorFee?: IntegratorFeeParams
+): Fees | undefined {
+    const hasIntegratorFee = integratorFee && !integratorFee.value.isZero()
+
+    if (resolverFeePreset.bps.isZero() && !hasIntegratorFee) {
+        return undefined
+    }
+
+    const hasResolverFee = !resolverFeePreset.bps.isZero()
+
+    return new Fees(
+        new ResolverFee(
+            hasResolverFee ? resolverFeePreset.receiver : Address.ZERO_ADDRESS,
+            resolverFeePreset.bps,
+            resolverFeePreset.whitelistDiscountPercent
+        ),
+        integratorFee
+            ? new IntegratorFee(
+                  integratorFee.receiver,
+                  resolverFeePreset.receiver,
+                  integratorFee.value,
+                  integratorFee.share
+              )
+            : IntegratorFee.ZERO
+    )
 }

@@ -1,5 +1,6 @@
 import {Address} from '@1inch/limit-order-sdk'
-import {QuoterRequestParams} from './types'
+import {QuoterRequestParams, QuoterRequestParamsRaw} from './types'
+import {IntegratorFeeParams} from './quote'
 import {isValidAmount} from '../../validations'
 
 export class QuoterRequest {
@@ -15,7 +16,7 @@ export class QuoterRequest {
 
     public readonly permit: string | undefined
 
-    public readonly fee: number | undefined
+    public readonly integratorFee?: IntegratorFeeParams
 
     public readonly source: string
 
@@ -28,7 +29,7 @@ export class QuoterRequest {
         this.walletAddress = new Address(params.walletAddress)
         this.enableEstimate = params.enableEstimate || false
         this.permit = params.permit
-        this.fee = params.fee
+        this.integratorFee = params.integratorFee
         this.source = params.source || 'sdk'
         this.isPermit2 = params.isPermit2 ?? false
 
@@ -54,7 +55,7 @@ export class QuoterRequest {
             throw new Error(`${this.amount} is invalid amount`)
         }
 
-        if (this.fee && this.source === 'sdk') {
+        if (this.integratorFee && this.source === 'sdk') {
             throw new Error('cannot use fee without source')
         }
     }
@@ -63,7 +64,7 @@ export class QuoterRequest {
         return new QuoterRequest(params)
     }
 
-    build(): QuoterRequestParams {
+    build(): QuoterRequestParamsRaw {
         return {
             fromTokenAddress: this.fromTokenAddress.toString(),
             toTokenAddress: this.toTokenAddress.toString(),
@@ -71,7 +72,7 @@ export class QuoterRequest {
             walletAddress: this.walletAddress.toString(),
             enableEstimate: this.enableEstimate,
             permit: this.permit,
-            fee: this.fee,
+            fee: Number(this.integratorFee?.value.value || 0),
             source: this.source,
             isPermit2: this.isPermit2
         }

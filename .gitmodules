@@ -1,0 +1,12 @@
+[submodule "contracts/lib/openzeppelin-contracts.git"]
+	path = contracts/lib/openzeppelin-contracts.git
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git
+[submodule "contracts/lib/solidity-utils"]
+	path = contracts/lib/solidity-utils
+	url = https://github.com/1inch/solidity-utils
+[submodule "contracts/lib/limit-order-protocol"]
+	path = contracts/lib/limit-order-protocol
+	url = https://github.com/1inch/limit-order-protocol
+[submodule "contracts/lib/limit-order-settlement"]
+	path = contracts/lib/limit-order-settlement
+	url = https://github.com/1inch/limit-order-settlement

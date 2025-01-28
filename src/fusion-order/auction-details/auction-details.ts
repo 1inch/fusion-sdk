@@ -1,5 +1,5 @@
 import {ethers} from 'ethers'
-import {BytesIter} from '@1inch/byte-utils'
+import {BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import {Extension} from '@1inch/limit-order-sdk'
 import assert from 'assert'
 import {AuctionGasCostInfo, AuctionPoint} from './types'
@@ -59,32 +59,33 @@ export class AuctionDetails {
     }
 
     /**
-     * Construct `AuctionDetails` from bytes
+     * Construct `AuctionDetails`
      *
-     * @param data bytes with 0x prefix in next format:
+     * @param iter :
      * - uint24 gasBumpEstimate
      * - uint32 gasPriceEstimate
      * - uint32 startTime
      * - uint24 duration
      * - uint24 initialRateBump
+     * - uint8  N = count of points
      * - [uint24 rate, uint16 delay] * N points
      *
      * All data is tight packed
      *
      * @see AuctionDetails.encode
      */
-    static decode(data: string): AuctionDetails {
-        assert(isHexBytes(data), 'Invalid auction details data')
-        const iter = BytesIter.BigInt(data)
-
+    static decodeFrom<T extends bigint | string>(
+        iter: BytesIter<T>
+    ): AuctionDetails {
         const gasBumpEstimate = iter.nextUint24()
         const gasPriceEstimate = iter.nextUint32()
         const start = iter.nextUint32()
         const duration = iter.nextUint24()
         const rateBump = Number(iter.nextUint24())
-        const points = [] as AuctionPoint[]
+        const points: AuctionPoint[] = []
+        let pointsLen = BigInt(iter.nextUint8())
 
-        while (!iter.isEmpty()) {
+        while (pointsLen--) {
             points.push({
                 coefficient: Number(iter.nextUint24()),
                 delay: Number(iter.nextUint16())
@@ -92,15 +93,28 @@ export class AuctionDetails {
         }
 
         return new AuctionDetails({
-            startTime: start,
-            duration: duration,
+            startTime: BigInt(start),
+            duration: BigInt(duration),
             initialRateBump: rateBump,
             points,
             gasCost: {
-                gasBumpEstimate,
-                gasPriceEstimate
+                gasBumpEstimate: BigInt(gasBumpEstimate),
+                gasPriceEstimate: BigInt(gasPriceEstimate)
             }
         })
+    }
+
+    /**
+     * Construct `AuctionDetails` from bytes
+     *
+     * @see AuctionDetails.decodeFrom
+     * @see AuctionDetails.encode
+     */
+    static decode(data: string): AuctionDetails {
+        assert(isHexBytes(data), 'Invalid auction details data')
+        const iter = BytesIter.BigInt(data)
+
+        return AuctionDetails.decodeFrom(iter)
     }
 
     static fromExtension(extension: Extension): AuctionDetails {
@@ -114,13 +128,14 @@ export class AuctionDetails {
      */
     public encode(): string {
         let details = ethers.solidityPacked(
-            ['uint24', 'uint32', 'uint32', 'uint24', 'uint24'],
+            ['uint24', 'uint32', 'uint32', 'uint24', 'uint24', 'uint8'],
             [
                 this.gasCost.gasBumpEstimate,
                 this.gasCost.gasPriceEstimate,
                 this.startTime,
                 this.duration,
-                this.initialRateBump
+                this.initialRateBump,
+                this.points.length
             ]
         )
 
@@ -134,5 +149,14 @@ export class AuctionDetails {
         }
 
         return details
+    }
+
+    /**
+     * Serialize auction data into
+     */
+    public encodeInto(
+        builder: BytesBuilder = new BytesBuilder()
+    ): BytesBuilder {
+        return builder.addBytes(this.encode())
     }
 }

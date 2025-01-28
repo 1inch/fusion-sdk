@@ -1,4 +1,4 @@
-import {Address} from '@1inch/limit-order-sdk'
+import {Address, Bps} from '@1inch/limit-order-sdk'
 import {PresetEnum} from '../types'
 import {NetworkEnum} from '../../../constants'
 
@@ -9,7 +9,6 @@ export type FusionOrderParamsData = {
     nonce?: bigint
     permit?: string
     isPermit2?: boolean
-    takingFeeReceiver?: string
     allowPartialFills?: boolean
     allowMultipleFills?: boolean
     delayAuctionStartTimeBy?: bigint
@@ -18,4 +17,28 @@ export type FusionOrderParamsData = {
      * Default 12s
      */
     orderExpirationDelay?: bigint
+}
+
+export type IntegratorFeeParams = {
+    /**
+     * Address which will receive `share` of `value` fee, other part will be sent to protocol
+     */
+    receiver: Address
+    /**
+     * How much to charge
+     */
+    value: Bps
+    /**
+     * Integrator will receive only `share` part from charged fee
+     */
+    share: Bps
+}
+
+export type ResolverFeePreset = {
+    /**
+     * protocol address
+     */
+    receiver: Address
+    bps: Bps
+    whitelistDiscountPercent: Bps
 }

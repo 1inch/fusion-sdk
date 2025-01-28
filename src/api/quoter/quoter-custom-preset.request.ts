@@ -90,7 +90,7 @@ export class QuoterCustomPresetRequest {
             if (!isValid) {
                 return 'points should be in range of auction'
             }
-        } catch (e) {
+        } catch {
             return `points should be an array of valid amounts`
         }
 

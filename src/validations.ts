@@ -9,7 +9,7 @@ export function isValidAmount(value: string | bigint): boolean {
         const amount = BigInt(value)
 
         return amount >= 0n
-    } catch (e) {
+    } catch {
         return false
     }
 }

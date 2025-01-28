@@ -1,7 +1,7 @@
 import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
 import {NetworkEnum} from '../constants'
-import {CustomPreset, PresetEnum} from '../api'
+import {CustomPreset, IntegratorFeeParams, PresetEnum} from '../api'
 import {FusionOrder} from '../fusion-order'
 
 export type FusionSDKConfigParams = {
@@ -19,7 +19,7 @@ export type QuoteParams = {
     walletAddress?: string
     enableEstimate?: boolean
     permit?: string
-    takingFeeBps?: number // 100 == 1%
+    integratorFee?: IntegratorFeeParams
     source?: string
     isPermit2?: boolean
 }
@@ -42,7 +42,6 @@ export type OrderParams = {
      * @see randBigInt
      */
     nonce?: bigint
-    fee?: TakingFeeInfo
     source?: string
     isPermit2?: boolean
     customPreset?: CustomPreset
@@ -56,11 +55,7 @@ export type OrderParams = {
      * true by default
      */
     allowMultipleFills?: boolean
-}
-
-export type TakingFeeInfo = {
-    takingFeeBps: number // 100 == 1%
-    takingFeeReceiver: string
+    integratorFee?: IntegratorFeeParams
 }
 
 export type OrderInfo = {

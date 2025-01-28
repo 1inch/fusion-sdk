@@ -15,7 +15,7 @@ export {
     MakerTraits
 } from '@1inch/limit-order-sdk'
 export * from './fusion-order/index'
-export * from './auction-calculator/index'
+export * from './amount-calculator/'
 export * from './connector/index'
 export * from './sdk/index'
 export * from './constants'

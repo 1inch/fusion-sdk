@@ -2,6 +2,7 @@ import {Address} from '@1inch/limit-order-sdk'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {FusionExtension} from './fusion-extension'
+import {Whitelist} from './whitelist'
 
 describe('FusionExtension', () => {
     it('should decode', () => {
@@ -37,15 +38,14 @@ describe('FusionExtension', () => {
                         }
                     ]
                 }),
-                whitelist: [
+                whitelist: Whitelist.new(1673548139n, [
                     {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
                         allowFrom: 0n
                     }
-                ],
-                resolvingStartTime: 1673548139n
+                ])
             }
         )
         const fusionExtension = FusionExtension.decode(order.extension.encode())
@@ -85,15 +85,14 @@ describe('FusionExtension', () => {
                         }
                     ]
                 }),
-                whitelist: [
+                whitelist: Whitelist.new(1673548139n, [
                     {
                         address: new Address(
                             '0x00000000219ab540356cbb839cbe05303d7705fa'
                         ),
                         allowFrom: 0n
                     }
-                ],
-                resolvingStartTime: 1673548139n
+                ])
             },
             {
                 permit: '0xdeadbeef'

@@ -27,14 +27,14 @@ jobs:
           fetch-tags: true
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.13.1
           cache: pnpm
 
       - name: Install Dev Dependencies

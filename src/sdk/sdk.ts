@@ -73,9 +73,9 @@ export class FusionSDK {
                 params.walletAddress || Address.ZERO_ADDRESS.toString(),
             permit: params.permit,
             enableEstimate: !!params.enableEstimate,
-            fee: params?.takingFeeBps,
             source: params.source,
-            isPermit2: params.isPermit2
+            isPermit2: params.isPermit2,
+            integratorFee: params.integratorFee
         })
 
         return this.api.getQuote(request)
@@ -93,7 +93,7 @@ export class FusionSDK {
                 params.walletAddress || Address.ZERO_ADDRESS.toString(),
             permit: params.permit,
             enableEstimate: !!params.enableEstimate,
-            fee: params?.takingFeeBps,
+            integratorFee: params?.integratorFee,
             source: params.source,
             isPermit2: params.isPermit2
         })
@@ -118,7 +118,6 @@ export class FusionSDK {
                 : undefined,
             preset: params.preset,
             nonce: params.nonce,
-            takingFeeReceiver: params.fee?.takingFeeReceiver,
             allowPartialFills: params.allowPartialFills,
             allowMultipleFills: params.allowMultipleFills,
             orderExpirationDelay: params.orderExpirationDelay,
@@ -209,9 +208,9 @@ export class FusionSDK {
             walletAddress: params.walletAddress,
             permit: params.permit,
             enableEstimate: true,
-            fee: params.fee?.takingFeeBps,
             source: params.source,
-            isPermit2: params.isPermit2
+            isPermit2: params.isPermit2,
+            integratorFee: params?.integratorFee
         })
 
         if (!params.customPreset) {

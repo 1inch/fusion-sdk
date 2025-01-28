@@ -1,13 +1,13 @@
-import {RATE_BUMP_DENOMINATOR} from './constants'
+import {mulDiv, Rounding} from '@1inch/limit-order-sdk'
 import {
-    SettlementPostInteractionData,
     AuctionDetails,
-    AuctionPoint
-} from '../fusion-order'
-import {addRatioToAmount} from '../sdk'
-import {AuctionGasCostInfo} from '../fusion-order/auction-details/types'
+    AuctionPoint,
+    AuctionGasCostInfo
+} from '../../fusion-order'
 
 export class AuctionCalculator {
+    public static RATE_BUMP_DENOMINATOR = 10_000_000n // 100%
+
     private static GAS_PRICE_BASE = 1_000_000n // 1000 means 1 Gwei
 
     constructor(
@@ -15,7 +15,6 @@ export class AuctionCalculator {
         private readonly duration: bigint,
         private readonly initialRateBump: bigint,
         private readonly points: AuctionPoint[],
-        private readonly takerFeeRatio: bigint,
         private readonly gasCost: AuctionGasCostInfo = {
             gasBumpEstimate: 0n,
             gasPriceEstimate: 0n
@@ -26,48 +25,46 @@ export class AuctionCalculator {
         return this.startTime + this.duration
     }
 
-    static fromAuctionData(
-        data: SettlementPostInteractionData,
-        details: AuctionDetails
-    ): AuctionCalculator {
+    static fromAuctionData(details: AuctionDetails): AuctionCalculator {
         return new AuctionCalculator(
             details.startTime,
             details.duration,
             details.initialRateBump,
             details.points,
-            data.integratorFee?.ratio || 0n,
             details.gasCost
         )
     }
 
     static calcInitialRateBump(startAmount: bigint, endAmount: bigint): number {
         const bump =
-            (RATE_BUMP_DENOMINATOR * startAmount) / endAmount -
-            RATE_BUMP_DENOMINATOR
+            (AuctionCalculator.RATE_BUMP_DENOMINATOR * startAmount) /
+                endAmount -
+            AuctionCalculator.RATE_BUMP_DENOMINATOR
 
         return Number(bump)
     }
 
     /**
-     * Important!: method implementation is different from contract implementation
-     * Because of that, sdk amount can be less than contract amount by 1 wad
-     *
-     * @see https://github.com/1inch/limit-order-settlement/blob/2eef6f86bf0142024f9a8bf054a0256b41d8362a/contracts/extensions/BaseExtension.sol#L66
+     * @see https://github.com/1inch/limit-order-settlement/blob/82f0a25c969170f710825ce6aa6920062adbde88/contracts/SimpleSettlement.sol#L54
      */
-    static calcAuctionTakingAmount(
-        takingAmount: bigint,
-        rate: number,
-        takerFeeRatio: bigint
-    ): bigint {
-        const auctionTakingAmount =
-            (BigInt(takingAmount) * (BigInt(rate) + RATE_BUMP_DENOMINATOR)) /
-            RATE_BUMP_DENOMINATOR
+    static calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
+        return mulDiv(
+            takingAmount,
+            BigInt(rate) + AuctionCalculator.RATE_BUMP_DENOMINATOR,
+            AuctionCalculator.RATE_BUMP_DENOMINATOR,
+            Rounding.Ceil
+        )
+    }
 
-        if (takerFeeRatio === 0n) {
-            return auctionTakingAmount
-        }
-
-        return addRatioToAmount(auctionTakingAmount, takerFeeRatio)
+    /**
+     * @see https://github.com/1inch/limit-order-settlement/blob/82f0a25c969170f710825ce6aa6920062adbde88/contracts/SimpleSettlement.sol#L34
+     */
+    static calcAuctionMakingAmount(makingAmount: bigint, rate: number): bigint {
+        return mulDiv(
+            makingAmount,
+            AuctionCalculator.RATE_BUMP_DENOMINATOR,
+            BigInt(rate) + AuctionCalculator.RATE_BUMP_DENOMINATOR
+        )
     }
 
     /**
@@ -87,15 +84,14 @@ export class AuctionCalculator {
         endTakingAmount: bigint,
         gasCostInToToken: bigint
     ): bigint {
-        return (gasCostInToToken * RATE_BUMP_DENOMINATOR) / endTakingAmount
+        return (
+            (gasCostInToToken * AuctionCalculator.RATE_BUMP_DENOMINATOR) /
+            endTakingAmount
+        )
     }
 
     public calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
-        return AuctionCalculator.calcAuctionTakingAmount(
-            takingAmount,
-            rate,
-            this.takerFeeRatio
-        )
+        return AuctionCalculator.calcAuctionTakingAmount(takingAmount, rate)
     }
 
     /**
