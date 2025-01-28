@@ -178,7 +178,15 @@ export class FusionOrder {
         return this.inner.makingAmount
     }
 
-    get receiver(): Address {
+    /**
+     * Returns actual receiver of funds
+     *
+     * Do not use this field to pass to order struct as it can lead to lost of funds
+     * For such cases use `order.receiver`
+     *
+     * @see receiver
+     */
+    get realReceiver(): Address {
         const hasFee = Boolean(this.fusionExtension.extra?.fees)
 
         const receiver = hasFee
@@ -186,6 +194,15 @@ export class FusionOrder {
             : this.inner.receiver
 
         return receiver && !receiver.isZero() ? receiver : this.maker
+    }
+
+    /**
+     * Receiver from order struct
+     *
+     * @see realReceiver
+     */
+    get receiver(): Address {
+        return this.inner.receiver
     }
 
     /**
