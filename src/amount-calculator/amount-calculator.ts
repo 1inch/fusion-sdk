@@ -3,6 +3,11 @@ import {FeeCalculator, Fees} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {AuctionCalculator} from './auction-calculator'
 import {FusionExtension} from '../fusion-order'
 
+/**
+ * Calculates fees/amount with accounting to auction
+ *
+ * @see FusionOrder
+ */
 export class AmountCalculator {
     constructor(
         private readonly auctionCalculator: AuctionCalculator,
