@@ -1,7 +1,6 @@
 import {RelayerRequest} from './relayer.request'
 import {RelayerApiConfig} from './types'
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
-import {VERSION} from '../version'
 
 export class RelayerApi {
     private static Version = 'v2.0'
@@ -21,13 +20,13 @@ export class RelayerApi {
     }
 
     submit(params: RelayerRequest): Promise<void> {
-        const url = `${this.config.url}/${RelayerApi.Version}/${this.config.network}/order/submit?version=${VERSION}`
+        const url = `${this.config.url}/${RelayerApi.Version}/${this.config.network}/order/submit`
 
         return this.httpClient.post(url, params)
     }
 
     submitBatch(params: RelayerRequest[]): Promise<void> {
-        const url = `${this.config.url}/${RelayerApi.Version}/${this.config.network}/order/submit/many?version=${VERSION}`
+        const url = `${this.config.url}/${RelayerApi.Version}/${this.config.network}/order/submit/many`
 
         return this.httpClient.post(url, params)
     }

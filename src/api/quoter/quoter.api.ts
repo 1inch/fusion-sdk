@@ -2,7 +2,7 @@ import {QuoterRequest} from './quoter.request'
 import {QuoterApiConfig, QuoterResponse} from './types'
 import {Quote} from './quote'
 import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
-import {concatQueryParamsWithVersion} from '../params'
+import {concatQueryParams} from '../params'
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 
 export class QuoterApi {
@@ -23,7 +23,7 @@ export class QuoterApi {
     }
 
     async getQuote(params: QuoterRequest): Promise<Quote> {
-        const queryParams = concatQueryParamsWithVersion(params.build())
+        const queryParams = concatQueryParams(params.build())
         const url = `${this.config.url}/${QuoterApi.Version}/${this.config.network}/quote/receive/${queryParams}`
 
         const res = await this.httpClient.get<QuoterResponse>(url)
@@ -41,7 +41,7 @@ export class QuoterApi {
             throw new Error(bodyErr)
         }
 
-        const queryParams = concatQueryParamsWithVersion(params.build())
+        const queryParams = concatQueryParams(params.build())
         const bodyParams = body.build()
         const url = `${this.config.url}/${QuoterApi.Version}/${this.config.network}/quote/receive/${queryParams}`
 

@@ -115,7 +115,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/active/?page=1&limit=2`
+                `${url}/orders/v2.0/1/order/active/?page=1&limit=2&version=2.1`
             )
         })
 
@@ -198,7 +198,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/active/?`
+                `${url}/orders/v2.0/1/order/active/?version=2.1`
             )
         })
     })
@@ -252,7 +252,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/status/${orderHash}`
+                `${url}/orders/v2.0/1/order/status/${orderHash}?version=2.1`
             )
         })
 
@@ -437,7 +437,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/maker/${address}/?limit=1&page=1`
+                `${url}/orders/v2.0/1/order/maker/${address}/?limit=1&page=1&version=2.1`
             )
         })
 
@@ -519,7 +519,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/maker/${address}/?`
+                `${url}/orders/v2.0/1/order/maker/${address}/?version=2.1`
             )
         })
 
