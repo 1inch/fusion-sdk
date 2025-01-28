@@ -1,5 +1,5 @@
-import {Address, FeeTakerExt} from '@1inch/limit-order-sdk'
-import {FeeCalculator} from '@1inch/limit-order-sdk/extensions/fee-taker'
+import {Address, Bps, FeeTakerExt} from '@1inch/limit-order-sdk'
+import {FeeCalculator, Fees} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {AuctionCalculator} from './auction-calculator'
 import {FusionExtension} from '../fusion-order'
 
@@ -16,6 +16,34 @@ export class AmountCalculator {
                 ? new FeeTakerExt.FeeCalculator(ext.extra?.fees, ext.whitelist)
                 : undefined
         )
+    }
+
+    /**
+     * Returns amount with applied rate bump and fees
+     *
+     * @param baseTakingAmount base amount to apply bump to
+     * @param rate auction rate bump
+     * @param fee all fees applied to amount
+     *
+     * @see AuctionCalculator.calcInitialRateBump
+     */
+    static calcAuctionTakingAmount(
+        baseTakingAmount: bigint,
+        rate: number,
+        fee: Bps = Bps.ZERO
+    ): bigint {
+        const withoutFee = AuctionCalculator.calcAuctionTakingAmount(
+            baseTakingAmount,
+            rate
+        )
+
+        if (fee.isZero()) {
+            return withoutFee
+        }
+
+        const numerator = Fees.BASE_1E5 + BigInt(fee.toFraction(Fees.BASE_1E5))
+
+        return (withoutFee * numerator) / Fees.BASE_1E5
     }
 
     /**
