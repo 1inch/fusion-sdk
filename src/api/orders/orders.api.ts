@@ -10,7 +10,8 @@ import {
     OrderStatusResponse
 } from './types'
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
-import {concatQueryParams} from '../params'
+import {concatQueryParamsWithVersion} from '../params'
+import {VERSION} from '../version'
 
 export class OrdersApi {
     private static Version = 'v2.0'
@@ -38,7 +39,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const queryParams = concatQueryParams(params.build())
+        const queryParams = concatQueryParamsWithVersion(params.build())
         const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/active/${queryParams}`
 
         return this.httpClient.get<ActiveOrdersResponse>(url)
@@ -53,7 +54,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/status/${params.orderHash}`
+        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/status/${params.orderHash}?version=${VERSION}`
 
         return this.httpClient.get<OrderStatusResponse>(url)
     }
@@ -67,7 +68,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const qp = concatQueryParams(params.buildQueryParams())
+        const qp = concatQueryParamsWithVersion(params.buildQueryParams())
         const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/maker/${params.address}/${qp}`
 
         return this.httpClient.get(url)
