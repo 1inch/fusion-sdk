@@ -234,7 +234,8 @@ describe(__filename, () => {
                     {
                         txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                         filledMakerAmount: '40000000000000000',
-                        filledAuctionTakerAmount: '120997216'
+                        filledAuctionTakerAmount: '120997216',
+                        takerFeeAmount: null
                     }
                 ],
                 isNativeCurrency: false
@@ -286,7 +287,8 @@ describe(__filename, () => {
                     {
                         txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                         filledMakerAmount: '40000000000000000',
-                        filledAuctionTakerAmount: '120997216'
+                        filledAuctionTakerAmount: '120997216',
+                        takerFeeAmount: null
                     }
                 ],
                 isNativeCurrency: false
@@ -335,7 +337,8 @@ describe(__filename, () => {
                     {
                         txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                         filledMakerAmount: '40000000000000000',
-                        filledAuctionTakerAmount: '120997216'
+                        filledAuctionTakerAmount: '120997216',
+                        takerFeeAmount: null
                     }
                 ],
                 isNativeCurrency: false
@@ -407,7 +410,8 @@ describe(__filename, () => {
                             {
                                 txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                                 filledMakerAmount: '40000000000000000',
-                                filledAuctionTakerAmount: '120997216'
+                                filledAuctionTakerAmount: '120997216',
+                                takerFeeAmount: null
                             }
                         ],
                         status: OrderStatus.Filled,
@@ -490,7 +494,8 @@ describe(__filename, () => {
                             {
                                 txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                                 filledMakerAmount: '40000000000000000',
-                                filledAuctionTakerAmount: '120997216'
+                                filledAuctionTakerAmount: '120997216',
+                                takerFeeAmount: null
                             }
                         ],
                         status: OrderStatus.Filled,
@@ -572,7 +577,8 @@ describe(__filename, () => {
                             {
                                 txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                                 filledMakerAmount: '40000000000000000',
-                                filledAuctionTakerAmount: '120997216'
+                                filledAuctionTakerAmount: '120997216',
+                                takerFeeAmount: null
                             }
                         ],
                         status: OrderStatus.Filled,
