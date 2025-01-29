@@ -8,23 +8,20 @@ import {
     MakerTraits,
     OrderInfoData
 } from '@1inch/limit-order-sdk'
+import {Fees} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import assert from 'assert'
 import {FusionExtension} from './fusion-extension'
 import {AuctionDetails} from './auction-details'
-import {
-    AuctionWhitelistItem,
-    IntegratorFee,
-    SettlementPostInteractionData
-} from './settlement-post-interaction-data'
+
 import {injectTrackCode} from './source-track'
-import {AuctionCalculator} from '../auction-calculator'
+import {Whitelist} from './whitelist/whitelist'
+import {AuctionCalculator} from '../amount-calculator/auction-calculator'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
 import {now} from '../utils/time'
+import {AmountCalculator} from '../amount-calculator/amount-calculator'
 
 export class FusionOrder {
-    private static _ORDER_FEE_BASE_POINTS = 10n ** 15n
-
     private static defaultExtra = {
         allowPartialFills: true,
         allowMultipleFills: true,
@@ -45,7 +42,7 @@ export class FusionOrder {
         public readonly settlementExtensionContract: Address,
         orderInfo: OrderInfoData,
         auctionDetails: AuctionDetails,
-        postInteractionData: SettlementPostInteractionData,
+        whitelist: Whitelist,
         extra: {
             unwrapWETH?: boolean
             /**
@@ -72,14 +69,19 @@ export class FusionOrder {
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
             source?: string
+            fees?: Fees
         } = FusionOrder.defaultExtra,
         extension = new FusionExtension(
             settlementExtensionContract,
             auctionDetails,
-            postInteractionData,
-            extra.permit
-                ? new Interaction(orderInfo.makerAsset, extra.permit)
-                : undefined
+            whitelist,
+            {
+                makerPermit: extra.permit
+                    ? new Interaction(orderInfo.makerAsset, extra.permit)
+                    : undefined,
+                customReceiver: orderInfo.receiver,
+                fees: extra?.fees
+            }
         )
     ) {
         const allowPartialFills =
@@ -129,7 +131,7 @@ export class FusionOrder {
         /**
          * @see https://github.com/1inch/limit-order-settlement/blob/0afb4785cb825fe959c534ff4f1a771d4d33cdf4/contracts/extensions/IntegratorFeeExtension.sol#L65
          */
-        const receiver = postInteractionData.integratorFee?.ratio
+        const receiver = extra.fees
             ? settlementExtensionContract
             : orderInfo.receiver
 
@@ -176,6 +178,29 @@ export class FusionOrder {
         return this.inner.makingAmount
     }
 
+    /**
+     * Returns actual receiver of funds
+     *
+     * Do not use this field to pass to order struct as it can lead to lost of funds
+     * For such cases use `order.receiver`
+     *
+     * @see receiver
+     */
+    get realReceiver(): Address {
+        const hasFee = Boolean(this.fusionExtension.extra?.fees)
+
+        const receiver = hasFee
+            ? this.fusionExtension.extra?.customReceiver
+            : this.inner.receiver
+
+        return receiver && !receiver.isZero() ? receiver : this.maker
+    }
+
+    /**
+     * Receiver from order struct
+     *
+     * @see realReceiver
+     */
     get receiver(): Address {
         return this.inner.receiver
     }
@@ -232,15 +257,7 @@ export class FusionOrder {
         orderInfo: OrderInfoData,
         details: {
             auction: AuctionDetails
-            fees?: {
-                integratorFee?: IntegratorFee
-                bankFee?: bigint
-            }
-            whitelist: AuctionWhitelistItem[]
-            /**
-             * Time from which order can be executed
-             */
-            resolvingStartTime?: bigint
+            whitelist: Whitelist
         },
         extra?: {
             unwrapWETH?: boolean
@@ -266,19 +283,14 @@ export class FusionOrder {
             orderExpirationDelay?: bigint
             enablePermit2?: boolean
             source?: string
+            fees?: Fees
         }
     ): FusionOrder {
         return new FusionOrder(
             settlementExtension,
             orderInfo,
             details.auction,
-            SettlementPostInteractionData.new({
-                bankFee: details.fees?.bankFee || 0n,
-                integratorFee: details.fees?.integratorFee,
-                whitelist: details.whitelist,
-                resolvingStartTime: details.resolvingStartTime ?? now(),
-                customReceiver: orderInfo.receiver
-            }),
+            details.whitelist,
             extra
         )
     }
@@ -313,10 +325,8 @@ export class FusionOrder {
             'post-interaction must be enabled'
         )
 
-        const auctionDetails = AuctionDetails.fromExtension(extension)
-
-        const postInteractionData =
-            SettlementPostInteractionData.fromExtension(extension)
+        const {auctionDetails, whitelist, extra} =
+            FusionExtension.fromExtension(extension)
 
         const deadline = makerTraits.expiration()
 
@@ -331,14 +341,14 @@ export class FusionOrder {
                 // shift because of how LimitOrder.buildSalt works
                 salt: BigInt(order.salt) >> 160n,
                 maker: new Address(order.maker),
-                receiver: new Address(order.receiver),
+                receiver: extra?.customReceiver,
                 makerAsset: new Address(order.makerAsset),
                 takerAsset: new Address(order.takerAsset),
                 makingAmount: BigInt(order.makingAmount),
                 takingAmount: BigInt(order.takingAmount)
             },
             auctionDetails,
-            postInteractionData,
+            whitelist,
             {
                 allowMultipleFills: makerTraits.isMultipleFillsAllowed(),
                 allowPartialFills: makerTraits.isPartialFillAllowed(),
@@ -349,7 +359,8 @@ export class FusionOrder {
                         ? undefined
                         : Interaction.decode(extension.makerPermit).data,
                 unwrapWETH: makerTraits.isNativeUnwrapEnabled(),
-                orderExpirationDelay
+                orderExpirationDelay,
+                fees: extra?.fees
             }
         )
     }
@@ -368,7 +379,6 @@ export class FusionOrder {
 
     public getCalculator(): AuctionCalculator {
         return AuctionCalculator.fromAuctionData(
-            this.fusionExtension.postInteractionData,
             this.fusionExtension.auctionDetails
         )
     }
@@ -376,11 +386,13 @@ export class FusionOrder {
     /**
      * Calculates required taking amount for passed `makingAmount` at block time `time`
      *
-     * @param makingAmount maker swap amount
+     * @param taker address who fill order
      * @param time execution time in sec
      * @param blockBaseFee block fee in wei.
+     * @param makingAmount maker swap amount
      * */
     public calcTakingAmount(
+        taker: Address,
         makingAmount: bigint,
         time: bigint,
         blockBaseFee = 0n
@@ -391,11 +403,161 @@ export class FusionOrder {
             this.takingAmount
         )
 
-        const calculator = this.getCalculator()
+        return this.getAmountCalculator().getRequiredTakingAmount(
+            taker,
+            takingAmount,
+            time,
+            blockBaseFee
+        )
+    }
 
-        const bump = calculator.calcRateBump(time, blockBaseFee)
+    /**
+     * How much user will receive in taker asset
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getUserReceiveAmount(
+        taker: Address,
+        makingAmount: bigint,
+        time: bigint,
+        blockBaseFee = 0n
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
 
-        return calculator.calcAuctionTakingAmount(takingAmount, bump)
+        return this.getAmountCalculator().getUserTakingAmountAmount(
+            taker,
+            takingAmount,
+            time,
+            blockBaseFee
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which resolver pays to resolver fee receiver
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getResolverFee(
+        taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getResolverFee(
+                taker,
+                takingAmount,
+                time,
+                blockBaseFee
+            ) ?? 0n
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which integrator gets to integrator wallet
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getIntegratorFee(
+        taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getIntegratorFee(
+                taker,
+                takingAmount,
+                time,
+                blockBaseFee
+            ) ?? 0n
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which protocol gets as share from integrator fee
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getProtocolShareOfIntegratorFee(
+        taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getProtocolShareOfIntegratorFee(
+                taker,
+                takingAmount,
+                time,
+                blockBaseFee
+            ) ?? 0n
+        )
+    }
+
+    /**
+     * Fee in `takerAsset` which protocol gets
+     * It equals to `share from integrator fee plus resolver fee`
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getProtocolFee(
+        taker: Address,
+        time: bigint,
+        blockBaseFee = 0n,
+        makingAmount = this.makingAmount
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return (
+            this.getAmountCalculator().getProtocolFee(
+                taker,
+                takingAmount,
+                time,
+                blockBaseFee
+            ) ?? 0n
+        )
     }
 
     /**
@@ -405,7 +567,7 @@ export class FusionOrder {
      * @param executionTime timestamp in sec at which order planning to execute
      */
     public canExecuteAt(executor: Address, executionTime: bigint): boolean {
-        return this.fusionExtension.postInteractionData.canExecuteAt(
+        return this.fusionExtension.whitelist.canExecuteAt(
             executor,
             executionTime
         )
@@ -421,37 +583,20 @@ export class FusionOrder {
     }
 
     /**
-     * Returns how much fee will be credited from a resolver deposit account
-     * Token of fee set in Settlement extension constructor
-     * Actual deployments can be found at https://github.com/1inch/limit-order-settlement/tree/master/deployments
-     *
-     * @param filledMakingAmount which resolver fills
-     * @see https://github.com/1inch/limit-order-settlement/blob/0e3cae3653092ebb4ea5d2a338c87a54351ad883/contracts/extensions/ResolverFeeExtension.sol#L29
-     */
-    public getResolverFee(filledMakingAmount: bigint): bigint {
-        return (
-            (this.fusionExtension.postInteractionData.bankFee *
-                FusionOrder._ORDER_FEE_BASE_POINTS *
-                filledMakingAmount) /
-            this.makingAmount
-        )
-    }
-
-    /**
      * Check if `wallet` can fill order before other
      */
     public isExclusiveResolver(wallet: Address): boolean {
-        return this.fusionExtension.postInteractionData.isExclusiveResolver(
-            wallet
-        )
+        return this.fusionExtension.whitelist.isExclusiveResolver(wallet)
     }
 
     /**
      * Check if the auction has exclusive resolver, and it is in the exclusivity period
      */
     public isExclusivityPeriod(time = now()): boolean {
-        return this.fusionExtension.postInteractionData.isExclusivityPeriod(
-            time
-        )
+        return this.fusionExtension.whitelist.isExclusivityPeriod(time)
+    }
+
+    public getAmountCalculator(): AmountCalculator {
+        return AmountCalculator.fromExtension(this.fusionExtension)
     }
 }

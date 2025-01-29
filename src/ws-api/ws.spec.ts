@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import {WebSocketServer, WebSocket} from 'ws'
 import {WebSocketApi} from './ws-api'
 import {
@@ -15,7 +14,7 @@ import {castUrl} from './url'
 import {NetworkEnum} from '../constants'
 import {WebsocketClient} from '../connector'
 
-jest.setTimeout(5 * 60 * 1000)
+jest.setTimeout(10 * 1000)
 
 describe(__filename, () => {
     describe('base', () => {
@@ -80,7 +79,7 @@ describe(__filename, () => {
             })
 
             wsSdk.on('error', (error) => {
-                expect(error.message).toContain('ECONNREFUSED')
+                expect(error.code).toEqual('ECONNREFUSED')
 
                 done()
             })
@@ -380,7 +379,7 @@ describe(__filename, () => {
             wsSdk.onOpen(() => {
                 try {
                     wsSdk.rpc.getActiveOrders({page: -1})
-                } catch (error) {
+                } catch {
                     wsSdk.close()
                     wss.close()
                     done()

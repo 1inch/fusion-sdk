@@ -1,13 +1,22 @@
+import {VERSION} from './version'
+
+/**
+ * Concat all params to query encoded string. if `addVersion` is true, then `version` param is added to this string
+ */
 export function concatQueryParams<
     T extends Record<string | number, string | string[] | number | boolean>
->(params: T): string {
+>(params: T, addVersion: boolean = false): string {
     if (!params) {
-        return ''
+        return addVersion ? `?version=${VERSION}` : ''
+    }
+
+    if (addVersion) {
+        Object.assign(params, {version: VERSION})
     }
 
     const keys = Object.keys(params)
 
-    if (keys.length === 0) {
+    if (!keys.length) {
         return ''
     }
 

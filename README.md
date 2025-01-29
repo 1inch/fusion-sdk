@@ -16,7 +16,7 @@ yarn add @1inch/fusion-sdk@2
 
 ## Modules docs
 
--   [auction-calculator](src/auction-calculator/README.md)
+-   [auction-calculator](src/amount-calculator/auction-calculator/README.md)
 -   [auction-details](src/fusion-order/auction-details/README.md)
 -   [settlement-post-interaction-data](src/fusion-order/settlement-post-interaction-data/README.md)
 -   [fusion-order](src/fusion-order/README.md)

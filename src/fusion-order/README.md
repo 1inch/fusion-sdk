@@ -3,11 +3,11 @@
 **Example:**
 
 ```typescript
-import {AuctionDetails, FusionOrder} from '@1inch/fusion-sdk'
+import {AuctionDetails, FusionOrder, Whitelist, now} from '@1inch/fusion-sdk'
 
-const extensionContract = new Address(
-    '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
-)
+const extensionContract = new Address('0x8273f37417da37c4a6c3995e82cf442f87a25d9c')
+const resolvingStartAt = now()
+
 const order = FusionOrder.new(
     extensionContract,
     {
@@ -30,19 +30,20 @@ const order = FusionOrder.new(
                 }
             ]
         }),
-        whitelist: [
+        whitelist: Whitelist.new(resolvingStartAt, [
             {
                 address: new Address(
                     '0x00000000219ab540356cbb839cbe05303d7705fa'
                 ),
                 delay: 0n
             }
-        ]
+        ])
     }
 )
 
+const extension = order.extension.encode() // => 0x...
 const builtOrder = order.build()
-/* #=> {
+/* => {
             maker: '0x00000000219ab540356cbb839cbe05303d7705fa',
             makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
             makingAmount: '1000000000000000000',

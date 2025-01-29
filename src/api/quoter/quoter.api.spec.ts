@@ -1,9 +1,11 @@
+import {Address, Bps} from '@1inch/limit-order-sdk'
 import {QuoterApi} from './quoter.api'
 import {QuoterRequest} from './quoter.request'
 import {Quote} from './quote'
 import {PresetEnum, QuoterResponse} from './types'
 import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
 import {HttpProviderConnector} from '../../connector'
+import {ONE_INCH_LIMIT_ORDER_V4} from '../../constants'
 
 describe('Quoter API', () => {
     let httpProvider: HttpProviderConnector
@@ -30,7 +32,6 @@ describe('Quoter API', () => {
         fromTokenAmount: '1000000000000000000000',
         recommended_preset: PresetEnum.medium,
         autoK: 5.5,
-        feeToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
         presets: {
             fast: {
                 auctionDuration: 180,
@@ -118,7 +119,11 @@ describe('Quoter API', () => {
             '0x84d99aa569d93a9ca187d83734c8c4a519c4e9b1',
             '0xcfa62f77920d6383be12c91c71bd403599e1116f'
         ],
-        bankFee: 0
+        fee: {
+            whitelistDiscountPercent: 1,
+            receiver: ONE_INCH_LIMIT_ORDER_V4,
+            bps: 10
+        }
     } as QuoterResponse
 
     const QuoterResponseMock = new Quote(params, ResponseMock)
@@ -154,7 +159,11 @@ describe('Quoter API', () => {
             toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
             amount: '1000000000000000000000',
             walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
-            fee: 1,
+            integratorFee: {
+                share: Bps.fromPercent(50),
+                receiver: Address.fromBigInt(10n),
+                value: new Bps(1n)
+            },
             source: '0x6b175474e89094c44da98b954eedeac495271d0f'
         })
 
@@ -180,7 +189,11 @@ describe('Quoter API', () => {
             toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
             amount: '1000000000000000000000',
             walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
-            fee: 1,
+            integratorFee: {
+                share: Bps.fromPercent(50),
+                receiver: Address.fromBigInt(10n),
+                value: new Bps(1n)
+            },
             source: '0x6b175474e89094c44da98b954eedeac495271d0f'
         })
 

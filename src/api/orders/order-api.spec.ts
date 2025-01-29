@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import {instance, mock} from 'ts-mockito'
 import {
     ActiveOrdersResponse,
@@ -116,7 +115,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/active/?page=1&limit=2`
+                `${url}/orders/v2.0/1/order/active/?page=1&limit=2&version=2.1`
             )
         })
 
@@ -199,7 +198,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/active/?`
+                `${url}/orders/v2.0/1/order/active/?version=2.1`
             )
         })
     })
@@ -235,7 +234,8 @@ describe(__filename, () => {
                     {
                         txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                         filledMakerAmount: '40000000000000000',
-                        filledAuctionTakerAmount: '120997216'
+                        filledAuctionTakerAmount: '120997216',
+                        takerFeeAmount: null
                     }
                 ],
                 isNativeCurrency: false
@@ -253,7 +253,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/status/${orderHash}`
+                `${url}/orders/v2.0/1/order/status/${orderHash}?version=2.1`
             )
         })
 
@@ -287,7 +287,8 @@ describe(__filename, () => {
                     {
                         txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                         filledMakerAmount: '40000000000000000',
-                        filledAuctionTakerAmount: '120997216'
+                        filledAuctionTakerAmount: '120997216',
+                        takerFeeAmount: null
                     }
                 ],
                 isNativeCurrency: false
@@ -336,7 +337,8 @@ describe(__filename, () => {
                     {
                         txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                         filledMakerAmount: '40000000000000000',
-                        filledAuctionTakerAmount: '120997216'
+                        filledAuctionTakerAmount: '120997216',
+                        takerFeeAmount: null
                     }
                 ],
                 isNativeCurrency: false
@@ -408,7 +410,8 @@ describe(__filename, () => {
                             {
                                 txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                                 filledMakerAmount: '40000000000000000',
-                                filledAuctionTakerAmount: '120997216'
+                                filledAuctionTakerAmount: '120997216',
+                                takerFeeAmount: null
                             }
                         ],
                         status: OrderStatus.Filled,
@@ -438,7 +441,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/maker/${address}/?limit=1&page=1`
+                `${url}/orders/v2.0/1/order/maker/${address}/?limit=1&page=1&version=2.1`
             )
         })
 
@@ -491,7 +494,8 @@ describe(__filename, () => {
                             {
                                 txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                                 filledMakerAmount: '40000000000000000',
-                                filledAuctionTakerAmount: '120997216'
+                                filledAuctionTakerAmount: '120997216',
+                                takerFeeAmount: null
                             }
                         ],
                         status: OrderStatus.Filled,
@@ -520,7 +524,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/maker/${address}/?`
+                `${url}/orders/v2.0/1/order/maker/${address}/?version=2.1`
             )
         })
 
@@ -573,7 +577,8 @@ describe(__filename, () => {
                             {
                                 txHash: '0x346d2098059da884c61dfb95c357f11abbf51466c7903fe9c0d5a3d8471b8549',
                                 filledMakerAmount: '40000000000000000',
-                                filledAuctionTakerAmount: '120997216'
+                                filledAuctionTakerAmount: '120997216',
+                                takerFeeAmount: null
                             }
                         ],
                         status: OrderStatus.Filled,
