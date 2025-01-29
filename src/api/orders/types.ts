@@ -46,6 +46,7 @@ export type Fill = {
     txHash: string
     filledMakerAmount: string
     filledAuctionTakerAmount: string
+    takerFeeAmount: string | null
 }
 
 export type OrderStatusResponse = {
