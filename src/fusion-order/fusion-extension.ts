@@ -129,21 +129,35 @@ export class FusionExtension {
         const hasFees =
             !integratorFeeRecipient.isZero() || !protocolFeeRecipient.isZero()
 
-        const fees = hasFees
-            ? new FeeTakerExt.Fees(
-                  new FeeTakerExt.ResolverFee(
+        if (!hasFees) {
+            return new FusionExtension(
+                settlementContract,
+                auctionDetails,
+                interactionData.whitelist,
+                {
+                    makerPermit,
+                    customReceiver
+                }
+            )
+        }
+
+        const fees = new FeeTakerExt.Fees(
+            interactionData.fees.resolverFee.isZero()
+                ? FeeTakerExt.ResolverFee.ZERO
+                : new FeeTakerExt.ResolverFee(
                       protocolFeeRecipient,
                       interactionData.fees.resolverFee,
                       interactionData.fees.whitelistDiscount
                   ),
-                  new FeeTakerExt.IntegratorFee(
+            interactionData.fees.integratorFee.isZero()
+                ? FeeTakerExt.IntegratorFee.ZERO
+                : new FeeTakerExt.IntegratorFee(
                       integratorFeeRecipient,
                       protocolFeeRecipient,
                       interactionData.fees.integratorFee,
                       interactionData.fees.integratorShare
                   )
-              )
-            : undefined
+        )
 
         return new FusionExtension(
             settlementContract,

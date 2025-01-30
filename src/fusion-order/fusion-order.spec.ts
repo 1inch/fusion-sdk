@@ -1,6 +1,5 @@
-import {Address, Bps, MakerTraits} from '@1inch/limit-order-sdk'
+import {Address, Bps, MakerTraits, FeeTakerExt} from '@1inch/limit-order-sdk'
 import {parseUnits} from 'ethers'
-import {FeeTakerExt} from '@1inch/limit-order-sdk'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist'
