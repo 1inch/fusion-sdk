@@ -31,5 +31,8 @@ export const CHAIN_TO_WRAPPER = {
     ),
     [NetworkEnum.ZKSYNC]: new Address(
         '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91'
+    ),
+    [NetworkEnum.LINEA]: new Address(
+        '0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f'
     )
 }
