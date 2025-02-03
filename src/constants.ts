@@ -10,7 +10,8 @@ export enum NetworkEnum {
     OPTIMISM = 10,
     FANTOM = 250,
     GNOSIS = 100,
-    COINBASE = 8453
+    COINBASE = 8453,
+    LINEA = 59144
 }
 
 export const ONE_INCH_LIMIT_ORDER_V4 =
