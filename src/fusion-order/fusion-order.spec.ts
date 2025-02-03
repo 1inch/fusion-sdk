@@ -59,7 +59,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '33471150795161712739625987854073848363835856965607525350783622537007396290560',
-            salt: '15150891855335877009553113668813008135841821470374'
+            salt: '15154917212229274031775300768002549554250257257796'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
@@ -131,7 +131,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '33471150795161712739625987854073848363835856965607525350783622537007396290560',
-            salt: '15927625895819333064650069072431807310373701948678'
+            salt: '14784889872407883648102551457165962490230021209460'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
