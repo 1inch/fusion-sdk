@@ -293,7 +293,7 @@ describe('Fusion Order', () => {
         )
     })
 
-    it.skip('Should calculate total fee', () => {
+    it('Should calculate fees', () => {
         // https://etherscan.io/tx/0x8f95dc0e6e836ca0abdad88e20cf61b0caf7c5463d67b577740f3084d428e56e
         const data = [
             {
@@ -334,8 +334,8 @@ describe('Fusion Order', () => {
                 1533984564n
             )
 
-        expect(userAmount).toEqual(18442228n)
         expect(integratorFee).toEqual(11065n)
         expect(protocolFee).toEqual(7377n)
+        expect(userAmount).toEqual(18442228n)
     })
 })
