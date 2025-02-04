@@ -6,7 +6,6 @@ import {
     Extension
 } from '@1inch/limit-order-sdk'
 import {parseUnits} from 'ethers'
-import * as console from 'node:console'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist'
@@ -334,8 +333,6 @@ describe('Fusion Order', () => {
                 1738650311n,
                 1533984564n
             )
-
-        console.log(order.getAmountCalculator())
 
         expect(userAmount).toEqual(18442228n)
         expect(integratorFee).toEqual(11065n)
