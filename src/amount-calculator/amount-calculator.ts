@@ -1,4 +1,10 @@
-import {Address, Bps, FeeTakerExt} from '@1inch/limit-order-sdk'
+import {
+    Address,
+    Bps,
+    FeeTakerExt,
+    mulDiv,
+    Rounding
+} from '@1inch/limit-order-sdk'
 import {FeeCalculator, Fees} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {AuctionCalculator} from './auction-calculator'
 import {FusionExtension} from '../fusion-order'
@@ -49,6 +55,27 @@ export class AmountCalculator {
         const numerator = Fees.BASE_1E5 + BigInt(fee.toFraction(Fees.BASE_1E5))
 
         return (withoutFee * numerator) / Fees.BASE_1E5
+    }
+
+    /**
+     * Return fee amount in taker asset which is included in `requiredTakingAmount`
+     *
+     * @param requiredTakingAmount must already contain fee
+     * @param fee to extract
+     */
+    public static extractFeeAmount(
+        requiredTakingAmount: bigint,
+        fee: Bps
+    ): bigint {
+        return (
+            requiredTakingAmount -
+            mulDiv(
+                requiredTakingAmount,
+                Fees.BASE_1E5,
+                Fees.BASE_1E5 + BigInt(fee.toFraction(Fees.BASE_1E5)),
+                Rounding.Ceil
+            )
+        )
     }
 
     /**
