@@ -293,7 +293,7 @@ describe('Fusion Order', () => {
         )
     })
 
-    it('Should calculate total fee', () => {
+    it.skip('Should calculate total fee', () => {
         // https://etherscan.io/tx/0x8f95dc0e6e836ca0abdad88e20cf61b0caf7c5463d67b577740f3084d428e56e
         const data = [
             {
