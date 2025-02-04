@@ -1,4 +1,10 @@
-import {Address, Bps, MakerTraits, FeeTakerExt} from '@1inch/limit-order-sdk'
+import {
+    Address,
+    Bps,
+    MakerTraits,
+    FeeTakerExt,
+    Extension
+} from '@1inch/limit-order-sdk'
 import {parseUnits} from 'ethers'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
@@ -59,7 +65,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '33471150795161712739625987854073848363835856965607525350783622537007396290560',
-            salt: '15150891855335877009553113668813008135841821470374'
+            salt: '15154917212229274031775300768002549554250257257796'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
@@ -131,7 +137,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '33471150795161712739625987854073848363835856965607525350783622537007396290560',
-            salt: '15927625895819333064650069072431807310373701948678'
+            salt: '14784889872407883648102551457165962490230021209460'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
@@ -285,5 +291,51 @@ describe('Fusion Order', () => {
         ).toEqual(
             2n * order.takingAmount // because init rate bump is 100%
         )
+    })
+
+    it.skip('Should calculate total fee', () => {
+        // https://etherscan.io/tx/0x8f95dc0e6e836ca0abdad88e20cf61b0caf7c5463d67b577740f3084d428e56e
+        const data = [
+            {
+                order: '{"salt": "88244613754032523633323406132962387804442696513566413874801304436628426636029", "maker": "0x6edc317f3208b10c46f4ff97faa04dd632487408", "receiver": "0xabd4e5fb590aa132749bbf2a04ea57efbaac399e", "makerAsset": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", "takerAsset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "makerTraits": "62419173104490761595518734106935910747442209877250655105498008304728645042176", "makingAmount": "7340000000000000", "takingAmount": "17733698"}',
+                extension:
+                    '0x000000ec0000008c0000008c0000008c0000008c000000460000000000000000abd4e5fb590aa132749bbf2a04ea57efbaac399e094c49000005f667a1b28a0000b41297d701094c4900b400643c00006402d1a23c3abeed63c51b86b5636af8f99b8e85dc9fabd4e5fb590aa132749bbf2a04ea57efbaac399e094c49000005f667a1b28a0000b41297d701094c4900b400643c00006402d1a23c3abeed63c51b86b5636af8f99b8e85dc9fabd4e5fb590aa132749bbf2a04ea57efbaac399e008e097e5e0493de033270a01b324caf31f464dc6790cbe4bdd538d6e9b379bff5fe72c3d67a521de500643c00006467a1b27202d1a23c3abeed63c51b860000b5636af8f99b8e85dc9f0000'
+            }
+        ]
+
+        const order = FusionOrder.fromDataAndExtension(
+            JSON.parse(data[0].order),
+            Extension.decode(data[0].extension)
+        )
+
+        const userAmount = order
+            .getAmountCalculator()
+            .getUserTakingAmountAmount(
+                Address.ZERO_ADDRESS,
+                order.takingAmount,
+                1738650311n,
+                1533984564n
+            )
+
+        const integratorFee = order
+            .getAmountCalculator()
+            .getIntegratorFee(
+                Address.ZERO_ADDRESS,
+                order.takingAmount,
+                1738650311n,
+                1533984564n
+            )
+        const protocolFee = order
+            .getAmountCalculator()
+            .getProtocolFee(
+                Address.ZERO_ADDRESS,
+                order.takingAmount,
+                1738650311n,
+                1533984564n
+            )
+
+        expect(userAmount).toEqual(18442228n)
+        expect(integratorFee).toEqual(11065n)
+        expect(protocolFee).toEqual(7377n)
     })
 })

@@ -13,6 +13,7 @@ import {BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist/whitelist'
+import {add0x} from '../utils'
 
 export class FusionExtension {
     /**
@@ -82,6 +83,8 @@ export class FusionExtension {
             : undefined
 
         const interactionData = parseAmountData(interactionBytes)
+        const whitelist = Whitelist.decodeFrom(interactionBytes)
+
         //endregion Parse postInteraction data
 
         //region Parse amount data
@@ -90,6 +93,20 @@ export class FusionExtension {
 
         const auctionDetails = AuctionDetails.decodeFrom(amountBytes)
         const amountData = parseAmountData(amountBytes)
+        const whitelistAddressLength = Number(amountBytes.nextUint8())
+
+        assert(
+            whitelist.length === whitelistAddressLength,
+            'whitelist addresses must be same in interaction data and in amount data'
+        )
+
+        const whitelistAddressesFromAmount: string[] = []
+
+        for (let i = 0; i < whitelistAddressLength; i++) {
+            whitelistAddressesFromAmount.push(
+                BigInt(amountBytes.nextBytes(10)).toString(16).padStart(20, '0')
+            )
+        }
 
         //endregion Parse amount data
 
@@ -122,8 +139,11 @@ export class FusionExtension {
         )
 
         assert(
-            interactionData.whitelist.equal(amountData.whitelist),
-            'whitelist must be same in interaction data and in amount data'
+            whitelist.whitelist.every(
+                ({addressHalf}, i) =>
+                    whitelistAddressesFromAmount[i] === addressHalf
+            ),
+            'whitelist addresses must be same in interaction data and in amount data'
         )
 
         const hasFees =
@@ -133,10 +153,11 @@ export class FusionExtension {
             return new FusionExtension(
                 settlementContract,
                 auctionDetails,
-                interactionData.whitelist,
+                whitelist,
                 {
                     makerPermit,
-                    customReceiver
+                    customReceiver,
+                    fees: undefined
                 }
             )
         }
@@ -162,7 +183,7 @@ export class FusionExtension {
         return new FusionExtension(
             settlementContract,
             auctionDetails,
-            interactionData.whitelist,
+            whitelist,
             {
                 makerPermit,
                 fees,
@@ -244,10 +265,10 @@ export class FusionExtension {
      *
      * @see https://github.com/1inch/limit-order-settlement/blob/82f0a25c969170f710825ce6aa6920062adbde88/contracts/SimpleSettlement.sol#L34
      */
-    private buildAmountGetterData(withAuction: boolean): string {
+    private buildAmountGetterData(forAmountGetters: boolean): string {
         const builder = new BytesBuilder()
 
-        if (withAuction) {
+        if (forAmountGetters) {
             // auction data required only for `getMakingAmount/getTakingAmount` and not for `postInteraction`
             this.auctionDetails.encodeInto(builder)
         }
@@ -282,7 +303,15 @@ export class FusionExtension {
                 )
             )
 
-        this.whitelist.encodeInto(builder)
+        if (forAmountGetters) {
+            // amount getters need only addresses, without delays
+            builder.addUint8(BigInt(this.whitelist.whitelist.length))
+            this.whitelist.whitelist.forEach((i) => {
+                builder.addBytes(add0x(i.addressHalf))
+            })
+        } else {
+            this.whitelist.encodeInto(builder)
+        }
 
         return builder.asHex()
     }
@@ -348,7 +377,6 @@ function parseAmountData(iter: BytesIter<string>): {
         resolverFee: Bps
         whitelistDiscount: Bps
     }
-    whitelist: Whitelist
 } {
     const fees = {
         integratorFee: Bps.fromFraction(
@@ -369,10 +397,7 @@ function parseAmountData(iter: BytesIter<string>): {
         )
     }
 
-    const whitelist = Whitelist.decodeFrom(iter)
-
     return {
-        fees,
-        whitelist
+        fees
     }
 }

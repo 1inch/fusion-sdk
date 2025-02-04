@@ -19,6 +19,10 @@ export class Whitelist {
         })
     }
 
+    public get length(): number {
+        return this.whitelist.length
+    }
+
     /**
      * Construct `Whitelist` from BytesIter
      *
