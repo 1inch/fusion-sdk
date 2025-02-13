@@ -6,11 +6,13 @@ import {OrdersVersion} from './ordersVersion'
 export function concatQueryParams<
     T extends Record<string | number, string | string[] | number | boolean>
 >(params: T, version: false | OrdersVersion = false): string {
+    const versionRequired = version && version !== OrdersVersion.all
+
     if (!params) {
-        return version ? `?version=${version}` : ''
+        return versionRequired ? `?version=${version}` : ''
     }
 
-    if (version) {
+    if (versionRequired) {
         Object.assign(params, {version})
     }
 
