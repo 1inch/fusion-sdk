@@ -11,7 +11,7 @@ import {
 } from './types'
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 import {concatQueryParams} from '../params'
-import {Version, VERSION} from '../version'
+import {OrdersVersion} from '../ordersVersion'
 
 export class OrdersApi {
     private static Version = 'v2.0'
@@ -32,7 +32,7 @@ export class OrdersApi {
 
     async getActiveOrders(
         params: ActiveOrdersRequest,
-        version: Version
+        ordersVersion: OrdersVersion
     ): Promise<ActiveOrdersResponse> {
         const err = params.validate()
 
@@ -40,7 +40,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const queryParams = concatQueryParams(params.build(), version)
+        const queryParams = concatQueryParams(params.build(), ordersVersion)
         const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/active/${queryParams}`
 
         return this.httpClient.get<ActiveOrdersResponse>(url)
@@ -55,14 +55,14 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/status/${params.orderHash}?version=${VERSION}`
+        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/status/${params.orderHash}`
 
         return this.httpClient.get<OrderStatusResponse>(url)
     }
 
     async getOrdersByMaker(
         params: OrdersByMakerRequest,
-        version: Version
+        ordersVersion: OrdersVersion
     ): Promise<OrdersByMakerResponse> {
         const err = params.validate()
 
@@ -70,7 +70,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const qp = concatQueryParams(params.buildQueryParams(), version)
+        const qp = concatQueryParams(params.buildQueryParams(), ordersVersion)
         const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/maker/${params.address}/${qp}`
 
         return this.httpClient.get(url)

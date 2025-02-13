@@ -1,11 +1,11 @@
-import {Version} from './version'
+import {OrdersVersion} from './ordersVersion'
 
 /**
  * Concat all params to query encoded string. if `addVersion` is true, then `version` param is added to this string
  */
 export function concatQueryParams<
     T extends Record<string | number, string | string[] | number | boolean>
->(params: T, version: false | Version = false): string {
+>(params: T, version: false | OrdersVersion = false): string {
     if (!params) {
         return version ? `?version=${version}` : ''
     }
