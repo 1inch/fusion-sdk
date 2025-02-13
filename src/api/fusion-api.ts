@@ -15,6 +15,7 @@ import {
     OrderStatusResponse,
     OrdersByMakerResponse
 } from './orders'
+import {OrdersVersion} from './ordersVersion'
 import {AxiosProviderConnector} from '../connector'
 
 export class FusionApi {
@@ -76,9 +77,10 @@ export class FusionApi {
     }
 
     getActiveOrders(
-        params: ActiveOrdersRequest = ActiveOrdersRequest.new()
+        params: ActiveOrdersRequest = ActiveOrdersRequest.new(),
+        ordersVersion = OrdersVersion._2_1
     ): Promise<ActiveOrdersResponse> {
-        return this.ordersApi.getActiveOrders(params)
+        return this.ordersApi.getActiveOrders(params, ordersVersion)
     }
 
     getOrderStatus(params: OrderStatusRequest): Promise<OrderStatusResponse> {
@@ -86,9 +88,10 @@ export class FusionApi {
     }
 
     getOrdersByMaker(
-        params: OrdersByMakerRequest
+        params: OrdersByMakerRequest,
+        ordersVersion = OrdersVersion._2_1
     ): Promise<OrdersByMakerResponse> {
-        return this.ordersApi.getOrdersByMaker(params)
+        return this.ordersApi.getOrdersByMaker(params, ordersVersion)
     }
 
     submitOrder(params: RelayerRequest): Promise<void> {

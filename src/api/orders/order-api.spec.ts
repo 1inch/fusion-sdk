@@ -255,7 +255,7 @@ describe(__filename, () => {
 
             expect(response).toEqual(expected)
             expect(httpProvider.get).toHaveBeenLastCalledWith(
-                `${url}/orders/v2.0/1/order/status/${orderHash}?version=2.1`
+                `${url}/orders/v2.0/1/order/status/${orderHash}`
             )
         })
 

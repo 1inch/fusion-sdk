@@ -11,7 +11,7 @@ import {
 } from './types'
 import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
 import {concatQueryParams} from '../params'
-import {VERSION} from '../version'
+import {OrdersVersion} from '../ordersVersion'
 
 export class OrdersApi {
     private static Version = 'v2.0'
@@ -31,7 +31,8 @@ export class OrdersApi {
     }
 
     async getActiveOrders(
-        params: ActiveOrdersRequest
+        params: ActiveOrdersRequest,
+        ordersVersion: OrdersVersion
     ): Promise<ActiveOrdersResponse> {
         const err = params.validate()
 
@@ -39,7 +40,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const queryParams = concatQueryParams(params.build(), true)
+        const queryParams = concatQueryParams(params.build(), ordersVersion)
         const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/active/${queryParams}`
 
         return this.httpClient.get<ActiveOrdersResponse>(url)
@@ -54,13 +55,14 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/status/${params.orderHash}?version=${VERSION}`
+        const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/status/${params.orderHash}`
 
         return this.httpClient.get<OrderStatusResponse>(url)
     }
 
     async getOrdersByMaker(
-        params: OrdersByMakerRequest
+        params: OrdersByMakerRequest,
+        ordersVersion: OrdersVersion
     ): Promise<OrdersByMakerResponse> {
         const err = params.validate()
 
@@ -68,7 +70,7 @@ export class OrdersApi {
             throw new Error(err)
         }
 
-        const qp = concatQueryParams(params.buildQueryParams(), true)
+        const qp = concatQueryParams(params.buildQueryParams(), ordersVersion)
         const url = `${this.config.url}/${OrdersApi.Version}/${this.config.network}/order/maker/${params.address}/${qp}`
 
         return this.httpClient.get(url)
