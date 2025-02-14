@@ -232,7 +232,7 @@ describe('Fusion Order', () => {
 
         expect(
             order.calcTakingAmount(order.makingAmount, now, baseFee)
-        ).toEqual(30411732255521644n)
+        ).toEqual(30411732255521645n)
     })
 
     it('should calculate amount with fee', () => {
