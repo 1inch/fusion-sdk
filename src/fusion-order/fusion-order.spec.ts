@@ -236,6 +236,7 @@ describe('Fusion Order', () => {
     })
 
     it('should calculate amount with fee', () => {
+        // https://etherscan.io/tx/0xf100c5b6ba02e88c2799e57a267bb4d0f3391a0418bb0d53d4ba1202e3e6c9d6#eventlog
         const takingAmount = FusionOrder.fromDataAndExtension(
             {
                 salt: '11856615190414968820327637775580928113260804040561625215651622042885713320134',
