@@ -35,4 +35,4 @@ export {
     Quote,
     OrderStatusResponse,
     OrderStatus
-} from './api'
+} from './api/index'
