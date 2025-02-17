@@ -1,18 +1,33 @@
 {
     "name": "@1inch/fusion-sdk",
-    "version": "2.2.2",
+    "version": "2.2.3-rc.1",
     "description": "1inch Fusion SDK",
     "author": "@1inch",
-    "private": false,
     "files": [
         "dist",
         "LICENSE",
         "README.md",
         "package.json"
     ],
-    "module": "dist/esm/index.js",
-    "main": "dist/cjs/index.js",
-    "types": "dist/types/src/index.d.ts",
+    "module": "./dist/esm/index.js",
+    "main": "./dist/cjs/index.js",
+    "types": "./dist/types/src/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/types/src/index.d.ts",
+            "import": "./dist/esm/index.js",
+            "require": "./dist/cjs/index.js",
+            "node": "./dist/cjs/index.js",
+            "default": "./dist/cjs/index.js"
+        },
+        "./api": {
+            "types": "./dist/types/src/api-ext.d.ts",
+            "import": "./dist/esm/api-ext.js",
+            "require": "./dist/cjs/api-ext.js",
+            "node": "./dist/cjs/api-ext.js",
+            "default": "./dist/cjs/api-ext.js"
+        }
+    },
     "repository": {
         "type": "git",
         "url": "ssh://git@github.com:1inch/fusion-sdk.git"
