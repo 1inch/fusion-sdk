@@ -1,11 +1,7 @@
 import {RATE_BUMP_DENOMINATOR} from './constants'
-import {
-    SettlementPostInteractionData,
-    AuctionDetails,
-    AuctionPoint
-} from '../fusion-order'
-import {addRatioToAmount} from '../sdk'
+import {AuctionDetails, AuctionPoint, SettlementPostInteractionData} from '../fusion-order'
 import {AuctionGasCostInfo} from '../fusion-order/auction-details/types'
+import {mulDiv, Rounding} from './utils'
 
 export class AuctionCalculator {
     private static GAS_PRICE_BASE = 1_000_000n // 1000 means 1 Gwei
@@ -57,17 +53,8 @@ export class AuctionCalculator {
     static calcAuctionTakingAmount(
         takingAmount: bigint,
         rate: number,
-        takerFeeRatio: bigint
     ): bigint {
-        const auctionTakingAmount =
-            (BigInt(takingAmount) * (BigInt(rate) + RATE_BUMP_DENOMINATOR)) /
-            RATE_BUMP_DENOMINATOR
-
-        if (takerFeeRatio === 0n) {
-            return auctionTakingAmount
-        }
-
-        return addRatioToAmount(auctionTakingAmount, takerFeeRatio)
+        return mulDiv(takingAmount, BigInt(rate) + RATE_BUMP_DENOMINATOR, RATE_BUMP_DENOMINATOR, Rounding.Ceil)
     }
 
     /**
@@ -94,7 +81,6 @@ export class AuctionCalculator {
         return AuctionCalculator.calcAuctionTakingAmount(
             takingAmount,
             rate,
-            this.takerFeeRatio
         )
     }
 

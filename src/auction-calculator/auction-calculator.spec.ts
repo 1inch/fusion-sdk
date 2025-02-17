@@ -39,7 +39,7 @@ describe('Auction Calculator', () => {
         )
 
         expect(rate).toBe(25000)
-        expect(auctionTakingAmount).toBe(1423692355n) // 1423550000 from rate + 142355 (1bps) integrator fee
+        expect(auctionTakingAmount).toBe(1423550000n)
     })
 
     describe('Gas bump', () => {
