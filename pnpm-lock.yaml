@@ -18,8 +18,8 @@ importers:
         specifier: '3'
         version: 3.0.0(assert@2.1.0)
       '@1inch/limit-order-sdk':
-        specifier: 4.11.6
-        version: 4.11.6(assert@2.1.0)(axios@1.7.9)
+        specifier: 4.12.1
+        version: 4.12.1(assert@2.1.0)(axios@1.7.9)
       assert:
         specifier: ^2.0.0
         version: 2.1.0
@@ -35,7 +35,7 @@ importers:
     devDependencies:
       '@1inch/eslint-config':
         specifier: 3.0.6
-        version: 3.0.6(6vcuek2uxrsu2uwhm2fmj6bbzu)
+        version: 3.0.6(4aca7851162c80b80c25548d0ea1f1fb)
       '@1inch/tsconfig':
         specifier: 1.0.8
         version: 1.0.8
@@ -148,17 +148,12 @@ packages:
       prettier: ^3.3.2
       typescript: ^5.5.2
 
-  '@1inch/limit-order-sdk@4.11.6':
-    resolution: {integrity: sha512-O+Xv0rITz0IqkseDYIAhdVSsmUQkWs2PTAwWju5N7++1umjBKV59aR0bsE5qkKzhD5oRCn6oVXBRuwDRCKfBug==}
+  '@1inch/limit-order-sdk@4.12.1':
+    resolution: {integrity: sha512-9CK1U0dqFfa2iDIUWH+XSYPBBPGuvHK3BNB61TX50ozBWh5MfOWfCDQuH7iYRKe2hurvnXdQoO3Dhd16N1C2Zg==, tarball: https://npm.pkg.github.com/download/@1inch/limit-order-sdk/4.12.1/c59daa3014cb580a7a74c9811ae2c4cb727400ec}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
       axios: '>=1.7.4'
-    peerDependenciesMeta:
-      assert:
-        optional: true
-      axios:
-        optional: true
 
   '@1inch/tsconfig@1.0.8':
     resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
@@ -3082,7 +3077,7 @@ snapshots:
     optionalDependencies:
       assert: 2.1.0
 
-  '@1inch/eslint-config@3.0.6(6vcuek2uxrsu2uwhm2fmj6bbzu)':
+  '@1inch/eslint-config@3.0.6(4aca7851162c80b80c25548d0ea1f1fb)':
     dependencies:
       '@eslint/compat': 1.2.5(eslint@9.18.0)
       '@eslint/eslintrc': 3.2.0
@@ -3104,13 +3099,12 @@ snapshots:
       semver: 7.6.3
       typescript: 5.7.3
 
-  '@1inch/limit-order-sdk@4.11.6(assert@2.1.0)(axios@1.7.9)':
+  '@1inch/limit-order-sdk@4.12.1(assert@2.1.0)(axios@1.7.9)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
-      ethers: 6.13.5
-    optionalDependencies:
       assert: 2.1.0
       axios: 1.7.9
+      ethers: 6.13.5
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
