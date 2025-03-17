@@ -1,4 +1,4 @@
-import {AnyFunctionWithThis, AnyFunction, OnMessageCb} from './types'
+import {AnyFunctionWithThis, AnyFunction, OnMessageCb, OnMessageInputVoidCb} from './types'
 
 export interface WsProviderConnector {
     init(): void
@@ -10,6 +10,9 @@ export interface WsProviderConnector {
 
     send<T>(message: T): void
     close(): void
+
+    ping(): void
+    onPong(cb: OnMessageInputVoidCb): void
 
     onMessage(cb: OnMessageCb): void
     onClose(cb: AnyFunction): void

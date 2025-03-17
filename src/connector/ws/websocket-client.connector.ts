@@ -2,7 +2,7 @@ import WebSocket from 'ws'
 import {
     AnyFunction,
     AnyFunctionWithThis,
-    OnMessageCb,
+    OnMessageCb, OnMessageInputVoidCb,
     WsApiConfig
 } from './types'
 import {WsProviderConnector} from './websocket-provider.connector'
@@ -86,6 +86,16 @@ export class WebsocketClient implements WsProviderConnector {
             const parsedData = JSON.parse(data)
 
             cb(parsedData)
+        })
+    }
+
+    ping(): void {
+        this.ws.ping()
+    }
+
+    onPong(cb: OnMessageInputVoidCb): void {
+        this.on('pong', () => {
+            cb()
         })
     }
 
