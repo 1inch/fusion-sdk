@@ -154,6 +154,11 @@ packages:
     peerDependencies:
       assert: ^2.0.0
       axios: '>=1.7.4'
+    peerDependenciesMeta:
+      assert:
+        optional: true
+      axios:
+        optional: true
 
   '@1inch/tsconfig@1.0.8':
     resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
@@ -3102,9 +3107,10 @@ snapshots:
   '@1inch/limit-order-sdk@4.12.1(assert@2.1.0)(axios@1.7.9)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
+      ethers: 6.13.5
+    optionalDependencies:
       assert: 2.1.0
       axios: 1.7.9
-      ethers: 6.13.5
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
