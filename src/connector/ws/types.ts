@@ -11,3 +11,5 @@ export type WsApiConfig = {
 }
 
 export type OnMessageCb = (data: any) => void
+
+export type OnMessageInputVoidCb = () => void
