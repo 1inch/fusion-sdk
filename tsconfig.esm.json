@@ -4,15 +4,17 @@
         "outDir": "./dist/esm",
         "module": "ESNext",
         "moduleResolution": "bundler",
-        "declaration": false,
-        "composite": false,
         "resolveJsonModule": true,
         "importHelpers": true
     },
-    "exclude": [
-        "node_modules",
-        "test",
-        "dist",
-        "**/*spec.ts"
-    ]
+    "tsc-alias": {
+        "verbose": true,
+        "resolveFullPaths": true,
+        "resolveFullExtension": ".js",
+        "fileExtensions": {
+            "inputGlob": "js",
+            "outputCheck": ["js", "json"]
+        }
+    },
+    "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }
