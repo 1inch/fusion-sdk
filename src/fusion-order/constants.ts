@@ -39,6 +39,6 @@ export const CHAIN_TO_WRAPPER = {
         '0x4200000000000000000000000000000000000006'
     ),
     [NetworkEnum.SONIC]: new Address(
-        '0x50c42deacd8fc9773493ed674b675be577f2634b'
+        '0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38'
     )
 }
