@@ -34,5 +34,11 @@ export const CHAIN_TO_WRAPPER = {
     ),
     [NetworkEnum.LINEA]: new Address(
         '0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f'
+    ),
+    [NetworkEnum.UNICHAIN]: new Address(
+        '0x4200000000000000000000000000000000000006'
+    ),
+    [NetworkEnum.SONIC]: new Address(
+        '0x50c42deacd8fc9773493ed674b675be577f2634b'
     )
 }
