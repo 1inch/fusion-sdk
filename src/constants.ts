@@ -11,7 +11,9 @@ export enum NetworkEnum {
     FANTOM = 250,
     GNOSIS = 100,
     COINBASE = 8453,
-    LINEA = 59144
+    LINEA = 59144,
+    SONIC = 146,
+    UNICHAIN = 130
 }
 
 export const ONE_INCH_LIMIT_ORDER_V4 =
