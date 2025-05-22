@@ -7,6 +7,3 @@
 [submodule "contracts/lib/limit-order-protocol"]
 	path = contracts/lib/limit-order-protocol
 	url = https://github.com/1inch/limit-order-protocol
-[submodule "contracts/lib/limit-order-settlement"]
-	path = contracts/lib/limit-order-settlement
-	url = https://github.com/1inch/limit-order-settlement
