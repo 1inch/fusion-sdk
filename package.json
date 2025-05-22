@@ -76,7 +76,7 @@
         "generate-changelog": "^1.8.0",
         "jest": "^29.7.0",
         "prettier": "^3.3.3",
-        "testcontainers": "10.17.1",
+        "testcontainers": "10.27.0",
         "ts-loader": "^9.5.1",
         "ts-mockito": "^2.6.1",
         "ts-node": "^10.9.2",
