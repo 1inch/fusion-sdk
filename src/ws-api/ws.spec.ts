@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import {WebSocketServer, WebSocket} from 'ws'
 import {WebSocketApi} from './ws-api'
 import {

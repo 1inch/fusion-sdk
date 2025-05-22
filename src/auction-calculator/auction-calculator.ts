@@ -1,7 +1,11 @@
 import {RATE_BUMP_DENOMINATOR} from './constants'
-import {AuctionDetails, AuctionPoint, SettlementPostInteractionData} from '../fusion-order'
-import {AuctionGasCostInfo} from '../fusion-order/auction-details/types'
 import {mulDiv, Rounding} from './utils'
+import {
+    AuctionDetails,
+    AuctionPoint,
+    SettlementPostInteractionData
+} from '../fusion-order'
+import {AuctionGasCostInfo} from '../fusion-order/auction-details/types'
 
 export class AuctionCalculator {
     private static GAS_PRICE_BASE = 1_000_000n // 1000 means 1 Gwei
@@ -50,11 +54,13 @@ export class AuctionCalculator {
      *
      * @see https://github.com/1inch/limit-order-settlement/blob/2eef6f86bf0142024f9a8bf054a0256b41d8362a/contracts/extensions/BaseExtension.sol#L66
      */
-    static calcAuctionTakingAmount(
-        takingAmount: bigint,
-        rate: number,
-    ): bigint {
-        return mulDiv(takingAmount, BigInt(rate) + RATE_BUMP_DENOMINATOR, RATE_BUMP_DENOMINATOR, Rounding.Ceil)
+    static calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
+        return mulDiv(
+            takingAmount,
+            BigInt(rate) + RATE_BUMP_DENOMINATOR,
+            RATE_BUMP_DENOMINATOR,
+            Rounding.Ceil
+        )
     }
 
     /**
@@ -78,10 +84,7 @@ export class AuctionCalculator {
     }
 
     public calcAuctionTakingAmount(takingAmount: bigint, rate: number): bigint {
-        return AuctionCalculator.calcAuctionTakingAmount(
-            takingAmount,
-            rate,
-        )
+        return AuctionCalculator.calcAuctionTakingAmount(takingAmount, rate)
     }
 
     /**
