@@ -79,7 +79,7 @@ describe(__filename, () => {
             })
 
             wsSdk.on('error', (error) => {
-                expect(error.message).toContain('ECONNREFUSED')
+                expect(error.code).toContain('ECONNREFUSED')
 
                 done()
             })
