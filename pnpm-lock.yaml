@@ -63,6 +63,9 @@ importers:
       axios:
         specifier: '>=1.7.4'
         version: 1.7.8
+      bluebird:
+        specifier: ^3.7.2
+        version: 3.7.2
       eslint:
         specifier: 9.27.0
         version: 9.27.0
