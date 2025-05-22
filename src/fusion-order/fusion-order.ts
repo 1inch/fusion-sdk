@@ -15,6 +15,7 @@ import {AuctionDetails} from './auction-details'
 
 import {injectTrackCode} from './source-track'
 import {Whitelist} from './whitelist/whitelist'
+import {SurplusParams} from './surplus-params'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
@@ -43,6 +44,7 @@ export class FusionOrder {
         orderInfo: OrderInfoData,
         auctionDetails: AuctionDetails,
         whitelist: Whitelist,
+        surplusParams: SurplusParams,
         extra: {
             unwrapWETH?: boolean
             /**
@@ -75,6 +77,7 @@ export class FusionOrder {
             settlementExtensionContract,
             auctionDetails,
             whitelist,
+            surplusParams,
             {
                 makerPermit: extra.permit
                     ? new Interaction(orderInfo.makerAsset, extra.permit)
@@ -258,6 +261,7 @@ export class FusionOrder {
         details: {
             auction: AuctionDetails
             whitelist: Whitelist
+            surplus: SurplusParams
         },
         extra?: {
             unwrapWETH?: boolean
@@ -291,6 +295,7 @@ export class FusionOrder {
             orderInfo,
             details.auction,
             details.whitelist,
+            details.surplus,
             extra
         )
     }
@@ -325,7 +330,7 @@ export class FusionOrder {
             'post-interaction must be enabled'
         )
 
-        const {auctionDetails, whitelist, extra} =
+        const {auctionDetails, whitelist, extra, surplus} =
             FusionExtension.fromExtension(extension)
 
         const deadline = makerTraits.expiration()
@@ -349,6 +354,7 @@ export class FusionOrder {
             },
             auctionDetails,
             whitelist,
+            surplus,
             {
                 allowMultipleFills: makerTraits.isMultipleFillsAllowed(),
                 allowPartialFills: makerTraits.isPartialFillAllowed(),
