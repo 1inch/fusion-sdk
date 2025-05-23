@@ -2,7 +2,8 @@ import WebSocket from 'ws'
 import {
     AnyFunction,
     AnyFunctionWithThis,
-    OnMessageCb, OnMessageInputVoidCb,
+    OnMessageCb,
+    OnMessageInputVoidCb,
     WsApiConfig
 } from './types'
 import {WsProviderConnector} from './websocket-provider.connector'
