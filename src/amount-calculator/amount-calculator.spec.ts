@@ -91,7 +91,7 @@ describe('AmountCalculator', () => {
         const takingAmount = 100000n
         const makingAmount = 1000n
         const surplus = takingAmount / 3n
-        const estimatedTakingAmount = takingAmount + surplus
+        const estimatedTakingAmount = takingAmount - surplus
 
         const calculator = new AmountCalculator(
             auction,
