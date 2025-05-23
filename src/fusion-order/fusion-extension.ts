@@ -13,6 +13,7 @@ import {BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist/whitelist'
+import {SurplusParams} from './surplus-params'
 import {add0x} from '../utils'
 
 export class FusionExtension {
@@ -26,6 +27,7 @@ export class FusionExtension {
         public readonly address: Address,
         public readonly auctionDetails: AuctionDetails,
         public readonly whitelist: Whitelist,
+        public readonly surplus: SurplusParams,
         public readonly extra?: {
             makerPermit?: Interaction
             customReceiver?: Address
@@ -84,6 +86,7 @@ export class FusionExtension {
 
         const interactionData = parseAmountData(interactionBytes)
         const whitelist = Whitelist.decodeFrom(interactionBytes)
+        const surplusParams = SurplusParams.decodeFrom(interactionBytes)
 
         //endregion Parse postInteraction data
 
@@ -154,6 +157,7 @@ export class FusionExtension {
                 settlementContract,
                 auctionDetails,
                 whitelist,
+                surplusParams,
                 {
                     makerPermit,
                     customReceiver,
@@ -184,6 +188,7 @@ export class FusionExtension {
             settlementContract,
             auctionDetails,
             whitelist,
+            surplusParams,
             {
                 makerPermit,
                 fees,
@@ -215,13 +220,15 @@ export class FusionExtension {
     /**
      * Build data for `FeeTaker.postInteraction`
      *
-     *
-     * 1 byte - flags:
+     * Data is built of:
+     *  `1 byte` - flags:
      *      01 bit `CUSTOM_RECEIVER_FLAG` - set to 1 if order has custom receiver
-     * 20 bytes — integrator fee recipient
-     * 20 bytes - protocol fee recipient
-     * [20 bytes] — receiver of taking tokens (optional, if not set, maker is used). See `CUSTOM_RECEIVER_FLAG` flag
-     * Same as in `buildAmountGetterData`
+     *  `20 bytes` — integrator fee recipient
+     *  `20 bytes` - protocol fee recipient
+     *  `[20 bytes]` — receiver of taking tokens (optional, if not set, maker is used). See `CUSTOM_RECEIVER_FLAG` flag
+     *  `bytes` - same as in `buildAmountGetterData`
+     *  `32 bytes` - estimated taking amount
+     *  `1 byte` - protocol surplus fee (in 1e2)
      * @see buildAmountGetterData
      * @see https://github.com/1inch/limit-order-protocol/blob/22a18f7f20acfec69d4f50ce1880e8e662477710/contracts/extensions/FeeTaker.sol#L114
      */
@@ -249,6 +256,10 @@ export class FusionExtension {
         }
 
         builder.addBytes(this.buildAmountGetterData(false))
+
+        // surplus params
+        builder.addUint256(this.surplus.estimatedTakerAmount)
+        builder.addUint8(BigInt(this.surplus.protocolFee.toPercent()))
 
         return builder.asHex()
     }

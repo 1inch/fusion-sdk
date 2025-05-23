@@ -5,6 +5,7 @@ import {
     IntegratorFee,
     ResolverFee
 } from '@1inch/limit-order-sdk/extensions/fee-taker'
+import assert from 'assert'
 
 import {
     Address,
@@ -14,6 +15,7 @@ import {
     FusionOrder,
     LimitOrderContract,
     ONE_INCH_LIMIT_ORDER_V4,
+    SurplusParams,
     TakerTraits,
     Whitelist
 } from '../../src'
@@ -22,7 +24,6 @@ import {USDC, WETH} from '../addresses'
 import {TestWallet} from '../test-wallet'
 
 import {now} from '../utils'
-import assert from 'assert'
 
 // eslint-disable-next-line max-lines-per-function
 describe('SettlementExtension', () => {
@@ -72,7 +73,8 @@ describe('SettlementExtension', () => {
                 }),
                 whitelist: Whitelist.new(0n, [
                     {address: takerAddress, allowFrom: 0n}
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             }
         )
 
@@ -163,7 +165,8 @@ describe('SettlementExtension', () => {
                     }),
                     whitelist: Whitelist.new(0n, [
                         {address: takerAddress, allowFrom: 0n}
-                    ])
+                    ]),
+                    surplus: SurplusParams.NO_FEE
                 },
                 {
                     fees: Fees.integratorFee(
@@ -275,7 +278,8 @@ describe('SettlementExtension', () => {
                     }),
                     whitelist: Whitelist.new(0n, [
                         {address: takerAddress, allowFrom: 0n}
-                    ])
+                    ]),
+                    surplus: SurplusParams.NO_FEE
                 },
                 {
                     fees: Fees.resolverFee(
@@ -384,7 +388,8 @@ describe('SettlementExtension', () => {
                     }),
                     whitelist: Whitelist.new(0n, [
                         {address: takerAddress, allowFrom: 0n}
-                    ])
+                    ]),
+                    surplus: SurplusParams.NO_FEE
                 },
                 {
                     fees: new Fees(
@@ -517,7 +522,8 @@ describe('SettlementExtension', () => {
                     }),
                     whitelist: Whitelist.new(0n, [
                         {address: takerAddress, allowFrom: 0n}
-                    ])
+                    ]),
+                    surplus: SurplusParams.NO_FEE
                 },
                 {
                     fees: new Fees(
@@ -653,7 +659,8 @@ describe('SettlementExtension', () => {
                     }),
                     whitelist: Whitelist.new(0n, [
                         {address: takerAddress, allowFrom: 0n}
-                    ])
+                    ]),
+                    surplus: SurplusParams.NO_FEE
                 },
                 {
                     fees: new Fees(
@@ -760,6 +767,171 @@ describe('SettlementExtension', () => {
                 finalBalances.weth.integrator - initBalances.weth.integrator
             ).toBe(0n)
         })
+
+        it('resolver and integrator fees with auction and surplus fee', async () => {
+            const integratorAddress = Address.fromBigInt(1337n)
+            const protocolAddress = new Address(await protocol.getAddress())
+            const integrator = await TestWallet.fromAddress(
+                integratorAddress,
+                globalThis.localNodeProvider
+            )
+            const initBalances = {
+                usdc: {
+                    maker: await maker.tokenBalance(USDC),
+                    taker: await taker.tokenBalance(USDC),
+                    protocol: await protocol.tokenBalance(USDC),
+                    integrator: await integrator.tokenBalance(USDC)
+                },
+                weth: {
+                    maker: await maker.tokenBalance(WETH),
+                    taker: await taker.tokenBalance(WETH),
+                    protocol: await protocol.tokenBalance(WETH),
+                    integrator: await integrator.tokenBalance(WETH)
+                }
+            }
+
+            const takerAddress = new Address(await taker.getAddress())
+
+            const currentTime = now()
+
+            const order = FusionOrder.new(
+                new Address(EXT_ADDRESS),
+                {
+                    maker: new Address(await maker.getAddress()),
+                    makerAsset: new Address(WETH),
+                    takerAsset: new Address(USDC),
+                    makingAmount: parseEther('0.1'),
+                    takingAmount: parseUnits('100', 6) // will be 200 at time of fill because of rate bump
+                },
+                {
+                    auction: new AuctionDetails({
+                        duration: 120n,
+                        startTime: currentTime,
+                        points: [],
+                        initialRateBump: Number(
+                            AuctionCalculator.RATE_BUMP_DENOMINATOR
+                        )
+                    }),
+                    whitelist: Whitelist.new(0n, [
+                        {address: takerAddress, allowFrom: 0n}
+                    ]),
+                    surplus: new SurplusParams(
+                        parseUnits('100', 6),
+                        Bps.fromPercent(50)
+                    )
+                },
+                {
+                    fees: new Fees(
+                        new ResolverFee(
+                            new Address(await protocol.getAddress()),
+                            Bps.fromPercent(1)
+                        ),
+                        new IntegratorFee(
+                            integratorAddress,
+                            protocolAddress,
+                            Bps.fromPercent(0.1),
+                            Bps.fromPercent(10)
+                        )
+                    )
+                }
+            )
+
+            const fillAmount = order.makingAmount / 2n
+            const signature = await maker.signTypedData(order.getTypedData(1))
+
+            const data = LimitOrderContract.getFillOrderArgsCalldata(
+                order.build(),
+                signature,
+                TakerTraits.default()
+                    .setExtension(order.extension)
+                    .setAmountMode(AmountMode.maker),
+                fillAmount
+            )
+
+            const {blockTimestamp, blockHash} = await taker.send({
+                data,
+                to: ONE_INCH_LIMIT_ORDER_V4
+            })
+
+            const baseFee = (
+                await globalThis.localNodeProvider.getBlock(blockHash)
+            )?.baseFeePerGas
+            assert(baseFee)
+
+            const finalBalances = {
+                usdc: {
+                    maker: await maker.tokenBalance(USDC),
+                    taker: await taker.tokenBalance(USDC),
+                    protocol: await protocol.tokenBalance(USDC),
+                    integrator: await integrator.tokenBalance(USDC)
+                },
+                weth: {
+                    maker: await maker.tokenBalance(WETH),
+                    taker: await taker.tokenBalance(WETH),
+                    protocol: await protocol.tokenBalance(WETH),
+                    integrator: await integrator.tokenBalance(WETH)
+                }
+            }
+
+            expect(initBalances.weth.maker - finalBalances.weth.maker).toBe(
+                fillAmount
+            )
+
+            expect(finalBalances.usdc.maker - initBalances.usdc.maker).toBe(
+                order.getUserReceiveAmount(
+                    takerAddress,
+                    fillAmount,
+                    blockTimestamp,
+                    baseFee
+                )
+            )
+
+            expect(finalBalances.weth.taker - initBalances.weth.taker).toBe(
+                fillAmount
+            )
+            expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
+                order.calcTakingAmount(
+                    takerAddress,
+                    fillAmount,
+                    blockTimestamp,
+                    baseFee
+                )
+            )
+
+            expect(
+                finalBalances.usdc.protocol - initBalances.usdc.protocol
+            ).toBe(
+                order.getProtocolFee(
+                    takerAddress,
+                    blockTimestamp,
+                    baseFee,
+                    fillAmount
+                ) +
+                    order.getSurplusFee(
+                        takerAddress,
+                        fillAmount,
+                        blockTimestamp,
+                        baseFee
+                    )
+            )
+            expect(
+                finalBalances.weth.protocol - initBalances.weth.protocol
+            ).toBe(0n)
+
+            expect(
+                finalBalances.usdc.integrator - initBalances.usdc.integrator
+            ).toBe(
+                order.getIntegratorFee(
+                    takerAddress,
+                    blockTimestamp,
+                    baseFee,
+                    fillAmount
+                )
+            )
+            expect(
+                finalBalances.weth.integrator - initBalances.weth.integrator
+            ).toBe(0n)
+        })
     })
 
     it('should execute with custom receiver no fee', async () => {
@@ -804,7 +976,8 @@ describe('SettlementExtension', () => {
                 }),
                 whitelist: Whitelist.new(0n, [
                     {address: takerAddress, allowFrom: 0n}
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             }
         )
 
