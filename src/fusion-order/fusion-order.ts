@@ -44,7 +44,7 @@ export class FusionOrder {
         orderInfo: OrderInfoData,
         auctionDetails: AuctionDetails,
         whitelist: Whitelist,
-        surplusParams: SurplusParams,
+        surplusParams = SurplusParams.NO_FEE,
         extra: {
             unwrapWETH?: boolean
             /**
@@ -261,7 +261,7 @@ export class FusionOrder {
         details: {
             auction: AuctionDetails
             whitelist: Whitelist
-            surplus: SurplusParams
+            surplus?: SurplusParams
         },
         extra?: {
             unwrapWETH?: boolean
