@@ -5,11 +5,18 @@ import {
     FeeTakerExt,
     Extension
 } from '@1inch/limit-order-sdk'
-import {parseUnits} from 'ethers'
+import {parseEther, parseUnits} from 'ethers'
+import {
+    Fees,
+    IntegratorFee,
+    ResolverFee
+} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist'
 import {SurplusParams} from './surplus-params'
+import {AuctionCalculator} from '../amount-calculator'
+import {now} from '../utils/time'
 
 describe('Fusion Order', () => {
     it('should create fusion order', () => {
@@ -333,7 +340,9 @@ describe('Fusion Order', () => {
             .getAmountCalculator()
             .getUserTakingAmountAmount(
                 Address.ZERO_ADDRESS,
+                order.makingAmount,
                 order.takingAmount,
+                order.makingAmount,
                 1738650311n,
                 1533984564n
             )
@@ -358,5 +367,132 @@ describe('Fusion Order', () => {
         expect(integratorFee).toEqual(11065n)
         expect(protocolFee).toEqual(7377n)
         expect(userAmount).toEqual(18442228n)
+    })
+
+    it('should calculate surplus fee - no surplus', () => {
+        const currentTime = now()
+        const takerAddress = Address.fromBigInt(1000n)
+
+        const order = FusionOrder.new(
+            Address.ZERO_ADDRESS,
+            {
+                maker: Address.fromBigInt(10n),
+                makerAsset: Address.fromBigInt(1n),
+                takerAsset: Address.fromBigInt(1n),
+                makingAmount: parseEther('0.1'),
+                takingAmount: parseUnits('100', 6) // will be 200 at time of fill because of rate bump
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 120n,
+                    startTime: currentTime,
+                    points: [],
+                    initialRateBump: Number(
+                        AuctionCalculator.RATE_BUMP_DENOMINATOR
+                    )
+                }),
+                whitelist: Whitelist.new(0n, [
+                    {address: takerAddress, allowFrom: 0n}
+                ]),
+                surplus: new SurplusParams(
+                    parseUnits('250', 6),
+                    Bps.fromPercent(50)
+                )
+            },
+            {
+                fees: new Fees(
+                    new ResolverFee(
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(1)
+                    ),
+                    new IntegratorFee(
+                        Address.fromBigInt(123n),
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(0.1),
+                        Bps.fromPercent(10)
+                    )
+                )
+            }
+        )
+
+        const makingAmount = parseEther('0.1') / 2n
+
+        const userAmount = order.getUserReceiveAmount(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        const surplus = order.getSurplusFee(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        expect(userAmount).toEqual(100000000n)
+        expect(surplus).toEqual(0n)
+    })
+    it('should calculate surplus fee - have surplus', () => {
+        const currentTime = now()
+        const takerAddress = Address.fromBigInt(1000n)
+
+        const order = FusionOrder.new(
+            Address.ZERO_ADDRESS,
+            {
+                maker: Address.fromBigInt(10n),
+                makerAsset: Address.fromBigInt(1n),
+                takerAsset: Address.fromBigInt(1n),
+                makingAmount: parseEther('0.1'),
+                takingAmount: parseUnits('100', 6) // will be 200 at time of fill because of rate bump
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 120n,
+                    startTime: currentTime,
+                    points: [],
+                    initialRateBump: Number(
+                        AuctionCalculator.RATE_BUMP_DENOMINATOR
+                    )
+                }),
+                whitelist: Whitelist.new(0n, [
+                    {address: takerAddress, allowFrom: 0n}
+                ]),
+                surplus: new SurplusParams(
+                    parseUnits('100', 6),
+                    Bps.fromPercent(50)
+                )
+            },
+            {
+                fees: new Fees(
+                    new ResolverFee(
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(1)
+                    ),
+                    new IntegratorFee(
+                        Address.fromBigInt(123n),
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(0.1),
+                        Bps.fromPercent(10)
+                    )
+                )
+            }
+        )
+
+        const makingAmount = parseEther('0.1') / 2n
+
+        const userAmount = order.getUserReceiveAmount(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        const surplus = order.getSurplusFee(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        expect(userAmount).toEqual(75000000n)
+        expect(surplus).toEqual(25000000n)
     })
 })

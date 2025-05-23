@@ -4,7 +4,7 @@ import assert from 'assert'
 
 export class SurplusParams {
     static NO_FEE = new SurplusParams(UINT_256_MAX, Bps.ZERO)
-    
+
     constructor(
         public readonly estimatedTakerAmount: bigint,
         public readonly protocolFee: Bps

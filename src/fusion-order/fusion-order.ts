@@ -439,7 +439,39 @@ export class FusionOrder {
 
         return this.getAmountCalculator().getUserTakingAmountAmount(
             taker,
+            makingAmount,
             takingAmount,
+            this.makingAmount,
+            time,
+            blockBaseFee
+        )
+    }
+
+    /**
+     * How much surplus will be shared with protocol
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getSurplusFee(
+        taker: Address,
+        makingAmount: bigint,
+        time: bigint,
+        blockBaseFee = 0n
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return this.getAmountCalculator().getSurplusFee(
+            taker,
+            makingAmount,
+            takingAmount,
+            this.makingAmount,
             time,
             blockBaseFee
         )
