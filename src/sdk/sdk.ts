@@ -75,7 +75,8 @@ export class FusionSDK {
             enableEstimate: !!params.enableEstimate,
             source: params.source,
             isPermit2: params.isPermit2,
-            integratorFee: params.integratorFee
+            integratorFee: params.integratorFee,
+            surplus: true
         })
 
         return this.api.getQuote(request)
@@ -95,7 +96,8 @@ export class FusionSDK {
             enableEstimate: !!params.enableEstimate,
             integratorFee: params?.integratorFee,
             source: params.source,
-            isPermit2: params.isPermit2
+            isPermit2: params.isPermit2,
+            surplus: true
         })
 
         const bodyRequest = QuoterCustomPresetRequest.new({
@@ -210,7 +212,8 @@ export class FusionSDK {
             enableEstimate: true,
             source: params.source,
             isPermit2: params.isPermit2,
-            integratorFee: params?.integratorFee
+            integratorFee: params?.integratorFee,
+            surplus: true
         })
 
         if (!params.customPreset) {
