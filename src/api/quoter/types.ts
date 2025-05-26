@@ -11,10 +11,6 @@ export type QuoterRequestParams = {
     integratorFee?: IntegratorFeeParams
     source?: string
     isPermit2?: boolean
-    /**
-     * tells quoter to use new settlement with surplus
-     */
-    surplus: true
 }
 
 export type QuoterRequestParamsRaw = Omit<
@@ -22,6 +18,10 @@ export type QuoterRequestParamsRaw = Omit<
     'integratorFee'
 > & {
     fee?: number
+    /**
+     * tells quoter to use new settlement with surplus
+     */
+    surplus: true
 }
 
 export type QuoterCustomPresetRequestParams = {

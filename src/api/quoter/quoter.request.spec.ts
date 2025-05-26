@@ -13,8 +13,7 @@ describe(__filename, () => {
                     share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
-                },
-                surplus: true
+                }
             })
         ).toThrow(/wrap native currency/)
     })
@@ -30,8 +29,7 @@ describe(__filename, () => {
                     share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
-                },
-                surplus: true
+                }
             })
         ).toThrow(/replace/)
         expect(() =>
@@ -44,8 +42,7 @@ describe(__filename, () => {
                     share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
-                },
-                surplus: true
+                }
             })
         ).toThrow(/replace/)
     })
@@ -61,8 +58,7 @@ describe(__filename, () => {
                     share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
-                },
-                surplus: true
+                }
             })
         ).toThrow(/fromTokenAddress and toTokenAddress should be different/)
     })
@@ -78,8 +74,7 @@ describe(__filename, () => {
                     share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
-                },
-                surplus: true
+                }
             })
         ).toThrow(/Invalid address/)
     })
@@ -95,8 +90,7 @@ describe(__filename, () => {
                     share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
-                },
-                surplus: true
+                }
             })
         ).toThrow(/is invalid amount/)
     })
@@ -112,8 +106,7 @@ describe(__filename, () => {
                     share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
-                },
-                surplus: true
+                }
             })
         ).toThrow(/cannot use fee without source/)
     })
