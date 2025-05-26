@@ -437,7 +437,7 @@ export class FusionOrder {
             this.takingAmount
         )
 
-        return this.getAmountCalculator().getUserTakingAmountAmount(
+        return this.getAmountCalculator().getUserTakingAmount(
             taker,
             makingAmount,
             takingAmount,

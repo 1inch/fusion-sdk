@@ -99,7 +99,7 @@ describe('AmountCalculator', () => {
             new SurplusParams(estimatedTakingAmount, Bps.fromPercent(50))
         )
 
-        const userAmount = calculatorNoSurplusFee.getUserTakingAmountAmount(
+        const userAmount = calculatorNoSurplusFee.getUserTakingAmount(
             taker,
             makingAmount,
             takingAmount,
@@ -107,14 +107,13 @@ describe('AmountCalculator', () => {
             execTime
         )
 
-        const userAmountWithChargedSurplus =
-            calculator.getUserTakingAmountAmount(
-                taker,
-                makingAmount,
-                takingAmount,
-                makingAmount,
-                execTime
-            )
+        const userAmountWithChargedSurplus = calculator.getUserTakingAmount(
+            taker,
+            makingAmount,
+            takingAmount,
+            makingAmount,
+            execTime
+        )
 
         expect(userAmount).toBeGreaterThan(userAmountWithChargedSurplus)
         expect(userAmount - userAmountWithChargedSurplus).toEqual(surplus / 2n) // fee is 50%

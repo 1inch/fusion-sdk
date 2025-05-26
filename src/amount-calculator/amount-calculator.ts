@@ -154,7 +154,7 @@ export class AmountCalculator {
      * @param time block time at which order will be filled
      * @param blockBaseFee base fee of block at which order will be filled
      */
-    public getUserTakingAmountAmount(
+    public getUserTakingAmount(
         taker: Address,
         makingAmount: bigint,
         takingAmount: bigint,

@@ -338,7 +338,7 @@ describe('Fusion Order', () => {
 
         const userAmount = order
             .getAmountCalculator()
-            .getUserTakingAmountAmount(
+            .getUserTakingAmount(
                 Address.ZERO_ADDRESS,
                 order.makingAmount,
                 order.takingAmount,
