@@ -123,7 +123,8 @@ describe('Quoter API', () => {
             whitelistDiscountPercent: 1,
             receiver: ONE_INCH_LIMIT_ORDER_V4,
             bps: 10
-        }
+        },
+        marketAmount: '626772029219852913'
     } as QuoterResponse
 
     const QuoterResponseMock = new Quote(params, ResponseMock)
