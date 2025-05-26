@@ -37,6 +37,8 @@ export class Quote {
 
     public readonly toTokenAmount: string
 
+    public readonly marketReturn: bigint
+
     public readonly prices: Cost
 
     public readonly volume: Cost
@@ -65,6 +67,7 @@ export class Quote {
                 : undefined
         }
         this.toTokenAmount = response.toTokenAmount
+        this.marketReturn = BigInt(response.marketAmount)
         this.prices = response.prices
         this.volume = response.volume
         this.quoteId = response.quoteId
@@ -131,7 +134,7 @@ export class Quote {
                     preset.exclusiveResolver
                 ),
                 surplus: new SurplusParams(
-                    BigInt(this.toTokenAmount),
+                    this.marketReturn,
                     Bps.fromPercent(this.surplusFee || 0)
                 )
             },

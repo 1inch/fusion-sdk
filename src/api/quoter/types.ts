@@ -43,6 +43,7 @@ export type QuoterResponse = {
     autoK: number
     fee: ResolverFeePresetRaw
     surplusFee?: number
+    marketAmount: string
 }
 
 export type QuoterPresets = {
