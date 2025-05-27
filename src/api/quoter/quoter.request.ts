@@ -74,7 +74,8 @@ export class QuoterRequest {
             permit: this.permit,
             fee: Number(this.integratorFee?.value.value || 0),
             source: this.source,
-            isPermit2: this.isPermit2
+            isPermit2: this.isPermit2,
+            surplus: true
         }
     }
 }

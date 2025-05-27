@@ -123,7 +123,8 @@ describe('Quoter API', () => {
             whitelistDiscountPercent: 1,
             receiver: ONE_INCH_LIMIT_ORDER_V4,
             bps: 10
-        }
+        },
+        marketAmount: '626772029219852913'
     } as QuoterResponse
 
     const QuoterResponseMock = new Quote(params, ResponseMock)
@@ -141,7 +142,7 @@ describe('Quoter API', () => {
 
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.get).toHaveBeenCalledWith(
-            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&source=sdk'
+            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&source=sdk&surplus=true'
         )
     })
 
@@ -171,7 +172,7 @@ describe('Quoter API', () => {
         const res = await quoter.getQuote(params)
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.get).toHaveBeenCalledWith(
-            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f'
+            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f&surplus=true'
         )
     })
 
@@ -213,7 +214,7 @@ describe('Quoter API', () => {
         const res = await quoter.getQuoteWithCustomPreset(params, body)
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.post).toHaveBeenCalledWith(
-            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f',
+            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f&surplus=true',
             body.build()
         )
     })

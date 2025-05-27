@@ -1,4 +1,9 @@
-import {AnyFunctionWithThis, AnyFunction, OnMessageCb, OnMessageInputVoidCb} from './types'
+import {
+    AnyFunctionWithThis,
+    AnyFunction,
+    OnMessageCb,
+    OnMessageInputVoidCb
+} from './types'
 
 export interface WsProviderConnector {
     init(): void

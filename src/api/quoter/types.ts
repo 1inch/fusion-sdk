@@ -18,6 +18,10 @@ export type QuoterRequestParamsRaw = Omit<
     'integratorFee'
 > & {
     fee?: number
+    /**
+     * tells quoter to use new settlement with surplus
+     */
+    surplus: true
 }
 
 export type QuoterCustomPresetRequestParams = {
@@ -42,6 +46,8 @@ export type QuoterResponse = {
     quoteId: string | null
     autoK: number
     fee: ResolverFeePresetRaw
+    surplusFee?: number
+    marketAmount: string
 }
 
 export type QuoterPresets = {

@@ -7,7 +7,7 @@ import {
 } from '@1inch/limit-order-sdk'
 import {FeeCalculator, Fees} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {AuctionCalculator} from './auction-calculator'
-import {FusionExtension} from '../fusion-order'
+import {FusionExtension, SurplusParams} from '../fusion-order'
 
 /**
  * Calculates fees/amount with accounting to auction
@@ -17,7 +17,8 @@ import {FusionExtension} from '../fusion-order'
 export class AmountCalculator {
     constructor(
         private readonly auctionCalculator: AuctionCalculator,
-        private readonly feeCalculator?: FeeCalculator
+        private readonly feeCalculator?: FeeCalculator,
+        private readonly surplus = SurplusParams.NO_FEE
     ) {}
 
     static fromExtension(ext: FusionExtension): AmountCalculator {
@@ -25,7 +26,8 @@ export class AmountCalculator {
             AuctionCalculator.fromAuctionData(ext.auctionDetails),
             ext.extra?.fees
                 ? new FeeTakerExt.FeeCalculator(ext.extra?.fees, ext.whitelist)
-                : undefined
+                : undefined,
+            ext.surplus
         )
     }
 
@@ -146,13 +148,17 @@ export class AmountCalculator {
      * Returns amount which will receive user
      *
      * @param taker
+     * @param makingAmount amount to be filled
      * @param takingAmount base taking amount without auction and fee
+     * @param orderMakingAmount full order making amount
      * @param time block time at which order will be filled
      * @param blockBaseFee base fee of block at which order will be filled
      */
-    public getUserTakingAmountAmount(
+    public getUserTakingAmount(
         taker: Address,
+        makingAmount: bigint,
         takingAmount: bigint,
+        orderMakingAmount: bigint,
         time: bigint,
         blockBaseFee = 0n
     ): bigint {
@@ -163,7 +169,47 @@ export class AmountCalculator {
             blockBaseFee
         )
 
-        return whole - this.getTotalFee(taker, takingAmount, time, blockBaseFee)
+        const preSurplus =
+            whole - this.getTotalFee(taker, takingAmount, time, blockBaseFee)
+
+        const surplusFee = this._getSurplusFee(
+            preSurplus,
+            makingAmount,
+            orderMakingAmount
+        )
+
+        return preSurplus - surplusFee
+    }
+
+    /**
+     * Returns amount in taker asset which sent to protocol as part of surplus share
+     *
+     * @param taker
+     * @param makingAmount amount to be filled
+     * @param takingAmount base taking amount without auction and fee
+     * @param orderMakingAmount full order making amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getSurplusFee(
+        taker: Address,
+        makingAmount: bigint,
+        takingAmount: bigint,
+        orderMakingAmount: bigint,
+        time: bigint,
+        blockBaseFee = 0n
+    ): bigint {
+        const whole = this.getRequiredTakingAmount(
+            taker,
+            takingAmount,
+            time,
+            blockBaseFee
+        )
+
+        const preSurplus =
+            whole - this.getTotalFee(taker, takingAmount, time, blockBaseFee)
+
+        return this._getSurplusFee(preSurplus, makingAmount, orderMakingAmount)
     }
 
     /**
@@ -253,6 +299,36 @@ export class AmountCalculator {
                 this.getAuctionBumpedAmount(takingAmount, time, blockBaseFee)
             ) ?? 0n
         )
+    }
+
+    /**
+     * Calculates surplus fee. It will be sent to the same address as `protocolFee`
+     *
+     * @param userTakingAmount how much user would receive without surplus
+     * @param makingAmount making amount to be filled
+     * @param orderMakingAmount full order making amount
+     */
+    private _getSurplusFee(
+        userTakingAmount: bigint,
+        makingAmount: bigint,
+        orderMakingAmount: bigint
+    ): bigint {
+        const estimatedTakingAmount = mulDiv(
+            this.surplus.estimatedTakerAmount,
+            makingAmount,
+            orderMakingAmount
+        )
+
+        if (userTakingAmount > estimatedTakingAmount) {
+            const surplusFee =
+                ((userTakingAmount - estimatedTakingAmount) *
+                    BigInt(this.surplus.protocolFee.toPercent())) /
+                100n
+
+            return surplusFee
+        }
+
+        return 0n
     }
 
     private getAuctionBumpedAmount(
