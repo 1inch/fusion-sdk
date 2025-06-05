@@ -3,6 +3,7 @@ import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {FusionExtension} from './fusion-extension'
 import {Whitelist} from './whitelist'
+import {SurplusParams} from './surplus-params'
 
 describe('FusionExtension', () => {
     it('should decode', () => {
@@ -45,7 +46,8 @@ describe('FusionExtension', () => {
                         ),
                         allowFrom: 0n
                     }
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             }
         )
         const fusionExtension = FusionExtension.decode(order.extension.encode())
@@ -92,7 +94,8 @@ describe('FusionExtension', () => {
                         ),
                         allowFrom: 0n
                     }
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             },
             {
                 permit: '0xdeadbeef'

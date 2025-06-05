@@ -15,6 +15,7 @@ import {AuctionDetails} from './auction-details'
 
 import {injectTrackCode} from './source-track'
 import {Whitelist} from './whitelist/whitelist'
+import {SurplusParams} from './surplus-params'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
@@ -43,6 +44,7 @@ export class FusionOrder {
         orderInfo: OrderInfoData,
         auctionDetails: AuctionDetails,
         whitelist: Whitelist,
+        surplusParams = SurplusParams.NO_FEE,
         extra: {
             unwrapWETH?: boolean
             /**
@@ -75,6 +77,7 @@ export class FusionOrder {
             settlementExtensionContract,
             auctionDetails,
             whitelist,
+            surplusParams,
             {
                 makerPermit: extra.permit
                     ? new Interaction(orderInfo.makerAsset, extra.permit)
@@ -258,6 +261,7 @@ export class FusionOrder {
         details: {
             auction: AuctionDetails
             whitelist: Whitelist
+            surplus?: SurplusParams
         },
         extra?: {
             unwrapWETH?: boolean
@@ -291,6 +295,7 @@ export class FusionOrder {
             orderInfo,
             details.auction,
             details.whitelist,
+            details.surplus,
             extra
         )
     }
@@ -325,7 +330,7 @@ export class FusionOrder {
             'post-interaction must be enabled'
         )
 
-        const {auctionDetails, whitelist, extra} =
+        const {auctionDetails, whitelist, extra, surplus} =
             FusionExtension.fromExtension(extension)
 
         const deadline = makerTraits.expiration()
@@ -349,6 +354,7 @@ export class FusionOrder {
             },
             auctionDetails,
             whitelist,
+            surplus,
             {
                 allowMultipleFills: makerTraits.isMultipleFillsAllowed(),
                 allowPartialFills: makerTraits.isPartialFillAllowed(),
@@ -431,9 +437,41 @@ export class FusionOrder {
             this.takingAmount
         )
 
-        return this.getAmountCalculator().getUserTakingAmountAmount(
+        return this.getAmountCalculator().getUserTakingAmount(
             taker,
+            makingAmount,
             takingAmount,
+            this.makingAmount,
+            time,
+            blockBaseFee
+        )
+    }
+
+    /**
+     * How much surplus will be shared with protocol
+     *
+     * @param taker who will fill order
+     * @param makingAmount maker swap amount
+     * @param time block time at which order will be filled
+     * @param blockBaseFee base fee of block at which order will be filled
+     */
+    public getSurplusFee(
+        taker: Address,
+        makingAmount: bigint,
+        time: bigint,
+        blockBaseFee = 0n
+    ): bigint {
+        const takingAmount = calcTakingAmount(
+            makingAmount,
+            this.makingAmount,
+            this.takingAmount
+        )
+
+        return this.getAmountCalculator().getSurplusFee(
+            taker,
+            makingAmount,
+            takingAmount,
+            this.makingAmount,
             time,
             blockBaseFee
         )

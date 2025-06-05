@@ -13,7 +13,7 @@ import {
 } from './types'
 import {Cost, PresetEnum, QuoterResponse} from '../types'
 import {Preset} from '../preset'
-import {FusionOrder, Whitelist} from '../../../fusion-order'
+import {FusionOrder, SurplusParams, Whitelist} from '../../../fusion-order'
 import {QuoterRequest} from '../quoter.request'
 import {CHAIN_TO_WRAPPER} from '../../../fusion-order/constants'
 
@@ -37,6 +37,8 @@ export class Quote {
 
     public readonly toTokenAmount: string
 
+    public readonly marketReturn: bigint
+
     public readonly prices: Cost
 
     public readonly volume: Cost
@@ -48,6 +50,8 @@ export class Quote {
     public readonly slippage: number
 
     public readonly resolverFeePreset: ResolverFeePreset
+
+    public readonly surplusFee?: number
 
     constructor(
         private readonly params: QuoterRequest,
@@ -63,6 +67,7 @@ export class Quote {
                 : undefined
         }
         this.toTokenAmount = response.toTokenAmount
+        this.marketReturn = BigInt(response.marketAmount)
         this.prices = response.prices
         this.volume = response.volume
         this.quoteId = response.quoteId
@@ -77,6 +82,7 @@ export class Quote {
             ),
             bps: new Bps(BigInt(response.fee.bps))
         }
+        this.surplusFee = response.surplusFee
     }
 
     createFusionOrder(
@@ -126,6 +132,10 @@ export class Quote {
                 whitelist: this.getWhitelist(
                     auctionDetails.startTime,
                     preset.exclusiveResolver
+                ),
+                surplus: new SurplusParams(
+                    this.marketReturn,
+                    Bps.fromPercent(this.surplusFee || 0)
                 )
             },
             {
