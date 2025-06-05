@@ -5,10 +5,18 @@ import {
     FeeTakerExt,
     Extension
 } from '@1inch/limit-order-sdk'
-import {parseUnits} from 'ethers'
+import {parseEther, parseUnits} from 'ethers'
+import {
+    Fees,
+    IntegratorFee,
+    ResolverFee
+} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist'
+import {SurplusParams} from './surplus-params'
+import {AuctionCalculator} from '../amount-calculator'
+import {now} from '../utils/time'
 
 describe('Fusion Order', () => {
     it('should create fusion order', () => {
@@ -51,7 +59,8 @@ describe('Fusion Order', () => {
                         ),
                         allowFrom: 0n
                     }
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             }
         )
 
@@ -65,7 +74,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '33471150795161712739625987854073848363835856965607525350783622537007396290560',
-            salt: '15154917212229274031775300768002549554250257257796'
+            salt: '14806972048616591160256394064723634084331321369214'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
@@ -113,7 +122,8 @@ describe('Fusion Order', () => {
                         ),
                         allowFrom: 0n
                     }
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             },
             {
                 fees: FeeTakerExt.Fees.integratorFee(
@@ -137,7 +147,7 @@ describe('Fusion Order', () => {
             takingAmount: '1420000000',
             makerTraits:
                 '33471150795161712739625987854073848363835856965607525350783622537007396290560',
-            salt: '14784889872407883648102551457165962490230021209460'
+            salt: '15235559042146644103405359194784496869858870199717'
         })
 
         const makerTraits = new MakerTraits(BigInt(builtOrder.makerTraits))
@@ -185,7 +195,8 @@ describe('Fusion Order', () => {
                         ),
                         allowFrom: 0n
                     }
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             }
         )
 
@@ -234,7 +245,8 @@ describe('Fusion Order', () => {
                         ),
                         allowFrom: 0n
                     }
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             },
             {
                 source: 'test'
@@ -275,7 +287,8 @@ describe('Fusion Order', () => {
                         ),
                         allowFrom: 0n
                     }
-                ])
+                ]),
+                surplus: SurplusParams.NO_FEE
             },
             {
                 source: 'some_id'
@@ -295,24 +308,41 @@ describe('Fusion Order', () => {
 
     it('Should calculate fees', () => {
         // https://etherscan.io/tx/0x8f95dc0e6e836ca0abdad88e20cf61b0caf7c5463d67b577740f3084d428e56e
-        const data = [
-            {
-                order: '{"salt": "88244613754032523633323406132962387804442696513566413874801304436628426636029", "maker": "0x6edc317f3208b10c46f4ff97faa04dd632487408", "receiver": "0xabd4e5fb590aa132749bbf2a04ea57efbaac399e", "makerAsset": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", "takerAsset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "makerTraits": "62419173104490761595518734106935910747442209877250655105498008304728645042176", "makingAmount": "7340000000000000", "takingAmount": "17733698"}',
-                extension:
-                    '0x000000ec0000008c0000008c0000008c0000008c000000460000000000000000abd4e5fb590aa132749bbf2a04ea57efbaac399e094c49000005f667a1b28a0000b41297d701094c4900b400643c00006402d1a23c3abeed63c51b86b5636af8f99b8e85dc9fabd4e5fb590aa132749bbf2a04ea57efbaac399e094c49000005f667a1b28a0000b41297d701094c4900b400643c00006402d1a23c3abeed63c51b86b5636af8f99b8e85dc9fabd4e5fb590aa132749bbf2a04ea57efbaac399e008e097e5e0493de033270a01b324caf31f464dc6790cbe4bdd538d6e9b379bff5fe72c3d67a521de500643c00006467a1b27202d1a23c3abeed63c51b860000b5636af8f99b8e85dc9f0000'
-            }
-        ]
-
         const order = FusionOrder.fromDataAndExtension(
-            JSON.parse(data[0].order),
-            Extension.decode(data[0].extension)
+            {
+                salt: '88244613754032523633323406132962387804442696513566413874801304436628426636029',
+                maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
+                receiver: '0xabd4e5fb590aa132749bbf2a04ea57efbaac399e',
+                makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                takerAsset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+                makerTraits:
+                    '62419173104490761595518734106935910747442209877250655105498008304728645042176',
+                makingAmount: '7340000000000000',
+                takingAmount: '17733698'
+            },
+            new Extension({
+                makerAssetSuffix: '0x',
+                takerAssetSuffix: '0x',
+                makingAmountData:
+                    '0xabd4e5fb590aa132749bbf2a04ea57efbaac399e094c49000005f667a1b28a0000b41297d701094c4900b400643c00006402d1a23c3abeed63c51b86b5636af8f99b8e85dc9f',
+                takingAmountData:
+                    '0xabd4e5fb590aa132749bbf2a04ea57efbaac399e094c49000005f667a1b28a0000b41297d701094c4900b400643c00006402d1a23c3abeed63c51b86b5636af8f99b8e85dc9f',
+                predicate: '0x',
+                makerPermit: '0x',
+                preInteraction: '0x',
+                postInteraction:
+                    '0xabd4e5fb590aa132749bbf2a04ea57efbaac399e008e097e5e0493de033270a01b324caf31f464dc6790cbe4bdd538d6e9b379bff5fe72c3d67a521de500643c00006467a1b27202d1a23c3abeed63c51b860000b5636af8f99b8e85dc9f0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00',
+                customData: '0x'
+            })
         )
 
         const userAmount = order
             .getAmountCalculator()
-            .getUserTakingAmountAmount(
+            .getUserTakingAmount(
                 Address.ZERO_ADDRESS,
+                order.makingAmount,
                 order.takingAmount,
+                order.makingAmount,
                 1738650311n,
                 1533984564n
             )
@@ -337,5 +367,132 @@ describe('Fusion Order', () => {
         expect(integratorFee).toEqual(11065n)
         expect(protocolFee).toEqual(7377n)
         expect(userAmount).toEqual(18442228n)
+    })
+
+    it('should calculate surplus fee - no surplus', () => {
+        const currentTime = now()
+        const takerAddress = Address.fromBigInt(1000n)
+
+        const order = FusionOrder.new(
+            Address.ZERO_ADDRESS,
+            {
+                maker: Address.fromBigInt(10n),
+                makerAsset: Address.fromBigInt(1n),
+                takerAsset: Address.fromBigInt(1n),
+                makingAmount: parseEther('0.1'),
+                takingAmount: parseUnits('100', 6) // will be 200 at time of fill because of rate bump
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 120n,
+                    startTime: currentTime,
+                    points: [],
+                    initialRateBump: Number(
+                        AuctionCalculator.RATE_BUMP_DENOMINATOR
+                    )
+                }),
+                whitelist: Whitelist.new(0n, [
+                    {address: takerAddress, allowFrom: 0n}
+                ]),
+                surplus: new SurplusParams(
+                    parseUnits('250', 6),
+                    Bps.fromPercent(50)
+                )
+            },
+            {
+                fees: new Fees(
+                    new ResolverFee(
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(1)
+                    ),
+                    new IntegratorFee(
+                        Address.fromBigInt(123n),
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(0.1),
+                        Bps.fromPercent(10)
+                    )
+                )
+            }
+        )
+
+        const makingAmount = parseEther('0.1') / 2n
+
+        const userAmount = order.getUserReceiveAmount(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        const surplus = order.getSurplusFee(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        expect(userAmount).toEqual(100000000n)
+        expect(surplus).toEqual(0n)
+    })
+    it('should calculate surplus fee - have surplus', () => {
+        const currentTime = now()
+        const takerAddress = Address.fromBigInt(1000n)
+
+        const order = FusionOrder.new(
+            Address.ZERO_ADDRESS,
+            {
+                maker: Address.fromBigInt(10n),
+                makerAsset: Address.fromBigInt(1n),
+                takerAsset: Address.fromBigInt(1n),
+                makingAmount: parseEther('0.1'),
+                takingAmount: parseUnits('100', 6) // will be 200 at time of fill because of rate bump
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 120n,
+                    startTime: currentTime,
+                    points: [],
+                    initialRateBump: Number(
+                        AuctionCalculator.RATE_BUMP_DENOMINATOR
+                    )
+                }),
+                whitelist: Whitelist.new(0n, [
+                    {address: takerAddress, allowFrom: 0n}
+                ]),
+                surplus: new SurplusParams(
+                    parseUnits('100', 6),
+                    Bps.fromPercent(50)
+                )
+            },
+            {
+                fees: new Fees(
+                    new ResolverFee(
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(1)
+                    ),
+                    new IntegratorFee(
+                        Address.fromBigInt(123n),
+                        Address.fromBigInt(123n),
+                        Bps.fromPercent(0.1),
+                        Bps.fromPercent(10)
+                    )
+                )
+            }
+        )
+
+        const makingAmount = parseEther('0.1') / 2n
+
+        const userAmount = order.getUserReceiveAmount(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        const surplus = order.getSurplusFee(
+            takerAddress,
+            makingAmount,
+            currentTime
+        )
+
+        expect(userAmount).toEqual(75000000n)
+        expect(surplus).toEqual(25000000n)
     })
 })
