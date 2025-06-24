@@ -149,7 +149,8 @@ export class Quote {
                 enablePermit2: params.isPermit2,
                 fees: buildFees(
                     this.resolverFeePreset,
-                    this.params.integratorFee
+                    this.params.integratorFee,
+                    this.surplusFee
                 )
             }
         )
@@ -187,9 +188,17 @@ export class Quote {
 
 function buildFees(
     resolverFeePreset: ResolverFeePreset,
-    integratorFee?: IntegratorFeeParams
+    integratorFee?: IntegratorFeeParams,
+    surplusFee?: number
 ): Fees | undefined {
     const protocolReceiver = resolverFeePreset.receiver
+    const hasIntegratorFee = integratorFee && !integratorFee.value.isZero()
+    const hasProtocolFee =
+        !resolverFeePreset.bps.isZero() || (surplusFee || 0) > 0
+
+    if (!hasProtocolFee && !hasIntegratorFee) {
+        return undefined
+    }
 
     return new Fees(
         new ResolverFee(
