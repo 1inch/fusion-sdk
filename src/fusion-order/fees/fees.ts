@@ -25,10 +25,10 @@ export class Fees {
             )
         }
 
-        assert(
-            !(resolver.fee.isZero() && integrator.fee.isZero()),
-            'at least one fee must be set'
-        )
+        // assert(
+        //     !(resolver.fee.isZero() && integrator.fee.isZero()),
+        //     'at least one fee must be set'
+        // )
 
         assert(
             this.integrator.fee.toFraction() < 0.6553,
