@@ -1,20 +1,10 @@
-import {
-    Address,
-    Bps,
-    MakerTraits,
-    FeeTakerExt,
-    Extension
-} from '@1inch/limit-order-sdk'
+import {Address, Bps, MakerTraits, Extension} from '@1inch/limit-order-sdk'
 import {parseEther, parseUnits} from 'ethers'
-import {
-    Fees,
-    IntegratorFee,
-    ResolverFee
-} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist'
 import {SurplusParams} from './surplus-params'
+import {Fees, IntegratorFee, ResolverFee} from './fees'
 import {AuctionCalculator} from '../amount-calculator'
 import {now} from '../utils/time'
 
@@ -126,8 +116,8 @@ describe('Fusion Order', () => {
                 surplus: SurplusParams.NO_FEE
             },
             {
-                fees: FeeTakerExt.Fees.integratorFee(
-                    new FeeTakerExt.IntegratorFee(
+                fees: Fees.integratorFee(
+                    new IntegratorFee(
                         Address.fromBigInt(1n),
                         Address.fromBigInt(2n),
                         Bps.fromPercent(1),

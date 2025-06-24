@@ -1,13 +1,10 @@
-import {
-    FeeCalculator,
-    Fees,
-    IntegratorFee
-} from '@1inch/limit-order-sdk/extensions/fee-taker'
+import {FeeCalculator} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import {Address, Bps} from '@1inch/limit-order-sdk'
 import {AmountCalculator} from './amount-calculator'
 import {AuctionCalculator} from './auction-calculator'
 import {SurplusParams, Whitelist} from '../fusion-order'
 import {now} from '../utils/time'
+import {Fees, IntegratorFee} from '../fusion-order/fees'
 
 describe('AmountCalculator', () => {
     it('should correct extract fee', () => {

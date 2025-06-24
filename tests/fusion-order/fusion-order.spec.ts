@@ -1,10 +1,5 @@
 import {parseEther, parseUnits} from 'ethers'
 import {Bps} from '@1inch/limit-order-sdk'
-import {
-    Fees,
-    IntegratorFee,
-    ResolverFee
-} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import assert from 'assert'
 
 import {
@@ -24,6 +19,9 @@ import {USDC, WETH} from '../addresses'
 import {TestWallet} from '../test-wallet'
 
 import {now} from '../utils'
+import {Fees} from '../../src/fusion-order/fees/fees.ts'
+import {IntegratorFee} from '../../src/fusion-order/fees/integrator-fee.ts'
+import {ResolverFee} from '../../src/fusion-order/fees/resolver-fee.ts'
 
 // eslint-disable-next-line max-lines-per-function
 describe('SettlementExtension', () => {
