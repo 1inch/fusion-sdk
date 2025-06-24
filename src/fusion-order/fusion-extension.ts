@@ -5,8 +5,7 @@ import {
     Interaction,
     Bps,
     mulDiv,
-    Rounding,
-    FeeTakerExt
+    Rounding
 } from '@1inch/limit-order-sdk'
 import {BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 
@@ -14,6 +13,7 @@ import assert from 'assert'
 import {AuctionDetails} from './auction-details'
 import {Whitelist} from './whitelist/whitelist'
 import {SurplusParams} from './surplus-params'
+import {Fees, IntegratorFee, ResolverFee} from './fees'
 import {add0x} from '../utils'
 
 export class FusionExtension {
@@ -31,7 +31,7 @@ export class FusionExtension {
         public readonly extra?: {
             makerPermit?: Interaction
             customReceiver?: Address
-            fees?: FeeTakerExt.Fees
+            fees?: Fees
         }
     ) {}
 
@@ -166,17 +166,15 @@ export class FusionExtension {
             )
         }
 
-        const fees = new FeeTakerExt.Fees(
-            interactionData.fees.resolverFee.isZero()
-                ? FeeTakerExt.ResolverFee.ZERO
-                : new FeeTakerExt.ResolverFee(
-                      protocolFeeRecipient,
-                      interactionData.fees.resolverFee,
-                      interactionData.fees.whitelistDiscount
-                  ),
+        const fees = new Fees(
+            new ResolverFee(
+                protocolFeeRecipient,
+                interactionData.fees.resolverFee,
+                interactionData.fees.whitelistDiscount
+            ),
             interactionData.fees.integratorFee.isZero()
-                ? FeeTakerExt.IntegratorFee.ZERO
-                : new FeeTakerExt.IntegratorFee(
+                ? IntegratorFee.ZERO
+                : new IntegratorFee(
                       integratorFeeRecipient,
                       protocolFeeRecipient,
                       interactionData.fees.integratorFee,
@@ -286,19 +284,14 @@ export class FusionExtension {
 
         const integrator = {
             fee:
-                this.extra?.fees?.integrator.fee.toFraction(
-                    FeeTakerExt.Fees.BASE_1E5
-                ) || 0,
+                this.extra?.fees?.integrator.fee.toFraction(Fees.BASE_1E5) || 0,
             share:
-                this.extra?.fees?.integrator.share.toFraction(
-                    FeeTakerExt.Fees.BASE_1E2
-                ) || 0
+                this.extra?.fees?.integrator.share.toFraction(Fees.BASE_1E2) ||
+                0
         }
 
         const resolverFee =
-            this.extra?.fees?.resolver.fee.toFraction(
-                FeeTakerExt.Fees.BASE_1E5
-            ) || 0
+            this.extra?.fees?.resolver.fee.toFraction(Fees.BASE_1E5) || 0
         const whitelistDiscount =
             this.extra?.fees?.resolver.whitelistDiscount || Bps.ZERO
 
@@ -309,8 +302,8 @@ export class FusionExtension {
             .addUint8(
                 BigInt(
                     // contract expects discount numerator, but class contain discount
-                    Number(FeeTakerExt.Fees.BASE_1E2) -
-                        whitelistDiscount.toFraction(FeeTakerExt.Fees.BASE_1E2)
+                    Number(Fees.BASE_1E2) -
+                        whitelistDiscount.toFraction(Fees.BASE_1E2)
                 )
             )
 
@@ -333,25 +326,21 @@ export class FusionExtension {
     } {
         const whitelistDiscount =
             this.extra?.fees?.resolver.whitelistDiscount.toFraction(
-                FeeTakerExt.Fees.BASE_1E2
+                Fees.BASE_1E2
             ) || 0
 
         const discountNumerator = this.whitelist.isWhitelisted(taker)
-            ? (Number(FeeTakerExt.Fees.BASE_1E2) - whitelistDiscount) /
-              Number(FeeTakerExt.Fees.BASE_1E2)
+            ? (Number(Fees.BASE_1E2) - whitelistDiscount) /
+              Number(Fees.BASE_1E2)
             : 1
 
         const resolverFee =
             discountNumerator *
-            (this.extra?.fees?.resolver.fee.toFraction(
-                FeeTakerExt.Fees.BASE_1E5
-            ) || 0)
+            (this.extra?.fees?.resolver.fee.toFraction(Fees.BASE_1E5) || 0)
 
         const resolverFeeBN = BigInt(resolverFee)
         const integratorFeeBN = BigInt(
-            this.extra?.fees?.integrator.fee.toFraction(
-                FeeTakerExt.Fees.BASE_1E5
-            ) || 0
+            this.extra?.fees?.integrator.fee.toFraction(Fees.BASE_1E5) || 0
         )
 
         return {
@@ -374,8 +363,8 @@ export class FusionExtension {
 
         return mulDiv(
             orderTakingAmount,
-            FeeTakerExt.Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee,
-            FeeTakerExt.Fees.BASE_1E5,
+            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee,
+            Fees.BASE_1E5,
             Rounding.Ceil
         )
     }
@@ -392,19 +381,16 @@ function parseAmountData(iter: BytesIter<string>): {
     const fees = {
         integratorFee: Bps.fromFraction(
             Number(iter.nextUint16()),
-            FeeTakerExt.Fees.BASE_1E5
+            Fees.BASE_1E5
         ),
         integratorShare: Bps.fromFraction(
             Number(iter.nextUint8()),
-            FeeTakerExt.Fees.BASE_1E2
+            Fees.BASE_1E2
         ),
-        resolverFee: Bps.fromFraction(
-            Number(iter.nextUint16()),
-            FeeTakerExt.Fees.BASE_1E5
-        ),
+        resolverFee: Bps.fromFraction(Number(iter.nextUint16()), Fees.BASE_1E5),
         whitelistDiscount: Bps.fromFraction(
-            Number(FeeTakerExt.Fees.BASE_1E2) - Number(iter.nextUint8()), // contract uses 1 - discount
-            FeeTakerExt.Fees.BASE_1E2
+            Number(Fees.BASE_1E2) - Number(iter.nextUint8()), // contract uses 1 - discount
+            Fees.BASE_1E2
         )
     }
 

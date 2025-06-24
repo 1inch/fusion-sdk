@@ -37,4 +37,4 @@ jobs:
         run: pnpm test
 
       - name: Security
-        run: pnpm audit
+        run: pnpm audit --audit-level high
