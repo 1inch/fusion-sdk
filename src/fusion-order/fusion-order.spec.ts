@@ -297,10 +297,9 @@ describe('Fusion Order', () => {
     })
 
     it('Should calculate fees', () => {
-        // https://etherscan.io/tx/0x8f95dc0e6e836ca0abdad88e20cf61b0caf7c5463d67b577740f3084d428e56e
         const order = FusionOrder.fromDataAndExtension(
             {
-                salt: '88244613754032523633323406132962387804442696513566413874801304436628426636029',
+                salt: '88244613754032523633323406134225422628418021814470407656044833909440411473904',
                 maker: '0x6edc317f3208b10c46f4ff97faa04dd632487408',
                 receiver: '0xabd4e5fb590aa132749bbf2a04ea57efbaac399e',
                 makerAsset: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
