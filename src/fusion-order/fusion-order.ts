@@ -8,7 +8,6 @@ import {
     MakerTraits,
     OrderInfoData
 } from '@1inch/limit-order-sdk'
-import {Fees} from '@1inch/limit-order-sdk/extensions/fee-taker'
 import assert from 'assert'
 import {FusionExtension} from './fusion-extension'
 import {AuctionDetails} from './auction-details'
@@ -16,6 +15,7 @@ import {AuctionDetails} from './auction-details'
 import {injectTrackCode} from './source-track'
 import {Whitelist} from './whitelist/whitelist'
 import {SurplusParams} from './surplus-params'
+import {Fees} from './fees'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator'
 import {ZX} from '../constants'
 import {calcTakingAmount} from '../utils/amounts'
