@@ -341,11 +341,13 @@ export class FusionOrder {
                 ? undefined
                 : deadline - auctionDetails.startTime - auctionDetails.duration
 
-        return new FusionOrder(
+        const providedSalt = BigInt(order.salt)
+
+        const fusionOrder = new FusionOrder(
             settlementContract,
             {
                 // shift because of how LimitOrder.buildSalt works
-                salt: BigInt(order.salt) >> 160n,
+                salt: providedSalt >> 160n,
                 maker: new Address(order.maker),
                 receiver: extra?.customReceiver,
                 makerAsset: new Address(order.makerAsset),
@@ -370,6 +372,13 @@ export class FusionOrder {
                 fees: extra?.fees
             }
         )
+
+        assert(
+            providedSalt === fusionOrder.salt,
+            'invalid salt for passed extension'
+        )
+
+        return fusionOrder
     }
 
     public build(): LimitOrderV4Struct {
