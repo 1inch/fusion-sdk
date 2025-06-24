@@ -29,4 +29,8 @@ export class SurplusParams {
 
         return new SurplusParams(amount, protocolFee)
     }
+
+    public isZero(): boolean {
+        return this.protocolFee.isZero()
+    }
 }

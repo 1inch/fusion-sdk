@@ -134,9 +134,10 @@ export class FusionOrder {
         /**
          * @see https://github.com/1inch/limit-order-settlement/blob/0afb4785cb825fe959c534ff4f1a771d4d33cdf4/contracts/extensions/IntegratorFeeExtension.sol#L65
          */
-        const receiver = extra.fees
-            ? settlementExtensionContract
-            : orderInfo.receiver
+        const receiver =
+            extra.fees || !surplusParams.isZero()
+                ? settlementExtensionContract
+                : orderInfo.receiver
 
         const builtExtension = extension.build()
         const salt = LimitOrder.buildSalt(builtExtension, orderInfo.salt)
