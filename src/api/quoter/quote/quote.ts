@@ -189,24 +189,18 @@ function buildFees(
     resolverFeePreset: ResolverFeePreset,
     integratorFee?: IntegratorFeeParams
 ): Fees | undefined {
-    const hasIntegratorFee = integratorFee && !integratorFee.value.isZero()
-
-    if (resolverFeePreset.bps.isZero() && !hasIntegratorFee) {
-        return undefined
-    }
-
-    const hasResolverFee = !resolverFeePreset.bps.isZero()
+    const protocolReceiver = resolverFeePreset.receiver
 
     return new Fees(
         new ResolverFee(
-            hasResolverFee ? resolverFeePreset.receiver : Address.ZERO_ADDRESS,
+            protocolReceiver,
             resolverFeePreset.bps,
             resolverFeePreset.whitelistDiscountPercent
         ),
         integratorFee
             ? new IntegratorFee(
                   integratorFee.receiver,
-                  resolverFeePreset.receiver,
+                  protocolReceiver,
                   integratorFee.value,
                   integratorFee.share
               )
