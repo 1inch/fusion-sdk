@@ -3,7 +3,7 @@ import {
     AnyFunction,
     OnMessageCb,
     OnMessageInputVoidCb
-} from './types'
+} from './types.js'
 
 export interface WsProviderConnector {
     init(): void

@@ -1,4 +1,4 @@
-import {PaginationRequest} from './pagination'
+import {PaginationRequest} from './pagination.js'
 
 describe(__filename, () => {
     describe('validate', () => {

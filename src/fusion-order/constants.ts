@@ -1,5 +1,5 @@
 import {Address} from '@1inch/limit-order-sdk'
-import {NetworkEnum} from '../constants'
+import {NetworkEnum} from '../constants.js'
 
 export const CHAIN_TO_WRAPPER = {
     [NetworkEnum.ETHEREUM]: new Address(

@@ -1,7 +1,7 @@
 import {Address} from '@1inch/limit-order-sdk'
 import assert from 'assert'
-import {ResolverFee} from './resolver-fee'
-import {IntegratorFee} from './integrator-fee'
+import {ResolverFee} from './resolver-fee.js'
+import {IntegratorFee} from './integrator-fee.js'
 
 export class Fees {
     /**

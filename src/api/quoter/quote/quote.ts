@@ -1,17 +1,25 @@
 import {Address, Bps, randBigInt} from '@1inch/limit-order-sdk'
 import {UINT_40_MAX} from '@1inch/byte-utils'
-import {FusionOrderParams} from './order-params'
+import {FusionOrderParams} from './order-params.js'
 import {
     FusionOrderParamsData,
     IntegratorFeeParams,
     ResolverFeePreset
-} from './types'
-import {Cost, PresetEnum, QuoterResponse} from '../types'
-import {Preset} from '../preset'
-import {FusionOrder, SurplusParams, Whitelist} from '../../../fusion-order'
-import {QuoterRequest} from '../quoter.request'
-import {CHAIN_TO_WRAPPER} from '../../../fusion-order/constants'
-import {Fees, ResolverFee, IntegratorFee} from '../../../fusion-order/fees'
+} from './types.js'
+import {Cost, PresetEnum, QuoterResponse} from '../types.js'
+import {Preset} from '../preset.js'
+import {
+    FusionOrder,
+    SurplusParams,
+    Whitelist
+} from '../../../fusion-order/index.js'
+import {QuoterRequest} from '../quoter.request.js'
+import {CHAIN_TO_WRAPPER} from '../../../fusion-order/constants.js'
+import {
+    Fees,
+    ResolverFee,
+    IntegratorFee
+} from '../../../fusion-order/fees/index.js'
 
 export class Quote {
     /**

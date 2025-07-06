@@ -6,15 +6,15 @@ import {
     PreparedOrder,
     QuoteParams,
     QuoteCustomPresetParams
-} from './types'
-import {encodeCancelOrder} from './encoders'
+} from './types.js'
+import {encodeCancelOrder} from './encoders/index.js'
 import {
     FusionApi,
     Quote,
     QuoterRequest,
     RelayerRequest,
     QuoterCustomPresetRequest
-} from '../api'
+} from '../api/index.js'
 import {
     ActiveOrdersRequest,
     ActiveOrdersRequestParams,
@@ -24,8 +24,8 @@ import {
     OrdersByMakerResponse,
     OrderStatusRequest,
     OrderStatusResponse
-} from '../api/orders'
-import {FusionOrder} from '../fusion-order'
+} from '../api/orders/index.js'
+import {FusionOrder} from '../fusion-order/index.js'
 
 export class FusionSDK {
     public readonly api: FusionApi

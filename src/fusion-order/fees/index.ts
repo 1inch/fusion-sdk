@@ -1,3 +1,3 @@
-export {Fees} from './fees'
-export {IntegratorFee} from './integrator-fee'
-export {ResolverFee} from './resolver-fee'
+export {Fees} from './fees.js'
+export {IntegratorFee} from './integrator-fee.js'
+export {ResolverFee} from './resolver-fee.js'

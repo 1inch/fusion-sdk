@@ -1,10 +1,10 @@
 import {Address} from '@1inch/limit-order-sdk'
 import {BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import assert from 'assert'
-import {WhitelistItem} from './types'
-import {UINT_16_MAX} from '../../constants'
-import {now} from '../../utils/time'
-import {add0x} from '../../utils'
+import {WhitelistItem} from './types.js'
+import {UINT_16_MAX} from '../../constants.js'
+import {now} from '../../utils/time.js'
+import {add0x} from '../../utils.js'
 
 export class Whitelist {
     private constructor(

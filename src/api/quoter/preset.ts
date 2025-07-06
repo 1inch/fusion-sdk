@@ -1,6 +1,6 @@
 import {Address} from '@1inch/limit-order-sdk'
-import {AuctionPoint, PresetData} from './types'
-import {AuctionDetails} from '../../fusion-order'
+import {AuctionPoint, PresetData} from './types.js'
+import {AuctionDetails} from '../../fusion-order/index.js'
 
 export class Preset {
     public readonly auctionDuration: bigint

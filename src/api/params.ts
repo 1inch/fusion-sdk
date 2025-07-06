@@ -1,4 +1,4 @@
-import {OrdersVersion} from './ordersVersion'
+import {OrdersVersion} from './ordersVersion.js'
 
 /**
  * Concat all params to query encoded string. if `addVersion` is true, then `version` param is added to this string

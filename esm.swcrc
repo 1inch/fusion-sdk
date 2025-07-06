@@ -1,0 +1,13 @@
+{
+    "jsc": {
+        "parser": {
+            "syntax": "typescript",
+            "decorators": true
+        },
+        "experimental": {"keepImportAttributes": true},
+        "transform":  {
+            "decoratorMetadata": true
+        },
+        "preserveAllComments": true
+    }
+}

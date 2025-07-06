@@ -2,9 +2,9 @@ import {
     ActiveOrdersRequestParams,
     OrdersByMakerParams,
     OrderStatusParams
-} from './types'
-import {isHexString, isValidAddress} from '../../validations'
-import {PaginationParams, PaginationRequest} from '../pagination'
+} from './types.js'
+import {isHexString, isValidAddress} from '../../validations.js'
+import {PaginationParams, PaginationRequest} from '../pagination.js'
 
 export class ActiveOrdersRequest {
     public readonly pagination: PaginationRequest

@@ -1,7 +1,7 @@
 import {Address} from '@1inch/limit-order-sdk'
-import {QuoterRequestParams, QuoterRequestParamsRaw} from './types'
-import {IntegratorFeeParams} from './quote'
-import {isValidAmount} from '../../validations'
+import {QuoterRequestParams, QuoterRequestParamsRaw} from './types.js'
+import {IntegratorFeeParams} from './quote/index.js'
+import {isValidAmount} from '../../validations.js'
 
 export class QuoterRequest {
     public readonly fromTokenAddress: Address

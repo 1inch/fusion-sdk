@@ -1,1 +1,1 @@
-export * from './auction-calculator'
+export * from './auction-calculator.js'

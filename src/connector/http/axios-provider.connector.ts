@@ -1,6 +1,6 @@
 import axios, {isAxiosError} from 'axios'
-import {HttpProviderConnector} from './http-provider.connector'
-import {AuthError} from '../../errors'
+import {HttpProviderConnector} from './http-provider.connector.js'
+import {AuthError} from '../../errors.js'
 
 export class AxiosProviderConnector implements HttpProviderConnector {
     constructor(private readonly authKey?: string) {}

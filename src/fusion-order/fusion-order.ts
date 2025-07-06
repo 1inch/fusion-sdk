@@ -9,18 +9,18 @@ import {
     OrderInfoData
 } from '@1inch/limit-order-sdk'
 import assert from 'assert'
-import {FusionExtension} from './fusion-extension'
-import {AuctionDetails} from './auction-details'
+import {FusionExtension} from './fusion-extension.js'
+import {AuctionDetails} from './auction-details/index.js'
 
-import {injectTrackCode} from './source-track'
-import {Whitelist} from './whitelist/whitelist'
-import {SurplusParams} from './surplus-params'
-import {Fees} from './fees'
-import {AuctionCalculator} from '../amount-calculator/auction-calculator'
-import {ZX} from '../constants'
-import {calcTakingAmount} from '../utils/amounts'
-import {now} from '../utils/time'
-import {AmountCalculator} from '../amount-calculator/amount-calculator'
+import {injectTrackCode} from './source-track.js'
+import {Whitelist} from './whitelist/whitelist.js'
+import {SurplusParams} from './surplus-params.js'
+import {Fees} from './fees/index.js'
+import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
+import {ZX} from '../constants.js'
+import {calcTakingAmount} from '../utils/amounts.js'
+import {now} from '../utils/time.js'
+import {AmountCalculator} from '../amount-calculator/amount-calculator.js'
 
 export class FusionOrder {
     private static defaultExtra = {

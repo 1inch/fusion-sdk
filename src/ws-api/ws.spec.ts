@@ -1,5 +1,5 @@
 import {WebSocketServer, WebSocket} from 'ws'
-import {WebSocketApi} from './ws-api'
+import {WebSocketApi} from './ws-api.js'
 import {
     GetActiveOrdersRpcEvent,
     OrderBalanceOrAllowanceChangeEvent,
@@ -9,10 +9,10 @@ import {
     OrderFilledEvent,
     OrderFilledPartiallyEvent,
     OrderInvalidEvent
-} from './types'
-import {castUrl} from './url'
-import {NetworkEnum} from '../constants'
-import {WebsocketClient} from '../connector'
+} from './types.js'
+import {castUrl} from './url.js'
+import {NetworkEnum} from '../constants.js'
+import {WebsocketClient} from '../connector/index.js'
 
 jest.setTimeout(10 * 1000)
 

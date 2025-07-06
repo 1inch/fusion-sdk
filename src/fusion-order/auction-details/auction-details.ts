@@ -2,10 +2,10 @@ import {ethers} from 'ethers'
 import {BytesBuilder, BytesIter} from '@1inch/byte-utils'
 import {Extension} from '@1inch/limit-order-sdk'
 import assert from 'assert'
-import {AuctionGasCostInfo, AuctionPoint} from './types'
-import {isHexBytes} from '../../validations'
-import {add0x, trim0x} from '../../utils'
-import {UINT_24_MAX, UINT_32_MAX} from '../../constants'
+import {AuctionGasCostInfo, AuctionPoint} from './types.js'
+import {isHexBytes} from '../../validations.js'
+import {add0x, trim0x} from '../../utils.js'
+import {UINT_24_MAX, UINT_32_MAX} from '../../constants.js'
 
 export class AuctionDetails {
     public readonly startTime: bigint

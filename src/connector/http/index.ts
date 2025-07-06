@@ -1,2 +1,2 @@
-export * from './http-provider.connector'
-export * from './axios-provider.connector'
+export * from './http-provider.connector.js'
+export * from './axios-provider.connector.js'

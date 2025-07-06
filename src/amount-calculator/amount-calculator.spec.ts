@@ -1,10 +1,9 @@
-import {FeeCalculator} from '@1inch/limit-order-sdk/extensions/fee-taker'
-import {Address, Bps} from '@1inch/limit-order-sdk'
-import {AmountCalculator} from './amount-calculator'
-import {AuctionCalculator} from './auction-calculator'
-import {SurplusParams, Whitelist} from '../fusion-order'
-import {now} from '../utils/time'
-import {Fees, IntegratorFee} from '../fusion-order/fees'
+import {FeeTakerExt, Address, Bps} from '@1inch/limit-order-sdk'
+import {AmountCalculator} from './amount-calculator.js'
+import {AuctionCalculator} from './auction-calculator/index.js'
+import {SurplusParams, Whitelist} from '../fusion-order/index.js'
+import {now} from '../utils/time.js'
+import {Fees, IntegratorFee} from '../fusion-order/fees/index.js'
 
 describe('AmountCalculator', () => {
     it('should correct extract fee', () => {
@@ -17,7 +16,7 @@ describe('AmountCalculator', () => {
                 [{coefficient: 609353, delay: 180}],
                 {gasBumpEstimate: 609353n, gasPriceEstimate: 1526n}
             ),
-            new FeeCalculator(
+            new FeeTakerExt.FeeCalculator(
                 Fees.integratorFee(
                     new IntegratorFee(
                         new Address(
@@ -69,7 +68,7 @@ describe('AmountCalculator', () => {
             {gasBumpEstimate: 609353n, gasPriceEstimate: 1526n}
         )
         const taker = Address.fromBigInt(1n)
-        const feeCalculator = new FeeCalculator(
+        const feeCalculator = new FeeTakerExt.FeeCalculator(
             Fees.integratorFee(
                 new IntegratorFee(
                     new Address('0x8e097e5e0493de033270a01b324caf31f464dc67'),

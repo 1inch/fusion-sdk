@@ -8,8 +8,8 @@ import {
     LimitOrderV4TypeDataVersion,
     Order
 } from '@1inch/limit-order-sdk'
-import {PrivateKeyProviderConnector} from './private-key-provider.connector'
-import {Web3Like} from './web3-provider-connector'
+import {PrivateKeyProviderConnector} from './private-key-provider.connector.js'
+import {Web3Like} from './web3-provider-connector.js'
 
 describe('Private Key provider connector', () => {
     let web3Provider: Web3Like

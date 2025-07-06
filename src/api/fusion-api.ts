@@ -1,11 +1,11 @@
-import {FusionApiConfig} from './types'
+import {FusionApiConfig} from './types.js'
 import {
     QuoterApi,
     QuoterRequest,
     QuoterCustomPresetRequest,
     Quote
-} from './quoter'
-import {RelayerApi, RelayerRequest} from './relayer'
+} from './quoter/index.js'
+import {RelayerApi, RelayerRequest} from './relayer/index.js'
 import {
     ActiveOrdersRequest,
     ActiveOrdersResponse,
@@ -14,9 +14,9 @@ import {
     OrderStatusRequest,
     OrderStatusResponse,
     OrdersByMakerResponse
-} from './orders'
-import {OrdersVersion} from './ordersVersion'
-import {AxiosProviderConnector} from '../connector'
+} from './orders/index.js'
+import {OrdersVersion} from './ordersVersion.js'
+import {AxiosProviderConnector} from '../connector/index.js'
 
 export class FusionApi {
     private readonly quoterApi: QuoterApi

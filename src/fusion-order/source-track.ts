@@ -1,7 +1,7 @@
 import {BitMask, BN} from '@1inch/byte-utils'
 import {id} from 'ethers'
-import {add0x} from '../utils'
-import {isHexString} from '../validations'
+import {add0x} from '../utils.js'
+import {isHexString} from '../validations.js'
 
 const TRACK_CODE_MASK = new BitMask(224n, 256n)
 

@@ -1,6 +1,6 @@
 export {
     Address,
-    LimitOrderV4Struct,
+    type LimitOrderV4Struct,
     Extension,
     randBigInt,
     getLimitOrderContract,
@@ -10,29 +10,29 @@ export {
     AmountMode,
     getLimitOrderV4Domain,
     LimitOrderContract,
-    OrderInfoData,
-    EIP712TypedData,
+    type OrderInfoData,
+    type EIP712TypedData,
     MakerTraits
 } from '@1inch/limit-order-sdk'
-export * from './fusion-order/index'
-export * from './amount-calculator/'
-export * from './connector/index'
-export * from './sdk/index'
-export * from './constants'
-export * from './utils'
-export * from './utils/amounts'
-export * from './utils/time'
-export * from './validations'
-export * from './ws-api'
-export * from './errors'
+export * from './fusion-order/index.js'
+export * from './amount-calculator//index.js'
+export * from './connector/index.js'
+export * from './sdk/index.js'
+export * from './constants.js'
+export * from './utils.js'
+export * from './utils/amounts.js'
+export * from './utils/time.js'
+export * from './validations.js'
+export * from './ws-api/index.js'
+export * from './errors.js'
 export {
     QuoterRequest,
-    QuoterResponse,
+    type QuoterResponse,
     RelayerRequest,
     QuoterCustomPresetRequest,
     PresetEnum,
     Preset,
     Quote,
-    OrderStatusResponse,
+    type OrderStatusResponse,
     OrderStatus
-} from './api/index'
+} from './api/index.js'

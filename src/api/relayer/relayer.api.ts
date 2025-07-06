@@ -1,6 +1,9 @@
-import {RelayerRequest} from './relayer.request'
-import {RelayerApiConfig} from './types'
-import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
+import {RelayerRequest} from './relayer.request.js'
+import {RelayerApiConfig} from './types.js'
+import {
+    AxiosProviderConnector,
+    HttpProviderConnector
+} from '../../connector/index.js'
 
 export class RelayerApi {
     private static Version = 'v2.0'

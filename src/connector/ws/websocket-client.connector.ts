@@ -5,8 +5,8 @@ import {
     OnMessageCb,
     OnMessageInputVoidCb,
     WsApiConfig
-} from './types'
-import {WsProviderConnector} from './websocket-provider.connector'
+} from './types.js'
+import {WsProviderConnector} from './websocket-provider.connector.js'
 
 export class WebsocketClient implements WsProviderConnector {
     public readonly ws!: WebSocket

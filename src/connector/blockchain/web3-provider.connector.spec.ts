@@ -8,7 +8,7 @@ import {
     LimitOrderV4TypeDataVersion,
     Order
 } from '@1inch/limit-order-sdk'
-import {Web3Like, Web3ProviderConnector} from './web3-provider-connector'
+import {Web3Like, Web3ProviderConnector} from './web3-provider-connector.js'
 
 describe('Web3 provider connector', () => {
     let web3Provider: Web3Like

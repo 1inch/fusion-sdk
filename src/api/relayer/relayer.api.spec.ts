@@ -1,7 +1,7 @@
-import {RelayerApi} from './relayer.api'
-import {RelayerRequest} from './relayer.request'
-import {RelayerRequestParams} from './types'
-import {HttpProviderConnector} from '../../connector'
+import {RelayerApi} from './relayer.api.js'
+import {RelayerRequest} from './relayer.request.js'
+import {RelayerRequestParams} from './types.js'
+import {HttpProviderConnector} from '../../connector/index.js'
 
 describe('Relayer API', () => {
     const httpProvider: HttpProviderConnector = {

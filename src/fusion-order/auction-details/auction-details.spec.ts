@@ -1,4 +1,4 @@
-import {AuctionDetails} from './auction-details'
+import {AuctionDetails} from './auction-details.js'
 
 describe('Auction details', () => {
     it('Should encode/decode details', () => {
