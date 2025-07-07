@@ -22,10 +22,7 @@ export type ActiveOrder = {
     remainingMakerAmount: string
     order: LimitOrderV4Struct
     extension: string
-    /**
-     * 2.1 is one with fees
-     */
-    version: '2.0' | '2.1'
+    version: '2.2'
 }
 
 export type ActiveOrdersResponse = PaginationOutput<ActiveOrder>
