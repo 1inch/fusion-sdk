@@ -1,11 +1,11 @@
 import {Address, Bps} from '@1inch/limit-order-sdk'
-import {QuoterApi} from './quoter.api'
-import {QuoterRequest} from './quoter.request'
-import {Quote} from './quote'
-import {PresetEnum, QuoterResponse} from './types'
-import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
-import {HttpProviderConnector} from '../../connector'
-import {ONE_INCH_LIMIT_ORDER_V4} from '../../constants'
+import {QuoterApi} from './quoter.api.js'
+import {QuoterRequest} from './quoter.request.js'
+import {Quote} from './quote/index.js'
+import {PresetEnum, QuoterResponse} from './types.js'
+import {QuoterCustomPresetRequest} from './quoter-custom-preset.request.js'
+import {HttpProviderConnector} from '../../connector/index.js'
+import {ONE_INCH_LIMIT_ORDER_V4} from '../../constants.js'
 
 describe('Quoter API', () => {
     let httpProvider: HttpProviderConnector

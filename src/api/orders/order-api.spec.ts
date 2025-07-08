@@ -4,14 +4,14 @@ import {
     OrdersByMakerResponse,
     OrderStatus,
     OrderStatusResponse
-} from './types'
+} from './types.js'
 import {
     HttpProviderConnector,
     Web3Like,
     Web3ProviderConnector
-} from '../../connector'
-import {NetworkEnum} from '../../constants'
-import {FusionSDK} from '../../sdk'
+} from '../../connector/index.js'
+import {NetworkEnum} from '../../constants.js'
+import {FusionSDK} from '../../sdk/index.js'
 
 function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
     return {

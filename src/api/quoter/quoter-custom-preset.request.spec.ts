@@ -1,4 +1,4 @@
-import {QuoterCustomPresetRequest} from './quoter-custom-preset.request'
+import {QuoterCustomPresetRequest} from './quoter-custom-preset.request.js'
 
 describe(__filename, () => {
     it('auctionStartAmount should be valid', () => {

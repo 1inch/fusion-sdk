@@ -1,11 +1,11 @@
 import {instance, mock} from 'ts-mockito'
-import {FusionSDK} from './sdk'
+import {FusionSDK} from './sdk.js'
 import {
     HttpProviderConnector,
     Web3Like,
     Web3ProviderConnector
-} from '../connector'
-import {NetworkEnum} from '../constants'
+} from '../connector/index.js'
+import {NetworkEnum} from '../constants.js'
 
 function createHttpProviderFake<T>(mock: T): HttpProviderConnector {
     const httpProvider: HttpProviderConnector = {

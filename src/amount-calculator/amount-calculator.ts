@@ -1,8 +1,13 @@
-import {Address, Bps, mulDiv, Rounding} from '@1inch/limit-order-sdk'
-import {FeeCalculator} from '@1inch/limit-order-sdk/extensions/fee-taker'
-import {AuctionCalculator} from './auction-calculator'
-import {FusionExtension, SurplusParams} from '../fusion-order'
-import {Fees} from '../fusion-order/fees'
+import {
+    Address,
+    Bps,
+    mulDiv,
+    Rounding,
+    FeeTakerExt
+} from '@1inch/limit-order-sdk'
+import {AuctionCalculator} from './auction-calculator/index.js'
+import {FusionExtension, SurplusParams} from '../fusion-order/index.js'
+import {Fees} from '../fusion-order/fees/index.js'
 
 /**
  * Calculates fees/amount with accounting to auction
@@ -12,7 +17,7 @@ import {Fees} from '../fusion-order/fees'
 export class AmountCalculator {
     constructor(
         private readonly auctionCalculator: AuctionCalculator,
-        private readonly feeCalculator?: FeeCalculator,
+        private readonly feeCalculator?: FeeTakerExt.FeeCalculator,
         private readonly surplus = SurplusParams.NO_FEE
     ) {}
 
@@ -20,7 +25,7 @@ export class AmountCalculator {
         return new AmountCalculator(
             AuctionCalculator.fromAuctionData(ext.auctionDetails),
             ext.extra?.fees
-                ? new FeeCalculator(ext.extra?.fees, ext.whitelist)
+                ? new FeeTakerExt.FeeCalculator(ext.extra?.fees, ext.whitelist)
                 : undefined,
             ext.surplus
         )

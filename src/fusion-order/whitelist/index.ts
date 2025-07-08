@@ -1,2 +1,2 @@
-export * from './whitelist'
-export * from './types'
+export * from './whitelist.js'
+export * from './types.js'

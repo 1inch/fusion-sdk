@@ -1,3 +1,3 @@
-export * from './orders.api'
-export * from './orders.request'
-export * from './types'
+export * from './orders.api.js'
+export * from './orders.request.js'
+export * from './types.js'

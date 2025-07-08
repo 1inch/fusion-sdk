@@ -1,12 +1,12 @@
 import {Address, Bps, MakerTraits, Extension} from '@1inch/limit-order-sdk'
 import {parseEther, parseUnits} from 'ethers'
-import {FusionOrder} from './fusion-order'
-import {AuctionDetails} from './auction-details'
-import {Whitelist} from './whitelist'
-import {SurplusParams} from './surplus-params'
-import {Fees, IntegratorFee, ResolverFee} from './fees'
-import {AuctionCalculator} from '../amount-calculator'
-import {now} from '../utils/time'
+import {FusionOrder} from './fusion-order.js'
+import {AuctionDetails} from './auction-details/index.js'
+import {Whitelist} from './whitelist/index.js'
+import {SurplusParams} from './surplus-params.js'
+import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
+import {AuctionCalculator} from '../amount-calculator/index.js'
+import {now} from '../utils/time.js'
 
 describe('Fusion Order', () => {
     it('should create fusion order', () => {

@@ -3,7 +3,7 @@ import {
     AuctionDetails,
     AuctionPoint,
     AuctionGasCostInfo
-} from '../../fusion-order'
+} from '../../fusion-order/index.js'
 
 export class AuctionCalculator {
     public static RATE_BUMP_DENOMINATOR = 10_000_000n // 100%

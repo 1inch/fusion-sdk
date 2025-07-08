@@ -1,5 +1,5 @@
-import {NetworkEnum} from '../constants'
-import {HttpProviderConnector} from '../connector'
+import {NetworkEnum} from '../constants.js'
+import {HttpProviderConnector} from '../connector/index.js'
 
 export type FusionApiConfig = {
     url: string

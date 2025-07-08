@@ -2,16 +2,19 @@ import {
     ActiveOrdersRequest,
     OrdersByMakerRequest,
     OrderStatusRequest
-} from './orders.request'
+} from './orders.request.js'
 import {
     ActiveOrdersResponse,
     OrdersApiConfig,
     OrdersByMakerResponse,
     OrderStatusResponse
-} from './types'
-import {AxiosProviderConnector, HttpProviderConnector} from '../../connector'
-import {concatQueryParams} from '../params'
-import {OrdersVersion} from '../ordersVersion'
+} from './types.js'
+import {
+    AxiosProviderConnector,
+    HttpProviderConnector
+} from '../../connector/index.js'
+import {concatQueryParams} from '../params.js'
+import {OrdersVersion} from '../ordersVersion.js'
 
 export class OrdersApi {
     private static Version = 'v2.0'

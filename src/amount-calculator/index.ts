@@ -1,3 +1,5 @@
-export * from './auction-calculator'
-export {AmountCalculator} from './amount-calculator'
-export {FeeCalculator} from '@1inch/limit-order-sdk/extensions/fee-taker'
+import {FeeTakerExt} from '@1inch/limit-order-sdk'
+
+export * from './auction-calculator/index.js'
+export {AmountCalculator} from './amount-calculator.js'
+export const FeeCalculator = FeeTakerExt.FeeCalculator

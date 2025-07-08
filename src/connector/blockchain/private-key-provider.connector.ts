@@ -1,8 +1,8 @@
 import {EIP712TypedData} from '@1inch/limit-order-sdk'
 import {Wallet} from 'ethers'
-import {BlockchainProviderConnector} from './blockchain-provider.connector'
-import {Web3Like} from './web3-provider-connector'
-import {add0x} from '../../utils'
+import {BlockchainProviderConnector} from './blockchain-provider.connector.js'
+import {Web3Like} from './web3-provider-connector.js'
+import {add0x} from '../../utils.js'
 
 export class PrivateKeyProviderConnector
     implements BlockchainProviderConnector

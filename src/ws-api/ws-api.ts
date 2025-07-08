@@ -1,14 +1,14 @@
-import {ActiveOrdersWebSocketApi} from './active-websocket-orders-api'
-import {RpcWebsocketApi} from './rpc-websocket-api'
-import {WsApiConfigWithNetwork} from './types'
-import {castUrl} from './url'
+import {ActiveOrdersWebSocketApi} from './active-websocket-orders-api.js'
+import {RpcWebsocketApi} from './rpc-websocket-api.js'
+import {WsApiConfigWithNetwork} from './types.js'
+import {castUrl} from './url.js'
 import {
     AnyFunction,
     AnyFunctionWithThis,
     OnMessageCb,
     WebsocketClient,
     WsProviderConnector
-} from '../connector/ws'
+} from '../connector/ws/index.js'
 
 export class WebSocketApi {
     private static Version = 'v2.0'

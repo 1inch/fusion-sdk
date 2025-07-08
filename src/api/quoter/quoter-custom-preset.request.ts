@@ -2,8 +2,8 @@ import {
     CustomPreset,
     CustomPresetPoint,
     QuoterCustomPresetRequestParams
-} from './types'
-import {isValidAmount} from '../../validations'
+} from './types.js'
+import {isValidAmount} from '../../validations.js'
 
 export class QuoterCustomPresetRequest {
     public readonly customPreset: CustomPreset

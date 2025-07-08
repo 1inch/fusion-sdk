@@ -1,7 +1,7 @@
 import {Address} from '@1inch/limit-order-sdk'
 import {UINT_160_MAX} from '@1inch/byte-utils'
-import {Whitelist} from './whitelist'
-import {now} from '../../utils/time'
+import {Whitelist} from './whitelist.js'
+import {now} from '../../utils/time.js'
 
 describe('Whitelist', () => {
     it('should encode/decode', () => {

@@ -3,9 +3,9 @@ import {
     OnGetAllowedMethodsCb,
     OnPongCb,
     RpcEventType
-} from './types'
-import {PaginationParams, PaginationRequest} from '../api/pagination'
-import {WsProviderConnector} from '../connector/ws'
+} from './types.js'
+import {PaginationParams, PaginationRequest} from '../api/pagination.js'
+import {WsProviderConnector} from '../connector/ws/index.js'
 
 export class RpcWebsocketApi {
     public readonly provider: WsProviderConnector

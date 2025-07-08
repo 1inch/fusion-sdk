@@ -1,8 +1,11 @@
 import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
-import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
-import {NetworkEnum} from '../constants'
-import {CustomPreset, IntegratorFeeParams, PresetEnum} from '../api'
-import {FusionOrder} from '../fusion-order'
+import {
+    BlockchainProviderConnector,
+    HttpProviderConnector
+} from '../connector/index.js'
+import {NetworkEnum} from '../constants.js'
+import {CustomPreset, IntegratorFeeParams, PresetEnum} from '../api/index.js'
+import {FusionOrder} from '../fusion-order/index.js'
 
 export type FusionSDKConfigParams = {
     url: string

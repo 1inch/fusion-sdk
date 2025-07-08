@@ -1,3 +1,3 @@
-export * from './blockchain/index'
-export * from './http/index'
-export * from './ws'
+export * from './blockchain/index.js'
+export * from './http/index.js'
+export * from './ws/index.js'

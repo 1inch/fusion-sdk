@@ -1,5 +1,5 @@
-import {IntegratorFeeParams} from './quote'
-import {NetworkEnum} from '../../constants'
+import {IntegratorFeeParams} from './quote/index.js'
+import {NetworkEnum} from '../../constants.js'
 
 export type QuoterRequestParams = {
     fromTokenAddress: string

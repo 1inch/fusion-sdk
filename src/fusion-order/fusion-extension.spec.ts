@@ -1,9 +1,9 @@
 import {Address} from '@1inch/limit-order-sdk'
-import {FusionOrder} from './fusion-order'
-import {AuctionDetails} from './auction-details'
-import {FusionExtension} from './fusion-extension'
-import {Whitelist} from './whitelist'
-import {SurplusParams} from './surplus-params'
+import {FusionOrder} from './fusion-order.js'
+import {AuctionDetails} from './auction-details/index.js'
+import {FusionExtension} from './fusion-extension.js'
+import {Whitelist} from './whitelist/index.js'
+import {SurplusParams} from './surplus-params.js'
 
 describe('FusionExtension', () => {
     it('should decode', () => {

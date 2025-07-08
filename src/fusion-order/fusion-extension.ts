@@ -10,11 +10,11 @@ import {
 import {BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 
 import assert from 'assert'
-import {AuctionDetails} from './auction-details'
-import {Whitelist} from './whitelist/whitelist'
-import {SurplusParams} from './surplus-params'
-import {Fees, IntegratorFee, ResolverFee} from './fees'
-import {add0x} from '../utils'
+import {AuctionDetails} from './auction-details/index.js'
+import {Whitelist} from './whitelist/whitelist.js'
+import {SurplusParams} from './surplus-params.js'
+import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
+import {add0x} from '../utils.js'
 
 export class FusionExtension {
     /**

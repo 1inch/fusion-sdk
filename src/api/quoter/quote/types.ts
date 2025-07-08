@@ -1,6 +1,6 @@
 import {Address, Bps} from '@1inch/limit-order-sdk'
-import {PresetEnum} from '../types'
-import {NetworkEnum} from '../../../constants'
+import {PresetEnum} from '../types.js'
+import {NetworkEnum} from '../../../constants.js'
 
 export type FusionOrderParamsData = {
     network: NetworkEnum

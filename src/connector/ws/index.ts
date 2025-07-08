@@ -1,3 +1,3 @@
-export * from './websocket-client.connector'
-export * from './types'
-export * from './websocket-provider.connector'
+export * from './websocket-client.connector.js'
+export * from './types.js'
+export * from './websocket-provider.connector.js'

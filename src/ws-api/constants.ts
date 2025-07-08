@@ -1,4 +1,4 @@
-import {OrderEventType} from './types'
+import {OrderEventType} from './types.js'
 
 export const orderEvents: OrderEventType['event'][] = [
     'order_created',

@@ -1,1 +1,1 @@
-export * from './cancel-order.encoder'
+export * from './cancel-order.encoder.js'

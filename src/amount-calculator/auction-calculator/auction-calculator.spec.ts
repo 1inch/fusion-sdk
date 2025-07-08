@@ -1,6 +1,6 @@
 import {parseEther, parseUnits} from 'ethers'
-import {AuctionCalculator} from './auction-calculator'
-import {AuctionDetails} from '../../fusion-order'
+import {AuctionCalculator} from './auction-calculator.js'
+import {AuctionDetails} from '../../fusion-order/index.js'
 
 describe('Auction Calculator', () => {
     it('should be created successfully from suffix and salt', () => {

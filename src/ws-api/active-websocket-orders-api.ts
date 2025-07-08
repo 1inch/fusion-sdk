@@ -1,4 +1,4 @@
-import {orderEvents} from './constants'
+import {orderEvents} from './constants.js'
 import {
     OnOrderCancelledCb,
     OnOrderCb,
@@ -8,8 +8,8 @@ import {
     OnOrderInvalidCb,
     OnOrderNotEnoughBalanceOrAllowanceCb,
     OrderEventType
-} from './types'
-import {WsProviderConnector} from '../connector/ws'
+} from './types.js'
+import {WsProviderConnector} from '../connector/ws/index.js'
 
 export class ActiveOrdersWebSocketApi {
     public readonly provider!: WsProviderConnector
