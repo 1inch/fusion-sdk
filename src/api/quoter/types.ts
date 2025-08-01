@@ -24,6 +24,10 @@ export type QuoterRequestParamsRaw = Omit<
      */
     surplus: true
 
+    /**
+     * Optional slippage value in percent (e.g., 1 for 1%, max 50)
+     * Must be between 1 and 50 inclusive
+     */
     slippage?: number
 }
 
