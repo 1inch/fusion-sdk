@@ -22,6 +22,8 @@ export class QuoterRequest {
 
     public readonly isPermit2: boolean
 
+    public readonly slippage?: number
+
     constructor(params: QuoterRequestParams) {
         this.fromTokenAddress = new Address(params.fromTokenAddress)
         this.toTokenAddress = new Address(params.toTokenAddress)
@@ -32,6 +34,7 @@ export class QuoterRequest {
         this.integratorFee = params.integratorFee
         this.source = params.source || 'sdk'
         this.isPermit2 = params.isPermit2 ?? false
+        this.slippage = params.slippage
 
         if (this.fromTokenAddress.isNative()) {
             throw new Error(
@@ -75,7 +78,8 @@ export class QuoterRequest {
             fee: Number(this.integratorFee?.value.value || 0),
             source: this.source,
             isPermit2: this.isPermit2,
-            surplus: true
+            surplus: true,
+            slippage: this.slippage
         }
     }
 }
