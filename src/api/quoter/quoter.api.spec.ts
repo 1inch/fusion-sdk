@@ -176,6 +176,37 @@ describe('Quoter API', () => {
         )
     })
 
+    it('should not throw error with slippage added', async () => {
+        const quoter = QuoterApi.new(
+            {
+                url: 'https://test.com/quoter',
+                network: 1
+            },
+            httpProvider
+        )
+
+        const params = QuoterRequest.new({
+            fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            amount: '1000000000000000000000',
+            walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+            integratorFee: {
+                share: Bps.fromPercent(50),
+                receiver: Address.fromBigInt(10n),
+                value: new Bps(1n)
+            },
+            source: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            slippage: 1
+        })
+
+        const QuoterResponseMock = new Quote(params, ResponseMock)
+        const res = await quoter.getQuote(params)
+        expect(res).toStrictEqual(QuoterResponseMock)
+        expect(httpProvider.get).toHaveBeenCalledWith(
+            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f&surplus=true&slippage=1'
+        )
+    })
+
     it('getQuoteWithCustomPreset', async () => {
         const quoter = QuoterApi.new(
             {
@@ -215,6 +246,50 @@ describe('Quoter API', () => {
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.post).toHaveBeenCalledWith(
             'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f&surplus=true',
+            body.build()
+        )
+    })
+
+    it('getQuoteWithCustomPreset with slippage', async () => {
+        const quoter = QuoterApi.new(
+            {
+                url: 'https://test.com/quoter',
+                network: 1
+            },
+            httpProvider
+        )
+
+        const params = QuoterRequest.new({
+            fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            amount: '1000000000000000000000',
+            walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+            integratorFee: {
+                share: Bps.fromPercent(50),
+                receiver: Address.fromBigInt(10n),
+                value: new Bps(1n)
+            },
+            source: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            slippage: 1
+        })
+
+        const body = QuoterCustomPresetRequest.new({
+            customPreset: {
+                auctionDuration: 180,
+                auctionStartAmount: '100000',
+                auctionEndAmount: '50000',
+                points: [
+                    {toTokenAmount: '90000', delay: 20},
+                    {toTokenAmount: '70000', delay: 40}
+                ]
+            }
+        })
+
+        const QuoterResponseMock = new Quote(params, ResponseMock)
+        const res = await quoter.getQuoteWithCustomPreset(params, body)
+        expect(res).toStrictEqual(QuoterResponseMock)
+        expect(httpProvider.post).toHaveBeenCalledWith(
+            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&fee=1&source=0x6b175474e89094c44da98b954eedeac495271d0f&surplus=true&slippage=1',
             body.build()
         )
     })
