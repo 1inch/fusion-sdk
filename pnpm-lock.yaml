@@ -124,7 +124,7 @@ importers:
 packages:
 
   '@1inch/byte-utils@3.0.0':
-    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/3.0.0/1c573a3e72586540ea6f542099cd18da978118df}
+    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
@@ -133,7 +133,7 @@ packages:
         optional: true
 
   '@1inch/byte-utils@3.1.0':
-    resolution: {integrity: sha512-fMxihTlLKvRvy3gvL16DTWkZGDwQXYSEgCLX/+sazb38+YD7IK3HzKaxvAUzg8ODLwQk5oY/o6pqRQKI+9x+OA==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/3.1.0/0dc5c2b673d7f3cd76fb4578849dfed3b9682076}
+    resolution: {integrity: sha512-fMxihTlLKvRvy3gvL16DTWkZGDwQXYSEgCLX/+sazb38+YD7IK3HzKaxvAUzg8ODLwQk5oY/o6pqRQKI+9x+OA==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
@@ -142,7 +142,7 @@ packages:
         optional: true
 
   '@1inch/eslint-config@3.0.6':
-    resolution: {integrity: sha512-apfoU2TFLhpBYcVzPJlU80a8WRuMheGA3tDhd27w4X5nkKvA3wZH9vX61NAgJ+0aDNbACd1VDQ2lAcU3xseLfw==, tarball: https://npm.pkg.github.com/download/@1inch/eslint-config/3.0.6/1f938de42af87ffb89875537c3d2171848c3bffb}
+    resolution: {integrity: sha512-apfoU2TFLhpBYcVzPJlU80a8WRuMheGA3tDhd27w4X5nkKvA3wZH9vX61NAgJ+0aDNbACd1VDQ2lAcU3xseLfw==}
     peerDependencies:
       '@eslint/compat': ^1.1.0
       '@eslint/eslintrc': ^3.1.0
@@ -164,7 +164,7 @@ packages:
       typescript: ^5.5.2
 
   '@1inch/limit-order-sdk@5.0.4-rc.0':
-    resolution: {integrity: sha512-2o3gi3caPVEqch0RQsMA+Rl3xtKbUL0FJ2vXtNNZYwN/05m4woJ1UWV00dxCl1h36LyK7L4dn3Q+ySQi2YXQYA==, tarball: https://npm.pkg.github.com/download/@1inch/limit-order-sdk/5.0.4-rc.0/36d1231c3236a0f117afd028ffdaf72adab769d8}
+    resolution: {integrity: sha512-2o3gi3caPVEqch0RQsMA+Rl3xtKbUL0FJ2vXtNNZYwN/05m4woJ1UWV00dxCl1h36LyK7L4dn3Q+ySQi2YXQYA==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
@@ -176,7 +176,7 @@ packages:
         optional: true
 
   '@1inch/tsconfig@1.0.8':
-    resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==, tarball: https://npm.pkg.github.com/download/@1inch/tsconfig/1.0.8/7b487c7bfa640c7a1ecee5a664c5d0d5000ca492}
+    resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
 
   '@adraffy/ens-normalize@1.10.1':
     resolution: {integrity: sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==}
