@@ -1,6 +1,6 @@
 {
     "name": "@1inch/fusion-sdk",
-    "version": "2.3.6-rc.0",
+    "version": "2.3.6",
     "description": "1inch Fusion SDK",
     "author": "@1inch",
     "files": [
