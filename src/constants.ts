@@ -1,6 +1,8 @@
 export const ZX = '0x'
 
 export enum NetworkEnum {
+    BITCOIN = 0,
+    BITCOIN_LIGHTNING_NETWORK = -1,
     ETHEREUM = 1,
     POLYGON = 137,
     ZKSYNC = 324,
