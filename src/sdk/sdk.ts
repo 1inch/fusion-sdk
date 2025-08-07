@@ -75,7 +75,8 @@ export class FusionSDK {
             enableEstimate: !!params.enableEstimate,
             source: params.source,
             isPermit2: params.isPermit2,
-            integratorFee: params.integratorFee
+            integratorFee: params.integratorFee,
+            slippage: params.slippage
         })
 
         return this.api.getQuote(request)
@@ -210,7 +211,8 @@ export class FusionSDK {
             enableEstimate: true,
             source: params.source,
             isPermit2: params.isPermit2,
-            integratorFee: params?.integratorFee
+            integratorFee: params?.integratorFee,
+            slippage: params?.slippage
         })
 
         if (!params.customPreset) {

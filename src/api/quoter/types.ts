@@ -11,6 +11,7 @@ export type QuoterRequestParams = {
     integratorFee?: IntegratorFeeParams
     source?: string
     isPermit2?: boolean
+    slippage?: number
 }
 
 export type QuoterRequestParamsRaw = Omit<
@@ -22,6 +23,12 @@ export type QuoterRequestParamsRaw = Omit<
      * tells quoter to use new settlement with surplus
      */
     surplus: true
+
+    /**
+     * Optional slippage value in percent (e.g., 1 for 1%, max 50)
+     * Must be between 1 and 50 inclusive
+     */
+    slippage?: number
 }
 
 export type QuoterCustomPresetRequestParams = {
