@@ -55,6 +55,15 @@ export type QuoterResponse = {
     fee: ResolverFeePresetRaw
     surplusFee?: number
     marketAmount: string
+    /**
+     * In bps
+     */
+    integratorFee: number
+    integratorFeeReceiver?: string
+    /**
+     * Percentage of the integrator fee that will be shared with the integrator.
+     */
+    integratorFeeShare: number
 }
 
 export type QuoterPresets = {
