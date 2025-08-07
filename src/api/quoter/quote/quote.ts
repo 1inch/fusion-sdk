@@ -57,6 +57,8 @@ export class Quote {
 
     public readonly surplusFee?: number
 
+    public readonly integratorFeeParams?: IntegratorFeeParams
+
     constructor(
         private readonly params: QuoterRequest,
         response: QuoterResponse
@@ -87,6 +89,15 @@ export class Quote {
             bps: new Bps(BigInt(response.fee.bps))
         }
         this.surplusFee = response.surplusFee
+
+        this.integratorFeeParams =
+            response.integratorFee && response.integratorFeeReceiver
+                ? {
+                      receiver: new Address(response.integratorFeeReceiver),
+                      value: new Bps(BigInt(response.integratorFee)),
+                      share: Bps.fromPercent(response.integratorFeeShare || 0)
+                  }
+                : undefined
     }
 
     createFusionOrder(
@@ -153,7 +164,7 @@ export class Quote {
                 enablePermit2: params.isPermit2,
                 fees: buildFees(
                     this.resolverFeePreset,
-                    this.params.integratorFee,
+                    this.params.integratorFee || this.integratorFeeParams,
                     this.surplusFee
                 )
             }

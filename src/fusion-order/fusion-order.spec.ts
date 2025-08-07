@@ -357,7 +357,6 @@ describe('Fusion Order', () => {
         expect(protocolFee).toEqual(7377n)
         expect(userAmount).toEqual(18442228n)
     })
-
     it('should calculate surplus fee - no surplus', () => {
         const currentTime = now()
         const takerAddress = Address.fromBigInt(1000n)
