@@ -26,6 +26,7 @@ export type OrderCreatedEvent = Event<
         auctionEndDate: string
         remainingMakerAmount: string
         extension: string
+        isMakerContract: boolean
     }
 >
 
