@@ -5,13 +5,14 @@ import {
     InterfaceAbi,
     JsonRpcProvider,
     parseEther,
+    parseUnits,
     Wallet
 } from 'ethers'
 
 import {randBigInt} from '@1inch/limit-order-sdk'
-import {WETH} from './addresses.js'
+import {USDC, USDC_DONOR, WETH} from './addresses.js'
 import {TestWallet} from './test-wallet.js'
-import FeeTakerExt from '../dist/contracts/FeeTaker.sol/FeeTaker.json'
+import SimpleSettlement from '../dist/contracts/SimpleSettlement.sol/SimpleSettlement.json'
 import {ONE_INCH_LIMIT_ORDER_V4} from '../src/constants.js'
 
 export type EvmNodeConfig = {
@@ -50,7 +51,7 @@ export async function setupEvm(config: EvmNodeConfig): Promise<ReadyEvmFork> {
         provider
     )
     const addresses = await deployContracts(provider)
-    await setupBalances(maker)
+    await setupBalances(maker, taker, provider)
 
     return {
         chainId,
@@ -102,7 +103,7 @@ async function startNode(
         .withCommand([
             `anvil -f ${forkUrl} --fork-header "${process.env.FORK_HEADER || 'x-test: test'}" --chain-id ${chainId} --mnemonic 'hat hat horse border print cancel subway heavy copy alert eternal mask' --host 0.0.0.0`
         ])
-        .withLogConsumer((s) => s.pipe(process.stdout))
+        // .withLogConsumer((s) => s.pipe(process.stdout))
         .withWaitStrategy(new LogWaitStrategy('Listening on 0.0.0.0:8545', 1))
         .withName(`anvil_cross_chain_tests_${chainId}_${randBigInt(100n)}`)
         .start()
@@ -127,7 +128,7 @@ async function deployContracts(provider: JsonRpcProvider): Promise<{
     )
 
     const settlement = await deploy(
-        FeeTakerExt,
+        SimpleSettlement,
         [
             ONE_INCH_LIMIT_ORDER_V4,
             '0xacce550000159e70908c0499a1119d04e7039c28', // access token
@@ -142,12 +143,21 @@ async function deployContracts(provider: JsonRpcProvider): Promise<{
     }
 }
 
-async function setupBalances(maker: TestWallet): Promise<void> {
+async function setupBalances(
+    maker: TestWallet,
+    taker: TestWallet,
+    provider: JsonRpcProvider
+): Promise<void> {
     // maker have WETH
     await maker.transfer(WETH, parseEther('5'))
     await maker.unlimitedApprove(WETH, ONE_INCH_LIMIT_ORDER_V4)
 
-    // await taker.unlimitedApprove(USDC, ONE_INCH_LIMIT_ORDER_V4)
+    // taker have USDC
+    await (
+        await TestWallet.fromAddress(USDC_DONOR, provider)
+    ).transferToken(USDC, await taker.getAddress(), parseUnits('10000', 6))
+
+    await taker.unlimitedApprove(USDC, ONE_INCH_LIMIT_ORDER_V4)
 }
 
 /**
