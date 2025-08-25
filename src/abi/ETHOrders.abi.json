@@ -1,0 +1,431 @@
+[
+    {
+        "type": "constructor",
+        "inputs": [
+            {
+                "name": "weth",
+                "type": "address",
+                "internalType": "contract IWETH"
+            },
+            {
+                "name": "limitOrderProtocol",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "accessToken",
+                "type": "address",
+                "internalType": "contract IERC20"
+            }
+        ],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "receive",
+        "stateMutability": "payable"
+    },
+    {
+        "type": "function",
+        "name": "cancelOrder",
+        "inputs": [
+            {
+                "name": "makerTraits",
+                "type": "uint256",
+                "internalType": "MakerTraits"
+            },
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "internalType": "bytes32"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "cancelOrderByResolver",
+        "inputs": [
+            {
+                "name": "makerTraits",
+                "type": "uint256",
+                "internalType": "MakerTraits"
+            },
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "internalType": "bytes32"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "ethOrderDeposit",
+        "inputs": [
+            {
+                "name": "order",
+                "type": "tuple",
+                "internalType": "struct IOrderMixin.Order",
+                "components": [
+                    {
+                        "name": "salt",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "maker",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "receiver",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "takerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "takingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "makerTraits",
+                        "type": "uint256",
+                        "internalType": "MakerTraits"
+                    }
+                ]
+            },
+            {
+                "name": "extension",
+                "type": "bytes",
+                "internalType": "bytes"
+            },
+            {
+                "name": "maximumPremium",
+                "type": "uint16",
+                "internalType": "uint16"
+            },
+            {
+                "name": "auctionDuration",
+                "type": "uint32",
+                "internalType": "uint32"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "internalType": "bytes32"
+            }
+        ],
+        "stateMutability": "payable"
+    },
+    {
+        "type": "function",
+        "name": "ethOrdersBatch",
+        "inputs": [
+            {
+                "name": "orderHashes",
+                "type": "bytes32[]",
+                "internalType": "bytes32[]"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "ethOrders",
+                "type": "tuple[]",
+                "internalType": "struct ETHOrders.ETHOrder[]",
+                "components": [
+                    {
+                        "name": "maker",
+                        "type": "address",
+                        "internalType": "address"
+                    },
+                    {
+                        "name": "balance",
+                        "type": "uint96",
+                        "internalType": "uint96"
+                    },
+                    {
+                        "name": "maximumPremium",
+                        "type": "uint16",
+                        "internalType": "uint16"
+                    },
+                    {
+                        "name": "auctionDuration",
+                        "type": "uint32",
+                        "internalType": "uint32"
+                    }
+                ]
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "isValidSignature",
+        "inputs": [
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "internalType": "bytes32"
+            },
+            {
+                "name": "signature",
+                "type": "bytes",
+                "internalType": "bytes"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes4",
+                "internalType": "bytes4"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "ordersMakersBalances",
+        "inputs": [
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "internalType": "bytes32"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "maker",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "balance",
+                "type": "uint96",
+                "internalType": "uint96"
+            },
+            {
+                "name": "maximumPremium",
+                "type": "uint16",
+                "internalType": "uint16"
+            },
+            {
+                "name": "auctionDuration",
+                "type": "uint32",
+                "internalType": "uint32"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "postInteraction",
+        "inputs": [
+            {
+                "name": "",
+                "type": "tuple",
+                "internalType": "struct IOrderMixin.Order",
+                "components": [
+                    {
+                        "name": "salt",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "maker",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "receiver",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "takerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "takingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "makerTraits",
+                        "type": "uint256",
+                        "internalType": "MakerTraits"
+                    }
+                ]
+            },
+            {
+                "name": "",
+                "type": "bytes",
+                "internalType": "bytes"
+            },
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "internalType": "bytes32"
+            },
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "makingAmount",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "",
+                "type": "bytes",
+                "internalType": "bytes"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "event",
+        "name": "ETHDeposited",
+        "inputs": [
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "indexed": false,
+                "internalType": "bytes32"
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "ETHOrderCancelled",
+        "inputs": [
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "indexed": false,
+                "internalType": "bytes32"
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "ETHOrderCancelledByThirdParty",
+        "inputs": [
+            {
+                "name": "orderHash",
+                "type": "bytes32",
+                "indexed": false,
+                "internalType": "bytes32"
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "reward",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "error",
+        "name": "AccessDenied",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "CancelOrderByResolverIsForbidden",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "EthDepositRejected",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "ExistingOrder",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "InvalidOrder",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "NotEnoughBalance",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "OrderNotExpired",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RewardIsTooBig",
+        "inputs": []
+    }
+]

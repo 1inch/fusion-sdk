@@ -11,5 +11,8 @@ module.exports = {
     collectCoverageFrom: ['**/*.(t|j)s'],
     testTimeout: 20_000,
     coverageDirectory: '../coverage',
-    testEnvironment: 'node'
+    testEnvironment: 'node',
+    moduleNameMapper: {
+        '(.+)\\.js': '$1'
+    }
 }

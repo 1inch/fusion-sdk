@@ -1,4 +1,5 @@
 export * from './fusion-order.js'
+export * from './fusion-order-from-native.js'
 export * from './auction-details/index.js'
 export * from './whitelist/index.js'
 export * from './fusion-extension.js'

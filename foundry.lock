@@ -1,0 +1,14 @@
+{
+  "contracts/lib/fusion-protocol": {
+    "rev": "c0197a5b4110e89a7a832fff8e95927e41564e17"
+  },
+  "contracts/lib/solidity-utils": {
+    "rev": "0268e85fa84cff589e4397cfd925c054183e0210"
+  },
+  "contracts/lib/limit-order-protocol": {
+    "rev": "39cc2cc9feabe74fbc0db370068ef2c40b7640e8"
+  },
+  "contracts/lib/openzeppelin-contracts.git": {
+    "rev": "69c8def5f222ff96f2b5beff05dfba996368aa79"
+  }
+}

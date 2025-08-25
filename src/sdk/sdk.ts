@@ -8,6 +8,7 @@ import {
     QuoteCustomPresetParams
 } from './types.js'
 import {encodeCancelOrder} from './encoders/index.js'
+import type {EthOrdersExtension} from '../contracts/eth-orders.extension.js'
 import {
     FusionApi,
     Quote,
@@ -25,7 +26,7 @@ import {
     OrderStatusRequest,
     OrderStatusResponse
 } from '../api/orders/index.js'
-import {FusionOrder} from '../fusion-order/index.js'
+import {FusionOrder, FusionOrderFromNative} from '../fusion-order/index.js'
 
 export class FusionSDK {
     public readonly api: FusionApi
@@ -130,20 +131,18 @@ export class FusionSDK {
         return {order, hash, quoteId: quote.quoteId}
     }
 
+    /**
+     * Submit order to relayer
+     *
+     * Note, that orders from native assets must be submitted onchain as well
+     * @see EthOrdersExtension.depositForOrder
+     */
     public async submitOrder(
         order: FusionOrder,
         quoteId: string
     ): Promise<OrderInfo> {
-        if (!this.config.blockchainProvider) {
-            throw new Error('blockchainProvider has not set to config')
-        }
-
+        const signature = await this.signOrder(order)
         const orderStruct = order.build()
-
-        const signature = await this.config.blockchainProvider.signTypedData(
-            orderStruct.maker,
-            order.getTypedData(this.config.network)
-        )
 
         const relayerRequest = RelayerRequest.new({
             order: orderStruct,
@@ -188,6 +187,10 @@ export class FusionSDK {
     }
 
     async signOrder(order: FusionOrder): Promise<string> {
+        if (order instanceof FusionOrderFromNative) {
+            return order.realMaker.toString()
+        }
+
         if (!this.config.blockchainProvider) {
             throw new Error('blockchainProvider has not set to config')
         }
@@ -231,3 +234,6 @@ export class FusionSDK {
         )
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _ = EthOrdersExtension

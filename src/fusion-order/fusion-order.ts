@@ -15,7 +15,7 @@ import {AuctionDetails} from './auction-details/index.js'
 import {injectTrackCode} from './source-track.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
-import {Fees} from './fees/index.js'
+import type {Details, Extra} from './types.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
 import {ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
@@ -45,34 +45,7 @@ export class FusionOrder {
         auctionDetails: AuctionDetails,
         whitelist: Whitelist,
         surplusParams = SurplusParams.NO_FEE,
-        extra: {
-            unwrapWETH?: boolean
-            /**
-             * Required if `allowPartialFills` or `allowMultipleFills` is false
-             */
-            nonce?: bigint
-            /**
-             * 0x prefixed without the token address
-             */
-            permit?: string
-            /**
-             * Default is true
-             */
-            allowPartialFills?: boolean
-
-            /**
-             * Default is true
-             */
-            allowMultipleFills?: boolean
-            /**
-             * Order will expire in `orderExpirationDelay` after auction ends
-             * Default 12s
-             */
-            orderExpirationDelay?: bigint
-            enablePermit2?: boolean
-            source?: string
-            fees?: Fees
-        } = FusionOrder.defaultExtra,
+        extra: Extra = FusionOrder.defaultExtra,
         extension = new FusionExtension(
             settlementExtensionContract,
             auctionDetails,
@@ -144,6 +117,12 @@ export class FusionOrder {
         const saltWithInjectedTrackCode = orderInfo.salt
             ? salt
             : injectTrackCode(salt, extra.source)
+
+        if (orderInfo.makerAsset.isNative()) {
+            throw new Error(
+                'use FusionOrder.fromNative to create order from native asset'
+            )
+        }
 
         this.inner = new LimitOrder(
             {
@@ -259,37 +238,8 @@ export class FusionOrder {
          */
         settlementExtension: Address,
         orderInfo: OrderInfoData,
-        details: {
-            auction: AuctionDetails
-            whitelist: Whitelist
-            surplus?: SurplusParams
-        },
-        extra?: {
-            unwrapWETH?: boolean
-            /**
-             * Required if `allowPartialFills` or `allowMultipleFills` is false
-             * Max size is 40bit
-             */
-            nonce?: bigint
-            permit?: string
-            /**
-             * Default is true
-             */
-            allowPartialFills?: boolean
-
-            /**
-             * Default is true
-             */
-            allowMultipleFills?: boolean
-            /**
-             * Order will expire in `orderExpirationDelay` after auction ends
-             * Default 12s
-             */
-            orderExpirationDelay?: bigint
-            enablePermit2?: boolean
-            source?: string
-            fees?: Fees
-        }
+        details: Details,
+        extra?: Extra
     ): FusionOrder {
         return new FusionOrder(
             settlementExtension,

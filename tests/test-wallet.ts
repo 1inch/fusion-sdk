@@ -8,7 +8,7 @@ import {
 } from 'ethers'
 import {Address} from '@1inch/limit-order-sdk'
 import ERC20 from '../dist/contracts/IERC20.sol/IERC20.json'
-import {EIP712TypedData} from '../src'
+import {EIP712TypedData} from '../src/index.js'
 
 const coder = AbiCoder.defaultAbiCoder()
 

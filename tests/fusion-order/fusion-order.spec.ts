@@ -13,28 +13,41 @@ import {
     SurplusParams,
     TakerTraits,
     Whitelist
-} from '../../src'
-import '../global.d.ts'
-import {USDC, WETH} from '../addresses'
-import {TestWallet} from '../test-wallet'
+} from '../../src/index.js'
+import {ReadyEvmFork, setupEvm} from '../setup-chain.ts'
+import {USDC, WETH} from '../addresses.js'
+import {TestWallet} from '../test-wallet.js'
+import {now} from '../utils.js'
 
-import {now} from '../utils'
 import {Fees} from '../../src/fusion-order/fees/fees.ts'
 import {IntegratorFee} from '../../src/fusion-order/fees/integrator-fee.ts'
 import {ResolverFee} from '../../src/fusion-order/fees/resolver-fee.ts'
 
+jest.setTimeout(100_000)
+
 // eslint-disable-next-line max-lines-per-function
 describe('SettlementExtension', () => {
-    const maker = globalThis.maker
-    const taker = globalThis.taker
-    const EXT_ADDRESS = globalThis.settlementExtension
+    let maker: TestWallet
+    let taker: TestWallet
+    let EXT_ADDRESS: string
+    let testNode: ReadyEvmFork
 
     let protocol: TestWallet
     beforeAll(async () => {
+        testNode = await setupEvm({})
+        maker = testNode.maker
+        taker = testNode.taker
+        EXT_ADDRESS = testNode.addresses.settlement
+
         protocol = await TestWallet.fromAddress(
             Address.fromBigInt(256n),
-            globalThis.localNodeProvider
+            testNode.provider
         )
+    })
+
+    afterAll(async () => {
+        testNode.provider.destroy()
+        await testNode.localNode.stop()
     })
 
     it('should execute order without fees and auction', async () => {
@@ -126,7 +139,7 @@ describe('SettlementExtension', () => {
             const integratorAddress = Address.fromBigInt(1337n)
             const integrator = await TestWallet.fromAddress(
                 integratorAddress,
-                globalThis.localNodeProvider
+                testNode.provider
             )
             const initBalances = {
                 usdc: {
@@ -349,7 +362,7 @@ describe('SettlementExtension', () => {
             const protocolAddress = new Address(await protocol.getAddress())
             const integrator = await TestWallet.fromAddress(
                 integratorAddress,
-                globalThis.localNodeProvider
+                testNode.provider
             )
             const initBalances = {
                 usdc: {
@@ -475,12 +488,12 @@ describe('SettlementExtension', () => {
             const protocolAddress = new Address(await protocol.getAddress())
             const customReceiver = await TestWallet.fromAddress(
                 Address.fromBigInt(1312n),
-                globalThis.localNodeProvider
+                testNode.provider
             )
 
             const integrator = await TestWallet.fromAddress(
                 integratorAddress,
-                globalThis.localNodeProvider
+                testNode.provider
             )
             const initBalances = {
                 usdc: {
@@ -616,7 +629,7 @@ describe('SettlementExtension', () => {
             const protocolAddress = new Address(await protocol.getAddress())
             const integrator = await TestWallet.fromAddress(
                 integratorAddress,
-                globalThis.localNodeProvider
+                testNode.provider
             )
             const initBalances = {
                 usdc: {
@@ -693,9 +706,8 @@ describe('SettlementExtension', () => {
                 to: ONE_INCH_LIMIT_ORDER_V4
             })
 
-            const baseFee = (
-                await globalThis.localNodeProvider.getBlock(blockHash)
-            )?.baseFeePerGas
+            const baseFee = (await testNode.provider.getBlock(blockHash))
+                ?.baseFeePerGas
             assert(baseFee)
 
             const finalBalances = {
@@ -771,7 +783,7 @@ describe('SettlementExtension', () => {
             const protocolAddress = new Address(await protocol.getAddress())
             const integrator = await TestWallet.fromAddress(
                 integratorAddress,
-                globalThis.localNodeProvider
+                testNode.provider
             )
             const initBalances = {
                 usdc: {
@@ -851,9 +863,8 @@ describe('SettlementExtension', () => {
                 to: ONE_INCH_LIMIT_ORDER_V4
             })
 
-            const baseFee = (
-                await globalThis.localNodeProvider.getBlock(blockHash)
-            )?.baseFeePerGas
+            const baseFee = (await testNode.provider.getBlock(blockHash))
+                ?.baseFeePerGas
             assert(baseFee)
 
             const finalBalances = {
@@ -935,7 +946,7 @@ describe('SettlementExtension', () => {
     it('should execute with custom receiver no fee', async () => {
         const customReceiver = await TestWallet.fromAddress(
             Address.fromBigInt(1337n),
-            globalThis.localNodeProvider
+            testNode.provider
         )
 
         const initBalances = {
