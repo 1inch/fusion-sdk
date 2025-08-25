@@ -70,4 +70,32 @@ describe('Whitelist', () => {
             false
         )
     })
+
+    it('should correctly identify whitelisted addresses with address half reconstruction', () => {
+        const start = 1708117482n
+
+        const testAddress = new Address(
+            '0x1234567890abcdef1234567890abcdef12345678'
+        )
+        const whitelist = Whitelist.new(start, [
+            {
+                address: testAddress,
+                allowFrom: start + 10n
+            }
+        ])
+
+        // Get the address half from the whitelist
+        const addressHalf = whitelist.whitelist[0].addressHalf
+        expect(addressHalf).toBe(
+            '1234567890abcdef1234567890abcdef12345678'.slice(-20)
+        )
+
+        // Create a new address by duplicating the address half (like in the user's scenario)
+        const reconstructedAddress = new Address(addressHalf + addressHalf)
+
+        expect(whitelist.isWhitelisted(reconstructedAddress)).toBe(true)
+
+        expect(reconstructedAddress.toString().slice(-20)).toBe(addressHalf)
+        expect(reconstructedAddress.lastHalf()).toBe('0x' + addressHalf)
+    })
 })

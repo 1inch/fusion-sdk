@@ -162,7 +162,7 @@ export class Whitelist {
     }
 
     public isWhitelisted(address: Address): boolean {
-        const half = address.lastHalf()
+        const half = address.toString().slice(-20)
 
         return this.whitelist.some((w) => w.addressHalf === half)
     }
