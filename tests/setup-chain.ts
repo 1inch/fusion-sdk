@@ -13,6 +13,7 @@ import {randBigInt} from '@1inch/limit-order-sdk'
 import {USDC, USDC_DONOR, WETH} from './addresses.js'
 import {TestWallet} from './test-wallet.js'
 import SimpleSettlement from '../dist/contracts/SimpleSettlement.sol/SimpleSettlement.json'
+import ETHOrders from '../dist/contracts/ETHOrders.sol/ETHOrders.json'
 import {ONE_INCH_LIMIT_ORDER_V4} from '../src/constants.js'
 
 export type EvmNodeConfig = {
@@ -26,6 +27,7 @@ export type ReadyEvmFork = {
     provider: JsonRpcProvider
     addresses: {
         settlement: string
+        ethOrders: string
     }
     maker: TestWallet
     taker: TestWallet
@@ -121,25 +123,34 @@ async function startNode(
 
 async function deployContracts(provider: JsonRpcProvider): Promise<{
     settlement: string
+    ethOrders: string
 }> {
     const deployer = new Wallet(
         '0x3667482b9520ea17999acd812ad3db1ff29c12c006e756cdcb5fd6cc5d5a9b01',
         provider
     )
+    const accessToken = '0xacce550000159e70908c0499a1119d04e7039c28'
 
     const settlement = await deploy(
         SimpleSettlement,
         [
             ONE_INCH_LIMIT_ORDER_V4,
-            '0xacce550000159e70908c0499a1119d04e7039c28', // access token
+            accessToken,
             WETH,
             deployer.address // owner
         ],
         deployer
     )
 
+    const ethOrders = await deploy(
+        ETHOrders,
+        [WETH, ONE_INCH_LIMIT_ORDER_V4, accessToken],
+        deployer
+    )
+
     return {
-        settlement
+        settlement,
+        ethOrders
     }
 }
 
