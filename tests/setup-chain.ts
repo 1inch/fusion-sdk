@@ -13,7 +13,7 @@ import {randBigInt} from '@1inch/limit-order-sdk'
 import {USDC, USDC_DONOR, WETH} from './addresses.js'
 import {TestWallet} from './test-wallet.js'
 import SimpleSettlement from '../dist/contracts/SimpleSettlement.sol/SimpleSettlement.json'
-import ETHOrders from '../dist/contracts/ETHOrders.sol/ETHOrders.json'
+import ETHOrders from '../dist/contracts/TestEthOrders.sol/TestEthOrders.json'
 import {ONE_INCH_LIMIT_ORDER_V4} from '../src/constants.js'
 
 export type EvmNodeConfig = {

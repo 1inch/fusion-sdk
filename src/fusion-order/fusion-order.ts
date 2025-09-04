@@ -9,6 +9,7 @@ import {
     OrderInfoData
 } from '@1inch/limit-order-sdk'
 import assert from 'assert'
+import {ProxyFactory} from 'contracts/proxy-factory.js'
 import {FusionExtension} from './fusion-extension.js'
 import {AuctionDetails} from './auction-details/index.js'
 
@@ -16,8 +17,9 @@ import {injectTrackCode} from './source-track.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
+import {CHAIN_TO_WRAPPER} from './constants.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
-import {ZX} from '../constants.js'
+import {NetworkEnum, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
 import {now} from '../utils/time.js'
 import {AmountCalculator} from '../amount-calculator/amount-calculator.js'
@@ -244,6 +246,75 @@ export class FusionOrder {
         return new FusionOrder(
             settlementExtension,
             orderInfo,
+            details.auction,
+            details.whitelist,
+            details.surplus,
+            extra
+        )
+    }
+
+    static isNativeOrder(
+        chainId: number,
+        ethOrderFactory: ProxyFactory,
+        order: LimitOrderV4Struct,
+        signature: string
+    ): boolean {
+        try {
+            const orderWithRealMaker = LimitOrder.fromCalldata(signature)
+            const expectedAddress = ethOrderFactory.getProxyAddress(
+                orderWithRealMaker.getOrderHash(chainId)
+            )
+
+            return expectedAddress.equal(new Address(order.maker))
+        } catch {
+            return false
+        }
+    }
+
+    /**
+     * Create new order from native asset
+     *
+     *
+     * Note, that such order should be submitted on-chain through `ETHOrders.depositForOrder` AND off-chain through submit to relayer
+     * // todo: update link
+     * @see ETHOrders.depositForOrder https://github.com/1inch/limit-order-protocol/blob/c100474444cd71cf7989cd8a63f375e72656b8b4/contracts/extensions/ETHOrders.sol#L89
+     */
+    static fromNative(
+        chainId: NetworkEnum,
+        ethOrdersFactory: ProxyFactory,
+        /**
+         * Fusion extension address
+         * @see https://github.com/1inch/limit-order-settlement
+         */
+        settlementExtension: Address,
+        orderInfo: Omit<OrderInfoData, 'makerAsset'>,
+        details: Details,
+        extra?: Extra
+    ): FusionOrder {
+        const _orderInfo = {
+            ...orderInfo,
+            makerAsset: CHAIN_TO_WRAPPER[chainId],
+            receiver: orderInfo.receiver || orderInfo.maker
+        }
+
+        // create temp order to calc order hash
+        const _order = FusionOrder.new(
+            settlementExtension,
+            _orderInfo,
+            details,
+            extra
+        )
+
+        const finalOrderInfo = {
+            ..._orderInfo,
+            maker: ethOrdersFactory.getProxyAddress(
+                _order.getOrderHash(chainId)
+            )
+        }
+
+        return new FusionOrder(
+            settlementExtension,
+            finalOrderInfo,
             details.auction,
             details.whitelist,
             details.surplus,
@@ -596,5 +667,40 @@ export class FusionOrder {
 
     public getAmountCalculator(): AmountCalculator {
         return AmountCalculator.fromExtension(this.fusionExtension)
+    }
+
+    public isNative(
+        chainId: number,
+        ethOrderFactory: ProxyFactory,
+        signature: string
+    ): boolean {
+        return FusionOrder.isNativeOrder(
+            chainId,
+            ethOrderFactory,
+            this.build(),
+            signature
+        )
+    }
+
+    /**
+     * Returns signature for submitting native order on-chain
+     * Only valid if order is native
+     *
+     * @see FusionOrder.isNative
+     * @see FusionOrder.fromNative
+     */
+    public nativeSignature(maker: Address): string {
+        return new LimitOrder(
+            {
+                maker,
+                makerAsset: this.makerAsset,
+                makingAmount: this.makingAmount,
+                takingAmount: this.takingAmount,
+                takerAsset: this.takerAsset,
+                receiver: this.receiver,
+                salt: this.salt
+            },
+            this.inner.makerTraits
+        ).toCalldata()
     }
 }

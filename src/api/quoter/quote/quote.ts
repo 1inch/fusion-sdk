@@ -12,7 +12,6 @@ import {Cost, PresetEnum, QuoterResponse} from '../types.js'
 import {Preset} from '../preset.js'
 import {
     FusionOrder,
-    FusionOrderFromNative,
     SurplusParams,
     Whitelist
 } from '../../../fusion-order/index.js'
@@ -24,6 +23,7 @@ import {
     IntegratorFee
 } from '../../../fusion-order/fees/index.js'
 import {Details, Extra} from '../../../fusion-order/types.js'
+import {ProxyFactory} from '../../../index.js'
 
 export class Quote {
     /**
@@ -36,7 +36,7 @@ export class Quote {
      * Native asset extension address
      * @see https://github.com/1inch/limit-order-settlement todo: update link
      */
-    public readonly ethOrdersAddress?: Address
+    public readonly nativeOrderFactory?: ProxyFactory
 
     public readonly fromTokenAmount: bigint
 
@@ -91,9 +91,14 @@ export class Quote {
         this.recommendedPreset = response.recommended_preset
         this.slippage = response.autoK
         this.settlementAddress = new Address(response.settlementAddress)
-        this.ethOrdersAddress = response.ethOrdersAddress
-            ? new Address(response.ethOrdersAddress)
-            : undefined
+        this.nativeOrderFactory =
+            response.nativeOrderFactoryAddress &&
+            response.nativeOrderImplAddress
+                ? new ProxyFactory(
+                      new Address(response.nativeOrderFactoryAddress),
+                      new Address(response.nativeOrderImplAddress)
+                  )
+                : undefined
         this.resolverFeePreset = {
             receiver: new Address(response.fee.receiver),
             whitelistDiscountPercent: Bps.fromPercent(
@@ -115,7 +120,7 @@ export class Quote {
 
     createFusionOrder(
         paramsData: Omit<FusionOrderParamsData, 'permit' | 'isPermit2'>
-    ): FusionOrder | FusionOrderFromNative {
+    ): FusionOrder {
         const params = FusionOrderParams.new({
             preset: paramsData?.preset || this.recommendedPreset,
             receiver: paramsData?.receiver,
@@ -228,13 +233,13 @@ export class Quote {
     ): FusionOrder {
         if (this.params.fromTokenAddress.isNative()) {
             assert(
-                this.ethOrdersAddress,
-                'expected ethOrdersAddress to be set for order from native asset'
+                this.nativeOrderFactory,
+                'expected nativeOrderFactory to be set for order from native asset'
             )
 
-            return FusionOrderFromNative.fromNative(
+            return FusionOrder.fromNative(
                 chainId,
-                this.ethOrdersAddress,
+                this.nativeOrderFactory,
                 settlementExtension,
                 orderInfo,
                 details,

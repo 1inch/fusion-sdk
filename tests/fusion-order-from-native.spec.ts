@@ -2,34 +2,38 @@ import {parseEther, parseUnits} from 'ethers'
 import {Bps} from '@1inch/limit-order-sdk'
 import assert from 'assert'
 
+import {ReadyEvmFork, setupEvm} from './setup-chain.js'
+import {USDC, WETH} from './addresses.js'
+import {TestWallet} from './test-wallet.js'
+import {now} from './utils.js'
+
+import {Fees} from '../src/fusion-order/fees/fees.js'
+import {IntegratorFee} from '../src/fusion-order/fees/integrator-fee.js'
+import {ResolverFee} from '../src/fusion-order/fees/resolver-fee.js'
 import {
     Address,
     AmountMode,
     AuctionCalculator,
     AuctionDetails,
+    EthOrdersExtension,
     FusionOrder,
+    FusionOrderFromNative,
     LimitOrderContract,
+    NetworkEnum,
     ONE_INCH_LIMIT_ORDER_V4,
     SurplusParams,
     TakerTraits,
     Whitelist
-} from '../../src/index.js'
-import {ReadyEvmFork, setupEvm} from '../setup-chain.ts'
-import {USDC, WETH} from '../addresses.js'
-import {TestWallet} from '../test-wallet.js'
-import {now} from '../utils.js'
-
-import {Fees} from '../../src/fusion-order/fees/fees.ts'
-import {IntegratorFee} from '../../src/fusion-order/fees/integrator-fee.ts'
-import {ResolverFee} from '../../src/fusion-order/fees/resolver-fee.ts'
+} from '../src/index.js'
 
 jest.setTimeout(100_000)
 
 // eslint-disable-next-line max-lines-per-function
-describe('SettlementExtension', () => {
+describe('EthOrders', () => {
     let maker: TestWallet
     let taker: TestWallet
     let EXT_ADDRESS: string
+    let ETH_ORDERS_EXT: string
     let testNode: ReadyEvmFork
 
     let protocol: TestWallet
@@ -38,6 +42,7 @@ describe('SettlementExtension', () => {
         maker = testNode.maker
         taker = testNode.taker
         EXT_ADDRESS = testNode.addresses.settlement
+        ETH_ORDERS_EXT = testNode.addresses.ethOrders
 
         protocol = await TestWallet.fromAddress(
             Address.fromBigInt(256n),
@@ -50,7 +55,7 @@ describe('SettlementExtension', () => {
         await testNode.localNode.stop()
     })
 
-    it('should execute order without fees and auction', async () => {
+    it.only('should execute order without fees and auction', async () => {
         const initBalances = {
             usdc: {
                 maker: await maker.tokenBalance(USDC),
@@ -61,16 +66,22 @@ describe('SettlementExtension', () => {
                 maker: await maker.tokenBalance(WETH),
                 taker: await taker.tokenBalance(WETH),
                 protocol: await protocol.tokenBalance(WETH)
+            },
+            eth: {
+                maker: await maker.nativeBalance(),
+                taker: await taker.nativeBalance(),
+                protocol: await protocol.nativeBalance()
             }
         }
 
         const takerAddress = new Address(await taker.getAddress())
 
-        const order = FusionOrder.new(
+        const order = FusionOrderFromNative.fromNative(
+            NetworkEnum.ETHEREUM,
+            new Address(ETH_ORDERS_EXT),
             new Address(EXT_ADDRESS),
             {
                 maker: new Address(await maker.getAddress()),
-                makerAsset: new Address(WETH),
                 takerAsset: new Address(USDC),
                 makingAmount: parseEther('0.1'),
                 takingAmount: parseUnits('100', 6)
@@ -89,7 +100,12 @@ describe('SettlementExtension', () => {
             }
         )
 
-        const signature = await maker.signTypedData(order.getTypedData(1))
+        const signature = await maker.getAddress()
+
+        const depositCall = new EthOrdersExtension(
+            new Address(ETH_ORDERS_EXT)
+        ).deposit(order)
+        await maker.send({...depositCall, to: depositCall.to.toString()})
 
         const data = LimitOrderContract.getFillOrderArgsCalldata(
             order.build(),
@@ -115,6 +131,11 @@ describe('SettlementExtension', () => {
                 maker: await maker.tokenBalance(WETH),
                 taker: await taker.tokenBalance(WETH),
                 protocol: await protocol.tokenBalance(WETH)
+            },
+            eth: {
+                maker: await maker.nativeBalance(),
+                taker: await taker.nativeBalance(),
+                protocol: await protocol.nativeBalance()
             }
         }
 

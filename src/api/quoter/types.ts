@@ -49,10 +49,8 @@ export type QuoterResponse = {
     prices: Cost
     volume: Cost
     settlementAddress: string
-    /**
-     * Present if src token is native
-     */
-    ethOrdersAddress?: string
+    nativeOrderFactoryAddress?: string
+    nativeOrderImplAddress?: string
     whitelist: string[]
     quoteId: string | null
     autoK: number

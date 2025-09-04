@@ -1,0 +1,281 @@
+[
+    {
+        "type": "constructor",
+        "inputs": [
+            {
+                "name": "weth",
+                "type": "address",
+                "internalType": "contract IWETH"
+            },
+            {
+                "name": "nativeOrderFactory",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "limitOrderProtocol",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "accessToken",
+                "type": "address",
+                "internalType": "contract IERC20"
+            }
+        ],
+        "stateMutability": "nonpayable"
+    },
+    {"type": "receive", "stateMutability": "payable"},
+    {
+        "type": "function",
+        "name": "cancelExpiredOrderByResolver",
+        "inputs": [
+            {
+                "name": "makerOrder",
+                "type": "tuple",
+                "internalType": "struct IOrderMixin.Order",
+                "components": [
+                    {
+                        "name": "salt",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "maker",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "receiver",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "takerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "takingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "makerTraits",
+                        "type": "uint256",
+                        "internalType": "MakerTraits"
+                    }
+                ]
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "cancelOrder",
+        "inputs": [
+            {
+                "name": "makerOrder",
+                "type": "tuple",
+                "internalType": "struct IOrderMixin.Order",
+                "components": [
+                    {
+                        "name": "salt",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "maker",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "receiver",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "takerAsset",
+                        "type": "uint256",
+                        "internalType": "Address"
+                    },
+                    {
+                        "name": "makingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "takingAmount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "makerTraits",
+                        "type": "uint256",
+                        "internalType": "MakerTraits"
+                    }
+                ]
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "decimals",
+        "inputs": [],
+        "outputs": [{"name": "", "type": "uint8", "internalType": "uint8"}],
+        "stateMutability": "pure"
+    },
+    {
+        "type": "function",
+        "name": "depositAndApprove",
+        "inputs": [],
+        "outputs": [],
+        "stateMutability": "payable"
+    },
+    {
+        "type": "function",
+        "name": "isValidSignature",
+        "inputs": [
+            {"name": "hash", "type": "bytes32", "internalType": "bytes32"},
+            {"name": "signature", "type": "bytes", "internalType": "bytes"}
+        ],
+        "outputs": [{"name": "", "type": "bytes4", "internalType": "bytes4"}],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "name",
+        "inputs": [],
+        "outputs": [{"name": "", "type": "string", "internalType": "string"}],
+        "stateMutability": "pure"
+    },
+    {
+        "type": "function",
+        "name": "rescueFunds",
+        "inputs": [
+            {"name": "token", "type": "address", "internalType": "address"},
+            {"name": "to", "type": "address", "internalType": "address"},
+            {"name": "amount", "type": "uint256", "internalType": "uint256"}
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "symbol",
+        "inputs": [],
+        "outputs": [{"name": "", "type": "string", "internalType": "string"}],
+        "stateMutability": "pure"
+    },
+    {
+        "type": "event",
+        "name": "NativeOrderCancelled",
+        "inputs": [
+            {
+                "name": "makerOrderHash",
+                "type": "bytes32",
+                "indexed": false,
+                "internalType": "bytes32"
+            },
+            {
+                "name": "balance",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "resolverReward",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {"type": "error", "name": "CanNotCancelForZeroBalance", "inputs": []},
+    {"type": "error", "name": "EthDepositRejected", "inputs": []},
+    {"type": "error", "name": "ForceApproveFailed", "inputs": []},
+    {
+        "type": "error",
+        "name": "OnlyFactoryViolation",
+        "inputs": [
+            {"name": "sender", "type": "address", "internalType": "address"},
+            {"name": "factory", "type": "address", "internalType": "address"}
+        ]
+    },
+    {
+        "type": "error",
+        "name": "OnlyLimitOrderProtocolViolation",
+        "inputs": [
+            {"name": "sender", "type": "address", "internalType": "address"},
+            {
+                "name": "limitOrderProtocol",
+                "type": "address",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "error",
+        "name": "OrderIsIncorrect",
+        "inputs": [
+            {"name": "expected", "type": "address", "internalType": "address"},
+            {"name": "actual", "type": "address", "internalType": "address"}
+        ]
+    },
+    {
+        "type": "error",
+        "name": "OrderShouldBeExpired",
+        "inputs": [
+            {
+                "name": "currentTime",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "expirationTime",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "error",
+        "name": "RescueFundsTooMuch",
+        "inputs": [
+            {"name": "requested", "type": "uint256", "internalType": "uint256"},
+            {"name": "available", "type": "uint256", "internalType": "uint256"}
+        ]
+    },
+    {
+        "type": "error",
+        "name": "ResolverAccessTokenMissing",
+        "inputs": [
+            {"name": "resolver", "type": "address", "internalType": "address"},
+            {
+                "name": "accessToken",
+                "type": "address",
+                "internalType": "address"
+            }
+        ]
+    },
+    {"type": "error", "name": "SafeTransferFailed", "inputs": []}
+]
