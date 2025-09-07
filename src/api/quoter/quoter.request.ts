@@ -36,12 +36,6 @@ export class QuoterRequest {
         this.isPermit2 = params.isPermit2 ?? false
         this.slippage = params.slippage
 
-        if (this.fromTokenAddress.isNative()) {
-            throw new Error(
-                `cannot swap ${Address.NATIVE_CURRENCY}: wrap native currency to it's wrapper fist`
-            )
-        }
-
         if (this.fromTokenAddress.isZero() || this.toTokenAddress.isZero()) {
             throw new Error(
                 `replace ${Address.ZERO_ADDRESS} with ${Address.NATIVE_CURRENCY}`
