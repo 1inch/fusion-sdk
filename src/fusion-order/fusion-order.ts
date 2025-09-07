@@ -294,7 +294,10 @@ export class FusionOrder {
         const _orderInfo = {
             ...orderInfo,
             makerAsset: CHAIN_TO_WRAPPER[chainId],
-            receiver: orderInfo.receiver || orderInfo.maker
+            receiver:
+                orderInfo.receiver && !orderInfo.receiver.isZero()
+                    ? orderInfo.receiver
+                    : orderInfo.maker
         }
 
         // create temp order to calc order hash
@@ -314,7 +317,8 @@ export class FusionOrder {
 
         return new FusionOrder(
             settlementExtension,
-            finalOrderInfo,
+            // use same salt to have same order hash. Remove extension hash from it
+            {...finalOrderInfo, salt: _order.salt >> 160n},
             details.auction,
             details.whitelist,
             details.surplus,
