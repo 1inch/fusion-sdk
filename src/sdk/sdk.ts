@@ -128,7 +128,12 @@ export class FusionSDK {
 
         const hash = order.getOrderHash(this.config.network)
 
-        return {order, hash, quoteId: quote.quoteId}
+        return {
+            order,
+            hash,
+            quoteId: quote.quoteId,
+            nativeOrderFactory: quote.nativeOrderFactory?.factory
+        }
     }
 
     /**
