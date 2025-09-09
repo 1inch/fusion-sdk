@@ -76,6 +76,11 @@
                         "internalType": "MakerTraits"
                     }
                 ]
+            },
+            {
+                "name": "rewardLimit",
+                "type": "uint256",
+                "internalType": "uint256"
             }
         ],
         "outputs": [],

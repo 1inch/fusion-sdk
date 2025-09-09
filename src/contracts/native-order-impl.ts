@@ -20,14 +20,15 @@ export class NativeOrdersImpl {
 
     public cancelExpiredOrderByResolver(
         maker: Address,
-        order: LimitOrderV4Struct
+        order: LimitOrderV4Struct,
+        rewardLimit: bigint
     ): CallInfo {
         return {
             to: this.address,
             value: 0n,
             data: this.iface.encodeFunctionData(
                 'cancelExpiredOrderByResolver',
-                [{...order, maker: maker.toString()}]
+                [{...order, maker: maker.toString()}, rewardLimit]
             )
         }
     }
