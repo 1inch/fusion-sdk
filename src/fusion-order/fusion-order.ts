@@ -712,7 +712,9 @@ export class FusionOrder {
                 receiver: this.receiver,
                 salt: this.salt
             },
-            this.inner.makerTraits
+            this.inner.makerTraits,
+            undefined,
+            {optimizeReceiverAddress: false}
         ).toCalldata()
     }
 }
