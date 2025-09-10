@@ -30,7 +30,8 @@ export class FusionOrder {
         allowMultipleFills: true,
         unwrapWETH: false,
         enablePermit2: false,
-        orderExpirationDelay: 12n
+        orderExpirationDelay: 12n,
+        optimizeReceiverAddress: true
     }
 
     public readonly fusionExtension: FusionExtension
@@ -126,6 +127,11 @@ export class FusionOrder {
             )
         }
 
+        const optimizeReceiverAddress =
+            extra.optimizeReceiverAddress !== undefined
+                ? extra.optimizeReceiverAddress
+                : FusionOrder.defaultExtra.optimizeReceiverAddress
+
         this.inner = new LimitOrder(
             {
                 ...orderInfo,
@@ -133,7 +139,8 @@ export class FusionOrder {
                 salt: saltWithInjectedTrackCode
             },
             makerTraits,
-            builtExtension
+            builtExtension,
+            {optimizeReceiverAddress}
         )
 
         this.fusionExtension = extension
@@ -305,7 +312,7 @@ export class FusionOrder {
             settlementExtension,
             _orderInfo,
             details,
-            extra
+            {...extra, optimizeReceiverAddress: false}
         )
 
         const finalOrderInfo = {
@@ -394,7 +401,8 @@ export class FusionOrder {
                         : Interaction.decode(extension.makerPermit).data,
                 unwrapWETH: makerTraits.isNativeUnwrapEnabled(),
                 orderExpirationDelay,
-                fees: extra?.fees
+                fees: extra?.fees,
+                optimizeReceiverAddress: true
             }
         )
 
