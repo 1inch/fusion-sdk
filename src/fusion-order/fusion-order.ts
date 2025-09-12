@@ -6,10 +6,10 @@ import {
     LimitOrder,
     LimitOrderV4Struct,
     MakerTraits,
-    OrderInfoData
+    OrderInfoData,
+    ProxyFactory
 } from '@1inch/limit-order-sdk'
 import assert from 'assert'
-import {ProxyFactory} from 'contracts/proxy-factory.js'
 import {FusionExtension} from './fusion-extension.js'
 import {AuctionDetails} from './auction-details/index.js'
 
@@ -17,7 +17,6 @@ import {injectTrackCode} from './source-track.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
-import {CHAIN_TO_WRAPPER} from './constants.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
 import {NetworkEnum, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
@@ -36,7 +35,7 @@ export class FusionOrder {
 
     public readonly fusionExtension: FusionExtension
 
-    private inner: LimitOrder
+    protected inner: LimitOrder
 
     protected constructor(
         /**
@@ -266,16 +265,12 @@ export class FusionOrder {
         order: LimitOrderV4Struct,
         signature: string
     ): boolean {
-        try {
-            const orderWithRealMaker = LimitOrder.fromCalldata(signature)
-            const expectedAddress = ethOrderFactory.getProxyAddress(
-                orderWithRealMaker.getOrderHash(chainId)
-            )
-
-            return expectedAddress.equal(new Address(order.maker))
-        } catch {
-            return false
-        }
+        return LimitOrder.isNativeOrder(
+            chainId,
+            ethOrderFactory,
+            order,
+            signature
+        )
     }
 
     /**
@@ -300,14 +295,13 @@ export class FusionOrder {
     ): FusionOrder {
         const _orderInfo = {
             ...orderInfo,
-            makerAsset: CHAIN_TO_WRAPPER[chainId],
+            makerAsset: LimitOrder.CHAIN_TO_WRAPPER[chainId],
             receiver:
                 orderInfo.receiver && !orderInfo.receiver.isZero()
                     ? orderInfo.receiver
                     : orderInfo.maker
         }
 
-        // create temp order to calc order hash
         const _order = FusionOrder.new(
             settlementExtension,
             _orderInfo,
@@ -315,22 +309,15 @@ export class FusionOrder {
             {...extra, optimizeReceiverAddress: false}
         )
 
-        const finalOrderInfo = {
-            ..._orderInfo,
-            maker: ethOrdersFactory.getProxyAddress(
-                _order.getOrderHash(chainId)
-            )
-        }
-
-        return new FusionOrder(
-            settlementExtension,
-            // use same salt to have same order hash. Remove extension hash from it
-            {...finalOrderInfo, salt: _order.salt >> 160n},
-            details.auction,
-            details.whitelist,
-            details.surplus,
-            extra
+        _order.inner = LimitOrder.fromNative(
+            chainId,
+            ethOrdersFactory,
+            {..._orderInfo, salt: _order.salt},
+            _order.inner.makerTraits,
+            _order.inner.extension
         )
+
+        return _order
     }
 
     /**
@@ -686,12 +673,7 @@ export class FusionOrder {
         ethOrderFactory: ProxyFactory,
         signature: string
     ): boolean {
-        return FusionOrder.isNativeOrder(
-            chainId,
-            ethOrderFactory,
-            this.build(),
-            signature
-        )
+        return this.inner.isNative(chainId, ethOrderFactory, signature)
     }
 
     /**
@@ -702,19 +684,6 @@ export class FusionOrder {
      * @see FusionOrder.fromNative
      */
     public nativeSignature(maker: Address): string {
-        return new LimitOrder(
-            {
-                maker,
-                makerAsset: this.makerAsset,
-                makingAmount: this.makingAmount,
-                takingAmount: this.takingAmount,
-                takerAsset: this.takerAsset,
-                receiver: this.receiver,
-                salt: this.salt
-            },
-            this.inner.makerTraits,
-            undefined,
-            {optimizeReceiverAddress: false}
-        ).toCalldata()
+        return this.inner.nativeSignature(maker)
     }
 }

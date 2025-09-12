@@ -5,15 +5,21 @@ import {NativeOrderImpl, IWETH, IERC20} from '../lib/limit-order-protocol/contra
 contract TestNativeOrderImpl is NativeOrderImpl {
     constructor(
         IWETH weth,
-        address nativeOrderImplementation,
+        address nativeOrderFactory,
         address limitOrderProtocol,
-        IERC20 accessToken
+        IERC20 accessToken,
+        uint256 cancellationDelay,
+        string memory name,
+        string memory version
     )
         NativeOrderImpl(
             weth,
-            nativeOrderImplementation,
+            nativeOrderFactory,
             limitOrderProtocol,
-            accessToken
+            accessToken,
+            cancellationDelay, // Recommended 60 seconds delay after order expiration for rewardable cancellation
+            name,
+            version
         )
     {}
 }

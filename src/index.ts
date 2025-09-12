@@ -12,7 +12,10 @@ export {
     LimitOrderContract,
     type OrderInfoData,
     type EIP712TypedData,
-    MakerTraits
+    MakerTraits,
+    ProxyFactory,
+    NativeOrdersFactory,
+    NativeOrdersImpl
 } from '@1inch/limit-order-sdk'
 export * from './fusion-order/index.js'
 export * from './amount-calculator//index.js'
@@ -25,7 +28,6 @@ export * from './utils/time.js'
 export * from './validations.js'
 export * from './ws-api/index.js'
 export * from './errors.js'
-export * from './contracts/index.js'
 export {
     QuoterRequest,
     type QuoterResponse,
