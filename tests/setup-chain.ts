@@ -13,7 +13,8 @@ import {randBigInt} from '@1inch/limit-order-sdk'
 import {USDC, USDC_DONOR, WETH} from './addresses.js'
 import {TestWallet} from './test-wallet.js'
 import SimpleSettlement from '../dist/contracts/SimpleSettlement.sol/SimpleSettlement.json'
-import ETHOrders from '../dist/contracts/TestEthOrders.sol/TestEthOrders.json'
+import NativeOrderFactory from '../dist/contracts/NativeOrderFactory.sol/NativeOrderFactory.json'
+import NativeOrderImpl from '../dist/contracts/NativeOrderImpl.sol/NativeOrderImpl.json'
 import {ONE_INCH_LIMIT_ORDER_V4} from '../src/constants.js'
 
 export type EvmNodeConfig = {
@@ -27,7 +28,8 @@ export type ReadyEvmFork = {
     provider: JsonRpcProvider
     addresses: {
         settlement: string
-        ethOrders: string
+        nativeOrdersFactory: string
+        nativeOrdersImpl: string
     }
     maker: TestWallet
     taker: TestWallet
@@ -123,7 +125,8 @@ async function startNode(
 
 async function deployContracts(provider: JsonRpcProvider): Promise<{
     settlement: string
-    ethOrders: string
+    nativeOrdersFactory: string
+    nativeOrdersImpl: string
 }> {
     const deployer = new Wallet(
         '0x3667482b9520ea17999acd812ad3db1ff29c12c006e756cdcb5fd6cc5d5a9b01',
@@ -142,15 +145,37 @@ async function deployContracts(provider: JsonRpcProvider): Promise<{
         deployer
     )
 
-    const ethOrders = await deploy(
-        ETHOrders,
-        [WETH, ONE_INCH_LIMIT_ORDER_V4, accessToken],
+    const nativeOrderImpl = await deploy(
+        NativeOrderImpl,
+        [
+            WETH,
+            deployer.address,
+            ONE_INCH_LIMIT_ORDER_V4,
+            accessToken,
+            60,
+            '1inch Aggregation Router',
+            '6' // version
+        ],
+        deployer
+    )
+
+    const nativeOrderFactory = await deploy(
+        NativeOrderFactory,
+        [
+            WETH,
+            ONE_INCH_LIMIT_ORDER_V4,
+            accessToken,
+            60,
+            '1inch Aggregation Router',
+            '6'
+        ],
         deployer
     )
 
     return {
         settlement,
-        ethOrders
+        nativeOrdersFactory: nativeOrderFactory,
+        nativeOrdersImpl: nativeOrderImpl
     }
 }
 

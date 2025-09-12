@@ -1,5 +1,5 @@
-import {parseEther, parseUnits} from 'ethers'
-import {Bps} from '@1inch/limit-order-sdk'
+import {parseEther, parseUnits, Contract} from 'ethers'
+import {Bps, ProxyFactory} from '@1inch/limit-order-sdk'
 import assert from 'assert'
 
 import {ReadyEvmFork, setupEvm} from './setup-chain.js'
@@ -15,9 +15,7 @@ import {
     AmountMode,
     AuctionCalculator,
     AuctionDetails,
-    EthOrdersExtension,
     FusionOrder,
-    FusionOrderFromNative,
     LimitOrderContract,
     NetworkEnum,
     ONE_INCH_LIMIT_ORDER_V4,
@@ -25,15 +23,17 @@ import {
     TakerTraits,
     Whitelist
 } from '../src/index.js'
+import NativeOrderFactory from '../dist/contracts/NativeOrderFactory.sol/NativeOrderFactory.json'
 
 jest.setTimeout(100_000)
 
 // eslint-disable-next-line max-lines-per-function
-describe('EthOrders', () => {
+describe('NativeOrders', () => {
     let maker: TestWallet
     let taker: TestWallet
     let EXT_ADDRESS: string
-    let ETH_ORDERS_EXT: string
+    let NATIVE_ORDERS_FACTORY: string
+    let NATIVE_ORDERS_IMPL: string
     let testNode: ReadyEvmFork
 
     let protocol: TestWallet
@@ -42,7 +42,8 @@ describe('EthOrders', () => {
         maker = testNode.maker
         taker = testNode.taker
         EXT_ADDRESS = testNode.addresses.settlement
-        ETH_ORDERS_EXT = testNode.addresses.ethOrders
+        NATIVE_ORDERS_FACTORY = testNode.addresses.nativeOrdersFactory
+        NATIVE_ORDERS_IMPL = testNode.addresses.nativeOrdersImpl
 
         protocol = await TestWallet.fromAddress(
             Address.fromBigInt(256n),
@@ -76,9 +77,12 @@ describe('EthOrders', () => {
 
         const takerAddress = new Address(await taker.getAddress())
 
-        const order = FusionOrderFromNative.fromNative(
+        const order = FusionOrder.fromNative(
             NetworkEnum.ETHEREUM,
-            new Address(ETH_ORDERS_EXT),
+            new ProxyFactory(
+                new Address(NATIVE_ORDERS_FACTORY),
+                new Address(NATIVE_ORDERS_IMPL)
+            ),
             new Address(EXT_ADDRESS),
             {
                 maker: new Address(await maker.getAddress()),
@@ -100,15 +104,28 @@ describe('EthOrders', () => {
             }
         )
 
-        const signature = await maker.getAddress()
+        const nativeOrderFactory = new Address(NATIVE_ORDERS_FACTORY)
+        const orderData = order.build()
 
-        const depositCall = new EthOrdersExtension(
-            new Address(ETH_ORDERS_EXT)
-        ).deposit(order)
-        await maker.send({...depositCall, to: depositCall.to.toString()})
+        const signature = order.nativeSignature(
+            new Address(await maker.getAddress())
+        )
+
+        const factoryContract = new Contract(
+            nativeOrderFactory.toString(),
+            NativeOrderFactory.abi,
+            maker.provider
+        )
+
+        const createTx =
+            await factoryContract.create.populateTransaction(orderData)
+        await maker.send({
+            ...createTx,
+            value: order.makingAmount
+        })
 
         const data = LimitOrderContract.getFillOrderArgsCalldata(
-            order.build(),
+            orderData,
             signature,
             TakerTraits.default()
                 .setExtension(order.extension)
