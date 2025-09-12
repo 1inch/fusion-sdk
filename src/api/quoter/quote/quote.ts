@@ -132,6 +132,7 @@ export class Quote {
             permit: this.params.permit,
             isPermit2: this.params.isPermit2,
             nonce: paramsData?.nonce,
+            delayAuctionStartTimeBy: paramsData?.delayAuctionStartTimeBy,
             network: paramsData.network
         })
 

@@ -28,6 +28,13 @@ export type Extra = {
     enablePermit2?: boolean
     source?: string
     fees?: Fees
+
+    /**
+     * When enabled, orders where maker == receiver will have ZERO_ADDRESS set
+     * Used to save calldata costs
+     * By default: enabled
+     */
+    optimizeReceiverAddress?: boolean
 }
 
 export type Details = {
