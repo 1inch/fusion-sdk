@@ -1,4 +1,10 @@
-import {Address, Bps, OrderInfoData, randBigInt} from '@1inch/limit-order-sdk'
+import {
+    Address,
+    Bps,
+    OrderInfoData,
+    randBigInt,
+    ProxyFactory
+} from '@1inch/limit-order-sdk'
 import {UINT_40_MAX} from '@1inch/byte-utils'
 import assert from 'assert'
 import {NetworkEnum} from 'constants.js'
@@ -23,7 +29,6 @@ import {
     IntegratorFee
 } from '../../../fusion-order/fees/index.js'
 import {Details, Extra} from '../../../fusion-order/types.js'
-import {ProxyFactory} from '../../../index.js'
 
 export class Quote {
     /**

@@ -1,11 +1,16 @@
-import {Address, Bps, MakerTraits, Extension} from '@1inch/limit-order-sdk'
+import {
+    Address,
+    Bps,
+    MakerTraits,
+    Extension,
+    ProxyFactory
+} from '@1inch/limit-order-sdk'
 import {parseEther, parseUnits} from 'ethers'
 import {FusionOrder} from './fusion-order.js'
 import {AuctionDetails} from './auction-details/index.js'
 import {Whitelist} from './whitelist/index.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
-import {ProxyFactory} from '../contracts/proxy-factory.js'
 import {NetworkEnum} from '../constants.js'
 import {AuctionCalculator} from '../amount-calculator/index.js'
 import {now} from '../utils/time.js'

@@ -1,4 +1,4 @@
-import {Address, MakerTraits} from '@1inch/limit-order-sdk'
+import {Address, MakerTraits, NativeOrdersFactory} from '@1inch/limit-order-sdk'
 import {
     FusionSDKConfigParams,
     OrderInfo,
@@ -8,7 +8,6 @@ import {
     QuoteCustomPresetParams
 } from './types.js'
 import {encodeCancelOrder} from './encoders/index.js'
-import type {NativeOrdersFactory} from '../contracts/index.js'
 import {
     FusionApi,
     Quote,
