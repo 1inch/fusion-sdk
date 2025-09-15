@@ -31,6 +31,8 @@ export type QuoterResponse = {
     prices: Cost
     volume: Cost
     settlementAddress: string
+    nativeOrderFactoryAddress?: string
+    nativeOrderImplAddress?: string
     whitelist: string[]
     quoteId: string | null
     autoK: number

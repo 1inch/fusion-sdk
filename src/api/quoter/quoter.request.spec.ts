@@ -2,18 +2,6 @@ import {Address} from '@1inch/limit-order-sdk'
 import {QuoterRequest} from './quoter.request'
 
 describe(__filename, () => {
-    it('should return error if native currency', () => {
-        expect(() =>
-            QuoterRequest.new({
-                fromTokenAddress: Address.NATIVE_CURRENCY.toString(),
-                toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-                amount: '1000000000000000000000',
-                walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
-                fee: 1
-            })
-        ).toThrow(/wrap native currency/)
-    })
-
     it('returns error fromTokenAddress or toTokenAddress equals ZERO_ADDRESS', () => {
         expect(() =>
             QuoterRequest.new({
