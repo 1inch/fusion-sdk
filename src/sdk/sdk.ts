@@ -151,11 +151,18 @@ export class FusionSDK {
         return this._submitOrder(order, quoteId, signature)
     }
 
+    /**
+     * Submit order to relayer
+     *
+     * Note, that orders from native assets must be submitted on-chain as well
+     * @see NativeOrdersFactory.create
+     */
     public async submitNativeOrder(
         order: FusionOrder,
+        maker: Address,
         quoteId: string
     ): Promise<OrderInfo> {
-        const signature = this.signNativeOrder(order, order.maker)
+        const signature = this.signNativeOrder(order, maker)
 
         return this._submitOrder(order, quoteId, signature)
     }
