@@ -151,6 +151,15 @@ export class FusionSDK {
         return this._submitOrder(order, quoteId, signature)
     }
 
+    public async submitNativeOrder(
+        order: FusionOrder,
+        quoteId: string
+    ): Promise<OrderInfo> {
+        const signature = this.signNativeOrder(order, order.maker)
+
+        return this._submitOrder(order, quoteId, signature)
+    }
+
     async placeOrder(params: OrderParams): Promise<OrderInfo> {
         const {order, quoteId} = await this.createOrder(params)
 
