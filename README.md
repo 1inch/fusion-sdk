@@ -109,10 +109,9 @@ main()
 
 ## How to swap with Fusion mode from Native asset
 ```typescript
-import {FusionSDK, NetworkEnum, OrderStatus, PrivateKeyProviderConnector, Web3Like, Address} from "@1inch/fusion-sdk";
+import {FusionSDK, NetworkEnum, OrderStatus, PrivateKeyProviderConnector, Web3Like, Address, NativeOrdersFactory} from "@1inch/fusion-sdk";
 import {computeAddress, formatUnits, JsonRpcProvider, Wallet} from "ethers";
 
-const NativeOrderFactoryAddress = '0xa562172dd87480687debca1cd7ab6a309919e9d8' // todo: move to SDK
 const PRIVATE_KEY = 'YOUR_PRIVATE_KEY'
 const NODE_URL = 'YOUR_WEB3_NODE_URL'
 const DEV_PORTAL_API_TOKEN = 'YOUR_DEV_PORTAL_API_TOKEN'
@@ -163,7 +162,7 @@ async function main() {
 
     console.log('OrderHash', info.orderHash)
 
-    const factory = new NativeOrdersFactory(new Address(NativeOrderFactoryAddress))
+    const factory = NativeOrdersFactory.default(NetworkEnum.BINANCE)
     const call = factory.create(new Address(wallet.address), preparedOrder.order)
 
     const txRes = await wallet.sendTransaction({
