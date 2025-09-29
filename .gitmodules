@@ -1,0 +1,13 @@
+[submodule "contracts/lib/openzeppelin-contracts.git"]
+	path = contracts/lib/openzeppelin-contracts.git
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git
+[submodule "contracts/lib/solidity-utils"]
+	path = contracts/lib/solidity-utils
+	url = https://github.com/1inch/solidity-utils
+[submodule "contracts/lib/limit-order-protocol"]
+	path = contracts/lib/limit-order-protocol
+	url = https://github.com/1inch/limit-order-protocol
+    branch = feature/new-eth-orders
+[submodule "contracts/lib/fusion-protocol"]
+	path = contracts/lib/fusion-protocol
+	url = https://github.com/1inch/fusion-protocol

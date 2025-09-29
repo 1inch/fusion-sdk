@@ -1,4 +1,4 @@
-import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
+import {Address, LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 import {BlockchainProviderConnector, HttpProviderConnector} from '../connector'
 import {NetworkEnum} from '../constants'
 import {CustomPreset, PresetEnum} from '../api'
@@ -75,4 +75,5 @@ export type PreparedOrder = {
     order: FusionOrder
     hash: string
     quoteId: string
+    nativeOrderFactory?: Address
 }
