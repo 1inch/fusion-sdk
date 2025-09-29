@@ -1,4 +1,4 @@
-import {Address, MakerTraits} from '@1inch/limit-order-sdk'
+import {Address, MakerTraits, NativeOrdersFactory} from '@1inch/limit-order-sdk'
 import {
     FusionSDKConfigParams,
     OrderInfo,
@@ -127,40 +127,44 @@ export class FusionSDK {
 
         const hash = order.getOrderHash(this.config.network)
 
-        return {order, hash, quoteId: quote.quoteId}
+        return {
+            order,
+            hash,
+            quoteId: quote.quoteId,
+            nativeOrderFactory: quote.nativeOrderFactory?.factory
+        }
     }
 
+    /**
+     * Submit order to relayer
+     *
+     * Note, that orders from native assets must be submitted with `submitNativeOrder`
+     *
+     * @see FusionSDK.submitNativeOrder
+     */
     public async submitOrder(
         order: FusionOrder,
         quoteId: string
     ): Promise<OrderInfo> {
-        if (!this.config.blockchainProvider) {
-            throw new Error('blockchainProvider has not set to config')
-        }
+        const signature = await this.signOrder(order)
 
-        const orderStruct = order.build()
+        return this._submitOrder(order, quoteId, signature)
+    }
 
-        const signature = await this.config.blockchainProvider.signTypedData(
-            orderStruct.maker,
-            order.getTypedData(this.config.network)
-        )
+    /**
+     * Submit order to relayer
+     *
+     * Note, that orders from native assets must be submitted on-chain as well
+     * @see NativeOrdersFactory.create
+     */
+    public async submitNativeOrder(
+        order: FusionOrder,
+        maker: Address,
+        quoteId: string
+    ): Promise<OrderInfo> {
+        const signature = this.signNativeOrder(order, maker)
 
-        const relayerRequest = RelayerRequest.new({
-            order: orderStruct,
-            signature,
-            quoteId,
-            extension: order.extension.encode()
-        })
-
-        await this.api.submitOrder(relayerRequest)
-
-        return {
-            order: orderStruct,
-            signature,
-            quoteId,
-            orderHash: order.getOrderHash(this.config.network),
-            extension: relayerRequest.extension
-        }
+        return this._submitOrder(order, quoteId, signature)
     }
 
     async placeOrder(params: OrderParams): Promise<OrderInfo> {
@@ -187,6 +191,13 @@ export class FusionSDK {
         )
     }
 
+    /**
+     * Sign order using `blockchainProvider` from config
+     *
+     * Use FusionSDK.signNativeOrder for signing orders from native asset
+     *
+     * @see FusionSDK.signNativeOrder
+     */
     async signOrder(order: FusionOrder): Promise<string> {
         if (!this.config.blockchainProvider) {
             throw new Error('blockchainProvider has not set to config')
@@ -199,6 +210,35 @@ export class FusionSDK {
             orderStruct.maker,
             data
         )
+    }
+
+    public signNativeOrder(order: FusionOrder, maker: Address): string {
+        return order.nativeSignature(maker)
+    }
+
+    private async _submitOrder(
+        order: FusionOrder,
+        quoteId: string,
+        signature: string
+    ): Promise<OrderInfo> {
+        const orderStruct = order.build()
+
+        const relayerRequest = RelayerRequest.new({
+            order: orderStruct,
+            signature,
+            quoteId,
+            extension: order.extension.encode()
+        })
+
+        await this.api.submitOrder(relayerRequest)
+
+        return {
+            order: orderStruct,
+            signature,
+            quoteId,
+            orderHash: order.getOrderHash(this.config.network),
+            extension: relayerRequest.extension
+        }
     }
 
     private async getQuoteResult(params: OrderParams): Promise<Quote> {
@@ -231,3 +271,6 @@ export class FusionSDK {
         )
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _ = NativeOrdersFactory

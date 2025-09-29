@@ -1,5 +1,13 @@
-import {Address, Bps, randBigInt} from '@1inch/limit-order-sdk'
+import {
+    Address,
+    Bps,
+    OrderInfoData,
+    randBigInt,
+    ProxyFactory
+} from '@1inch/limit-order-sdk'
 import {UINT_40_MAX} from '@1inch/byte-utils'
+import assert from 'assert'
+import {NetworkEnum} from 'constants.js'
 import {FusionOrderParams} from './order-params.js'
 import {
     FusionOrderParamsData,
@@ -20,6 +28,7 @@ import {
     ResolverFee,
     IntegratorFee
 } from '../../../fusion-order/fees/index.js'
+import {Details, Extra} from '../../../fusion-order/types.js'
 
 export class Quote {
     /**
@@ -27,6 +36,12 @@ export class Quote {
      * @see https://github.com/1inch/limit-order-settlement
      */
     public readonly settlementAddress: Address
+
+    /**
+     * Native asset extension address
+     * @see https://github.com/1inch/limit-order-settlement todo: update link
+     */
+    public readonly nativeOrderFactory?: ProxyFactory
 
     public readonly fromTokenAmount: bigint
 
@@ -81,6 +96,14 @@ export class Quote {
         this.recommendedPreset = response.recommended_preset
         this.slippage = response.autoK
         this.settlementAddress = new Address(response.settlementAddress)
+        this.nativeOrderFactory =
+            response.nativeOrderFactoryAddress &&
+            response.nativeOrderImplAddress
+                ? new ProxyFactory(
+                      new Address(response.nativeOrderFactoryAddress),
+                      new Address(response.nativeOrderImplAddress)
+                  )
+                : undefined
         this.resolverFeePreset = {
             receiver: new Address(response.fee.receiver),
             whitelistDiscountPercent: Bps.fromPercent(
@@ -109,6 +132,7 @@ export class Quote {
             permit: this.params.permit,
             isPermit2: this.params.isPermit2,
             nonce: paramsData?.nonce,
+            delayAuctionStartTimeBy: paramsData?.delayAuctionStartTimeBy,
             network: paramsData.network
         })
 
@@ -132,42 +156,48 @@ export class Quote {
             ? CHAIN_TO_WRAPPER[paramsData.network]
             : this.params.toTokenAddress
 
-        return FusionOrder.new(
+        const orderInfo = {
+            makerAsset: this.params.fromTokenAddress,
+            takerAsset: takerAsset,
+            makingAmount: this.fromTokenAmount,
+            takingAmount: preset.auctionEndAmount,
+            maker: this.params.walletAddress,
+            receiver: params.receiver
+        }
+
+        const details = {
+            auction: auctionDetails,
+            whitelist: this.getWhitelist(
+                auctionDetails.startTime,
+                preset.exclusiveResolver
+            ),
+            surplus: new SurplusParams(
+                this.marketReturn,
+                Bps.fromPercent(this.surplusFee || 0)
+            )
+        }
+        const extra = {
+            nonce,
+            unwrapWETH: this.params.toTokenAddress.isNative(),
+            permit: params.permit,
+            allowPartialFills,
+            allowMultipleFills,
+            orderExpirationDelay: paramsData?.orderExpirationDelay,
+            source: this.params.source,
+            enablePermit2: params.isPermit2,
+            fees: buildFees(
+                this.resolverFeePreset,
+                this.params.integratorFee || this.integratorFeeParams,
+                this.surplusFee
+            )
+        }
+
+        return this._createOrder(
+            paramsData.network,
             this.settlementAddress,
-            {
-                makerAsset: this.params.fromTokenAddress,
-                takerAsset: takerAsset,
-                makingAmount: this.fromTokenAmount,
-                takingAmount: preset.auctionEndAmount,
-                maker: this.params.walletAddress,
-                receiver: params.receiver
-            },
-            {
-                auction: auctionDetails,
-                whitelist: this.getWhitelist(
-                    auctionDetails.startTime,
-                    preset.exclusiveResolver
-                ),
-                surplus: new SurplusParams(
-                    this.marketReturn,
-                    Bps.fromPercent(this.surplusFee || 0)
-                )
-            },
-            {
-                nonce,
-                unwrapWETH: this.params.toTokenAddress.isNative(),
-                permit: params.permit,
-                allowPartialFills,
-                allowMultipleFills,
-                orderExpirationDelay: paramsData?.orderExpirationDelay,
-                source: this.params.source,
-                enablePermit2: params.isPermit2,
-                fees: buildFees(
-                    this.resolverFeePreset,
-                    this.params.integratorFee || this.integratorFeeParams,
-                    this.surplusFee
-                )
-            }
+            orderInfo,
+            details,
+            extra
         )
     }
 
@@ -198,6 +228,32 @@ export class Quote {
                 allowFrom: 0n
             }))
         )
+    }
+
+    private _createOrder(
+        chainId: NetworkEnum,
+        settlementExtension: Address,
+        orderInfo: OrderInfoData,
+        details: Details,
+        extra?: Extra
+    ): FusionOrder {
+        if (this.params.fromTokenAddress.isNative()) {
+            assert(
+                this.nativeOrderFactory,
+                'expected nativeOrderFactory to be set for order from native asset'
+            )
+
+            return FusionOrder.fromNative(
+                chainId,
+                this.nativeOrderFactory,
+                settlementExtension,
+                orderInfo,
+                details,
+                extra
+            )
+        }
+
+        return FusionOrder.new(settlementExtension, orderInfo, details, extra)
     }
 }
 

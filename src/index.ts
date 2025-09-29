@@ -12,7 +12,10 @@ export {
     LimitOrderContract,
     type OrderInfoData,
     type EIP712TypedData,
-    MakerTraits
+    MakerTraits,
+    ProxyFactory,
+    NativeOrdersFactory,
+    NativeOrdersImpl
 } from '@1inch/limit-order-sdk'
 export * from './fusion-order/index.js'
 export * from './amount-calculator//index.js'

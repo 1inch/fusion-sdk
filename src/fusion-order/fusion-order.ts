@@ -6,7 +6,8 @@ import {
     LimitOrder,
     LimitOrderV4Struct,
     MakerTraits,
-    OrderInfoData
+    OrderInfoData,
+    ProxyFactory
 } from '@1inch/limit-order-sdk'
 import assert from 'assert'
 import {FusionExtension} from './fusion-extension.js'
@@ -15,9 +16,9 @@ import {AuctionDetails} from './auction-details/index.js'
 import {injectTrackCode} from './source-track.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
-import {Fees} from './fees/index.js'
+import type {Details, Extra} from './types.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
-import {ZX} from '../constants.js'
+import {NetworkEnum, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
 import {now} from '../utils/time.js'
 import {AmountCalculator} from '../amount-calculator/amount-calculator.js'
@@ -28,12 +29,13 @@ export class FusionOrder {
         allowMultipleFills: true,
         unwrapWETH: false,
         enablePermit2: false,
-        orderExpirationDelay: 12n
+        orderExpirationDelay: 12n,
+        optimizeReceiverAddress: true
     }
 
     public readonly fusionExtension: FusionExtension
 
-    private inner: LimitOrder
+    protected inner: LimitOrder
 
     protected constructor(
         /**
@@ -45,34 +47,7 @@ export class FusionOrder {
         auctionDetails: AuctionDetails,
         whitelist: Whitelist,
         surplusParams = SurplusParams.NO_FEE,
-        extra: {
-            unwrapWETH?: boolean
-            /**
-             * Required if `allowPartialFills` or `allowMultipleFills` is false
-             */
-            nonce?: bigint
-            /**
-             * 0x prefixed without the token address
-             */
-            permit?: string
-            /**
-             * Default is true
-             */
-            allowPartialFills?: boolean
-
-            /**
-             * Default is true
-             */
-            allowMultipleFills?: boolean
-            /**
-             * Order will expire in `orderExpirationDelay` after auction ends
-             * Default 12s
-             */
-            orderExpirationDelay?: bigint
-            enablePermit2?: boolean
-            source?: string
-            fees?: Fees
-        } = FusionOrder.defaultExtra,
+        extra: Extra = FusionOrder.defaultExtra,
         extension = new FusionExtension(
             settlementExtensionContract,
             auctionDetails,
@@ -145,6 +120,17 @@ export class FusionOrder {
             ? salt
             : injectTrackCode(salt, extra.source)
 
+        if (orderInfo.makerAsset.isNative()) {
+            throw new Error(
+                'use FusionOrder.fromNative to create order from native asset'
+            )
+        }
+
+        const optimizeReceiverAddress =
+            extra.optimizeReceiverAddress !== undefined
+                ? extra.optimizeReceiverAddress
+                : FusionOrder.defaultExtra.optimizeReceiverAddress
+
         this.inner = new LimitOrder(
             {
                 ...orderInfo,
@@ -152,7 +138,8 @@ export class FusionOrder {
                 salt: saltWithInjectedTrackCode
             },
             makerTraits,
-            builtExtension
+            builtExtension,
+            {optimizeReceiverAddress}
         )
 
         this.fusionExtension = extension
@@ -259,37 +246,8 @@ export class FusionOrder {
          */
         settlementExtension: Address,
         orderInfo: OrderInfoData,
-        details: {
-            auction: AuctionDetails
-            whitelist: Whitelist
-            surplus?: SurplusParams
-        },
-        extra?: {
-            unwrapWETH?: boolean
-            /**
-             * Required if `allowPartialFills` or `allowMultipleFills` is false
-             * Max size is 40bit
-             */
-            nonce?: bigint
-            permit?: string
-            /**
-             * Default is true
-             */
-            allowPartialFills?: boolean
-
-            /**
-             * Default is true
-             */
-            allowMultipleFills?: boolean
-            /**
-             * Order will expire in `orderExpirationDelay` after auction ends
-             * Default 12s
-             */
-            orderExpirationDelay?: bigint
-            enablePermit2?: boolean
-            source?: string
-            fees?: Fees
-        }
+        details: Details,
+        extra?: Extra
     ): FusionOrder {
         return new FusionOrder(
             settlementExtension,
@@ -299,6 +257,67 @@ export class FusionOrder {
             details.surplus,
             extra
         )
+    }
+
+    static isNativeOrder(
+        chainId: number,
+        ethOrderFactory: ProxyFactory,
+        order: LimitOrderV4Struct,
+        signature: string
+    ): boolean {
+        return LimitOrder.isNativeOrder(
+            chainId,
+            ethOrderFactory,
+            order,
+            signature
+        )
+    }
+
+    /**
+     * Create new order from native asset
+     *
+     *
+     * Note, that such order should be submitted on-chain through `ETHOrders.depositForOrder` AND off-chain through submit to relayer
+     * // todo: update link
+     * @see ETHOrders.depositForOrder https://github.com/1inch/limit-order-protocol/blob/c100474444cd71cf7989cd8a63f375e72656b8b4/contracts/extensions/ETHOrders.sol#L89
+     */
+    static fromNative(
+        chainId: NetworkEnum,
+        ethOrdersFactory: ProxyFactory,
+        /**
+         * Fusion extension address
+         * @see https://github.com/1inch/limit-order-settlement
+         */
+        settlementExtension: Address,
+        orderInfo: Omit<OrderInfoData, 'makerAsset'>,
+        details: Details,
+        extra?: Extra
+    ): FusionOrder {
+        const _orderInfo = {
+            ...orderInfo,
+            makerAsset: LimitOrder.CHAIN_TO_WRAPPER[chainId],
+            receiver:
+                orderInfo.receiver && !orderInfo.receiver.isZero()
+                    ? orderInfo.receiver
+                    : orderInfo.maker
+        }
+
+        const _order = FusionOrder.new(
+            settlementExtension,
+            _orderInfo,
+            details,
+            {...extra, optimizeReceiverAddress: false}
+        )
+
+        _order.inner = LimitOrder.fromNative(
+            chainId,
+            ethOrdersFactory,
+            {..._orderInfo, salt: _order.salt},
+            _order.inner.makerTraits,
+            _order.inner.extension
+        )
+
+        return _order
     }
 
     /**
@@ -369,7 +388,8 @@ export class FusionOrder {
                         : Interaction.decode(extension.makerPermit).data,
                 unwrapWETH: makerTraits.isNativeUnwrapEnabled(),
                 orderExpirationDelay,
-                fees: extra?.fees
+                fees: extra?.fees,
+                optimizeReceiverAddress: true
             }
         )
 
@@ -646,5 +666,24 @@ export class FusionOrder {
 
     public getAmountCalculator(): AmountCalculator {
         return AmountCalculator.fromExtension(this.fusionExtension)
+    }
+
+    public isNative(
+        chainId: number,
+        ethOrderFactory: ProxyFactory,
+        signature: string
+    ): boolean {
+        return this.inner.isNative(chainId, ethOrderFactory, signature)
+    }
+
+    /**
+     * Returns signature for submitting native order on-chain
+     * Only valid if order is native
+     *
+     * @see FusionOrder.isNative
+     * @see FusionOrder.fromNative
+     */
+    public nativeSignature(maker: Address): string {
+        return this.inner.nativeSignature(maker)
     }
 }

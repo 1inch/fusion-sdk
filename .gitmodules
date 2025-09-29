@@ -7,6 +7,7 @@
 [submodule "contracts/lib/limit-order-protocol"]
 	path = contracts/lib/limit-order-protocol
 	url = https://github.com/1inch/limit-order-protocol
+    branch = feature/new-eth-orders
 [submodule "contracts/lib/fusion-protocol"]
 	path = contracts/lib/fusion-protocol
 	url = https://github.com/1inch/fusion-protocol

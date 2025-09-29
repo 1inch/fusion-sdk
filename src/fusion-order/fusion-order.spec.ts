@@ -1,10 +1,17 @@
-import {Address, Bps, MakerTraits, Extension} from '@1inch/limit-order-sdk'
+import {
+    Address,
+    Bps,
+    MakerTraits,
+    Extension,
+    ProxyFactory
+} from '@1inch/limit-order-sdk'
 import {parseEther, parseUnits} from 'ethers'
 import {FusionOrder} from './fusion-order.js'
 import {AuctionDetails} from './auction-details/index.js'
 import {Whitelist} from './whitelist/index.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
+import {NetworkEnum} from '../constants.js'
 import {AuctionCalculator} from '../amount-calculator/index.js'
 import {now} from '../utils/time.js'
 
@@ -482,5 +489,204 @@ describe('Fusion Order', () => {
 
         expect(userAmount).toEqual(75000000n)
         expect(surplus).toEqual(25000000n)
+    })
+})
+
+describe('FusionOrder Native', () => {
+    it('should correct detect that order is from native asset', () => {
+        const ethOrderFactory = new ProxyFactory(
+            Address.fromBigInt(1n),
+            Address.fromBigInt(2n)
+        )
+        const chainId = NetworkEnum.ETHEREUM
+        const settlementExt = Address.fromBigInt(3n)
+        const maker = new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
+        const nativeOrder = FusionOrder.fromNative(
+            chainId,
+            ethOrderFactory,
+            settlementExt,
+            {
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker,
+                salt: 10n
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [
+                        {
+                            coefficient: 20000,
+                            delay: 12
+                        }
+                    ]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ]),
+                surplus: SurplusParams.NO_FEE
+            }
+        )
+
+        expect(
+            nativeOrder.isNative(
+                chainId,
+                ethOrderFactory,
+                nativeOrder.nativeSignature(maker)
+            )
+        ).toEqual(true)
+
+        expect(
+            FusionOrder.fromDataAndExtension(
+                nativeOrder.build(),
+                nativeOrder.extension
+            ).isNative(
+                chainId,
+                ethOrderFactory,
+                nativeOrder.nativeSignature(maker)
+            )
+        ).toEqual(true)
+    })
+
+    it('should correct detect that order is from native asset (no salt)', () => {
+        const ethOrderFactory = new ProxyFactory(
+            new Address('0x62c650084e97a0fba2ecf365cc6d8a7722425363'),
+            new Address('0xe8773a43fce4eedb18d0edbaf319059e1ae786af')
+        )
+        const chainId = NetworkEnum.ETHEREUM
+        const settlementExt = new Address(
+            '0x2ad5004c60e16e54d5007c80ce329adde5b51ef5'
+        )
+        const maker = new Address('0x962a836519109e162754161000d65d9dc027fa0f')
+        const nativeOrder = FusionOrder.fromNative(
+            chainId,
+            ethOrderFactory,
+            settlementExt,
+            {
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [
+                        {
+                            coefficient: 20000,
+                            delay: 12
+                        }
+                    ]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ]),
+                surplus: SurplusParams.NO_FEE
+            }
+        )
+
+        expect(
+            nativeOrder.isNative(
+                chainId,
+                ethOrderFactory,
+                nativeOrder.nativeSignature(maker)
+            )
+        ).toEqual(true)
+
+        expect(
+            FusionOrder.fromDataAndExtension(
+                nativeOrder.build(),
+                Extension.decode(nativeOrder.extension.encode())
+            ).isNative(
+                chainId,
+                ethOrderFactory,
+                nativeOrder.nativeSignature(maker)
+            )
+        ).toEqual(true)
+    })
+
+    it('should correct detect that order is NOT from native asset', () => {
+        const ethOrderFactory = new ProxyFactory(
+            Address.fromBigInt(1n),
+            Address.fromBigInt(2n)
+        )
+        const chainId = NetworkEnum.ETHEREUM
+        const settlementExt = Address.fromBigInt(3n)
+        const maker = new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
+        const nativeOrder = FusionOrder.new(
+            settlementExt,
+            {
+                makerAsset: new Address(
+                    '0x1000000000000000000000000000000000000000'
+                ),
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker,
+                salt: 10n
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [
+                        {
+                            coefficient: 20000,
+                            delay: 12
+                        }
+                    ]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ]),
+                surplus: SurplusParams.NO_FEE
+            }
+        )
+
+        expect(
+            nativeOrder.isNative(
+                chainId,
+                ethOrderFactory,
+                nativeOrder.nativeSignature(maker)
+            )
+        ).toEqual(false)
+
+        expect(
+            FusionOrder.fromDataAndExtension(
+                nativeOrder.build(),
+                nativeOrder.extension
+            ).isNative(
+                chainId,
+                ethOrderFactory,
+                nativeOrder.nativeSignature(maker)
+            )
+        ).toEqual(false)
     })
 })

@@ -1,4 +1,4 @@
-import {LimitOrderV4Struct} from '@1inch/limit-order-sdk'
+import {Address, LimitOrderV4Struct} from '@1inch/limit-order-sdk'
 import {
     BlockchainProviderConnector,
     HttpProviderConnector
@@ -75,4 +75,5 @@ export type PreparedOrder = {
     order: FusionOrder
     hash: string
     quoteId: string
+    nativeOrderFactory?: Address
 }
