@@ -689,4 +689,52 @@ describe('FusionOrder Native', () => {
             )
         ).toEqual(false)
     })
+
+    it('should have extension address in receiver if surplus passed', () => {
+        const ethOrderFactory = new ProxyFactory(
+            Address.fromBigInt(1n),
+            Address.fromBigInt(2n)
+        )
+        const chainId = NetworkEnum.ETHEREUM
+        const settlementExt = Address.fromBigInt(3n)
+        const maker = new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
+        const nativeOrder = FusionOrder.fromNative(
+            chainId,
+            ethOrderFactory,
+            settlementExt,
+            {
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker,
+                salt: 10n
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [
+                        {
+                            coefficient: 20000,
+                            delay: 12
+                        }
+                    ]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ]),
+                surplus: new SurplusParams(10n, new Bps(10000n))
+            }
+        )
+
+        expect(nativeOrder.build().receiver).toEqual(settlementExt.toString())
+    })
 })

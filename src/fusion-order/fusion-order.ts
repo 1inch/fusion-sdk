@@ -312,7 +312,7 @@ export class FusionOrder {
         _order.inner = LimitOrder.fromNative(
             chainId,
             ethOrdersFactory,
-            {..._orderInfo, salt: _order.salt},
+            {..._orderInfo, receiver: _order.receiver, salt: _order.salt},
             _order.inner.makerTraits,
             _order.inner.extension
         )
