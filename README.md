@@ -163,7 +163,7 @@ async function main() {
     console.log('OrderHash', info.orderHash)
 
     const factory = NativeOrdersFactory.default(NetworkEnum.BINANCE)
-    const call = factory.create(new Address(wallet.address), preparedOrder.order)
+    const call = factory.create(new Address(wallet.address), preparedOrder.order.build())
 
     const txRes = await wallet.sendTransaction({
         to: call.to.toString(),
