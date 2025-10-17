@@ -58,7 +58,9 @@ export class FusionOrder {
                     ? new Interaction(orderInfo.makerAsset, extra.permit)
                     : undefined,
                 customReceiver: orderInfo.receiver,
-                fees: extra?.fees
+                fees: extra?.fees,
+                preInteraction: extra.preInteraction,
+                postInteraction: extra.postInteraction
             }
         )
     ) {

@@ -32,6 +32,8 @@ export class FusionExtension {
             makerPermit?: Interaction
             customReceiver?: Address
             fees?: Fees
+            preInteraction?: Interaction
+            postInteraction?: Interaction
         }
     ) {}
 
@@ -202,8 +204,15 @@ export class FusionExtension {
             .withMakingAmountData(this.address, amountData)
             .withTakingAmountData(this.address, amountData)
             .withPostInteraction(
-                new Interaction(this.address, this.buildInteractionData())
+                new Interaction(
+                    this.address,
+                    this.buildInteractionData(this.extra?.postInteraction)
+                )
             )
+
+        if (this.extra?.preInteraction) {
+            builder.withPreInteraction(this.extra.preInteraction)
+        }
 
         if (this.extra?.makerPermit) {
             builder.withMakerPermit(
@@ -213,6 +222,26 @@ export class FusionExtension {
         }
 
         return builder.build()
+    }
+
+    /**
+     * Returns takingAmount with fee, but without auction bump
+     * @param taker
+     * @param orderTakingAmount
+     * @private
+     */
+    public getTakingAmountWithFee(
+        taker: Address,
+        orderTakingAmount: bigint
+    ): bigint {
+        const fees = this.getFeesForTaker(taker)
+
+        return mulDiv(
+            orderTakingAmount,
+            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee,
+            Fees.BASE_1E5,
+            Rounding.Ceil
+        )
     }
 
     /**
@@ -230,7 +259,7 @@ export class FusionExtension {
      * @see buildAmountGetterData
      * @see https://github.com/1inch/limit-order-protocol/blob/22a18f7f20acfec69d4f50ce1880e8e662477710/contracts/extensions/FeeTaker.sol#L114
      */
-    private buildInteractionData(): string {
+    private buildInteractionData(customPostInteraction?: Interaction): string {
         const customReceiver =
             this.extra?.customReceiver || Address.ZERO_ADDRESS
 
@@ -258,6 +287,10 @@ export class FusionExtension {
         // surplus params
         builder.addUint256(this.surplus.estimatedTakerAmount)
         builder.addUint8(BigInt(this.surplus.protocolFee.toPercent()))
+
+        if (customPostInteraction) {
+            builder.addBytes(customPostInteraction.encode())
+        }
 
         return builder.asHex()
     }
@@ -347,26 +380,6 @@ export class FusionExtension {
             resolverFee: resolverFeeBN,
             integratorFee: integratorFeeBN
         }
-    }
-
-    /**
-     * Returns takingAmount with fee, but without auction bump
-     * @param taker
-     * @param orderTakingAmount
-     * @private
-     */
-    private getTakingAmountWithFee(
-        taker: Address,
-        orderTakingAmount: bigint
-    ): bigint {
-        const fees = this.getFeesForTaker(taker)
-
-        return mulDiv(
-            orderTakingAmount,
-            Fees.BASE_1E5 + fees.resolverFee + fees.integratorFee,
-            Fees.BASE_1E5,
-            Rounding.Ceil
-        )
     }
 }
 
