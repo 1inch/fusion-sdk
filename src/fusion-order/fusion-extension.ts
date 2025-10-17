@@ -5,7 +5,8 @@ import {
     Interaction,
     Bps,
     mulDiv,
-    Rounding
+    Rounding,
+    ZX
 } from '@1inch/limit-order-sdk'
 import {BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
 
@@ -154,6 +155,15 @@ export class FusionExtension {
         const hasFees =
             !integratorFeeRecipient.isZero() || !protocolFeeRecipient.isZero()
 
+        const preInteraction =
+            extension.preInteraction == ZX
+                ? undefined
+                : Interaction.decode(extension.preInteraction)
+
+        const postInteraction = interactionBytes.isEmpty()
+            ? undefined
+            : Interaction.decode(interactionBytes.rest())
+
         if (!hasFees) {
             return new FusionExtension(
                 settlementContract,
@@ -163,7 +173,9 @@ export class FusionExtension {
                 {
                     makerPermit,
                     customReceiver,
-                    fees: undefined
+                    fees: undefined,
+                    preInteraction,
+                    postInteraction
                 }
             )
         }
@@ -192,7 +204,8 @@ export class FusionExtension {
             {
                 makerPermit,
                 fees,
-                customReceiver
+                customReceiver,
+                preInteraction
             }
         )
     }
