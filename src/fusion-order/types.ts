@@ -1,3 +1,4 @@
+import {Interaction} from '@1inch/limit-order-sdk'
 import {AuctionDetails} from './auction-details/auction-details.js'
 import {Fees} from './fees/index.js'
 import {SurplusParams} from './surplus-params.js'
@@ -35,6 +36,18 @@ export type Extra = {
      * By default: enabled
      */
     optimizeReceiverAddress?: boolean
+
+    /**
+     * Allows maker to execute custom code before order executed
+     * @see https://github.com/1inch/limit-order-protocol/blob/master/docs/interfaces/IPreInteraction.md
+     */
+    preInteraction?: Interaction
+
+    /**
+     * Allows maker to execute custom code after order executed
+     * @see https://github.com/1inch/limit-order-protocol/blob/master/docs/interfaces/IPostInteraction.md
+     */
+    postInteraction?: Interaction
 }
 
 export type Details = {
