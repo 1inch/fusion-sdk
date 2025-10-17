@@ -205,7 +205,8 @@ export class FusionExtension {
                 makerPermit,
                 fees,
                 customReceiver,
-                preInteraction
+                preInteraction,
+                postInteraction
             }
         )
     }
