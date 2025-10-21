@@ -23,7 +23,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.13.1
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
           scope: ${{ github.repository_owner }}
           cache: pnpm
@@ -64,7 +64,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.13.1
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies

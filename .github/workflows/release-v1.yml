@@ -8,13 +8,16 @@ on:
 jobs:
   publish-to-npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
           scope: ${{ github.repository_owner }}
 
@@ -33,10 +36,10 @@ jobs:
         run: yarn build
 
       - name: Publish
-        run: yarn publish
+        run: |
+          npm install -g npm@11
+          npm publish
         working-directory: dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
   publish-to-github:
     runs-on: ubuntu-latest
@@ -49,7 +52,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           registry-url: 'https://npm.pkg.github.com'
           scope: ${{ github.repository_owner }}
 
