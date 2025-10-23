@@ -14,16 +14,16 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v2
         with:
           version: 10
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22.8.0
           registry-url: 'https://registry.npmjs.org'
           scope: ${{ github.repository_owner }}
           cache: pnpm
@@ -39,13 +39,7 @@ jobs:
         run: pnpm build
 
       - name: Publish 🚀
-        run: |
-          VERSION=$(node -p "require('../package.json').version")
-          if [[ "$VERSION" == *"-rc"* ]]; then
-            pnpm publish --no-git-checks --access=public --tag next
-          else
-            pnpm publish --no-git-checks --access=public
-          fi
+        run: pnpm publish --no-git-checks --access=public
         working-directory: dist
 
   publish-to-github:
@@ -55,16 +49,16 @@ jobs:
       packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v2
         with:
           version: 10
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22.8.0
           cache: pnpm
 
       - name: Install dependencies
@@ -81,4 +75,3 @@ jobs:
       - name: Publish 🚀
         run: pnpm publish --no-git-checks
         working-directory: dist
-
