@@ -9,21 +9,28 @@ on:
 jobs:
   publish-to-npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 22.8.0
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
           scope: ${{ github.repository_owner }}
           cache: pnpm
+
+      # pnpm uses npm under the hood, so we need to upgrade it to the latest version to suport OIDC
+      - name: Install npm@11
+        run: npm install -g npm@11
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -32,10 +39,14 @@ jobs:
         run: pnpm build
 
       - name: Publish 🚀
-        run: pnpm publish --no-git-checks --access=public
+        run: |
+          VERSION=$(node -p "require('../package.json').version")
+          if [[ "$VERSION" == *"-rc"* ]]; then
+            pnpm publish --no-git-checks --access=public --tag next
+          else
+            pnpm publish --no-git-checks --access=public
+          fi
         working-directory: dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
   publish-to-github:
     runs-on: ubuntu-latest
@@ -44,16 +55,16 @@ jobs:
       packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 22.8.0
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies
@@ -70,3 +81,4 @@ jobs:
       - name: Publish 🚀
         run: pnpm publish --no-git-checks
         working-directory: dist
+
