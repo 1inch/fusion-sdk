@@ -289,4 +289,72 @@ describe('Quoter API', () => {
             body.build()
         )
     })
+
+    describe('parseIntegratorFee', () => {
+        it('should use response receiver when provided', () => {
+            const responseWithFee = {
+                ...ResponseMock,
+                integratorFee: 100,
+                integratorFeeReceiver:
+                    '0x1234567890123456789012345678901234567890',
+                integratorFeeShare: 50
+            }
+
+            const quote = new Quote(params, responseWithFee)
+
+            expect(quote.integratorFeeParams).toBeDefined()
+            expect(quote.integratorFeeParams?.receiver.toString()).toBe(
+                '0x1234567890123456789012345678901234567890'
+            )
+            expect(Number(quote.integratorFeeParams?.value.value)).toBe(100)
+            expect(Number(quote.integratorFeeParams?.share.value)).toBe(5000)
+        })
+
+        it('should fallback to request receiver when response receiver is missing', () => {
+            const responseWithFeeNoReceiver = {
+                ...ResponseMock,
+                integratorFee: 100,
+                integratorFeeShare: 50
+            }
+
+            const paramsWithFee = QuoterRequest.new({
+                fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                amount: '1000000000000000000000',
+                walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+                integratorFee: {
+                    receiver: new Address(
+                        '0xabcdef0123456789abcdef0123456789abcdef01'
+                    ),
+                    value: new Bps(100n)
+                },
+                source: 'test-source'
+            })
+
+            const quote = new Quote(paramsWithFee, responseWithFeeNoReceiver)
+
+            expect(quote.integratorFeeParams).toBeDefined()
+            expect(quote.integratorFeeParams?.receiver.toString()).toBe(
+                '0xabcdef0123456789abcdef0123456789abcdef01'
+            )
+        })
+
+        it('should return undefined when no receiver available', () => {
+            const responseWithFeeNoReceiver = {
+                ...ResponseMock,
+                integratorFee: 100,
+                integratorFeeShare: 50
+            }
+
+            const quote = new Quote(params, responseWithFeeNoReceiver)
+
+            expect(quote.integratorFeeParams).toBeUndefined()
+        })
+
+        it('should return undefined when no integratorFee in response', () => {
+            const quote = new Quote(params, ResponseMock)
+
+            expect(quote.integratorFeeParams).toBeUndefined()
+        })
+    })
 })
