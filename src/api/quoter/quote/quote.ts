@@ -11,7 +11,7 @@ import {NetworkEnum} from 'constants.js'
 import {FusionOrderParams} from './order-params.js'
 import {
     FusionOrderParamsData,
-    IntegratorFeeParams,
+    IntegratorFeeResponse,
     ResolverFeePreset
 } from './types.js'
 import {Cost, PresetEnum, QuoterResponse} from '../types.js'
@@ -72,7 +72,7 @@ export class Quote {
 
     public readonly surplusFee?: number
 
-    public readonly integratorFeeParams?: IntegratorFeeParams
+    public readonly integratorFeeParams?: IntegratorFeeResponse
 
     constructor(
         private readonly params: QuoterRequest,
@@ -187,7 +187,7 @@ export class Quote {
             enablePermit2: params.isPermit2,
             fees: buildFees(
                 this.resolverFeePreset,
-                this.params.integratorFee || this.integratorFeeParams,
+                this.integratorFeeParams,
                 this.surplusFee
             )
         }
@@ -259,7 +259,7 @@ export class Quote {
 
 function buildFees(
     resolverFeePreset: ResolverFeePreset,
-    integratorFee?: IntegratorFeeParams,
+    integratorFee?: IntegratorFeeResponse,
     surplusFee?: number
 ): Fees | undefined {
     const protocolReceiver = resolverFeePreset.receiver

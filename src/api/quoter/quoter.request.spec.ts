@@ -10,7 +10,6 @@ describe(__filename, () => {
                 amount: '1000000000000000000000',
                 walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
                 integratorFee: {
-                    share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
                 }
@@ -23,7 +22,6 @@ describe(__filename, () => {
                 amount: '1000000000000000000000',
                 walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
                 integratorFee: {
-                    share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
                 }
@@ -39,7 +37,6 @@ describe(__filename, () => {
                 amount: '1000000000000000000000',
                 walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
                 integratorFee: {
-                    share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
                 }
@@ -55,7 +52,6 @@ describe(__filename, () => {
                 amount: '1000000000000000000000',
                 walletAddress: '0x0000000019ab540356cbb839be05303d7705fa1',
                 integratorFee: {
-                    share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
                 }
@@ -71,7 +67,6 @@ describe(__filename, () => {
                 amount: 'dasdad',
                 walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
                 integratorFee: {
-                    share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
                 }
@@ -79,7 +74,9 @@ describe(__filename, () => {
         ).toThrow(/is invalid amount/)
     })
 
-    it('returns error if  fee is provided and source not', () => {
+    it('allows fee without source (two-path flow support)', () => {
+        // With the two-path flow, fees can be applied via provider header
+        // without requiring a source parameter
         expect(() =>
             QuoterRequest.new({
                 fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
@@ -87,11 +84,10 @@ describe(__filename, () => {
                 amount: '1000000',
                 walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
                 integratorFee: {
-                    share: Bps.fromPercent(50),
                     receiver: Address.fromBigInt(10n),
                     value: new Bps(1n)
                 }
             })
-        ).toThrow(/cannot use fee without source/)
+        ).not.toThrow()
     })
 })

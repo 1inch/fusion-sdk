@@ -1,6 +1,6 @@
 import {Address} from '@1inch/limit-order-sdk'
 import {QuoterRequestParams, QuoterRequestParamsRaw} from './types.js'
-import {IntegratorFeeParams} from './quote/index.js'
+import {IntegratorFeeRequest} from './quote/index.js'
 import {isValidAmount} from '../../validations.js'
 
 export class QuoterRequest {
@@ -16,9 +16,9 @@ export class QuoterRequest {
 
     public readonly permit: string | undefined
 
-    public readonly integratorFee?: IntegratorFeeParams
+    public readonly integratorFee?: IntegratorFeeRequest
 
-    public readonly source: string
+    public readonly source?: string
 
     public readonly isPermit2: boolean
 
@@ -32,7 +32,7 @@ export class QuoterRequest {
         this.enableEstimate = params.enableEstimate || false
         this.permit = params.permit
         this.integratorFee = params.integratorFee
-        this.source = params.source || 'sdk'
+        this.source = params.source
         this.isPermit2 = params.isPermit2 ?? false
         this.slippage = params.slippage
 
@@ -50,10 +50,6 @@ export class QuoterRequest {
 
         if (!isValidAmount(this.amount)) {
             throw new Error(`${this.amount} is invalid amount`)
-        }
-
-        if (this.integratorFee && this.source === 'sdk') {
-            throw new Error('cannot use fee without source')
         }
     }
 

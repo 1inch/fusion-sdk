@@ -142,7 +142,7 @@ describe('Quoter API', () => {
 
         expect(res).toStrictEqual(QuoterResponseMock)
         expect(httpProvider.get).toHaveBeenCalledWith(
-            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&source=sdk&surplus=true'
+            'https://test.com/quoter/v2.0/1/quote/receive/?fromTokenAddress=0x6b175474e89094c44da98b954eedeac495271d0f&toTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&amount=1000000000000000000000&walletAddress=0x00000000219ab540356cbb839cbe05303d7705fa&surplus=true'
         )
     })
 
@@ -161,7 +161,6 @@ describe('Quoter API', () => {
             amount: '1000000000000000000000',
             walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
             integratorFee: {
-                share: Bps.fromPercent(50),
                 receiver: Address.fromBigInt(10n),
                 value: new Bps(1n)
             },
@@ -191,7 +190,6 @@ describe('Quoter API', () => {
             amount: '1000000000000000000000',
             walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
             integratorFee: {
-                share: Bps.fromPercent(50),
                 receiver: Address.fromBigInt(10n),
                 value: new Bps(1n)
             },
@@ -222,7 +220,6 @@ describe('Quoter API', () => {
             amount: '1000000000000000000000',
             walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
             integratorFee: {
-                share: Bps.fromPercent(50),
                 receiver: Address.fromBigInt(10n),
                 value: new Bps(1n)
             },
@@ -265,7 +262,6 @@ describe('Quoter API', () => {
             amount: '1000000000000000000000',
             walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
             integratorFee: {
-                share: Bps.fromPercent(50),
                 receiver: Address.fromBigInt(10n),
                 value: new Bps(1n)
             },
