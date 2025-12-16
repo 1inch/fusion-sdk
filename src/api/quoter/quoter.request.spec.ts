@@ -74,9 +74,7 @@ describe(__filename, () => {
         ).toThrow(/is invalid amount/)
     })
 
-    it('allows fee without source (two-path flow support)', () => {
-        // With the two-path flow, fees can be applied via provider header
-        // without requiring a source parameter
+    it('allows fee without source', () => {
         expect(() =>
             QuoterRequest.new({
                 fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',

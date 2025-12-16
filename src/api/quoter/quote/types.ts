@@ -26,7 +26,6 @@ export type FusionOrderParamsData = {
 export type IntegratorFeeRequest = {
     /**
      * Address which will receive integrator's portion of the fee.
-     * If not provided, backend config determines the receiver.
      */
     receiver?: Address
     /**

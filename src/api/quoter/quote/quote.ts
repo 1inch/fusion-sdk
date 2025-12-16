@@ -113,14 +113,7 @@ export class Quote {
         }
         this.surplusFee = response.surplusFee
 
-        this.integratorFeeParams =
-            response.integratorFee && response.integratorFeeReceiver
-                ? {
-                      receiver: new Address(response.integratorFeeReceiver),
-                      value: new Bps(BigInt(response.integratorFee)),
-                      share: Bps.fromPercent(response.integratorFeeShare || 0)
-                  }
-                : undefined
+        this.integratorFeeParams = this.parseIntegratorFee(response)
     }
 
     createFusionOrder(
@@ -254,6 +247,28 @@ export class Quote {
         }
 
         return FusionOrder.new(settlementExtension, orderInfo, details, extra)
+    }
+
+    private parseIntegratorFee(
+        response: QuoterResponse
+    ): IntegratorFeeResponse | undefined {
+        if (!response.integratorFee) {
+            return undefined
+        }
+
+        const receiver =
+            response.integratorFeeReceiver ||
+            this.params.integratorFee?.receiver?.toString()
+
+        if (!receiver) {
+            return undefined
+        }
+
+        return {
+            receiver: new Address(receiver),
+            value: new Bps(BigInt(response.integratorFee)),
+            share: Bps.fromPercent(response.integratorFeeShare || 0)
+        }
     }
 }
 
