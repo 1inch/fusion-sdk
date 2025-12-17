@@ -114,4 +114,66 @@ describe('AmountCalculator', () => {
         expect(userAmount).toBeGreaterThan(userAmountWithChargedSurplus)
         expect(userAmount - userAmountWithChargedSurplus).toEqual(surplus / 2n) // fee is 50%
     })
+
+    it('should apply surplus with correct rounding', () => {
+        const startTime = 1764548287n
+        const execTime = startTime
+
+        const auction = new AuctionCalculator(
+            startTime,
+            600n,
+            179149n,
+            [
+                {coefficient: 157277, delay: 84},
+                {coefficient: 141862, delay: 84},
+                {coefficient: 129415, delay: 84},
+                {coefficient: 116876, delay: 84},
+                {coefficient: 24, delay: 264}
+            ],
+            {gasBumpEstimate: 24n, gasPriceEstimate: 221n}
+        )
+
+        const taker = Address.fromBigInt(1n)
+        const feeCalculator = new FeeTakerExt.FeeCalculator(
+            Fees.integratorFee(
+                new IntegratorFee(
+                    new Address('0x0000000000000000000000000000000000000000'),
+                    new Address('0x0000000000000000000000000000000000000000'),
+                    new Bps(0n),
+                    new Bps(0n)
+                )
+            ),
+            Whitelist.new(1764548263n, [{address: taker, allowFrom: 0n}])
+        )
+
+        const makingAmountOrder = 1369521200000n
+
+        const calculator = new AmountCalculator(
+            auction,
+            feeCalculator,
+            new SurplusParams(107289453867377650931124n, Bps.fromPercent(90))
+        )
+
+        const userAmount1 = calculator.getSurplusFee(
+            taker,
+            982226837n,
+            76145644627284979970n,
+            makingAmountOrder,
+            execTime,
+            216836903n
+        )
+
+        expect(userAmount1).toBe(505013885259508359n)
+
+        const userAmount2 = calculator.getSurplusFee(
+            taker,
+            136853897316n,
+            10609390660421433527440n,
+            makingAmountOrder,
+            execTime + 4n,
+            242000680n
+        )
+
+        expect(userAmount2).toBe(69365890784904718356n)
+    })
 })
