@@ -1,9 +1,9 @@
 import {
     Address,
     Bps,
+    FeeTakerExt,
     mulDiv,
-    Rounding,
-    FeeTakerExt
+    Rounding
 } from '@1inch/limit-order-sdk'
 import {AuctionCalculator} from './auction-calculator/index.js'
 import {FusionExtension, SurplusParams} from '../fusion-order/index.js'
@@ -316,7 +316,8 @@ export class AmountCalculator {
         const estimatedTakingAmount = mulDiv(
             this.surplus.estimatedTakerAmount,
             makingAmount,
-            orderMakingAmount
+            orderMakingAmount,
+            Rounding.Ceil
         )
 
         if (userTakingAmount > estimatedTakingAmount) {
