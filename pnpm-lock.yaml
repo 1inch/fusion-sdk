@@ -36,7 +36,7 @@ importers:
     devDependencies:
       '@1inch/eslint-config':
         specifier: 3.0.6
-        version: 3.0.6(nx3onz5gib6hpeu2iycaoxwjju)
+        version: 3.0.6(c7c87396cd9fcd460ec3c4518ecbf767)
       '@1inch/tsconfig':
         specifier: 1.0.8
         version: 1.0.8
@@ -3635,7 +3635,7 @@ snapshots:
     optionalDependencies:
       assert: 2.1.0
 
-  '@1inch/eslint-config@3.0.6(nx3onz5gib6hpeu2iycaoxwjju)':
+  '@1inch/eslint-config@3.0.6(c7c87396cd9fcd460ec3c4518ecbf767)':
     dependencies:
       '@eslint/compat': 1.4.0(eslint@9.18.0)
       '@eslint/eslintrc': 3.3.1
