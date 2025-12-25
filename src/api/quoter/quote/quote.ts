@@ -171,10 +171,13 @@ export class Quote {
                 auctionDetails.startTime,
                 preset.exclusiveResolver
             ),
-            surplus: new SurplusParams(
-                this.marketReturn,
-                Bps.fromPercent(this.surplusFee || 0)
-            )
+            surplus:
+                this.marketReturn > orderInfo.takingAmount
+                    ? new SurplusParams(
+                          this.marketReturn,
+                          Bps.fromPercent(this.surplusFee || 0)
+                      )
+                    : SurplusParams.NO_FEE
         }
         const extra = {
             nonce,
