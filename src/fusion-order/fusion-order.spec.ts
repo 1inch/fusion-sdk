@@ -784,7 +784,7 @@ describe('FusionOrder Native', () => {
                         allowFrom: 0n
                     }
                 ]),
-                surplus: new SurplusParams(10n, new Bps(10000n))
+                surplus: new SurplusParams(1420000000n * 2n, new Bps(10000n))
             }
         )
 
