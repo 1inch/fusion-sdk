@@ -7,13 +7,13 @@ import {
 } from '@1inch/limit-order-sdk'
 import {UINT_40_MAX} from '@1inch/byte-utils'
 import assert from 'assert'
-import {NetworkEnum} from 'constants.js'
 import {FusionOrderParams} from './order-params.js'
 import {
     FusionOrderParamsData,
     IntegratorFeeParams,
     ResolverFeePreset
 } from './types.js'
+import {NetworkEnum} from '../../../constants.js'
 import {Cost, PresetEnum, QuoterResponse} from '../types.js'
 import {Preset} from '../preset.js'
 import {
