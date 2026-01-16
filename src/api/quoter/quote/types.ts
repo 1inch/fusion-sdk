@@ -27,7 +27,7 @@ export type IntegratorFeeRequest = {
     /**
      * Address which will receive integrator's portion of the fee.
      */
-    receiver?: Address
+    receiver: Address
     /**
      * How much to charge in basis points (1% = 100 bps)
      */
