@@ -126,6 +126,13 @@ export class FusionOrder {
             )
         }
 
+        if (!surplusParams.isZero()) {
+            assert(
+                orderInfo.takingAmount <= surplusParams.estimatedTakerAmount,
+                'order.takingAmount must be less then surplusParams.estimatedTakerAmount'
+            )
+        }
+
         const optimizeReceiverAddress =
             extra.optimizeReceiverAddress !== undefined
                 ? extra.optimizeReceiverAddress

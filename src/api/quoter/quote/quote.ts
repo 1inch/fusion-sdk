@@ -7,13 +7,13 @@ import {
 } from '@1inch/limit-order-sdk'
 import {UINT_40_MAX} from '@1inch/byte-utils'
 import assert from 'assert'
-import {NetworkEnum} from 'constants.js'
 import {FusionOrderParams} from './order-params.js'
 import {
     FusionOrderParamsData,
     IntegratorFeeResponse,
     ResolverFeePreset
 } from './types.js'
+import {NetworkEnum} from '../../../constants.js'
 import {Cost, PresetEnum, QuoterResponse} from '../types.js'
 import {Preset} from '../preset.js'
 import {
@@ -164,10 +164,13 @@ export class Quote {
                 auctionDetails.startTime,
                 preset.exclusiveResolver
             ),
-            surplus: new SurplusParams(
-                this.marketReturn,
-                Bps.fromPercent(this.surplusFee || 0)
-            )
+            surplus:
+                this.marketReturn > orderInfo.takingAmount
+                    ? new SurplusParams(
+                          this.marketReturn,
+                          Bps.fromPercent(this.surplusFee || 0)
+                      )
+                    : SurplusParams.NO_FEE
         }
         const extra = {
             nonce,
