@@ -49,13 +49,13 @@
     "dependencies": {
         "@1inch/byte-utils": "^3.1.0",
         "@1inch/limit-order-sdk": "5.2.2",
-        "ethers": "^6.14.1",
+        "ethers": "6.16.0",
         "tslib": "^2.8.1",
         "ws": "^8.18.2"
     },
     "devDependencies": {
-        "@1inch/eslint-config": "3.0.6",
-        "@1inch/tsconfig": "1.0.8",
+        "@1inch/eslint-config": "3.0.8",
+        "@1inch/tsconfig": "1.0.12",
         "@swc/cli": "0.7.7",
         "@swc/core": "1.10.9",
         "@swc/jest": "0.2.37",

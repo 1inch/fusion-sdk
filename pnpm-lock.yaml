@@ -25,8 +25,8 @@ importers:
         specifier: ^2.0.0
         version: 2.1.0
       ethers:
-        specifier: ^6.14.1
-        version: 6.15.0
+        specifier: 6.16.0
+        version: 6.16.0
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -35,11 +35,11 @@ importers:
         version: 8.18.3
     devDependencies:
       '@1inch/eslint-config':
-        specifier: 3.0.6
-        version: 3.0.6(c7c87396cd9fcd460ec3c4518ecbf767)
+        specifier: 3.0.8
+        version: 3.0.8(c7c87396cd9fcd460ec3c4518ecbf767)
       '@1inch/tsconfig':
-        specifier: 1.0.8
-        version: 1.0.8
+        specifier: 1.0.12
+        version: 1.0.12
       '@swc/cli':
         specifier: 0.7.7
         version: 0.7.7(@swc/core@1.10.9)
@@ -142,8 +142,8 @@ packages:
       assert:
         optional: true
 
-  '@1inch/eslint-config@3.0.6':
-    resolution: {integrity: sha512-apfoU2TFLhpBYcVzPJlU80a8WRuMheGA3tDhd27w4X5nkKvA3wZH9vX61NAgJ+0aDNbACd1VDQ2lAcU3xseLfw==}
+  '@1inch/eslint-config@3.0.8':
+    resolution: {integrity: sha512-QJFaI2caKUjdeHMVhWyqWYhjNRZkkqkZcMHMmJHqfOnkICrqMRWvTZgy+VIVRBf0epoNu1LXcMdUVwWjtDrfVA==, tarball: https://npm.pkg.github.com/download/@1inch/eslint-config/3.0.8/9257c78ce276a32ba5a5d486afe2efde0f20094b}
     peerDependencies:
       '@eslint/compat': ^1.1.0
       '@eslint/eslintrc': ^3.1.0
@@ -176,8 +176,8 @@ packages:
       axios:
         optional: true
 
-  '@1inch/tsconfig@1.0.8':
-    resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
+  '@1inch/tsconfig@1.0.12':
+    resolution: {integrity: sha512-ljVPgRT9ju5kj4kdckCNjW1dZpaT2/4UhBkFf7Ah3yDGU5VNuFiq4MExpLm/2T+g46iSEvZSdqzDC3oLrIkafA==, tarball: https://npm.pkg.github.com/download/@1inch/tsconfig/1.0.12/dc493fb46277dc52a454fcecee73db6384bd92b8}
 
   '@adraffy/ens-normalize@1.10.1':
     resolution: {integrity: sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==}
@@ -1956,8 +1956,8 @@ packages:
     resolution: {integrity: sha512-+knKNieu5EKRThQJWwqaJ10a6HE9sSehGeqWN65//wE7j47ZpFhKAnHB/JJFibwwg61I/koxaPsXbXpD/skNOQ==}
     engines: {node: '>=14.0.0'}
 
-  ethers@6.15.0:
-    resolution: {integrity: sha512-Kf/3ZW54L4UT0pZtsY/rf+EkBU7Qi5nnhonjUb8yTXcxH3cdcWrV2cRyk0Xk/4jK6OoHhxxZHriyhje20If2hQ==}
+  ethers@6.16.0:
+    resolution: {integrity: sha512-U1wulmetNymijEhpSEQ7Ct/P/Jw9/e7R1j5XIbPRydgV2DjLVMsULDlNksq3RQnFgKoLlZf88ijYtWEXcPa07A==}
     engines: {node: '>=14.0.0'}
 
   event-target-shim@5.0.1:
@@ -3635,7 +3635,7 @@ snapshots:
     optionalDependencies:
       assert: 2.1.0
 
-  '@1inch/eslint-config@3.0.6(c7c87396cd9fcd460ec3c4518ecbf767)':
+  '@1inch/eslint-config@3.0.8(c7c87396cd9fcd460ec3c4518ecbf767)':
     dependencies:
       '@eslint/compat': 1.4.0(eslint@9.18.0)
       '@eslint/eslintrc': 3.3.1
@@ -3668,7 +3668,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@1inch/tsconfig@1.0.8':
+  '@1inch/tsconfig@1.0.12':
     dependencies:
       semver: 7.7.2
 
@@ -5794,7 +5794,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  ethers@6.15.0:
+  ethers@6.16.0:
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.2.0
