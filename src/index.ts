@@ -37,5 +37,7 @@ export {
     Preset,
     Quote,
     type OrderStatusResponse,
-    OrderStatus
+    OrderStatus,
+    type IntegratorFeeRequest,
+    type IntegratorFeeResponse
 } from './api/index.js'
