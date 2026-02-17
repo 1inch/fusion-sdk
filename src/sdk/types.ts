@@ -4,7 +4,7 @@ import {
     HttpProviderConnector
 } from '../connector/index.js'
 import {NetworkEnum} from '../constants.js'
-import {CustomPreset, IntegratorFeeParams, PresetEnum} from '../api/index.js'
+import {CustomPreset, IntegratorFeeRequest, PresetEnum} from '../api/index.js'
 import {FusionOrder} from '../fusion-order/index.js'
 
 export type FusionSDKConfigParams = {
@@ -22,7 +22,7 @@ export type QuoteParams = {
     walletAddress?: string
     enableEstimate?: boolean
     permit?: string
-    integratorFee?: IntegratorFeeParams
+    integratorFee?: IntegratorFeeRequest
     source?: string
     isPermit2?: boolean
     slippage?: number
@@ -59,7 +59,7 @@ export type OrderParams = {
      * true by default
      */
     allowMultipleFills?: boolean
-    integratorFee?: IntegratorFeeParams
+    integratorFee?: IntegratorFeeRequest
     slippage?: number
 }
 
