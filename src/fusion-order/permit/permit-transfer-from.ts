@@ -1,4 +1,6 @@
 import {Address, EIP712TypedData} from '@1inch/limit-order-sdk'
+import {AbiCoder} from 'ethers'
+import {trim0x} from '@1inch/byte-utils'
 import {PERMIT2_DOMAIN_NAME, PERMIT_TRANSFER_FROM_TYPES} from './constants.js'
 import {getPermit2Address} from './utils.js'
 
@@ -35,5 +37,38 @@ export class PermitTransferFrom {
                 deadline: this.deadline
             }
         }
+    }
+
+    /**
+     * ABI-encodes the Permit2 suffix appended to `transferFrom(from,to,amount)` calldata.
+     *
+     * The limit order protocol calls `_callTransferFromWithSuffix` on the Permit2Proxy,
+     * which has `func_nZHTch(address,address,uint256,((address,uint256),uint256,uint256),bytes)`
+     * with selector 0x23b872dd (same as transferFrom). The suffix is everything after (from,to,amount).
+     */
+    public getTransferFromSuffix(signature: string): string {
+        const abiCoder = AbiCoder.defaultAbiCoder()
+
+        const encoded = abiCoder.encode(
+            [
+                'tuple(tuple(address token, uint256 amount) permitted, uint256 nonce, uint256 deadline)',
+                'bytes'
+            ],
+            [
+                {
+                    permitted: {
+                        token: this.token.toString(),
+                        amount: this.maxSpendAmount
+                    },
+                    nonce: this.nonce,
+                    deadline: this.deadline
+                },
+                signature
+            ]
+        )
+
+        const STRIPPED_HEAD_BYTES = 3 * 32
+
+        return '0x' + trim0x(encoded).slice(STRIPPED_HEAD_BYTES * 2)
     }
 }

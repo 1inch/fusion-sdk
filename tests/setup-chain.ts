@@ -11,10 +11,17 @@ import {
 } from 'ethers'
 
 import {randBigInt} from '@1inch/limit-order-sdk'
-import {USDC, USDC_DONOR, WETH, ONE_INCH_LIMIT_ORDER_V4} from './addresses.js'
+import {
+    USDC,
+    USDC_DONOR,
+    WETH,
+    ONE_INCH_LIMIT_ORDER_V4,
+    PERMIT2
+} from './addresses.js'
 import {TestWallet} from './test-wallet.js'
 import SimpleSettlement from '../dist/contracts/SimpleSettlement.sol/SimpleSettlement.json'
 import NativeOrderFactory from '../dist/contracts/NativeOrderFactory.sol/NativeOrderFactory.json'
+import Permit2Proxy from '../dist/contracts/Permit2Proxy.sol/Permit2Proxy.json'
 
 export type EvmNodeConfig = {
     chainId?: number
@@ -29,6 +36,7 @@ export type ReadyEvmFork = {
         settlement: string
         nativeOrdersFactory: string
         nativeOrdersImpl: string
+        permit2Proxy: string
     }
     maker: TestWallet
     taker: TestWallet
@@ -128,6 +136,7 @@ async function deployContracts(provider: JsonRpcProvider): Promise<{
     settlement: string
     nativeOrdersFactory: string
     nativeOrdersImpl: string
+    permit2Proxy: string
 }> {
     const deployer = new Wallet(
         '0x3667482b9520ea17999acd812ad3db1ff29c12c006e756cdcb5fd6cc5d5a9b01',
@@ -168,10 +177,17 @@ async function deployContracts(provider: JsonRpcProvider): Promise<{
     const nativeOrdersImpl: string =
         await nativeOrderFactoryContract.IMPLEMENTATION()
 
+    const permit2Proxy = await deploy(
+        Permit2Proxy,
+        [ONE_INCH_LIMIT_ORDER_V4, PERMIT2],
+        deployer
+    )
+
     return {
         settlement,
         nativeOrdersFactory: nativeOrderFactory,
-        nativeOrdersImpl
+        nativeOrdersImpl,
+        permit2Proxy
     }
 }
 
@@ -183,6 +199,7 @@ async function setupBalances(
     // maker have WETH
     await maker.transfer(WETH, parseEther('5'))
     await maker.unlimitedApprove(WETH, ONE_INCH_LIMIT_ORDER_V4)
+    await maker.unlimitedApprove(WETH, PERMIT2)
 
     // taker have USDC
     await (

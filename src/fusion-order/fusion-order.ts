@@ -21,11 +21,7 @@ import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
 import {PermitTransferFrom} from './permit/permit-transfer-from.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
-import {
-    NetworkEnum,
-    ONE_INCH_LIMIT_ORDER_V4_ADDRESSES,
-    ZX
-} from '../constants.js'
+import {NetworkEnum, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
 import {now} from '../utils/time.js'
 import {AmountCalculator} from '../amount-calculator/amount-calculator.js'
@@ -419,7 +415,45 @@ export class FusionOrder {
         permit: PermitTransferFrom,
         signature: string
     ): this {
-        // todo: update all required fields
+        assert(
+            this.inner.makerTraits.isPermit2(),
+            'enablePermit2 must be set to use withTransferPermit'
+        )
+
+        const suffix = permit.getTransferFromSuffix(signature)
+
+        const currentExtension = this.inner.extension
+        const newExtension = new Extension({
+            makerAssetSuffix: suffix,
+            takerAssetSuffix: currentExtension.takerAssetSuffix,
+            makingAmountData: currentExtension.makingAmountData,
+            takingAmountData: currentExtension.takingAmountData,
+            predicate: currentExtension.predicate,
+            makerPermit: currentExtension.makerPermit,
+            preInteraction: currentExtension.preInteraction,
+            postInteraction: currentExtension.postInteraction,
+            customData: currentExtension.customData
+        })
+
+        this.inner.makerTraits.disablePermit2()
+
+        const baseSalt = this.inner.salt >> 160n
+        const newSalt = LimitOrder.buildSalt(newExtension, baseSalt)
+
+        this.inner = new LimitOrder(
+            {
+                maker: this.inner.maker,
+                makerAsset: permit.spender,
+                takerAsset: this.inner.takerAsset,
+                makingAmount: this.inner.makingAmount,
+                takingAmount: this.inner.takingAmount,
+                receiver: this.inner.receiver,
+                salt: newSalt
+            },
+            this.inner.makerTraits,
+            newExtension,
+            {optimizeReceiverAddress: false}
+        )
 
         return this
     }
@@ -715,30 +749,30 @@ export class FusionOrder {
      *
      * Can only be used for orders where `multipleFillsAllowed` is `false`.
      *
-     * The returned permit authorizes the 1inch Limit Order Protocol v4 contract
-     * (as spender) to transfer up to `makingAmount` of the `makerAsset` token,
+     * The returned permit authorizes the given `permit2Proxy` address (as spender)
+     * to transfer up to `makingAmount` of the `makerAsset` token,
      * with a random 256-bit nonce and the order's deadline.
      *
-     * @param chainId - The chain ID of the network (must be a supported {@link NetworkEnum} value)
+     * The resulting permit can be signed and then attached to the order
+     * via {@link FusionOrder.withTransferPermit}.
+     *
+     * @param permit2Proxy - The address of the Permit2Proxy contract that will act as spender
      * @returns A {@link PermitTransferFrom} instance that can be signed and attached to the order
      *
      * @throws If `multipleFillsAllowed` is `true`
-     * @throws If `chainId` is not a supported network
+     *
+     * @see FusionOrder.withTransferPermit
      */
-    public createTransferPermit(chainId: number): PermitTransferFrom {
+    public createTransferPermit(permit2Proxy: Address): PermitTransferFrom {
         assert(
             !this.multipleFillsAllowed,
             'transfer permit can be used only for orders where multipleFillsAllowed=false'
         )
 
-        assert(NetworkEnum[chainId], 'unsupported chain id')
-
         return new PermitTransferFrom(
             this.makerAsset,
             this.makingAmount,
-            new Address(
-                ONE_INCH_LIMIT_ORDER_V4_ADDRESSES[chainId as NetworkEnum]
-            ),
+            permit2Proxy,
             randBigInt(UINT_256_MAX),
             this.deadline
         )

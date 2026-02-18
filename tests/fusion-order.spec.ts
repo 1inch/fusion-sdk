@@ -17,6 +17,7 @@ import {
     AuctionDetails,
     FusionOrder,
     LimitOrderContract,
+    NetworkEnum,
     SurplusParams,
     TakerTraits,
     Whitelist
@@ -975,9 +976,13 @@ describe('SettlementExtension', () => {
             }
         )
 
-        const permit = order.createTransferPermit(1)
+        const chainId = NetworkEnum.ETHEREUM
+
+        const permit2Proxy = new Address(testNode.addresses.permit2Proxy)
+
+        const permit = order.createTransferPermit(permit2Proxy)
         const permitSignature = await maker.signTypedData(
-            permit.getTypedData(1)
+            permit.getTypedData(chainId)
         )
 
         const orderWithPermit = order.withTransferPermit(
@@ -986,7 +991,7 @@ describe('SettlementExtension', () => {
         )
 
         const signature = await maker.signTypedData(
-            orderWithPermit.getTypedData(1)
+            orderWithPermit.getTypedData(chainId)
         )
 
         const data = LimitOrderContract.getFillOrderArgsCalldata(
