@@ -1,5 +1,6 @@
 [profile.default]
-solc = "0.8.23"
+# solc = "0.8.23"
+auto_detect_solc = true
 src = 'contracts/src'
 out = 'dist/contracts'
 libs = ['contracts/lib']
