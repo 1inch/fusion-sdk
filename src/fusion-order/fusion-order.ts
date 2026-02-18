@@ -20,6 +20,10 @@ import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
 import {PermitTransferFrom} from './permit/permit-transfer-from.js'
+import {
+    DecodedTransferPermitSuffix,
+    decodeTransferFromSuffix
+} from './permit/transfer-from-suffix.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
 import {NetworkEnum, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
@@ -168,6 +172,10 @@ export class FusionOrder {
     }
 
     get makerAsset(): Address {
+        if (this.isTransferPermit()) {
+            return this.decodeTransferPermitSuffix().token
+        }
+
         return this.inner.makerAsset
     }
 
@@ -411,28 +419,33 @@ export class FusionOrder {
         return fusionOrder
     }
 
+    /**
+     * Returns true if the order uses a Permit2 transfer permit via Permit2Proxy.
+     * Decodes `makerAssetSuffix` and validates the Permit2 ABI structure.
+     *
+     * @see FusionOrder.withTransferPermit
+     * @see FusionOrder.createTransferPermit
+     */
+    public isTransferPermit(): boolean {
+        try {
+            this.decodeTransferPermitSuffix()
+
+            return true
+        } catch {
+            return false
+        }
+    }
+
     public withTransferPermit(
         permit: PermitTransferFrom,
         signature: string
     ): this {
-        assert(
-            this.inner.makerTraits.isPermit2(),
-            'enablePermit2 must be set to use withTransferPermit'
-        )
-
         const suffix = permit.getTransferFromSuffix(signature)
 
         const currentExtension = this.inner.extension
         const newExtension = new Extension({
-            makerAssetSuffix: suffix,
-            takerAssetSuffix: currentExtension.takerAssetSuffix,
-            makingAmountData: currentExtension.makingAmountData,
-            takingAmountData: currentExtension.takingAmountData,
-            predicate: currentExtension.predicate,
-            makerPermit: currentExtension.makerPermit,
-            preInteraction: currentExtension.preInteraction,
-            postInteraction: currentExtension.postInteraction,
-            customData: currentExtension.customData
+            ...currentExtension,
+            makerAssetSuffix: suffix
         })
 
         this.inner.makerTraits.disablePermit2()
@@ -776,5 +789,15 @@ export class FusionOrder {
             randBigInt(UINT_256_MAX),
             this.deadline
         )
+    }
+
+    private decodeTransferPermitSuffix(): DecodedTransferPermitSuffix {
+        const suffix = this.inner.extension.makerAssetSuffix
+
+        if (suffix === ZX) {
+            throw new Error('no makerAssetSuffix')
+        }
+
+        return decodeTransferFromSuffix(suffix)
     }
 }

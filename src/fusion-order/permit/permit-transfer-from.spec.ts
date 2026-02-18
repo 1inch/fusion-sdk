@@ -1,12 +1,8 @@
 import {Address} from '@1inch/limit-order-sdk'
 import {verifyTypedData, Wallet} from 'ethers'
 import {PermitTransferFrom} from './permit-transfer-from.js'
-import {
-    PERMIT2_ADDRESS,
-    PERMIT2_ADDRESS_ZK,
-    PERMIT2_DOMAIN_NAME,
-    PERMIT_TRANSFER_FROM_TYPES
-} from './constants.js'
+import {PERMIT2_DOMAIN_NAME, PERMIT_TRANSFER_FROM_TYPES} from './constants.js'
+import {getPermit2Address} from './utils.js'
 import {NetworkEnum} from '../../constants.js'
 
 describe('PermitTransferFrom', () => {
@@ -33,7 +29,7 @@ describe('PermitTransferFrom', () => {
             domain: {
                 name: PERMIT2_DOMAIN_NAME,
                 chainId: NetworkEnum.ETHEREUM,
-                verifyingContract: PERMIT2_ADDRESS
+                verifyingContract: getPermit2Address(NetworkEnum.ETHEREUM)
             },
             message: {
                 permitted: {
@@ -58,7 +54,9 @@ describe('PermitTransferFrom', () => {
 
         const typedData = permit.getTypedData(NetworkEnum.ZKSYNC)
 
-        expect(typedData.domain.verifyingContract).toBe(PERMIT2_ADDRESS_ZK)
+        expect(typedData.domain.verifyingContract).toBe(
+            getPermit2Address(NetworkEnum.ZKSYNC)
+        )
     })
 
     it('should use custom permit2 address when provided', () => {

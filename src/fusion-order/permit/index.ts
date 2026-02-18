@@ -1,2 +1,3 @@
 export * from './permit-transfer-from.js'
-export {PERMIT2_ADDRESS} from './constants.js'
+export * from './transfer-from-suffix.js'
+export {getPermit2Address} from './utils.js'

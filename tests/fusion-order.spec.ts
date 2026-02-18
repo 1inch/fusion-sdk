@@ -944,6 +944,19 @@ describe('SettlementExtension', () => {
     })
 
     it('should execute order with PermitTransferFrom', async () => {
+        const initBalances = {
+            usdc: {
+                maker: await maker.tokenBalance(USDC),
+                taker: await taker.tokenBalance(USDC),
+                protocol: await protocol.tokenBalance(USDC)
+            },
+            weth: {
+                maker: await maker.tokenBalance(WETH),
+                taker: await taker.tokenBalance(WETH),
+                protocol: await protocol.tokenBalance(WETH)
+            }
+        }
+
         const takerAddress = new Address(await taker.getAddress())
         const makerAddress = new Address(await maker.getAddress())
 
@@ -971,8 +984,7 @@ describe('SettlementExtension', () => {
             {
                 allowPartialFills: false,
                 allowMultipleFills: false,
-                nonce: 1n,
-                enablePermit2: true
+                nonce: 1n
             }
         )
 
@@ -1010,14 +1022,33 @@ describe('SettlementExtension', () => {
 
         const finalBalances = {
             usdc: {
-                maker: await maker.tokenBalance(USDC)
+                maker: await maker.tokenBalance(USDC),
+                taker: await taker.tokenBalance(USDC),
+                protocol: await protocol.tokenBalance(USDC)
             },
             weth: {
-                maker: await maker.tokenBalance(WETH)
+                maker: await maker.tokenBalance(WETH),
+                taker: await taker.tokenBalance(WETH),
+                protocol: await protocol.tokenBalance(WETH)
             }
         }
 
-        expect(finalBalances.usdc.maker).toBeGreaterThan(0n)
+        expect(initBalances.weth.maker - finalBalances.weth.maker).toBe(
+            order.makingAmount
+        )
+        expect(finalBalances.usdc.maker - initBalances.usdc.maker).toBe(
+            order.takingAmount
+        )
+
+        expect(finalBalances.weth.taker - initBalances.weth.taker).toBe(
+            order.makingAmount
+        )
+        expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
+            order.calcTakingAmount(takerAddress, order.makingAmount, now())
+        )
+
+        expect(finalBalances.weth.protocol).toBe(initBalances.weth.protocol)
+        expect(finalBalances.usdc.protocol).toBe(initBalances.usdc.protocol)
     })
 
     it('should execute with custom receiver no fee', async () => {

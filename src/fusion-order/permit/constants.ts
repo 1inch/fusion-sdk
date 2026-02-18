@@ -1,8 +1,8 @@
 import {EIP712Types} from '@1inch/limit-order-sdk'
 import {NetworkEnum} from '../../constants.js'
 
-export const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3'
-export const PERMIT2_ADDRESS_ZK = '0x0000000000225e31d15943971f47ad3022f714fa'
+const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3'
+const PERMIT2_ADDRESS_ZK = '0x0000000000225e31d15943971f47ad3022f714fa'
 
 export const PERMIT2_ADDRESSES: Record<NetworkEnum, string> = {
     [NetworkEnum.ZKSYNC]: PERMIT2_ADDRESS_ZK,

@@ -790,4 +790,145 @@ describe('FusionOrder Native', () => {
 
         expect(nativeOrder.build().receiver).toEqual(settlementExt.toString())
     })
+
+    describe('isTransferPermit', () => {
+        const extensionContract = new Address(
+            '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
+        )
+
+        const permit2Proxy = new Address(
+            '0x1234567890abcdef1234567890abcdef12345678'
+        )
+
+        const baseOrder = (): FusionOrder =>
+            FusionOrder.new(
+                extensionContract,
+                {
+                    makerAsset: new Address(
+                        '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+                    ),
+                    takerAsset: new Address(
+                        '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                    ),
+                    makingAmount: parseEther('1'),
+                    takingAmount: parseUnits('1000', 6),
+                    maker: new Address(
+                        '0x00000000219ab540356cbb839cbe05303d7705fa'
+                    )
+                },
+                {
+                    auction: new AuctionDetails({
+                        duration: 180n,
+                        startTime: 1673548149n,
+                        initialRateBump: 0,
+                        points: []
+                    }),
+                    whitelist: Whitelist.new(1673548139n, [
+                        {
+                            address: new Address(
+                                '0x00000000219ab540356cbb839cbe05303d7705fa'
+                            ),
+                            allowFrom: 0n
+                        }
+                    ]),
+                    surplus: SurplusParams.NO_FEE
+                },
+                {
+                    allowPartialFills: false,
+                    allowMultipleFills: false,
+                    nonce: 1n
+                }
+            )
+
+        it('should return false for regular order', () => {
+            const order = FusionOrder.new(
+                extensionContract,
+                {
+                    makerAsset: new Address(
+                        '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+                    ),
+                    takerAsset: new Address(
+                        '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                    ),
+                    makingAmount: parseEther('1'),
+                    takingAmount: parseUnits('1000', 6),
+                    maker: new Address(
+                        '0x00000000219ab540356cbb839cbe05303d7705fa'
+                    )
+                },
+                {
+                    auction: new AuctionDetails({
+                        duration: 180n,
+                        startTime: 1673548149n,
+                        initialRateBump: 0,
+                        points: []
+                    }),
+                    whitelist: Whitelist.new(1673548139n, [
+                        {
+                            address: new Address(
+                                '0x00000000219ab540356cbb839cbe05303d7705fa'
+                            ),
+                            allowFrom: 0n
+                        }
+                    ]),
+                    surplus: SurplusParams.NO_FEE
+                }
+            )
+
+            expect(order.isTransferPermit()).toBe(false)
+        })
+
+        it('should return true after withTransferPermit', () => {
+            const order = baseOrder()
+            const permit = order.createTransferPermit(permit2Proxy)
+            const fakeSignature = '0x' + 'ab'.repeat(65)
+
+            const orderWithPermit = order.withTransferPermit(
+                permit,
+                fakeSignature
+            )
+
+            expect(orderWithPermit.isTransferPermit()).toBe(true)
+        })
+
+        it('should return real token as makerAsset after withTransferPermit', () => {
+            const weth = new Address(
+                '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+            )
+            const order = baseOrder()
+            const permit = order.createTransferPermit(permit2Proxy)
+            const fakeSignature = '0x' + 'ab'.repeat(65)
+
+            const orderWithPermit = order.withTransferPermit(
+                permit,
+                fakeSignature
+            )
+
+            expect(orderWithPermit.makerAsset).toEqual(weth)
+        })
+
+        it('should return false for non-permit2 suffix data', () => {
+            const order = baseOrder()
+
+            const ext = order.extension
+            const tampered = new Extension({
+                makerAssetSuffix: '0xdeadbeef',
+                takerAssetSuffix: ext.takerAssetSuffix,
+                makingAmountData: ext.makingAmountData,
+                takingAmountData: ext.takingAmountData,
+                predicate: ext.predicate,
+                makerPermit: ext.makerPermit,
+                preInteraction: ext.preInteraction,
+                postInteraction: ext.postInteraction,
+                customData: ext.customData
+            })
+
+            const rebuilt = FusionOrder.fromDataAndExtension(
+                order.build(),
+                tampered
+            )
+
+            expect(rebuilt.isTransferPermit()).toBe(false)
+        })
+    })
 })
