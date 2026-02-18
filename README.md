@@ -263,7 +263,6 @@ import {
     OrderStatus,
     PrivateKeyProviderConnector,
     Web3Like,
-    Address,
     getPermit2Address
 } from '@1inch/fusion-sdk'
 import {computeAddress, JsonRpcProvider, Wallet} from 'ethers'
@@ -271,7 +270,6 @@ import {computeAddress, JsonRpcProvider, Wallet} from 'ethers'
 const PRIVATE_KEY = 'YOUR_PRIVATE_KEY'
 const NODE_URL = 'YOUR_WEB3_NODE_URL'
 const DEV_PORTAL_API_TOKEN = 'YOUR_DEV_PORTAL_API_TOKEN'
-const PERMIT2_PROXY_ADDRESS = 'PERMIT2_PROXY_CONTRACT_ADDRESS'
 
 const ethersRpcProvider = new JsonRpcProvider(NODE_URL)
 
@@ -315,12 +313,14 @@ async function main() {
     const {order, quoteId} = await sdk.createOrder(params)
 
     // Step 3: Create a transfer permit for the order
-    const permit2Proxy = new Address(PERMIT2_PROXY_ADDRESS)
-    const permit = order.createTransferPermit(permit2Proxy)
+    const permit = order.createTransferPermit(NetworkEnum.ETHEREUM)
 
     // Step 4: Sign the transfer permit
     const permitTypedData = permit.getTypedData(NetworkEnum.ETHEREUM)
-    const permitSignature = await connector.signTypedData(params.walletAddress, permitTypedData)
+    const permitSignature = await connector.signTypedData(
+        params.walletAddress,
+        permitTypedData
+    )
 
     // Step 5: Attach the signed permit to the order
     const orderWithPermit = order.withTransferPermit(permit, permitSignature)

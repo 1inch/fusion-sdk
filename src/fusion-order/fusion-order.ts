@@ -20,6 +20,7 @@ import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
 import {PermitTransferFrom} from './permit/permit-transfer-from.js'
+import {getPermit2ProxyAddress} from './permit/utils.js'
 import {
     DecodedTransferPermitSuffix,
     decodeTransferFromSuffix
@@ -762,30 +763,41 @@ export class FusionOrder {
      *
      * Can only be used for orders where `multipleFillsAllowed` is `false`.
      *
-     * The returned permit authorizes the given `permit2Proxy` address (as spender)
+     * The returned permit authorizes the `permit2Proxy` address (as spender)
      * to transfer up to `makingAmount` of the `makerAsset` token,
      * with a random 256-bit nonce and the order's deadline.
      *
      * The resulting permit can be signed and then attached to the order
      * via {@link FusionOrder.withTransferPermit}.
      *
-     * @param permit2Proxy - The address of the Permit2Proxy contract that will act as spender
+     * @param chainId - The chain ID used to resolve the default Permit2Proxy address
+     * @param permit2Proxy - Optional address of the Permit2Proxy contract that will act as spender.
+     *                       Defaults to the built-in address for the given `chainId`.
      * @returns A {@link PermitTransferFrom} instance that can be signed and attached to the order
      *
      * @throws If `multipleFillsAllowed` is `true`
      *
      * @see FusionOrder.withTransferPermit
      */
-    public createTransferPermit(permit2Proxy: Address): PermitTransferFrom {
+    public createTransferPermit(
+        chainIdOrPermit2Proxy: number | Address,
+        permit2Proxy?: Address
+    ): PermitTransferFrom {
         assert(
             !this.multipleFillsAllowed,
             'transfer permit can be used only for orders where multipleFillsAllowed=false'
         )
 
+        const spender =
+            chainIdOrPermit2Proxy instanceof Address
+                ? chainIdOrPermit2Proxy
+                : (permit2Proxy ??
+                  getPermit2ProxyAddress(chainIdOrPermit2Proxy))
+
         return new PermitTransferFrom(
             this.makerAsset,
             this.makingAmount,
-            permit2Proxy,
+            spender,
             randBigInt(UINT_256_MAX),
             this.deadline
         )
