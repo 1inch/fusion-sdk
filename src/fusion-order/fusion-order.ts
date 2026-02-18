@@ -7,8 +7,10 @@ import {
     LimitOrderV4Struct,
     MakerTraits,
     OrderInfoData,
-    ProxyFactory
+    ProxyFactory,
+    randBigInt
 } from '@1inch/limit-order-sdk'
+import {UINT_256_MAX} from '@1inch/byte-utils'
 import assert from 'assert'
 import {FusionExtension} from './fusion-extension.js'
 import {AuctionDetails} from './auction-details/index.js'
@@ -17,8 +19,13 @@ import {injectTrackCode} from './source-track.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
+import {PermitTransferFrom} from './permit/permit-transfer-from.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
-import {NetworkEnum, ZX} from '../constants.js'
+import {
+    NetworkEnum,
+    ONE_INCH_LIMIT_ORDER_V4_ADDRESSES,
+    ZX
+} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
 import {now} from '../utils/time.js'
 import {AmountCalculator} from '../amount-calculator/amount-calculator.js'
@@ -408,6 +415,15 @@ export class FusionOrder {
         return fusionOrder
     }
 
+    public withTransferPermit(
+        permit: PermitTransferFrom,
+        signature: string
+    ): this {
+        // todo: update all required fields
+
+        return this
+    }
+
     public build(): LimitOrderV4Struct {
         return this.inner.build()
     }
@@ -692,5 +708,39 @@ export class FusionOrder {
      */
     public nativeSignature(maker: Address): string {
         return this.inner.nativeSignature(maker)
+    }
+
+    /**
+     * Creates a Permit2 `PermitTransferFrom` object for the order's maker asset.
+     *
+     * Can only be used for orders where `multipleFillsAllowed` is `false`.
+     *
+     * The returned permit authorizes the 1inch Limit Order Protocol v4 contract
+     * (as spender) to transfer up to `makingAmount` of the `makerAsset` token,
+     * with a random 256-bit nonce and the order's deadline.
+     *
+     * @param chainId - The chain ID of the network (must be a supported {@link NetworkEnum} value)
+     * @returns A {@link PermitTransferFrom} instance that can be signed and attached to the order
+     *
+     * @throws If `multipleFillsAllowed` is `true`
+     * @throws If `chainId` is not a supported network
+     */
+    public createTransferPermit(chainId: number): PermitTransferFrom {
+        assert(
+            !this.multipleFillsAllowed,
+            'transfer permit can be used only for orders where multipleFillsAllowed=false'
+        )
+
+        assert(NetworkEnum[chainId], 'unsupported chain id')
+
+        return new PermitTransferFrom(
+            this.makerAsset,
+            this.makingAmount,
+            new Address(
+                ONE_INCH_LIMIT_ORDER_V4_ADDRESSES[chainId as NetworkEnum]
+            ),
+            randBigInt(UINT_256_MAX),
+            this.deadline
+        )
     }
 }

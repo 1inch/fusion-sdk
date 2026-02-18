@@ -5,7 +5,6 @@ import {Quote} from './quote/index.js'
 import {PresetEnum, QuoterResponse} from './types.js'
 import {QuoterCustomPresetRequest} from './quoter-custom-preset.request.js'
 import {HttpProviderConnector} from '../../connector/index.js'
-import {ONE_INCH_LIMIT_ORDER_V4} from '../../constants.js'
 
 describe('Quoter API', () => {
     let httpProvider: HttpProviderConnector
@@ -121,7 +120,7 @@ describe('Quoter API', () => {
         ],
         fee: {
             whitelistDiscountPercent: 1,
-            receiver: ONE_INCH_LIMIT_ORDER_V4,
+            receiver: '0x02f92800F57BCD74066F5709F1Daa1A4302Df875',
             bps: 10
         },
         marketAmount: '626772029219852913'
