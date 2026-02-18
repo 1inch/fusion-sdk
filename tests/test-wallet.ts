@@ -156,7 +156,7 @@ export class TestWallet {
         const res = await this.signer.sendTransaction({
             ...param,
             gasLimit: 10_000_000,
-            from: this.getAddress()
+            from: await this.getAddress()
         })
         const receipt = await res.wait(1)
 
