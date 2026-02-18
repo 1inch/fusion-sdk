@@ -32,11 +32,10 @@ export class TestWallet {
         signer: Signer,
         typedData: EIP712TypedData
     ): Promise<string> {
-        return signer.signTypedData(
-            typedData.domain,
-            {Order: typedData.types[typedData.primaryType]},
-            typedData.message
-        )
+        const types = {...typedData.types}
+        delete types['EIP712Domain']
+
+        return signer.signTypedData(typedData.domain, types, typedData.message)
     }
 
     public static async fromAddress(
