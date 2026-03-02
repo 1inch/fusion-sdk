@@ -15,7 +15,8 @@ export {
     MakerTraits,
     ProxyFactory,
     NativeOrdersFactory,
-    NativeOrdersImpl
+    NativeOrdersImpl,
+    Bps
 } from '@1inch/limit-order-sdk'
 export * from './fusion-order/index.js'
 export * from './amount-calculator//index.js'
@@ -37,5 +38,7 @@ export {
     Preset,
     Quote,
     type OrderStatusResponse,
-    OrderStatus
+    OrderStatus,
+    type IntegratorFeeRequest,
+    type IntegratorFeeResponse
 } from './api/index.js'
