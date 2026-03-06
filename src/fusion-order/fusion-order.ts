@@ -7,8 +7,10 @@ import {
     LimitOrderV4Struct,
     MakerTraits,
     OrderInfoData,
-    ProxyFactory
+    ProxyFactory,
+    randBigInt
 } from '@1inch/limit-order-sdk'
+import {UINT_256_MAX} from '@1inch/byte-utils'
 import assert from 'assert'
 import {FusionExtension} from './fusion-extension.js'
 import {AuctionDetails} from './auction-details/index.js'
@@ -17,6 +19,12 @@ import {injectTrackCode} from './source-track.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
+import {PermitTransferFrom} from './permit/permit-transfer-from.js'
+import {getPermit2ProxyAddress} from './permit/utils.js'
+import {
+    DecodedTransferPermitSuffix,
+    decodeTransferFromSuffix
+} from './permit/transfer-from-suffix.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
 import {NetworkEnum, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
@@ -165,6 +173,10 @@ export class FusionOrder {
     }
 
     get makerAsset(): Address {
+        if (this.isTransferPermit()) {
+            return this.decodeTransferPermitSuffix().token
+        }
+
         return this.inner.makerAsset
     }
 
@@ -406,6 +418,58 @@ export class FusionOrder {
         )
 
         return fusionOrder
+    }
+
+    /**
+     * Returns true if the order uses a Permit2 transfer permit via Permit2Proxy.
+     * Decodes `makerAssetSuffix` and validates the Permit2 ABI structure.
+     *
+     * @see FusionOrder.withTransferPermit
+     * @see FusionOrder.createTransferPermit
+     */
+    public isTransferPermit(): boolean {
+        try {
+            this.decodeTransferPermitSuffix()
+
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    public withTransferPermit(
+        permit: PermitTransferFrom,
+        signature: string
+    ): this {
+        const suffix = permit.getTransferFromSuffix(signature)
+
+        const currentExtension = this.inner.extension
+        const newExtension = new Extension({
+            ...currentExtension,
+            makerAssetSuffix: suffix
+        })
+
+        this.inner.makerTraits.disablePermit2()
+
+        const baseSalt = this.inner.salt >> 160n
+        const newSalt = LimitOrder.buildSalt(newExtension, baseSalt)
+
+        this.inner = new LimitOrder(
+            {
+                maker: this.inner.maker,
+                makerAsset: permit.spender,
+                takerAsset: this.inner.takerAsset,
+                makingAmount: this.inner.makingAmount,
+                takingAmount: this.inner.takingAmount,
+                receiver: this.inner.receiver,
+                salt: newSalt
+            },
+            this.inner.makerTraits,
+            newExtension,
+            {optimizeReceiverAddress: false}
+        )
+
+        return this
     }
 
     public build(): LimitOrderV4Struct {
@@ -692,5 +756,60 @@ export class FusionOrder {
      */
     public nativeSignature(maker: Address): string {
         return this.inner.nativeSignature(maker)
+    }
+
+    /**
+     * Creates a Permit2 `PermitTransferFrom` object for the order's maker asset.
+     *
+     * Can only be used for orders where `multipleFillsAllowed` is `false`.
+     *
+     * The returned permit authorizes the `permit2Proxy` address (as spender)
+     * to transfer up to `makingAmount` of the `makerAsset` token,
+     * with a random 256-bit nonce and the order's deadline.
+     *
+     * The resulting permit can be signed and then attached to the order
+     * via {@link FusionOrder.withTransferPermit}.
+     *
+     * @param chainId - The chain ID used to resolve the default Permit2Proxy address
+     * @param permit2Proxy - Optional address of the Permit2Proxy contract that will act as spender.
+     *                       Defaults to the built-in address for the given `chainId`.
+     * @returns A {@link PermitTransferFrom} instance that can be signed and attached to the order
+     *
+     * @throws If `multipleFillsAllowed` is `true`
+     *
+     * @see FusionOrder.withTransferPermit
+     */
+    public createTransferPermit(
+        chainIdOrPermit2Proxy: number | Address,
+        permit2Proxy?: Address
+    ): PermitTransferFrom {
+        assert(
+            !this.multipleFillsAllowed,
+            'transfer permit can be used only for orders where multipleFillsAllowed=false'
+        )
+
+        const spender =
+            chainIdOrPermit2Proxy instanceof Address
+                ? chainIdOrPermit2Proxy
+                : (permit2Proxy ??
+                  getPermit2ProxyAddress(chainIdOrPermit2Proxy))
+
+        return new PermitTransferFrom(
+            this.makerAsset,
+            this.makingAmount,
+            spender,
+            randBigInt(UINT_256_MAX),
+            this.deadline
+        )
+    }
+
+    private decodeTransferPermitSuffix(): DecodedTransferPermitSuffix {
+        const suffix = this.inner.extension.makerAssetSuffix
+
+        if (suffix === ZX) {
+            throw new Error('no makerAssetSuffix')
+        }
+
+        return decodeTransferFromSuffix(suffix)
     }
 }
