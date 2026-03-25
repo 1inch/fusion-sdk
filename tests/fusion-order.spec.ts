@@ -3,7 +3,7 @@ import {Bps} from '@1inch/limit-order-sdk'
 import assert from 'assert'
 
 import {ReadyEvmFork, setupEvm} from './setup-chain.js'
-import {USDC, WETH} from './addresses.js'
+import {USDC, WETH, ONE_INCH_LIMIT_ORDER_V4} from './addresses.js'
 import {TestWallet} from './test-wallet.js'
 import {now} from './utils.js'
 
@@ -17,7 +17,7 @@ import {
     AuctionDetails,
     FusionOrder,
     LimitOrderContract,
-    ONE_INCH_LIMIT_ORDER_V4,
+    NetworkEnum,
     SurplusParams,
     TakerTraits,
     Whitelist
@@ -34,7 +34,7 @@ describe('SettlementExtension', () => {
 
     let protocol: TestWallet
     beforeAll(async () => {
-        testNode = await setupEvm({})
+        testNode = await setupEvm()
         maker = testNode.maker
         taker = testNode.taker
         EXT_ADDRESS = testNode.addresses.settlement
@@ -941,6 +941,114 @@ describe('SettlementExtension', () => {
                 finalBalances.weth.integrator - initBalances.weth.integrator
             ).toBe(0n)
         })
+    })
+
+    it('should execute order with PermitTransferFrom', async () => {
+        const initBalances = {
+            usdc: {
+                maker: await maker.tokenBalance(USDC),
+                taker: await taker.tokenBalance(USDC),
+                protocol: await protocol.tokenBalance(USDC)
+            },
+            weth: {
+                maker: await maker.tokenBalance(WETH),
+                taker: await taker.tokenBalance(WETH),
+                protocol: await protocol.tokenBalance(WETH)
+            }
+        }
+
+        const takerAddress = new Address(await taker.getAddress())
+        const makerAddress = new Address(await maker.getAddress())
+
+        const order = FusionOrder.new(
+            new Address(EXT_ADDRESS),
+            {
+                maker: makerAddress,
+                makerAsset: new Address(WETH),
+                takerAsset: new Address(USDC),
+                makingAmount: parseEther('0.1'),
+                takingAmount: parseUnits('100', 6)
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 120n,
+                    startTime: now(),
+                    points: [],
+                    initialRateBump: 0
+                }),
+                whitelist: Whitelist.new(0n, [
+                    {address: takerAddress, allowFrom: 0n}
+                ]),
+                surplus: SurplusParams.NO_FEE
+            },
+            {
+                allowPartialFills: false,
+                allowMultipleFills: false,
+                nonce: 1n
+            }
+        )
+
+        const chainId = NetworkEnum.ETHEREUM
+
+        const permit2Proxy = new Address(testNode.addresses.permit2Proxy)
+
+        const permit = order.createTransferPermit(permit2Proxy)
+        const permitSignature = await maker.signTypedData(
+            permit.getTypedData(chainId)
+        )
+
+        const orderWithPermit = order.withTransferPermit(
+            permit,
+            permitSignature
+        )
+
+        const signature = await maker.signTypedData(
+            orderWithPermit.getTypedData(chainId)
+        )
+
+        const data = LimitOrderContract.getFillOrderArgsCalldata(
+            orderWithPermit.build(),
+            signature,
+            TakerTraits.default()
+                .setExtension(orderWithPermit.extension)
+                .setAmountMode(AmountMode.maker),
+            orderWithPermit.makingAmount
+        )
+
+        await taker.send({
+            data,
+            to: ONE_INCH_LIMIT_ORDER_V4
+        })
+
+        const finalBalances = {
+            usdc: {
+                maker: await maker.tokenBalance(USDC),
+                taker: await taker.tokenBalance(USDC),
+                protocol: await protocol.tokenBalance(USDC)
+            },
+            weth: {
+                maker: await maker.tokenBalance(WETH),
+                taker: await taker.tokenBalance(WETH),
+                protocol: await protocol.tokenBalance(WETH)
+            }
+        }
+
+        expect(initBalances.weth.maker - finalBalances.weth.maker).toBe(
+            order.makingAmount
+        )
+        expect(finalBalances.usdc.maker - initBalances.usdc.maker).toBe(
+            order.takingAmount
+        )
+
+        expect(finalBalances.weth.taker - initBalances.weth.taker).toBe(
+            order.makingAmount
+        )
+        expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
+            order.calcTakingAmount(takerAddress, order.makingAmount, now())
+        )
+
+        expect(finalBalances.weth.protocol).toBe(initBalances.weth.protocol)
+        expect(finalBalances.usdc.protocol).toBe(initBalances.usdc.protocol)
     })
 
     it('should execute with custom receiver no fee', async () => {

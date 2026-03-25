@@ -32,11 +32,10 @@ export class TestWallet {
         signer: Signer,
         typedData: EIP712TypedData
     ): Promise<string> {
-        return signer.signTypedData(
-            typedData.domain,
-            {Order: typedData.types[typedData.primaryType]},
-            typedData.message
-        )
+        const types = {...typedData.types}
+        delete types['EIP712Domain']
+
+        return signer.signTypedData(typedData.domain, types, typedData.message)
     }
 
     public static async fromAddress(
@@ -156,7 +155,7 @@ export class TestWallet {
         const res = await this.signer.sendTransaction({
             ...param,
             gasLimit: 10_000_000,
-            from: this.getAddress()
+            from: await this.getAddress()
         })
         const receipt = await res.wait(1)
 
