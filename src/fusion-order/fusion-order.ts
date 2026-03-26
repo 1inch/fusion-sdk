@@ -412,6 +412,10 @@ export class FusionOrder {
             }
         )
 
+        if (extension.makerAssetSuffix !== ZX) {
+            fusionOrder.restoreMakerAssetSuffix(extension.makerAssetSuffix)
+        }
+
         assert(
             providedSalt === fusionOrder.salt,
             'invalid salt for passed extension'
@@ -800,6 +804,34 @@ export class FusionOrder {
             spender,
             randBigInt(UINT_256_MAX),
             this.deadline
+        )
+    }
+
+    /**
+     * Restores the original `makerAssetSuffix` that `FusionExtension.build()` does not preserve.
+     * Recomputes the salt to match the patched extension hash.
+     */
+    private restoreMakerAssetSuffix(makerAssetSuffix: string): void {
+        const patchedExtension = new Extension({
+            ...this.inner.extension,
+            makerAssetSuffix
+        })
+
+        const baseSalt = this.inner.salt >> 160n
+
+        this.inner = new LimitOrder(
+            {
+                maker: this.inner.maker,
+                makerAsset: this.inner.makerAsset,
+                takerAsset: this.inner.takerAsset,
+                makingAmount: this.inner.makingAmount,
+                takingAmount: this.inner.takingAmount,
+                receiver: this.inner.receiver,
+                salt: LimitOrder.buildSalt(patchedExtension, baseSalt)
+            },
+            this.inner.makerTraits,
+            patchedExtension,
+            {optimizeReceiverAddress: false}
         )
     }
 

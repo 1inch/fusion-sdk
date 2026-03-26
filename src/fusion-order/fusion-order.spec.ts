@@ -907,7 +907,29 @@ describe('FusionOrder Native', () => {
             expect(orderWithPermit.makerAsset).toEqual(weth)
         })
 
-        it('should return false for non-permit2 suffix data', () => {
+        it('should round-trip Permit2 order through fromDataAndExtension', () => {
+            const order = baseOrder()
+            const permit = order.createTransferPermit(permit2Proxy)
+            const fakeSignature = '0x' + 'ab'.repeat(65)
+
+            const orderWithPermit = order.withTransferPermit(
+                permit,
+                fakeSignature
+            )
+
+            const built = orderWithPermit.build()
+            const rebuilt = FusionOrder.fromDataAndExtension(
+                built,
+                orderWithPermit.extension
+            )
+
+            expect(rebuilt.isTransferPermit()).toBe(true)
+            expect(rebuilt.makerAsset).toEqual(orderWithPermit.makerAsset)
+            expect(rebuilt.salt).toEqual(orderWithPermit.salt)
+            expect(rebuilt.build()).toEqual(built)
+        })
+
+        it('should reject tampered makerAssetSuffix via salt check', () => {
             const order = baseOrder()
 
             const ext = order.extension
@@ -923,12 +945,9 @@ describe('FusionOrder Native', () => {
                 customData: ext.customData
             })
 
-            const rebuilt = FusionOrder.fromDataAndExtension(
-                order.build(),
-                tampered
-            )
-
-            expect(rebuilt.isTransferPermit()).toBe(false)
+            expect(() =>
+                FusionOrder.fromDataAndExtension(order.build(), tampered)
+            ).toThrow('invalid salt for passed extension')
         })
     })
 })
