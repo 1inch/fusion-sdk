@@ -16,6 +16,10 @@ export enum NetworkEnum {
     UNICHAIN = 130
 }
 
+/** @deprecated Use ONE_INCH_LIMIT_ORDER_V4_ADDRESSES instead */
+export const ONE_INCH_LIMIT_ORDER_V4 =
+    '0x111111125421ca6dc452d289314280a0f8842a65'
+
 export const ONE_INCH_LIMIT_ORDER_V4_ADDRESSES: Record<NetworkEnum, string> = {
     [NetworkEnum.ZKSYNC]: '0x6fd4383cb451173d5f9304f041c7bcbf27d561ff',
     [NetworkEnum.ETHEREUM]: '0x111111125421ca6dc452d289314280a0f8842a65',
