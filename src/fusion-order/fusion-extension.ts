@@ -15,6 +15,7 @@ import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
 import {add0x} from '../utils.js'
+import {ZX} from '../constants.js'
 
 export class FusionExtension {
     /**
@@ -30,6 +31,7 @@ export class FusionExtension {
         public readonly surplus: SurplusParams,
         public readonly extra?: {
             makerPermit?: Interaction
+            preInteraction?: Interaction
             customReceiver?: Address
             fees?: Fees
         }
@@ -117,6 +119,11 @@ export class FusionExtension {
             ? Interaction.decode(extension.makerPermit)
             : undefined
 
+        const preInteraction =
+            extension.preInteraction !== ZX
+                ? Interaction.decode(extension.preInteraction)
+                : undefined
+
         assert(
             amountData.fees.integratorFee.value ===
                 interactionData.fees.integratorFee.value,
@@ -160,6 +167,7 @@ export class FusionExtension {
                 surplusParams,
                 {
                     makerPermit,
+                    preInteraction,
                     customReceiver,
                     fees: undefined
                 }
@@ -189,6 +197,7 @@ export class FusionExtension {
             surplusParams,
             {
                 makerPermit,
+                preInteraction,
                 fees,
                 customReceiver
             }
@@ -210,6 +219,10 @@ export class FusionExtension {
                 this.extra?.makerPermit.target,
                 this.extra?.makerPermit.data
             )
+        }
+
+        if (this.extra?.preInteraction) {
+            builder.withPreInteraction(this.extra.preInteraction)
         }
 
         return builder.build()
