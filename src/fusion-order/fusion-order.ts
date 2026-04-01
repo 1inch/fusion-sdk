@@ -57,6 +57,9 @@ export class FusionOrder {
                 makerPermit: extra.permit
                     ? new Interaction(orderInfo.makerAsset, extra.permit)
                     : undefined,
+                preInteraction: extra.preInteraction
+                    ? Interaction.decode(extra.preInteraction)
+                    : undefined,
                 customReceiver: orderInfo.receiver,
                 fees: extra?.fees
             }
@@ -100,6 +103,10 @@ export class FusionOrder {
 
         if (enablePermit2) {
             makerTraits.enablePermit2()
+        }
+
+        if (extra.preInteraction) {
+            makerTraits.enablePreInteraction()
         }
 
         if (extra.nonce !== undefined) {
@@ -393,6 +400,10 @@ export class FusionOrder {
                     extension.makerPermit === ZX
                         ? undefined
                         : Interaction.decode(extension.makerPermit).data,
+                preInteraction:
+                    extension.preInteraction === ZX
+                        ? undefined
+                        : extension.preInteraction,
                 unwrapWETH: makerTraits.isNativeUnwrapEnabled(),
                 orderExpirationDelay,
                 fees: extra?.fees,
