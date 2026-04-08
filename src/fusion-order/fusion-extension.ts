@@ -15,7 +15,6 @@ import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
 import {add0x} from '../utils.js'
-import {ZX} from '../constants.js'
 
 export class FusionExtension {
     /**
@@ -119,10 +118,9 @@ export class FusionExtension {
             ? Interaction.decode(extension.makerPermit)
             : undefined
 
-        const preInteraction =
-            extension.preInteraction !== ZX
-                ? Interaction.decode(extension.preInteraction)
-                : undefined
+        const preInteraction = extension.hasPreInteraction
+            ? Interaction.decode(extension.preInteraction)
+            : undefined
 
         assert(
             amountData.fees.integratorFee.value ===
