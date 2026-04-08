@@ -119,9 +119,10 @@ export class FusionExtension {
             ? Interaction.decode(extension.makerPermit)
             : undefined
 
-        const preInteraction = extension.hasPreInteraction
-            ? Interaction.decode(extension.preInteraction)
-            : undefined
+        const preInteraction =
+            extension.preInteraction !== ZX
+                ? Interaction.decode(extension.preInteraction)
+                : undefined
 
         assert(
             amountData.fees.integratorFee.value ===
