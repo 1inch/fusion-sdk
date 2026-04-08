@@ -125,10 +125,13 @@ importers:
 packages:
 
   '@1inch/byte-utils@3.0.0':
-    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/3.0.0/1c573a3e72586540ea6f542099cd18da978118df}
+    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
+    peerDependenciesMeta:
+      assert:
+        optional: true
 
   '@1inch/byte-utils@3.1.0':
     resolution: {integrity: sha512-fMxihTlLKvRvy3gvL16DTWkZGDwQXYSEgCLX/+sazb38+YD7IK3HzKaxvAUzg8ODLwQk5oY/o6pqRQKI+9x+OA==}
@@ -162,11 +165,16 @@ packages:
       typescript: ^5.5.2
 
   '@1inch/limit-order-sdk@5.2.5':
-    resolution: {integrity: sha512-TvITGypMTzVnJ9B9CjFd1XILnF5tE/Uvy8/DCGCcHOcshEI99mfucgg3DwLoQTpzOcRcDHJ4FbYq9j4T6SUJ9A==, tarball: https://npm.pkg.github.com/download/@1inch/limit-order-sdk/5.2.5/05ebb8f6e44a2c54127c70b034e4a4a75d365a83}
+    resolution: {integrity: sha512-TvITGypMTzVnJ9B9CjFd1XILnF5tE/Uvy8/DCGCcHOcshEI99mfucgg3DwLoQTpzOcRcDHJ4FbYq9j4T6SUJ9A==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
       axios: '>=1.7.4'
+    peerDependenciesMeta:
+      assert:
+        optional: true
+      axios:
+        optional: true
 
   '@1inch/tsconfig@1.0.8':
     resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
@@ -3616,7 +3624,7 @@ packages:
 snapshots:
 
   '@1inch/byte-utils@3.0.0(assert@2.1.0)':
-    dependencies:
+    optionalDependencies:
       assert: 2.1.0
 
   '@1inch/byte-utils@3.1.0(assert@2.1.0)':
@@ -3648,9 +3656,10 @@ snapshots:
   '@1inch/limit-order-sdk@5.2.5(assert@2.1.0)(axios@1.12.2)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
+      ethers: 6.16.0
+    optionalDependencies:
       assert: 2.1.0
       axios: 1.12.2
-      ethers: 6.16.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
