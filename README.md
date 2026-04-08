@@ -48,7 +48,7 @@ const connector = new PrivateKeyProviderConnector(
 )
 
 const sdk = new FusionSDK({
-    url: 'https://api.1inch.dev/fusion',
+    url: 'https://api.1inch.com/fusion',
     network: NetworkEnum.BINANCE,
     blockchainProvider: connector,
     authKey: DEV_PORTAL_API_TOKEN
@@ -133,7 +133,7 @@ const connector = new PrivateKeyProviderConnector(
 )
 
 const sdk = new FusionSDK({
-    url: 'https://api.1inch.dev/fusion',
+    url: 'https://api.1inch.com/fusion',
     network: NetworkEnum.BINANCE,
     blockchainProvider: connector,
     authKey: DEV_PORTAL_API_TOKEN
