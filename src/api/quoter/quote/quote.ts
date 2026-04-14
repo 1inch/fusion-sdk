@@ -74,6 +74,8 @@ export class Quote {
 
     public readonly integratorFeeParams?: IntegratorFeeResponse
 
+    public readonly source?: string
+
     constructor(
         private readonly params: QuoterRequest,
         response: QuoterResponse
@@ -112,6 +114,7 @@ export class Quote {
             bps: new Bps(BigInt(response.fee.bps))
         }
         this.surplusFee = response.surplusFee
+        this.source = response.source
 
         this.integratorFeeParams = this.parseIntegratorFee(response)
     }
@@ -179,7 +182,7 @@ export class Quote {
             allowPartialFills,
             allowMultipleFills,
             orderExpirationDelay: paramsData?.orderExpirationDelay,
-            source: this.params.source,
+            source: this.source || this.params.source,
             enablePermit2: params.isPermit2,
             fees: buildFees(
                 this.resolverFeePreset,

@@ -66,6 +66,10 @@ export type QuoterResponse = {
      * Percentage of the integrator fee that will be shared with the integrator.
      */
     integratorFeeShare: number
+    /**
+     * Resolved source tracking code
+     */
+    source?: string
 }
 
 export type QuoterPresets = {
