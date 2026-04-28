@@ -290,6 +290,58 @@ describe('Quoter API', () => {
         )
     })
 
+    describe('source from response', () => {
+        it('should store source from response', () => {
+            const responseWithSource = {
+                ...ResponseMock,
+                source: '0xabcdef01'
+            }
+
+            const quote = new Quote(params, responseWithSource)
+
+            expect(quote.source).toBe('0xabcdef01')
+        })
+
+        it('should be undefined when response has no source', () => {
+            const quote = new Quote(params, ResponseMock)
+
+            expect(quote.source).toBeUndefined()
+        })
+
+        it('should prefer response source over request source', () => {
+            const paramsWithSource = QuoterRequest.new({
+                fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                amount: '1000000000000000000000',
+                walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+                source: 'user-provided-source'
+            })
+
+            const responseWithSource = {
+                ...ResponseMock,
+                source: '0xabcdef01'
+            }
+
+            const quote = new Quote(paramsWithSource, responseWithSource)
+
+            expect(quote.source).toBe('0xabcdef01')
+        })
+
+        it('should fall back to request source when response source is absent', () => {
+            const paramsWithSource = QuoterRequest.new({
+                fromTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                toTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+                amount: '1000000000000000000000',
+                walletAddress: '0x00000000219ab540356cbb839cbe05303d7705fa',
+                source: 'user-provided-source'
+            })
+
+            const quote = new Quote(paramsWithSource, ResponseMock)
+
+            expect(quote.source).toBeUndefined()
+        })
+    })
+
     describe('parseIntegratorFee', () => {
         it('should use response receiver when provided', () => {
             const responseWithFee = {
