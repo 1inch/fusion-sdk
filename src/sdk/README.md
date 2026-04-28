@@ -204,12 +204,11 @@ sdk.placeOrder({
     toTokenAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
     amount: '50000000000000000', // 0.05 ETH
     walletAddress: makerAddress,
-    // fee is an optional field
-    fee: {
-        takingFeeBps: 100, // 1% as we use bps format, 1% is equal to 100bps
-        takingFeeReceiver: '0x0000000000000000000000000000000000000000' //  fee receiver address
-    },
-    source: 'platform-name'
+    // integratorFee is an optional field
+    integratorFee: {
+        receiver: new Address('0x0000000000000000000000000000000000000000'), //  fee receiver address
+        value: new Bps(100n) // 1% as we use bps format, 1% is equal to 100bps
+    }
 }).then(console.log)
 ```
 
@@ -224,6 +223,15 @@ type PaginationParams = {
 }
 ```
 
+### IntegratorFeeRequest
+
+```typescript
+type IntegratorFeeRequest = {
+    receiver: Address // fee receiver address
+    value: Bps // 100 == 1%
+}
+```
+
 ### QuoteParams
 
 ```typescript
@@ -231,8 +239,9 @@ type QuoteParams = {
     fromTokenAddress: string
     toTokenAddress: string
     amount: string
+    walletAddress?: string
     permit?: string // a permit (EIP-2612) call data, user approval sign
-    takingFeeBps?: number // 100 == 1%
+    integratorFee?: IntegratorFeeRequest
 }
 ```
 
@@ -253,12 +262,7 @@ type OrderParams = {
     permit?: string // a permit (EIP-2612) call data, user approval sign
     receiver?: string // address
     preset?: PresetEnum
-    nonce?: OrderNonce | string | number // allows to batch cancel orders. by default: not used
-    fee?: TakingFeeInfo
-}
-
-export type TakingFeeInfo = {
-    takingFeeBps: number // 100 == 1%
-    takingFeeReceiver: string
+    nonce?: bigint // allows to batch cancel orders
+    integratorFee?: IntegratorFeeRequest
 }
 ```

@@ -10,7 +10,7 @@ import assert from 'assert'
 import {FusionOrderParams} from './order-params.js'
 import {
     FusionOrderParamsData,
-    IntegratorFeeParams,
+    IntegratorFeeResponse,
     ResolverFeePreset
 } from './types.js'
 import {NetworkEnum} from '../../../constants.js'
@@ -72,7 +72,9 @@ export class Quote {
 
     public readonly surplusFee?: number
 
-    public readonly integratorFeeParams?: IntegratorFeeParams
+    public readonly integratorFeeParams?: IntegratorFeeResponse
+
+    public readonly source?: string
 
     constructor(
         private readonly params: QuoterRequest,
@@ -112,15 +114,9 @@ export class Quote {
             bps: new Bps(BigInt(response.fee.bps))
         }
         this.surplusFee = response.surplusFee
+        this.source = response.source
 
-        this.integratorFeeParams =
-            response.integratorFee && response.integratorFeeReceiver
-                ? {
-                      receiver: new Address(response.integratorFeeReceiver),
-                      value: new Bps(BigInt(response.integratorFee)),
-                      share: Bps.fromPercent(response.integratorFeeShare || 0)
-                  }
-                : undefined
+        this.integratorFeeParams = this.parseIntegratorFee(response)
     }
 
     createFusionOrder(
@@ -186,11 +182,11 @@ export class Quote {
             allowPartialFills,
             allowMultipleFills,
             orderExpirationDelay: paramsData?.orderExpirationDelay,
-            source: this.params.source,
+            source: this.source || this.params.source,
             enablePermit2: params.isPermit2,
             fees: buildFees(
                 this.resolverFeePreset,
-                this.params.integratorFee || this.integratorFeeParams,
+                this.integratorFeeParams,
                 this.surplusFee
             )
         }
@@ -258,11 +254,33 @@ export class Quote {
 
         return FusionOrder.new(settlementExtension, orderInfo, details, extra)
     }
+
+    private parseIntegratorFee(
+        response: QuoterResponse
+    ): IntegratorFeeResponse | undefined {
+        if (!response.integratorFee) {
+            return undefined
+        }
+
+        const receiver =
+            response.integratorFeeReceiver ||
+            this.params.integratorFee?.receiver?.toString()
+
+        if (!receiver) {
+            return undefined
+        }
+
+        return {
+            receiver: new Address(receiver),
+            value: new Bps(BigInt(response.integratorFee)),
+            share: Bps.fromPercent(response.integratorFeeShare || 0)
+        }
+    }
 }
 
 function buildFees(
     resolverFeePreset: ResolverFeePreset,
-    integratorFee?: IntegratorFeeParams,
+    integratorFee?: IntegratorFeeResponse,
     surplusFee?: number
 ): Fees | undefined {
     const protocolReceiver = resolverFeePreset.receiver

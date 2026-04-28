@@ -1,4 +1,4 @@
-import {IntegratorFeeParams} from './quote/index.js'
+import {IntegratorFeeRequest} from './quote/index.js'
 import {NetworkEnum} from '../../constants.js'
 
 export type QuoterRequestParams = {
@@ -8,7 +8,7 @@ export type QuoterRequestParams = {
     walletAddress: string
     enableEstimate?: boolean
     permit?: string
-    integratorFee?: IntegratorFeeParams
+    integratorFee?: IntegratorFeeRequest
     source?: string
     isPermit2?: boolean
     slippage?: number
@@ -66,6 +66,10 @@ export type QuoterResponse = {
      * Percentage of the integrator fee that will be shared with the integrator.
      */
     integratorFeeShare: number
+    /**
+     * Resolved source tracking code
+     */
+    source?: string
 }
 
 export type QuoterPresets = {
