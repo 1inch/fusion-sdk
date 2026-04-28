@@ -12,6 +12,13 @@ export type Extra = {
     nonce?: bigint
     permit?: string
     /**
+     * Encoded pre-interaction: target address (20 bytes) followed by calldata.
+     * Format matches `Interaction.encode()`: `0x{target}{calldata}`.
+     * When set, the PRE_INTERACTION_CALL_FLAG is enabled in makerTraits
+     * and the LOP contract calls IPreInteraction on the target before the swap.
+     */
+    preInteraction?: string
+    /**
      * Default is true
      */
     allowPartialFills?: boolean

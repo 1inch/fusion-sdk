@@ -20,8 +20,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(assert@2.1.0)
       '@1inch/limit-order-sdk':
-        specifier: 5.2.4
-        version: 5.2.4(assert@2.1.0)(axios@1.13.5)
+        specifier: 5.2.5
+        version: 5.2.5(assert@2.1.0)(axios@1.13.5)
       assert:
         specifier: ^2.0.0
         version: 2.1.0
@@ -165,8 +165,8 @@ packages:
       prettier: ^3.3.2
       typescript: ^5.5.2
 
-  '@1inch/limit-order-sdk@5.2.4':
-    resolution: {integrity: sha512-M9Z2Y5Na+DdQGe0YaDpmrAQ8ed4y7pOKOwCNePBvHsk9ufu5Uz0FSwRNFoxEMj48XIUgU3OW7KQ+zsqQTBwnfA==}
+  '@1inch/limit-order-sdk@5.2.5':
+    resolution: {integrity: sha512-TvITGypMTzVnJ9B9CjFd1XILnF5tE/Uvy8/DCGCcHOcshEI99mfucgg3DwLoQTpzOcRcDHJ4FbYq9j4T6SUJ9A==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
@@ -3650,7 +3650,7 @@ snapshots:
       semver: 7.7.2
       typescript: 5.7.3
 
-  '@1inch/limit-order-sdk@5.2.4(assert@2.1.0)(axios@1.13.5)':
+  '@1inch/limit-order-sdk@5.2.5(assert@2.1.0)(axios@1.13.5)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
       ethers: 6.16.0

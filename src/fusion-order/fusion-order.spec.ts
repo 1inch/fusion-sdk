@@ -3,6 +3,7 @@ import {
     Bps,
     MakerTraits,
     Extension,
+    Interaction,
     ProxyFactory
 } from '@1inch/limit-order-sdk'
 import {parseEther, parseUnits} from 'ethers'
@@ -789,5 +790,194 @@ describe('FusionOrder Native', () => {
         )
 
         expect(nativeOrder.build().receiver).toEqual(settlementExt.toString())
+    })
+})
+
+describe('FusionOrder preInteraction', () => {
+    it('should create order with preInteraction and set PRE_INTERACTION_CALL_FLAG in makerTraits', () => {
+        const extensionContract = new Address(
+            '0x2ad5004c60e16e54d5007c80ce329adde5b51ef5'
+        )
+
+        const preInteraction = new Interaction(
+            new Address('0x3a617c2fbaf8d7c58c793fbbd2d14eb4927876c1'),
+            '0xdeadbeef01020304'
+        )
+
+        const order = FusionOrder.new(
+            extensionContract,
+            {
+                makerAsset: new Address(
+                    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+                ),
+                takerAsset: new Address(
+                    '0xda7ad9dea9397cffddae2f8a052b82f1484252b3'
+                ),
+                makingAmount: 1983000000000000n,
+                takingAmount: 79052953622246027n,
+                maker: new Address('0x3a617c2fbaf8d7c58c793fbbd2d14eb4927876c1')
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [{coefficient: 20000, delay: 12}]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ]),
+                surplus: SurplusParams.NO_FEE
+            },
+            {
+                preInteraction: preInteraction.encode()
+            }
+        )
+
+        const makerTraits = new MakerTraits(BigInt(order.build().makerTraits))
+
+        expect(makerTraits.hasPreInteraction()).toBe(true)
+    })
+
+    it('should not set PRE_INTERACTION_CALL_FLAG when no preInteraction', () => {
+        const extensionContract = new Address(
+            '0x2ad5004c60e16e54d5007c80ce329adde5b51ef5'
+        )
+
+        const order = FusionOrder.new(
+            extensionContract,
+            {
+                makerAsset: new Address(
+                    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+                ),
+                takerAsset: new Address(
+                    '0xda7ad9dea9397cffddae2f8a052b82f1484252b3'
+                ),
+                makingAmount: 1983000000000000n,
+                takingAmount: 79052953622246027n,
+                maker: new Address('0x3a617c2fbaf8d7c58c793fbbd2d14eb4927876c1')
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [{coefficient: 20000, delay: 12}]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ]),
+                surplus: SurplusParams.NO_FEE
+            }
+        )
+
+        const makerTraits = new MakerTraits(BigInt(order.build().makerTraits))
+
+        expect(makerTraits.hasPreInteraction()).toBe(false)
+    })
+
+    it('should round-trip order with preInteraction via fromDataAndExtension', () => {
+        const extensionContract = new Address(
+            '0x2ad5004c60e16e54d5007c80ce329adde5b51ef5'
+        )
+
+        const preInteractionTarget = new Address(
+            '0x3a617c2fbaf8d7c58c793fbbd2d14eb4927876c1'
+        )
+        const preInteractionCalldata =
+            '0x0599a1fd1975848548e5b765925a935093a96ecc6f2ca216f77dcfd328b8a491'
+        const preInteraction = new Interaction(
+            preInteractionTarget,
+            preInteractionCalldata
+        )
+
+        const order = FusionOrder.new(
+            extensionContract,
+            {
+                makerAsset: new Address(
+                    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+                ),
+                takerAsset: new Address(
+                    '0xda7ad9dea9397cffddae2f8a052b82f1484252b3'
+                ),
+                makingAmount: 1983000000000000n,
+                takingAmount: 79052953622246027n,
+                maker: new Address('0x3a617c2fbaf8d7c58c793fbbd2d14eb4927876c1')
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 180n,
+                    startTime: 1673548149n,
+                    initialRateBump: 50000,
+                    points: [{coefficient: 20000, delay: 12}]
+                }),
+                whitelist: Whitelist.new(1673548139n, [
+                    {
+                        address: new Address(
+                            '0x00000000219ab540356cbb839cbe05303d7705fa'
+                        ),
+                        allowFrom: 0n
+                    }
+                ]),
+                surplus: SurplusParams.NO_FEE
+            },
+            {
+                preInteraction: preInteraction.encode()
+            }
+        )
+
+        const built = order.build()
+        const extension = order.extension
+
+        const restored = FusionOrder.fromDataAndExtension(
+            {
+                salt: built.salt,
+                maker: built.maker,
+                receiver: built.receiver,
+                makerAsset: built.makerAsset,
+                takerAsset: built.takerAsset,
+                makerTraits: built.makerTraits,
+                makingAmount: built.makingAmount,
+                takingAmount: built.takingAmount
+            },
+            extension
+        )
+
+        expect(restored.build().salt).toEqual(built.salt)
+        expect(restored.extension.encode()).toEqual(extension.encode())
+    })
+
+    it('should validate OKX order with preInteraction (real customer data)', () => {
+        const extensionHex =
+            '0x000002b800000207000000d2000000d2000000d20000006900000000000000002ad5004c60e16e54d5007c80ce329adde5b51ef50000000000000069c930cb0000b403e4e400000000000064062324dfe7924cb4f3257d000000000000000000006ea9a11ae13b29f5c555d18bd45f0b94f54a968faa848f727be12534f24895770895ad27ad6b0d952ad5004c60e16e54d5007c80ce329adde5b51ef50000000000000069c930cb0000b403e4e400000000000064062324dfe7924cb4f3257d000000000000000000006ea9a11ae13b29f5c555d18bd45f0b94f54a968faa848f727be12534f24895770895ad27ad6b0d953a617c2fbaf8d7c58c793fbbd2d14eb4927876c10100000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000070b872a96f0000000000000000000000000000000000000000000000000006715eae5b898683d0000000000000000000000000000000000000000000000000000000069c931e800000000000000000000000000000000000000000000000000000000000000410599a1fd1975848548e5b765925a935093a96ecc6f2ca216f77dcfd328b8a4917028648ec3e33d048184f9877d4892fb829ddc5d75a19c1c2ef064d2a38c012b1b000000000000000000000000000000000000000000000000000000000000002ad5004c60e16e54d5007c80ce329adde5b51ef500000000000000000000000000000000000000000090cbe4bdd538d6e9b379bff5fe72c3d67a521de500000000006469c930cb062324dfe7924cb4f3257d000c0000000000000000000000006ea9a11ae13b29f5c5550000d18bd45f0b94f54a968f0000aa848f727be12534f248000095770895ad27ad6b0d950000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00'
+
+        const extension = Extension.decode(extensionHex)
+
+        expect(() => {
+            FusionOrder.fromDataAndExtension(
+                {
+                    maker: '0x3a617c2fbaf8d7c58c793fbbd2d14eb4927876c1',
+                    makerAsset: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+                    makerTraits:
+                        '69656178681823023809491920669288819567982727296017585526061607372909138935808',
+                    makingAmount: '1983000000000000',
+                    receiver: '0xb698362cc878094c406115efeeb13089b544e6c8',
+                    salt: '1084071965642925953405739669729447852001208220133',
+                    takerAsset: '0xda7ad9dea9397cffddae2f8a052b82f1484252b3',
+                    takingAmount: '79052953622246027'
+                },
+                extension
+            )
+        }).not.toThrow()
     })
 })
