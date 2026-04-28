@@ -1,6 +1,6 @@
 {
     "name": "@1inch/fusion-sdk",
-    "version": "2.4.6-rc.3",
+    "version": "2.4.8-rc.0",
     "description": "1inch Fusion SDK",
     "author": "@1inch",
     "files": [
@@ -64,7 +64,7 @@
         "@types/ws": "^8.18.1",
         "@typescript-eslint/eslint-plugin": "^8.32.1",
         "@typescript-eslint/parser": "^8.32.1",
-        "axios": "^1.11.0",
+        "axios": "^1.13.5",
         "eslint": "~9.18.0",
         "eslint-config-prettier": "^10.1.5",
         "eslint-config-standard": "^17.1.0",
@@ -106,8 +106,8 @@
             "micromatch@<4.0.8": ">=4.0.8",
             "webpack@>=5.0.0-alpha.0 <5.94.0": ">=5.94.0",
             "cross-spawn@>=7.0.0 <7.0.5": ">=7.0.5",
-            "glob@>=10.2.0 <10.5.0": ">=10.5.0"
+            "glob@>=10.2.0 <10.5.0": ">=10.5.0",
+            "@isaacs/brace-expansion@<=5.0.0": ">=5.0.1"
         }
-    },
-    "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"
+    }
 }
