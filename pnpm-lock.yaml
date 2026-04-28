@@ -19,8 +19,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.7(assert@2.1.0)
       '@1inch/limit-order-sdk':
-        specifier: 5.2.6
-        version: 5.2.6(assert@2.1.0)(axios@1.15.0)
+        specifier: 5.3.0
+        version: 5.3.0(assert@2.1.0)(axios@1.15.0)
       assert:
         specifier: ^2.0.0
         version: 2.1.0
@@ -158,8 +158,8 @@ packages:
       typescript: ^5.5.2 || ^6.0.0
       typescript-eslint: ^8.0.0
 
-  '@1inch/limit-order-sdk@5.2.6':
-    resolution: {integrity: sha512-nZnpzyJPr7qTpHRiLiDx1gAQlXIZZHIwUpMHENGVZjtY5KVW9uYdZV+lVOlNHDwUuPq0A5a3s4FKmQ5gm0WpQg==}
+  '@1inch/limit-order-sdk@5.3.0':
+    resolution: {integrity: sha512-k32+L3o1ZoxE3KHVNGzxuLSWCpGhciF7bzmD5FdIyzRwO2JpVFJheKBH+bKZ+BjXrVCi9HAVVT5tGoLqJrtO+g==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
@@ -3692,7 +3692,7 @@ snapshots:
       typescript: 5.7.3
       typescript-eslint: 8.58.2(eslint@9.18.0)(typescript@5.7.3)
 
-  '@1inch/limit-order-sdk@5.2.6(assert@2.1.0)(axios@1.15.0)':
+  '@1inch/limit-order-sdk@5.3.0(assert@2.1.0)(axios@1.15.0)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
       ethers: 6.16.0
