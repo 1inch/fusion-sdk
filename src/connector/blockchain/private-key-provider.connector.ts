@@ -4,9 +4,7 @@ import {BlockchainProviderConnector} from './blockchain-provider.connector.js'
 import {Web3Like} from './web3-provider-connector.js'
 import {add0x} from '../../utils.js'
 
-export class PrivateKeyProviderConnector
-    implements BlockchainProviderConnector
-{
+export class PrivateKeyProviderConnector implements BlockchainProviderConnector {
     private readonly wallet: Wallet
 
     constructor(
