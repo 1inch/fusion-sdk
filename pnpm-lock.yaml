@@ -20,8 +20,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.7(assert@2.1.0)
       '@1inch/limit-order-sdk':
-        specifier: 5.3.0
-        version: 5.3.0(assert@2.1.0)(axios@1.15.0)
+        specifier: 5.3.1-rc.0
+        version: 5.3.1-rc.0(assert@2.1.0)(axios@1.15.0)
       assert:
         specifier: ^2.0.0
         version: 2.1.0
@@ -126,13 +126,10 @@ importers:
 packages:
 
   '@1inch/byte-utils@3.0.0':
-    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==}
+    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/3.0.0/1c573a3e72586540ea6f542099cd18da978118df}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
-    peerDependenciesMeta:
-      assert:
-        optional: true
 
   '@1inch/byte-utils@3.1.7':
     resolution: {integrity: sha512-AXS9XWOPXnTYFYozc10fYE3PnplD9RmCzO57U4vzxzGQ0zgdeoTfYe8hXej/NctYJFcTL3PzyC0HZn2sZ7IWbA==}
@@ -159,17 +156,12 @@ packages:
       typescript: ^5.5.2 || ^6.0.0
       typescript-eslint: ^8.0.0
 
-  '@1inch/limit-order-sdk@5.3.0':
-    resolution: {integrity: sha512-k32+L3o1ZoxE3KHVNGzxuLSWCpGhciF7bzmD5FdIyzRwO2JpVFJheKBH+bKZ+BjXrVCi9HAVVT5tGoLqJrtO+g==}
+  '@1inch/limit-order-sdk@5.3.1-rc.0':
+    resolution: {integrity: sha512-tkyIF9HaEw2URRUMEZcRfNJoniZwHhLv8Yx3hBWXuPxq/w/7Ws/G/pjeK/rbNGKKxfLaCbpqHk4sud6hNopsKg==, tarball: https://npm.pkg.github.com/download/@1inch/limit-order-sdk/5.3.1-rc.0/4b7eea647b6b7ba65ca0504ca55bc31422d6bac9}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
       axios: '>=1.15.0'
-    peerDependenciesMeta:
-      assert:
-        optional: true
-      axios:
-        optional: true
 
   '@1inch/tsconfig@1.0.8':
     resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
@@ -3670,7 +3662,7 @@ packages:
 snapshots:
 
   '@1inch/byte-utils@3.0.0(assert@2.1.0)':
-    optionalDependencies:
+    dependencies:
       assert: 2.1.0
 
   '@1inch/byte-utils@3.1.7(assert@2.1.0)':
@@ -3693,13 +3685,12 @@ snapshots:
       typescript: 5.7.3
       typescript-eslint: 8.58.2(eslint@9.18.0)(typescript@5.7.3)
 
-  '@1inch/limit-order-sdk@5.3.0(assert@2.1.0)(axios@1.15.0)':
+  '@1inch/limit-order-sdk@5.3.1-rc.0(assert@2.1.0)(axios@1.15.0)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
-      ethers: 6.16.0
-    optionalDependencies:
       assert: 2.1.0
       axios: 1.15.0
+      ethers: 6.16.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
