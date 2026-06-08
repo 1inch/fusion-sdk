@@ -40,5 +40,8 @@ export const CHAIN_TO_WRAPPER = {
     ),
     [NetworkEnum.SONIC]: new Address(
         '0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38'
+    ),
+    [NetworkEnum.AETHERIUM_TESTNET]: new Address(
+        '0x0bd7d308f8e1639fab988df18a8011f41eacad73'
     )
 }
