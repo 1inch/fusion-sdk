@@ -14,7 +14,7 @@ export enum NetworkEnum {
     LINEA = 59144,
     SONIC = 146,
     UNICHAIN = 130,
-    AETHERIUM_TESTNET = 4663
+    ROBINHOOD = 4663
 }
 
 export const ONE_INCH_LIMIT_ORDER_V4 =
