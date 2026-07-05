@@ -1,4 +1,4 @@
-import {parseEther, parseUnits} from 'ethers'
+import {AbiCoder, Contract, parseEther, parseUnits, Signature} from 'ethers'
 import {Bps} from '@1inch/limit-order-sdk'
 import assert from 'assert'
 
@@ -18,6 +18,7 @@ import {
     FusionOrder,
     LimitOrderContract,
     ONE_INCH_LIMIT_ORDER_V4,
+    PERMIT2_ADDRESS,
     SurplusParams,
     TakerTraits,
     Whitelist
@@ -131,6 +132,183 @@ describe('SettlementExtension', () => {
         expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
             order.calcTakingAmount(takerAddress, order.makingAmount, now())
         )
+    })
+
+    // eslint-disable-next-line max-lines-per-function
+    it('should execute order with permit2', async () => {
+        const permit2 = new Contract(
+            PERMIT2_ADDRESS.toString(),
+            [
+                'function allowance(address,address,address) view returns (uint160 amount, uint48 expiration, uint48 nonce)'
+            ],
+            maker.provider
+        )
+
+        const makerAddress = await maker.getAddress()
+        const takerAddress = new Address(await taker.getAddress())
+
+        // Maker approves WETH to Permit2 so Permit2 can pull maker funds. The
+        // Permit2 -> LOP allowance itself is granted on-chain by the maker permit
+        // embedded in the order (see `enablePermit2`/`permit` below).
+        await maker.unlimitedApprove(WETH, PERMIT2_ADDRESS.toString())
+
+        const makingAmount = parseEther('0.1')
+
+        // A finite Permit2 allowance (equal to makingAmount) lets us assert it is
+        // fully consumed by the fill, proving funds moved through Permit2.
+        const permitAmount = makingAmount
+        const expiration = 2n ** 48n - 1n
+        const sigDeadline = 2n ** 48n - 1n
+        const {nonce} = await permit2.allowance(
+            makerAddress,
+            WETH,
+            ONE_INCH_LIMIT_ORDER_V4
+        )
+
+        const permitSingle = {
+            details: {
+                token: WETH,
+                amount: permitAmount,
+                expiration,
+                nonce
+            },
+            spender: ONE_INCH_LIMIT_ORDER_V4,
+            sigDeadline
+        }
+
+        const rawSignature = await maker.signer.signTypedData(
+            {
+                name: 'Permit2',
+                chainId: testNode.chainId,
+                verifyingContract: PERMIT2_ADDRESS.toString()
+            },
+            {
+                PermitDetails: [
+                    {name: 'token', type: 'address'},
+                    {name: 'amount', type: 'uint160'},
+                    {name: 'expiration', type: 'uint48'},
+                    {name: 'nonce', type: 'uint48'}
+                ],
+                PermitSingle: [
+                    {name: 'details', type: 'PermitDetails'},
+                    {name: 'spender', type: 'address'},
+                    {name: 'sigDeadline', type: 'uint256'}
+                ]
+            },
+            permitSingle
+        )
+
+        // Compact (EIP-2098) signature keeps the encoded permit at the 352-byte
+        // length expected by the LOP's `IPermit2.permit` handling.
+        const compactSignature = Signature.from(rawSignature).compactSerialized
+
+        const permitCalldata = AbiCoder.defaultAbiCoder().encode(
+            [
+                'address',
+                'tuple(tuple(address,uint160,uint48,uint48),address,uint256)',
+                'bytes'
+            ],
+            [
+                makerAddress,
+                [
+                    [WETH, permitAmount, expiration, nonce],
+                    ONE_INCH_LIMIT_ORDER_V4,
+                    sigDeadline
+                ],
+                compactSignature
+            ]
+        )
+
+        const order = FusionOrder.new(
+            new Address(EXT_ADDRESS),
+            {
+                maker: new Address(makerAddress),
+                makerAsset: new Address(WETH),
+                takerAsset: new Address(USDC),
+                makingAmount,
+                takingAmount: parseUnits('100', 6)
+            },
+            {
+                auction: new AuctionDetails({
+                    duration: 120n,
+                    startTime: now(),
+                    points: [],
+                    initialRateBump: 0
+                }),
+                whitelist: Whitelist.new(0n, [
+                    {address: takerAddress, allowFrom: 0n}
+                ]),
+                surplus: SurplusParams.NO_FEE
+            },
+            {
+                enablePermit2: true,
+                permit: permitCalldata
+            }
+        )
+
+        // The maker permit must target the Permit2 contract when permit2 is enabled.
+        expect(order.extension.makerPermit.startsWith(PERMIT2_ADDRESS.toString()))
+            .toBe(true)
+
+        const initBalances = {
+            usdc: {
+                maker: await maker.tokenBalance(USDC),
+                taker: await taker.tokenBalance(USDC)
+            },
+            weth: {
+                maker: await maker.tokenBalance(WETH),
+                taker: await taker.tokenBalance(WETH)
+            }
+        }
+
+        const signature = await maker.signTypedData(order.getTypedData(1))
+
+        const data = LimitOrderContract.getFillOrderArgsCalldata(
+            order.build(),
+            signature,
+            TakerTraits.default()
+                .setExtension(order.extension)
+                .setAmountMode(AmountMode.maker),
+            order.makingAmount
+        )
+
+        await taker.send({
+            data,
+            to: ONE_INCH_LIMIT_ORDER_V4
+        })
+
+        const finalBalances = {
+            usdc: {
+                maker: await maker.tokenBalance(USDC),
+                taker: await taker.tokenBalance(USDC)
+            },
+            weth: {
+                maker: await maker.tokenBalance(WETH),
+                taker: await taker.tokenBalance(WETH)
+            }
+        }
+
+        expect(initBalances.weth.maker - finalBalances.weth.maker).toBe(
+            order.makingAmount
+        )
+        expect(finalBalances.usdc.maker - initBalances.usdc.maker).toBe(
+            order.takingAmount
+        )
+        expect(finalBalances.weth.taker - initBalances.weth.taker).toBe(
+            order.makingAmount
+        )
+        expect(initBalances.usdc.taker - finalBalances.usdc.taker).toBe(
+            order.calcTakingAmount(takerAddress, order.makingAmount, now())
+        )
+
+        // Permit2 allowance granted by the permit is fully spent by the fill,
+        // confirming maker funds were transferred through Permit2.
+        const finalAllowance = await permit2.allowance(
+            makerAddress,
+            WETH,
+            ONE_INCH_LIMIT_ORDER_V4
+        )
+        expect(finalAllowance.amount).toBe(0n)
     })
 
     // eslint-disable-next-line max-lines-per-function
