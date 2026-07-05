@@ -9,7 +9,7 @@ import {FusionSDK, NetworkEnum} from '@1inch/fusion-sdk'
 
 async function main() {
     const sdk = new FusionSDK({
-        url: 'https://api.1inch.dev/fusion',
+        url: 'https://api.1inch.com/fusion',
         network: NetworkEnum.ETHEREUM,
         authKey: 'your-auth-key'
     })
@@ -78,7 +78,7 @@ class CustomHttpProvider implements HttpProviderConnector {
 ```typescript
 import {FusionSDK, NetworkEnum} from '@1inch/fusion-sdk'
 const sdk = new FusionSDK({
-    url: 'https://api.1inch.dev/fusion',
+    url: 'https://api.1inch.com/fusion',
     network: NetworkEnum.ETHEREUM
 })
 const orders = await sdk.getActiveOrders({page: 1, limit: 2})
@@ -97,7 +97,7 @@ const orders = await sdk.getActiveOrders({page: 1, limit: 2})
 ```typescript
 import {FusionSDK, NetworkEnum} from '@1inch/fusion-sdk'
 const sdk = new FusionSDK({
-    url: 'https://api.1inch.dev/fusion',
+    url: 'https://api.1inch.com/fusion',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -121,7 +121,7 @@ const orders = await sdk.getOrdersByMaker({
 ```typescript
 import {FusionSDK, NetworkEnum, QuoteParams} from '@1inch/fusion-sdk'
 const sdk = new FusionSDK({
-    url: 'https://api.1inch.dev/fusion',
+    url: 'https://api.1inch.com/fusion',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -146,7 +146,7 @@ const quote = await sdk.getQuote(params)
 ```typescript
 import {FusionSDK, NetworkEnum, QuoteParams} from '@1inch/fusion-sdk'
 const sdk = new FusionSDK({
-    url: 'https://api.1inch.dev/fusion',
+    url: 'https://api.1inch.com/fusion',
     network: NetworkEnum.ETHEREUM
 })
 
@@ -194,7 +194,7 @@ const blockchainProvider = new PrivateKeyProviderConnector(
 )
 
 const sdk = new FusionSDK({
-    url: 'https://api.1inch.dev/fusion',
+    url: 'https://api.1inch.com/fusion',
     network: 1,
     blockchainProvider
 })
