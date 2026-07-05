@@ -56,7 +56,7 @@ describe('NativeOrders', () => {
         await testNode.localNode.stop()
     })
 
-    it.only('should execute order without fees and auction', async () => {
+    it('should execute order without fees and auction', async () => {
         const initBalances = {
             usdc: {
                 maker: await maker.tokenBalance(USDC),
@@ -117,14 +117,19 @@ describe('NativeOrders', () => {
             maker.provider
         )
 
+        const createOrderData = {
+            ...orderData,
+            maker: await maker.getAddress()
+        }
+
         const createTx =
-            await factoryContract.create.populateTransaction(orderData)
+            await factoryContract.create.populateTransaction(createOrderData)
         await maker.send({
             ...createTx,
             value: order.makingAmount
         })
 
-        const data = LimitOrderContract.getFillOrderArgsCalldata(
+        const data = LimitOrderContract.getFillContractOrderArgsCalldata(
             orderData,
             signature,
             TakerTraits.default()
@@ -156,9 +161,10 @@ describe('NativeOrders', () => {
             }
         }
 
-        expect(initBalances.weth.maker - finalBalances.weth.maker).toBe(
-            order.makingAmount
-        )
+        expect(
+            initBalances.eth.maker - finalBalances.eth.maker
+        ).toBeGreaterThanOrEqual(order.makingAmount)
+        expect(finalBalances.weth.maker - initBalances.weth.maker).toBe(0n)
         expect(finalBalances.usdc.maker - initBalances.usdc.maker).toBe(
             order.takingAmount
         )
