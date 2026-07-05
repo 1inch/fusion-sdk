@@ -18,7 +18,7 @@ import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import type {Details, Extra} from './types.js'
 import {AuctionCalculator} from '../amount-calculator/auction-calculator/index.js'
-import {NetworkEnum, ZX} from '../constants.js'
+import {NetworkEnum, PERMIT2_ADDRESS, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
 import {now} from '../utils/time.js'
 import {AmountCalculator} from '../amount-calculator/amount-calculator.js'
@@ -55,7 +55,12 @@ export class FusionOrder {
             surplusParams,
             {
                 makerPermit: extra.permit
-                    ? new Interaction(orderInfo.makerAsset, extra.permit)
+                    ? new Interaction(
+                          extra.enablePermit2
+                              ? PERMIT2_ADDRESS
+                              : orderInfo.makerAsset,
+                          extra.permit
+                      )
                     : undefined,
                 preInteraction: extra.preInteraction
                     ? Interaction.decode(extra.preInteraction)
