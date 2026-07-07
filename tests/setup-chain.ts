@@ -1,6 +1,7 @@
 import {GenericContainer, StartedTestContainer} from 'testcontainers'
 import {LogWaitStrategy} from 'testcontainers/build/wait-strategies/log-wait-strategy'
 import {
+    Contract,
     ContractFactory,
     InterfaceAbi,
     JsonRpcProvider,
@@ -14,7 +15,6 @@ import {USDC, USDC_DONOR, WETH} from './addresses.js'
 import {TestWallet} from './test-wallet.js'
 import SimpleSettlement from '../dist/contracts/SimpleSettlement.sol/SimpleSettlement.json'
 import NativeOrderFactory from '../dist/contracts/NativeOrderFactory.sol/NativeOrderFactory.json'
-import NativeOrderImpl from '../dist/contracts/NativeOrderImpl.sol/NativeOrderImpl.json'
 import {ONE_INCH_LIMIT_ORDER_V4} from '../src/constants.js'
 
 export type EvmNodeConfig = {
@@ -145,20 +145,6 @@ async function deployContracts(provider: JsonRpcProvider): Promise<{
         deployer
     )
 
-    const nativeOrderImpl = await deploy(
-        NativeOrderImpl,
-        [
-            WETH,
-            deployer.address,
-            ONE_INCH_LIMIT_ORDER_V4,
-            accessToken,
-            60,
-            '1inch Aggregation Router',
-            '6' // version
-        ],
-        deployer
-    )
-
     const nativeOrderFactory = await deploy(
         NativeOrderFactory,
         [
@@ -171,6 +157,12 @@ async function deployContracts(provider: JsonRpcProvider): Promise<{
         ],
         deployer
     )
+
+    const nativeOrderImpl = await new Contract(
+        nativeOrderFactory,
+        NativeOrderFactory.abi,
+        provider
+    ).IMPLEMENTATION()
 
     return {
         settlement,
