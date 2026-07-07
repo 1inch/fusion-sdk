@@ -1,14 +1,4 @@
-import {Address} from '@1inch/limit-order-sdk'
-
 export const ZX = '0x'
-
-/**
- * Canonical Uniswap Permit2 contract, same address on all chains
- * @see https://github.com/Uniswap/permit2
- */
-export const PERMIT2_ADDRESS = new Address(
-    '0x000000000022d473030f116ddee9f6b43ac78ba3'
-)
 
 export enum NetworkEnum {
     ETHEREUM = 1,

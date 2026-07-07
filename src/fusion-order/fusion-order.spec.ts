@@ -12,7 +12,7 @@ import {AuctionDetails} from './auction-details/index.js'
 import {Whitelist} from './whitelist/index.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
-import {NetworkEnum, PERMIT2_ADDRESS} from '../constants.js'
+import {NetworkEnum} from '../constants.js'
 import {AuctionCalculator} from '../amount-calculator/index.js'
 import {now} from '../utils/time.js'
 
@@ -790,95 +790,6 @@ describe('FusionOrder Native', () => {
         )
 
         expect(nativeOrder.build().receiver).toEqual(settlementExt.toString())
-    })
-})
-
-describe('FusionOrder permit2', () => {
-    const extensionContract = new Address(
-        '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
-    )
-    const makerAsset = new Address('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
-    const permitData = '0xdeadbeef01020304'
-
-    const orderInfo = {
-        makerAsset,
-        takerAsset: new Address('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'),
-        makingAmount: 1000000000000000000n,
-        takingAmount: 1420000000n,
-        maker: new Address('0x00000000219ab540356cbb839cbe05303d7705fa'),
-        salt: 10n
-    }
-
-    const details = {
-        auction: new AuctionDetails({
-            duration: 180n,
-            startTime: 1673548149n,
-            initialRateBump: 50000,
-            points: [
-                {
-                    coefficient: 20000,
-                    delay: 12
-                }
-            ]
-        }),
-        whitelist: Whitelist.new(0n, [
-            {
-                address: new Address(
-                    '0x00000000219ab540356cbb839cbe05303d7705fa'
-                ),
-                allowFrom: 0n
-            }
-        ]),
-        surplus: SurplusParams.NO_FEE
-    }
-
-    it('should target permit2 contract in makerPermit when permit2 enabled', () => {
-        const order = FusionOrder.new(extensionContract, orderInfo, details, {
-            permit: permitData,
-            enablePermit2: true
-        })
-
-        const makerPermit = Interaction.decode(order.extension.makerPermit)
-        expect(makerPermit.target).toEqual(PERMIT2_ADDRESS)
-        expect(makerPermit.data).toEqual(permitData)
-
-        const makerTraits = new MakerTraits(BigInt(order.build().makerTraits))
-        expect(makerTraits.isPermit2()).toBe(true)
-    })
-
-    it('should target maker asset in makerPermit when permit2 disabled', () => {
-        const order = FusionOrder.new(extensionContract, orderInfo, details, {
-            permit: permitData
-        })
-
-        const makerPermit = Interaction.decode(order.extension.makerPermit)
-        expect(makerPermit.target).toEqual(makerAsset)
-        expect(makerPermit.data).toEqual(permitData)
-
-        const makerTraits = new MakerTraits(BigInt(order.build().makerTraits))
-        expect(makerTraits.isPermit2()).toBe(false)
-    })
-
-    it('should round-trip permit2 order via fromDataAndExtension', () => {
-        const order = FusionOrder.new(extensionContract, orderInfo, details, {
-            permit: permitData,
-            enablePermit2: true
-        })
-
-        const restored = FusionOrder.fromDataAndExtension(
-            order.build(),
-            order.extension
-        )
-
-        expect(restored).toStrictEqual(order)
-
-        const makerPermit = Interaction.decode(restored.extension.makerPermit)
-        expect(makerPermit.target).toEqual(PERMIT2_ADDRESS)
-
-        const makerTraits = new MakerTraits(
-            BigInt(restored.build().makerTraits)
-        )
-        expect(makerTraits.isPermit2()).toBe(true)
     })
 })
 

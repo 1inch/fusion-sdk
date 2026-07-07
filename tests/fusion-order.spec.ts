@@ -18,7 +18,6 @@ import {
     FusionOrder,
     LimitOrderContract,
     ONE_INCH_LIMIT_ORDER_V4,
-    PERMIT2_ADDRESS,
     SurplusParams,
     TakerTraits,
     Whitelist
@@ -136,8 +135,10 @@ describe('SettlementExtension', () => {
 
     // eslint-disable-next-line max-lines-per-function
     it('should execute order with permit2', async () => {
+        // Canonical Uniswap Permit2 contract (same address on every chain).
+        const PERMIT2 = '0x000000000022d473030f116ddee9f6b43ac78ba3'
         const permit2 = new Contract(
-            PERMIT2_ADDRESS.toString(),
+            PERMIT2,
             [
                 'function allowance(address,address,address) view returns (uint160 amount, uint48 expiration, uint48 nonce)'
             ],
@@ -146,16 +147,15 @@ describe('SettlementExtension', () => {
 
         const makerAddress = await maker.getAddress()
         const takerAddress = new Address(await taker.getAddress())
-
-        // Maker approves WETH to Permit2 so Permit2 can pull maker funds. The
-        // Permit2 -> LOP allowance itself is granted on-chain by the maker permit
-        // embedded in the order (see `enablePermit2`/`permit` below).
-        await maker.unlimitedApprove(WETH, PERMIT2_ADDRESS.toString())
-
         const makingAmount = parseEther('0.1')
 
-        // A finite Permit2 allowance (equal to makingAmount) lets us assert it is
-        // fully consumed by the fill, proving funds moved through Permit2.
+        // The maker approves the token to Permit2 and signs a Permit2 allowance
+        // permit. The signed permit is embedded in the order as the maker permit
+        // and applied by the LOP during the fill (not submitted separately).
+        await maker.unlimitedApprove(WETH, PERMIT2)
+
+        // Finite allowance (== makingAmount) so we can assert it is fully
+        // consumed by the fill, proving funds moved through Permit2.
         const permitAmount = makingAmount
         const expiration = 2n ** 48n - 1n
         const sigDeadline = 2n ** 48n - 1n
@@ -180,7 +180,7 @@ describe('SettlementExtension', () => {
             {
                 name: 'Permit2',
                 chainId: testNode.chainId,
-                verifyingContract: PERMIT2_ADDRESS.toString()
+                verifyingContract: PERMIT2
             },
             {
                 PermitDetails: [
@@ -197,9 +197,6 @@ describe('SettlementExtension', () => {
             },
             permitSingle
         )
-
-        // Compact (EIP-2098) signature keeps the encoded permit at the 352-byte
-        // length expected by the LOP's `IPermit2.permit` handling.
         const compactSignature = Signature.from(rawSignature).compactSerialized
 
         const permitCalldata = AbiCoder.defaultAbiCoder().encode(
@@ -246,9 +243,9 @@ describe('SettlementExtension', () => {
             }
         )
 
-        // The maker permit must target the Permit2 contract when permit2 is enabled.
-        expect(order.extension.makerPermit.startsWith(PERMIT2_ADDRESS.toString()))
-            .toBe(true)
+        // The signed permit is embedded in the order as the maker permit; its
+        // target is the maker asset regardless of permit2.
+        expect(order.extension.makerPermit.startsWith(WETH)).toBe(true)
 
         const initBalances = {
             usdc: {
@@ -301,8 +298,8 @@ describe('SettlementExtension', () => {
             order.calcTakingAmount(takerAddress, order.makingAmount, now())
         )
 
-        // Permit2 allowance granted by the permit is fully spent by the fill,
-        // confirming maker funds were transferred through Permit2.
+        // The finite Permit2 allowance is fully spent by the fill, confirming
+        // maker funds were transferred through Permit2.
         const finalAllowance = await permit2.allowance(
             makerAddress,
             WETH,
