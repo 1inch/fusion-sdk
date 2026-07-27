@@ -7,14 +7,14 @@ import {
     mulDiv,
     Rounding
 } from '@1inch/limit-order-sdk'
-import {BN, BytesBuilder, BytesIter} from '@1inch/byte-utils'
+import {BN, BytesBuilder, BytesIter, isHexBytes} from '@1inch/byte-utils'
 
 import assert from 'assert'
 import {AuctionDetails} from './auction-details/index.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
-import {add0x} from '../utils.js'
+import {add0x, trim0x} from '../utils.js'
 
 export class FusionExtension {
     /**
@@ -31,6 +31,7 @@ export class FusionExtension {
         public readonly extra?: {
             makerPermit?: Interaction
             preInteraction?: Interaction
+            chainedPostInteraction?: Interaction
             customReceiver?: Address
             fees?: Fees
         }
@@ -88,6 +89,9 @@ export class FusionExtension {
         const interactionData = parseAmountData(interactionBytes)
         const whitelist = Whitelist.decodeFrom(interactionBytes)
         const surplusParams = SurplusParams.decodeFrom(interactionBytes)
+        const chainedPostInteraction = interactionBytes.isEmpty()
+            ? undefined
+            : FusionExtension.decodeInteraction(interactionBytes.rest())
 
         //endregion Parse postInteraction data
 
@@ -166,6 +170,7 @@ export class FusionExtension {
                 {
                     makerPermit,
                     preInteraction,
+                    chainedPostInteraction,
                     customReceiver,
                     fees: undefined
                 }
@@ -195,11 +200,35 @@ export class FusionExtension {
             surplusParams,
             {
                 makerPermit,
+                chainedPostInteraction,
                 preInteraction,
                 fees,
                 customReceiver
             }
         )
+    }
+
+    /**
+     * Decode bytes in `Interaction.encode()` format
+     *
+     * Unlike `Interaction.decode` it accepts a target-only payload (exactly
+     * 20 bytes, empty data), which is a valid chained post-interaction:
+     * `FeeTaker` calls the target for any tail of at least 20 bytes
+     */
+    public static decodeInteraction(bytes: string): Interaction {
+        assert(
+            isHexBytes(bytes) && trim0x(bytes).length >= 40,
+            `invalid interaction ${bytes}: must be valid hex bytes starting with a 20 bytes target address`
+        )
+
+        const target = Address.fromFirstBytes(bytes)
+        const data = add0x(bytes.slice(42))
+
+        if (data === '0x') {
+            return new TargetOnlyInteraction(target) as Interaction
+        }
+
+        return new Interaction(target, data)
     }
 
     public build(): Extension {
@@ -269,6 +298,10 @@ export class FusionExtension {
         // surplus params
         builder.addUint256(this.surplus.estimatedTakerAmount)
         builder.addUint8(BigInt(this.surplus.protocolFee.toPercent()))
+
+        if (this.extra?.chainedPostInteraction) {
+            builder.addBytes(this.extra.chainedPostInteraction.encode())
+        }
 
         return builder.asHex()
     }
@@ -407,5 +440,15 @@ function parseAmountData(iter: BytesIter<string>): {
 
     return {
         fees
+    }
+}
+
+class TargetOnlyInteraction {
+    public readonly data = '0x'
+
+    constructor(public readonly target: Address) {}
+
+    public encode(): string {
+        return this.target.toString()
     }
 }
