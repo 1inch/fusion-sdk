@@ -14,6 +14,7 @@ import {AuctionDetails} from './auction-details/index.js'
 import {Whitelist} from './whitelist/whitelist.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
+import {TargetOnlyInteraction} from './target-only-interaction.js'
 import {add0x, trim0x} from '../utils.js'
 
 export class FusionExtension {
@@ -440,15 +441,5 @@ function parseAmountData(iter: BytesIter<string>): {
 
     return {
         fees
-    }
-}
-
-class TargetOnlyInteraction {
-    public readonly data = '0x'
-
-    constructor(public readonly target: Address) {}
-
-    public encode(): string {
-        return this.target.toString()
     }
 }
