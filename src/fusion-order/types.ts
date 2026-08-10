@@ -28,7 +28,8 @@ export type Extra = {
      *
      * An array is concatenated in order into a single tail; only the first
      * 20 bytes of the result form the single called target — subsequent
-     * chunks only extend that target's `extraData`.
+     * chunks only extend that target's `extraData`. Empty chunks (`''` /
+     * `'0x'`) are ignored.
      */
     chainedPostInteraction?: string | string[]
     /**

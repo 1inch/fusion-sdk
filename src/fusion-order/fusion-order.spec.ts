@@ -256,18 +256,22 @@ describe('Fusion Order', () => {
         ).toStrictEqual(order)
     })
 
-    it('should decode fusion order from order + extension with chained post interaction', () => {
-        const extensionContract = new Address(
-            '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
-        )
-        const tails = [
-            // target + data
-            '0x593a321a1b5ff516eb6eee2c752a8ee7097d5119abcdef',
-            // target only
-            '0x593a321a1b5ff516eb6eee2c752a8ee7097d5119'
-        ]
-
-        for (const chainedPostInteraction of tails) {
+    it.each([
+        {
+            name: 'target + data',
+            chainedPostInteraction:
+                '0x593a321a1b5ff516eb6eee2c752a8ee7097d5119abcdef'
+        },
+        {
+            name: 'target only',
+            chainedPostInteraction: '0x593a321a1b5ff516eb6eee2c752a8ee7097d5119'
+        }
+    ])(
+        'should decode fusion order from order + extension with chained post interaction ($name)',
+        ({chainedPostInteraction}) => {
+            const extensionContract = new Address(
+                '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
+            )
             const order = FusionOrder.new(
                 extensionContract,
                 {
@@ -320,7 +324,7 @@ describe('Fusion Order', () => {
             expect(decoded.build().salt).toEqual(order.build().salt)
             expect(decoded.extension.encode()).toEqual(order.extension.encode())
         }
-    })
+    )
 
     it('Should calculate taking amount', () => {
         const now = 10000n

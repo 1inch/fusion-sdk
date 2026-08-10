@@ -312,19 +312,22 @@ describe('FusionExtension', () => {
         expect(decoded.build().encode()).toBe(order.extension.encode())
     })
 
-    it('should reject invalid chained post interaction at build time', () => {
-        // shorter than 20 bytes target address
+    it('should reject chained post interaction shorter than target address', () => {
         expect(() => buildOrder({chainedPostInteraction: '0x1234'})).toThrow(
             'invalid interaction'
         )
-        // not valid hex bytes
+    })
+
+    it('should reject non-hex chained post interaction chunk', () => {
         expect(() =>
             buildOrder({
                 chainedPostInteraction:
                     '0xzz3a321a1b5ff516eb6eee2c752a8ee7097d5119'
             })
         ).toThrow('invalid chained post-interaction chunk')
-        // odd length chunks must not silently merge into valid looking bytes
+    })
+
+    it('should reject odd-length chunks that would merge into valid-looking bytes', () => {
         expect(() =>
             buildOrder({
                 chainedPostInteraction: [
@@ -333,6 +336,26 @@ describe('FusionExtension', () => {
                 ]
             })
         ).toThrow('invalid chained post-interaction chunk')
+    })
+
+    it('should treat empty chained post interaction chunks as no tail', () => {
+        const tail = '0x593a321a1b5ff516eb6eee2c752a8ee7097d5119abcdef'
+        const noTail = buildOrder().extension.encode()
+        const withTail = buildOrder({
+            chainedPostInteraction: tail
+        }).extension.encode()
+
+        expect(
+            buildOrder({chainedPostInteraction: '0x'}).extension.encode()
+        ).toBe(noTail)
+        expect(
+            buildOrder({chainedPostInteraction: ['0x']}).extension.encode()
+        ).toBe(noTail)
+        expect(
+            buildOrder({
+                chainedPostInteraction: [tail, '0x']
+            }).extension.encode()
+        ).toBe(withTail)
     })
 
     it('should throw on decode when tail is shorter than 20 bytes', () => {

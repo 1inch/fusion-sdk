@@ -719,9 +719,11 @@ function encodeChainedPostInteraction(
         return undefined
     }
 
-    const interactions = Array.isArray(chainedPostInteraction)
-        ? chainedPostInteraction
-        : [chainedPostInteraction]
+    const interactions = (
+        Array.isArray(chainedPostInteraction)
+            ? chainedPostInteraction
+            : [chainedPostInteraction]
+    ).filter((chunk) => trim0x(chunk) !== '')
 
     for (const chunk of interactions) {
         assert(
