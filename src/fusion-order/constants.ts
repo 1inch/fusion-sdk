@@ -43,5 +43,14 @@ export const CHAIN_TO_WRAPPER = {
     ),
     [NetworkEnum.ROBINHOOD]: new Address(
         '0x0bd7d308f8e1639fab988df18a8011f41eacad73'
+    ),
+    [NetworkEnum.MONAD]: new Address(
+        '0x3bd359c1119da7da1d913d1c4d2b7c461115433a'
+    ),
+    [NetworkEnum.CRONOS]: new Address(
+        '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23'
+    ),
+    [NetworkEnum.HYPEREVM]: new Address(
+        '0x5555555555555555555555555555555555555555'
     )
 }
