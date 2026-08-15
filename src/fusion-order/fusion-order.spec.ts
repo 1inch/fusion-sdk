@@ -7,7 +7,8 @@ import {
 import {parseUnits} from 'ethers'
 import {FusionOrder} from './fusion-order'
 import {AuctionDetails} from './auction-details'
-import {NetworkEnum} from '../constants'
+import {CHAIN_TO_WRAPPER} from './constants'
+import {NetworkEnum, ONE_INCH_LIMIT_ORDER_V4} from '../constants'
 
 describe('Fusion Order', () => {
     it('should create fusion order', () => {
@@ -458,4 +459,58 @@ describe('FusionOrder Native', () => {
             )
         ).toEqual(false)
     })
+
+    it.each<[NetworkEnum, string]>([
+        // HyperEVM uses a non-default limit order protocol deployment
+        [NetworkEnum.MONAD, ONE_INCH_LIMIT_ORDER_V4],
+        [NetworkEnum.CRONOS, ONE_INCH_LIMIT_ORDER_V4],
+        [NetworkEnum.HYPEREVM, '0x5281602adc446a94eb48d055f514a6d8d5bee176']
+    ])(
+        'should use correct verifying contract for chain %d',
+        (chainId, expectedVerifyingContract) => {
+            const extensionContract = new Address(
+                '0x8273f37417da37c4a6c3995e82cf442f87a25d9c'
+            )
+
+            const order = FusionOrder.new(
+                extensionContract,
+                {
+                    makerAsset: CHAIN_TO_WRAPPER[chainId],
+                    takerAsset: new Address(
+                        '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                    ),
+                    makingAmount: 1000000000000000000n,
+                    takingAmount: 1420000000n,
+                    maker: new Address(
+                        '0x00000000219ab540356cbb839cbe05303d7705fa'
+                    ),
+                    salt: 10n
+                },
+                {
+                    auction: new AuctionDetails({
+                        duration: 180n,
+                        startTime: 1673548149n,
+                        initialRateBump: 50000,
+                        points: [{coefficient: 20000, delay: 12}]
+                    }),
+                    whitelist: [
+                        {
+                            address: new Address(
+                                '0x00000000219ab540356cbb839cbe05303d7705fa'
+                            ),
+                            allowFrom: 0n
+                        }
+                    ],
+                    resolvingStartTime: 1673548139n
+                }
+            )
+
+            const typedData = order.getTypedData(chainId)
+
+            expect(typedData.domain.chainId).toEqual(chainId)
+            expect(typedData.domain.verifyingContract).toEqual(
+                expectedVerifyingContract
+            )
+        }
+    )
 })
