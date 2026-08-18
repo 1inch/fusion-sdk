@@ -19,6 +19,20 @@ export type Extra = {
      */
     preInteraction?: string
     /**
+     * Raw post-interaction bytes appended to the Fusion settlement
+     * post-interaction payload.
+     *
+     * Fusion settlement consumes its own fee/surplus data first, then treats
+     * the remaining tail as a chained post-interaction: first 20 bytes are the
+     * target and the rest is forwarded as that target's `extraData`.
+     *
+     * An array is concatenated in order into a single tail; only the first
+     * 20 bytes of the result form the single called target — subsequent
+     * chunks only extend that target's `extraData`. Empty chunks (`''` /
+     * `'0x'`) are ignored.
+     */
+    chainedPostInteraction?: string | string[]
+    /**
      * Default is true
      */
     allowPartialFills?: boolean

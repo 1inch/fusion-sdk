@@ -36,3 +36,15 @@ jobs:
 
       - name: Security
         run: pnpm audit --audit-level high
+
+  dependabot-audit:
+    uses: 1inch/workflows/.github/workflows/trivy-scan.yaml@trivy-scan-v1
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      security-events: write
+    with:
+      severity: 'CRITICAL'
+      limit-severities-for-sarif: false
+      skip-files: '.npmrc'

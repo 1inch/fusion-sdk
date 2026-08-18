@@ -9,6 +9,7 @@ import {
     OrderInfoData,
     ProxyFactory
 } from '@1inch/limit-order-sdk'
+import {isHexBytes} from '@1inch/byte-utils'
 import assert from 'assert'
 import {FusionExtension} from './fusion-extension.js'
 import {AuctionDetails} from './auction-details/index.js'
@@ -22,6 +23,7 @@ import {NetworkEnum, ZX} from '../constants.js'
 import {calcTakingAmount} from '../utils/amounts.js'
 import {now} from '../utils/time.js'
 import {AmountCalculator} from '../amount-calculator/amount-calculator.js'
+import {trim0x} from '../utils.js'
 
 export class FusionOrder {
     private static defaultExtra = {
@@ -60,6 +62,9 @@ export class FusionOrder {
                 preInteraction: extra.preInteraction
                     ? Interaction.decode(extra.preInteraction)
                     : undefined,
+                chainedPostInteraction: decodeChainedPostInteraction(
+                    extra.chainedPostInteraction
+                ),
                 customReceiver: orderInfo.receiver,
                 fees: extra?.fees
             }
@@ -404,6 +409,7 @@ export class FusionOrder {
                     extension.preInteraction === ZX
                         ? undefined
                         : extension.preInteraction,
+                chainedPostInteraction: extra?.chainedPostInteraction?.encode(),
                 unwrapWETH: makerTraits.isNativeUnwrapEnabled(),
                 orderExpirationDelay,
                 fees: extra?.fees,
@@ -704,4 +710,38 @@ export class FusionOrder {
     public nativeSignature(maker: Address): string {
         return this.inner.nativeSignature(maker)
     }
+}
+
+function encodeChainedPostInteraction(
+    chainedPostInteraction?: string | string[]
+): string | undefined {
+    if (!chainedPostInteraction) {
+        return undefined
+    }
+
+    const interactions = (
+        Array.isArray(chainedPostInteraction)
+            ? chainedPostInteraction
+            : [chainedPostInteraction]
+    ).filter((chunk) => trim0x(chunk) !== '')
+
+    for (const chunk of interactions) {
+        assert(
+            isHexBytes(chunk),
+            `invalid chained post-interaction chunk ${chunk}: must be 0x-prefixed hex bytes of even length`
+        )
+    }
+
+    const encoded = `0x${interactions.map(trim0x).join('')}`
+
+    // empty concatenation (e.g. `[]`) is an empty tail, i.e. no interaction
+    return encoded === '0x' ? undefined : encoded
+}
+
+function decodeChainedPostInteraction(
+    chainedPostInteraction?: string | string[]
+): Interaction | undefined {
+    const encoded = encodeChainedPostInteraction(chainedPostInteraction)
+
+    return encoded ? FusionExtension.decodeInteraction(encoded) : undefined
 }
