@@ -41,10 +41,11 @@ jobs:
       - name: Publish 🚀
         run: |
           VERSION=$(node -p "require('../package.json').version")
+          # 2.1.x maintenance line: never touch the default 'latest'/'next' dist-tags
           if [[ "$VERSION" == *"-rc"* ]]; then
-            pnpm publish --no-git-checks --access=public --tag next
+            pnpm publish --no-git-checks --access=public --tag v2-next
           else
-            pnpm publish --no-git-checks --access=public
+            pnpm publish --no-git-checks --access=public --tag v2-latest
           fi
         working-directory: dist
 
@@ -79,5 +80,12 @@ jobs:
           echo "@1inch:registry=https://npm.pkg.github.com" >> .npmrc
 
       - name: Publish 🚀
-        run: pnpm publish --no-git-checks
+        run: |
+          VERSION=$(node -p "require('../package.json').version")
+          # 2.1.x maintenance line: never touch the default 'latest' dist-tag
+          if [[ "$VERSION" == *"-rc"* ]]; then
+            pnpm publish --no-git-checks --tag v2-next
+          else
+            pnpm publish --no-git-checks --tag v2-latest
+          fi
         working-directory: dist
