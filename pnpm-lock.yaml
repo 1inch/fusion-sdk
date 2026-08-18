@@ -150,7 +150,7 @@ packages:
       assert: ^2.0.0
 
   '@1inch/eslint-config@5.0.0':
-    resolution: {integrity: sha512-aSRdTLO466FjDZIbKcKxJozzULnFo34dPQIfoP95EeqilNW/m93nsFgGDo4jj2qUG8v6mvQyEJw8mliy2kEQwQ==}
+    resolution: {integrity: sha512-gRDnp7O+HJd8ZKzofna4SmVIOomnc7U3PuYieg5KWoLKa5xRM1iDHyhY3iS/B+fcmUC2d9a7j9blF3/OJbYIgQ==}
     peerDependencies:
       '@eslint/js': ^10.0.0
       '@stylistic/eslint-plugin': ^5.0.0
