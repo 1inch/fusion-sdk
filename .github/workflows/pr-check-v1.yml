@@ -16,15 +16,15 @@ jobs:
 
     steps:
       - name: Load current commit
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref }}
 
       - name: Setup Node.js
-        uses: volta-cli/action@v4
+        uses: volta-cli/action@v5
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         id: yarn-cache
         if: github.event_name == 'pull_request' || github.event_name == 'push'
         with:
@@ -44,15 +44,15 @@ jobs:
 
     steps:
       - name: Load current commit
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref }}
 
       - name: Setup Node.js
-        uses: volta-cli/action@v4
+        uses: volta-cli/action@v5
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         id: yarn-cache
         if: github.event_name == 'pull_request' || github.event_name == 'push'
         with:
@@ -81,15 +81,15 @@ jobs:
 
     steps:
       - name: Load current commit
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref }}
 
       - name: Setup Node.js
-        uses: volta-cli/action@v4
+        uses: volta-cli/action@v5
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         id: yarn-cache
         if: github.event_name == 'pull_request' || github.event_name == 'push'
         with:
