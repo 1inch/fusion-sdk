@@ -1106,3 +1106,70 @@ describe('FusionOrder preInteraction', () => {
         }
     )
 })
+
+describe('FusionOrder all-supported-chains registry', () => {
+    // Non-default Limit Order Protocol v4 deployments; every other chain uses
+    // the canonical ONE_INCH_LIMIT_ORDER_V4 address
+    const NON_DEFAULT_LOP: Partial<Record<NetworkEnum, string>> = {
+        [NetworkEnum.ZKSYNC]: '0x6fd4383cb451173d5f9304f041c7bcbf27d561ff',
+        [NetworkEnum.ROBINHOOD]: '0x5a705de8982235a7fa45bb83dcacf03a211389c7',
+        [NetworkEnum.HYPEREVM]: '0x5281602adc446a94eb48d055f514a6d8d5bee176'
+    }
+
+    const allChains = Object.values(NetworkEnum).filter(
+        (v): v is NetworkEnum => typeof v === 'number'
+    )
+
+    it.each(allChains)(
+        'chain %d has a wrapped-native token mapping',
+        (chainId) => {
+            expect(CHAIN_TO_WRAPPER[chainId]).toBeDefined()
+        }
+    )
+
+    it.each(allChains)(
+        'builds an order with the correct EIP-712 domain on chain %d',
+        (chainId) => {
+            const order = FusionOrder.new(
+                new Address('0x8273f37417da37c4a6c3995e82cf442f87a25d9c'),
+                {
+                    makerAsset: CHAIN_TO_WRAPPER[chainId],
+                    takerAsset: new Address(
+                        '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                    ),
+                    makingAmount: 1000000000000000000n,
+                    takingAmount: 1420000000n,
+                    maker: new Address(
+                        '0x00000000219ab540356cbb839cbe05303d7705fa'
+                    ),
+                    salt: 10n
+                },
+                {
+                    auction: new AuctionDetails({
+                        duration: 180n,
+                        startTime: 1673548149n,
+                        initialRateBump: 50000,
+                        points: [{coefficient: 20000, delay: 12}]
+                    }),
+                    whitelist: Whitelist.new(1673548139n, [
+                        {
+                            address: new Address(
+                                '0x00000000219ab540356cbb839cbe05303d7705fa'
+                            ),
+                            allowFrom: 0n
+                        }
+                    ]),
+                    surplus: SurplusParams.NO_FEE
+                }
+            )
+
+            const typedData = order.getTypedData(chainId)
+
+            expect(typedData.domain.chainId).toEqual(chainId)
+            expect(typedData.domain.verifyingContract).toEqual(
+                NON_DEFAULT_LOP[chainId] ?? ONE_INCH_LIMIT_ORDER_V4
+            )
+            expect(order.getOrderHash(chainId)).toMatch(/^0x[0-9a-f]{64}$/)
+        }
+    )
+})
