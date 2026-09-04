@@ -64,4 +64,20 @@ describe('Private Key provider connector', () => {
             '0x8e1cbdc41ebb253aea91bfa41a028e735be4a5b25d93da0e3a6817070f40dcd31dfbc38bd3800ce2ff88089c77ca2f442dc84637006808aab0af00d966c917b11b'
         )
     })
+
+    it('forwards eth_call to the wrapped web3 provider', async () => {
+        const call = jest.fn().mockResolvedValue('0x01')
+        const connector = new PrivateKeyProviderConnector(testPrivateKey, {
+            eth: {call},
+            extend: jest.fn()
+        })
+
+        await expect(
+            connector.ethCall('0x1111111111111111111111111111111111111111', '0xabcd')
+        ).resolves.toBe('0x01')
+        expect(call).toHaveBeenCalledWith({
+            to: '0x1111111111111111111111111111111111111111',
+            data: '0xabcd'
+        })
+    })
 })

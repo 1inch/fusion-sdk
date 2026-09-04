@@ -203,6 +203,19 @@ describe(__filename, () => {
                 `${url}/orders/v2.0/1/order/active/?version=2.1`
             )
         })
+
+        it('throws when pagination is out of range', async () => {
+            const sdk = new FusionSDK({
+                url: 'https://test.com',
+                network: NetworkEnum.ETHEREUM,
+                httpProvider: createHttpProviderFake({items: [], meta: {}}),
+                blockchainProvider: web3ProviderConnector
+            })
+
+            await expect(
+                sdk.getActiveOrders({page: 0, limit: 1})
+            ).rejects.toThrow(/page should be >= 1/)
+        })
     })
 
     describe('getOrderStatus', () => {
@@ -611,6 +624,23 @@ describe(__filename, () => {
             })
 
             await expect(promise).rejects.toThrow(/is invalid address/)
+        })
+
+        it('throws when maker pagination is out of range', async () => {
+            const sdk = new FusionSDK({
+                url: 'https://test.com',
+                network: NetworkEnum.ETHEREUM,
+                httpProvider: createHttpProviderFake({items: [], meta: {}}),
+                blockchainProvider: web3ProviderConnector
+            })
+
+            await expect(
+                sdk.getOrdersByMaker({
+                    address: '0xfa80cd9b3becc0b4403b0f421384724f2810775f',
+                    page: 0,
+                    limit: 1
+                })
+            ).rejects.toThrow(/page should be >= 1/)
         })
     })
 })
