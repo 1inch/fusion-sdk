@@ -1053,10 +1053,11 @@ describe('FusionOrder preInteraction', () => {
     })
 
     it.each<[NetworkEnum, string]>([
-        // HyperEVM uses a non-default limit order protocol deployment
+        // HyperEVM and Arc use non-default limit order protocol deployments
         [NetworkEnum.MONAD, ONE_INCH_LIMIT_ORDER_V4],
         [NetworkEnum.CRONOS, ONE_INCH_LIMIT_ORDER_V4],
-        [NetworkEnum.HYPEREVM, '0x5281602adc446a94eb48d055f514a6d8d5bee176']
+        [NetworkEnum.HYPEREVM, '0x5281602adc446a94eb48d055f514a6d8d5bee176'],
+        [NetworkEnum.ARC, '0xe08cab0828a67291ec4af1fb3e7f867e206a6bda']
     ])(
         'should use correct verifying contract for chain %d',
         (chainId, expectedVerifyingContract) => {
@@ -1113,7 +1114,8 @@ describe('FusionOrder all-supported-chains registry', () => {
     const NON_DEFAULT_LOP: Partial<Record<NetworkEnum, string>> = {
         [NetworkEnum.ZKSYNC]: '0x6fd4383cb451173d5f9304f041c7bcbf27d561ff',
         [NetworkEnum.ROBINHOOD]: '0x5a705de8982235a7fa45bb83dcacf03a211389c7',
-        [NetworkEnum.HYPEREVM]: '0x5281602adc446a94eb48d055f514a6d8d5bee176'
+        [NetworkEnum.HYPEREVM]: '0x5281602adc446a94eb48d055f514a6d8d5bee176',
+        [NetworkEnum.ARC]: '0xe08cab0828a67291ec4af1fb3e7f867e206a6bda'
     }
 
     const allChains = Object.values(NetworkEnum).filter(
