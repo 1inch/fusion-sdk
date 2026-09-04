@@ -18,8 +18,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(assert@2.1.0)
       '@1inch/limit-order-sdk':
-        specifier: 5.4.2
-        version: 5.4.2(assert@2.1.0)(axios@1.12.2)
+        specifier: 5.4.3-rc.0
+        version: 5.4.3-rc.0(assert@2.1.0)(axios@1.12.2)
       assert:
         specifier: ^2.0.0
         version: 2.1.0
@@ -122,12 +122,18 @@ packages:
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
+    peerDependenciesMeta:
+      assert:
+        optional: true
 
   '@1inch/byte-utils@3.1.0':
     resolution: {integrity: sha512-fMxihTlLKvRvy3gvL16DTWkZGDwQXYSEgCLX/+sazb38+YD7IK3HzKaxvAUzg8ODLwQk5oY/o6pqRQKI+9x+OA==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
+    peerDependenciesMeta:
+      assert:
+        optional: true
 
   '@1inch/eslint-config@3.0.6':
     resolution: {integrity: sha512-apfoU2TFLhpBYcVzPJlU80a8WRuMheGA3tDhd27w4X5nkKvA3wZH9vX61NAgJ+0aDNbACd1VDQ2lAcU3xseLfw==}
@@ -151,12 +157,17 @@ packages:
       prettier: ^3.3.2
       typescript: ^5.5.2
 
-  '@1inch/limit-order-sdk@5.4.2':
-    resolution: {integrity: sha512-bsOhfeSZRTXXsKF1wpDEHO/P401MdojCBI8hUGf+gBZeipWpL+KIrCtAoRvm3O2DEWPg1cXHTSSVKHil5eMfkA==}
+  '@1inch/limit-order-sdk@5.4.3-rc.0':
+    resolution: {integrity: sha512-88PP/c2CD9nW1ZWTjIOlblBY60c87WEKKjezEVri4oPnhnoas1+5BxvOgnNYQIHVrzXLLWBrGV0M0SNWsvOyOg==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
       axios: '>=1.7.4'
+    peerDependenciesMeta:
+      assert:
+        optional: true
+      axios:
+        optional: true
 
   '@1inch/tsconfig@1.0.8':
     resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
@@ -2755,11 +2766,11 @@ packages:
 snapshots:
 
   '@1inch/byte-utils@3.0.0(assert@2.1.0)':
-    dependencies:
+    optionalDependencies:
       assert: 2.1.0
 
   '@1inch/byte-utils@3.1.0(assert@2.1.0)':
-    dependencies:
+    optionalDependencies:
       assert: 2.1.0
 
   '@1inch/eslint-config@3.0.6(6c037112769e9469a8ba5c98a8ace5b6)':
@@ -2784,12 +2795,13 @@ snapshots:
       semver: 7.7.2
       typescript: 4.9.4
 
-  '@1inch/limit-order-sdk@5.4.2(assert@2.1.0)(axios@1.12.2)':
+  '@1inch/limit-order-sdk@5.4.3-rc.0(assert@2.1.0)(axios@1.12.2)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
+      ethers: 6.16.0
+    optionalDependencies:
       assert: 2.1.0
       axios: 1.12.2
-      ethers: 6.16.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate

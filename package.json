@@ -1,6 +1,6 @@
 {
     "name": "@1inch/fusion-sdk",
-    "version": "2.1.13",
+    "version": "2.1.14-rc.1",
     "description": "1inch Fusion SDK",
     "author": "@1inch",
     "private": false,
@@ -32,7 +32,7 @@
     },
     "dependencies": {
         "@1inch/byte-utils": "^3.1.0",
-        "@1inch/limit-order-sdk": "5.4.2",
+        "@1inch/limit-order-sdk": "5.4.3-rc.0",
         "ethers": "^6.13.1",
         "tslib": "^2.6.3",
         "ws": "^8.17.1"
