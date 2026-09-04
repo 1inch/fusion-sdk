@@ -98,4 +98,44 @@ describe('Whitelist', () => {
         expect(reconstructedAddress.toString().slice(-20)).toBe(addressHalf)
         expect(reconstructedAddress.lastHalf()).toBe('0x' + addressHalf)
     })
+
+    it('fromNow builds a whitelist relative to the current time', () => {
+        const address = Address.fromBigInt(7n)
+        const whitelist = Whitelist.fromNow([
+            {address, allowFrom: 0n}
+        ])
+
+        expect(whitelist.isWhitelisted(address)).toBe(true)
+        expect(whitelist.canExecuteAt(address, now() + 1n)).toBe(true)
+    })
+
+    it('detects exclusivity for a single resolver and equal delays', () => {
+        const start = now()
+        const only = Address.fromBigInt(1n)
+        const single = Whitelist.new(start, [{address: only, allowFrom: start}])
+        expect(single.isExclusiveResolver(only)).toBe(true)
+        expect(single.isExclusivityPeriod(start)).toBe(true)
+
+        const a = Address.fromBigInt(2n)
+        const b = Address.fromBigInt(3n)
+        const shared = Whitelist.new(start, [
+            {address: a, allowFrom: start},
+            {address: b, allowFrom: start}
+        ])
+        expect(shared.isExclusiveResolver(a)).toBe(false)
+        expect(shared.isExclusivityPeriod(start)).toBe(false)
+
+        const staggered = Whitelist.new(start, [
+            {address: a, allowFrom: start},
+            {address: b, allowFrom: start + 30n}
+        ])
+        expect(staggered.isExclusiveResolver(a)).toBe(true)
+        expect(staggered.isExclusiveResolver(b)).toBe(false)
+        expect(staggered.isExclusivityPeriod(start + 10n)).toBe(true)
+        expect(staggered.equal(staggered)).toBe(true)
+        expect(staggered.equal(shared)).toBe(false)
+        expect(staggered.canExecuteAt(Address.fromBigInt(99n), start + 100n)).toBe(
+            false
+        )
+    })
 })
