@@ -52,5 +52,7 @@ export const CHAIN_TO_WRAPPER = {
     ),
     [NetworkEnum.HYPEREVM]: new Address(
         '0x5555555555555555555555555555555555555555'
-    )
+    ),
+    // WUSDC - the native gas token on Arc is USDC
+    [NetworkEnum.ARC]: new Address('0x1111161b5af064893d1a88e467293ecf660eeeee')
 }
