@@ -68,4 +68,17 @@ describe('Auction Calculator', () => {
             )
         })
     })
+
+    it('exposes initial bump and gas-cost estimate helpers', () => {
+        expect(AuctionCalculator.calcInitialRateBump(110n, 100n)).toBe(1000000)
+        expect(AuctionCalculator.calcAuctionMakingAmount(1000n, 10000)).toBe(
+            999n
+        )
+        expect(AuctionCalculator.baseFeeToGasPriceEstimate(1_000_000_000n)).toBe(
+            1000n
+        )
+        expect(AuctionCalculator.calcGasBumpEstimate(1_000_000n, 1000n)).toBe(
+            10000n
+        )
+    })
 })

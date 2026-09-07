@@ -1173,3 +1173,159 @@ describe('FusionOrder all-supported-chains registry', () => {
         }
     )
 })
+
+describe('FusionOrder extras', () => {
+    const settlement = new Address('0x8273f37417da37c4a6c3995e82cf442f87a25d9c')
+    const maker = new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
+    const resolver = new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
+
+    function details() {
+        return {
+            auction: new AuctionDetails({
+                duration: 180n,
+                startTime: 1673548149n,
+                initialRateBump: 50000,
+                points: [{coefficient: 20000, delay: 12}]
+            }),
+            whitelist: Whitelist.new(1673548139n, [
+                {address: resolver, allowFrom: 0n}
+            ]),
+            surplus: SurplusParams.NO_FEE
+        }
+    }
+
+    function erc20Info() {
+        return {
+            makerAsset: new Address(
+                '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+            ),
+            takerAsset: new Address(
+                '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+            ),
+            makingAmount: 1000000000000000000n,
+            takingAmount: 1420000000n,
+            maker,
+            salt: 10n
+        }
+    }
+
+    it('enables unwrap, permit2 and a nonce, and exposes getters', () => {
+        const order = FusionOrder.new(settlement, erc20Info(), details(), {
+            unwrapWETH: true,
+            enablePermit2: true,
+            nonce: 9n,
+            source: '0xabcdef01'
+        })
+
+        expect(order.maker.equal(maker)).toBe(true)
+        expect(order.makerAsset.toString()).toBe(
+            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+        )
+        expect(order.takerAsset.toString()).toBe(
+            '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        )
+        expect(order.makingAmount).toBe(1000000000000000000n)
+        expect(order.takingAmount).toBe(1420000000n)
+        expect(order.nonce).toBe(9n)
+        expect(order.salt).toBeGreaterThan(0n)
+        expect(order.deadline).toBe(1673548149n + 180n + 12n)
+        expect(order.auctionStartTime).toBe(1673548149n)
+        expect(order.auctionEndTime).toBe(1673548149n + 180n)
+        expect(order.partialFillAllowed).toBe(true)
+        expect(order.multipleFillsAllowed).toBe(true)
+        expect(order.isBitInvalidatorMode).toBe(false)
+        expect(order.receiver.isZero() || order.receiver.equal(settlement)).toBe(
+            true
+        )
+        expect(order.realReceiver.equal(maker)).toBe(true)
+        expect(order.isExpiredAt(order.deadline)).toBe(false)
+        expect(order.isExpiredAt(order.deadline + 1n)).toBe(true)
+        expect(order.canExecuteAt(resolver, 1673548149n)).toBe(true)
+        expect(order.isExclusiveResolver(resolver)).toBe(true)
+        expect(order.isExclusivityPeriod(1673548149n)).toBe(true)
+        expect(order.getCalculator()).toBeInstanceOf(AuctionCalculator)
+        expect(
+            order.getResolverFee(resolver, order.auctionStartTime)
+        ).toBe(0n)
+        expect(
+            order.getIntegratorFee(resolver, order.auctionStartTime)
+        ).toBe(0n)
+        expect(
+            order.getProtocolShareOfIntegratorFee(
+                resolver,
+                order.auctionStartTime
+            )
+        ).toBe(0n)
+        expect(order.getProtocolFee(resolver, order.auctionStartTime)).toBe(0n)
+        expect(
+            new MakerTraits(BigInt(order.build().makerTraits)).isNativeUnwrapEnabled()
+        ).toBe(true)
+        expect(
+            new MakerTraits(BigInt(order.build().makerTraits)).isPermit2()
+        ).toBe(true)
+    })
+
+    it('injects a 32-byte hex source into the salt track code', () => {
+        const order = FusionOrder.new(settlement, {
+            ...erc20Info(),
+            salt: undefined
+        }, details(), {
+            source: '0xabcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789'
+        })
+
+        expect(order.salt).toBeGreaterThan(0n)
+    })
+
+    it('rejects a native makerAsset on FusionOrder.new', () => {
+        expect(() =>
+            FusionOrder.new(
+                settlement,
+                {
+                    ...erc20Info(),
+                    makerAsset: Address.NATIVE_CURRENCY
+                },
+                details()
+            )
+        ).toThrow(/use FusionOrder.fromNative/)
+    })
+
+    it('fromNative keeps a non-zero receiver and reports isNativeOrder', () => {
+        const factory = new ProxyFactory(
+            Address.fromBigInt(1n),
+            Address.fromBigInt(2n)
+        )
+        const receiver = new Address(
+            '0x1111111111111111111111111111111111111111'
+        )
+        const nativeOrder = FusionOrder.fromNative(
+            NetworkEnum.ETHEREUM,
+            factory,
+            settlement,
+            {
+                takerAsset: new Address(
+                    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+                ),
+                makingAmount: 1000000000000000000n,
+                takingAmount: 1420000000n,
+                maker,
+                receiver,
+                salt: 10n
+            },
+            details()
+        )
+        const signature = nativeOrder.nativeSignature(maker)
+
+        expect(nativeOrder.realReceiver.equal(receiver)).toBe(true)
+        expect(
+            FusionOrder.isNativeOrder(
+                NetworkEnum.ETHEREUM,
+                factory,
+                nativeOrder.build(),
+                signature
+            )
+        ).toBe(true)
+        expect(
+            nativeOrder.isNative(NetworkEnum.ETHEREUM, factory, signature)
+        ).toBe(true)
+    })
+})
