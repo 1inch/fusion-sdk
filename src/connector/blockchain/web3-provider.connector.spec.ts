@@ -63,4 +63,23 @@ describe('Web3 provider connector', () => {
             JSON.stringify(typedData)
         )
     })
+
+    it('forwards eth_call to the wrapped provider', async () => {
+        const call = jest.fn().mockResolvedValue('0xabc')
+        const connector = new Web3ProviderConnector({
+            eth: {call},
+            extend: jest.fn()
+        })
+
+        await expect(
+            connector.ethCall(
+                '0x1111111111111111111111111111111111111111',
+                '0xdead'
+            )
+        ).resolves.toBe('0xabc')
+        expect(call).toHaveBeenCalledWith({
+            to: '0x1111111111111111111111111111111111111111',
+            data: '0xdead'
+        })
+    })
 })

@@ -38,4 +38,58 @@ describe('Axios Http provider connector', () => {
             headers: {Authorization: 'Bearer test-key'}
         })
     })
+
+    it('omits auth headers when no key is configured', async () => {
+        const connector = new AxiosProviderConnector()
+        jest.spyOn(axios, 'get').mockResolvedValueOnce({data: {ok: true}})
+
+        await expect(connector.get('https://example.com')).resolves.toEqual({
+            ok: true
+        })
+        expect(axios.get).toHaveBeenCalledWith('https://example.com', undefined)
+    })
+
+    it('throws AuthError on 401 responses', async () => {
+        const {AuthError} = await import('../../errors.js')
+        jest.spyOn(axios, 'get').mockRejectedValueOnce({
+            isAxiosError: true,
+            response: {status: 401}
+        })
+        jest.spyOn(axios, 'post').mockRejectedValueOnce({
+            isAxiosError: true,
+            response: {status: 401}
+        })
+
+        await expect(httpConnector.get('https://example.com')).rejects.toBeInstanceOf(
+            AuthError
+        )
+        await expect(
+            httpConnector.post('https://example.com', {})
+        ).rejects.toBeInstanceOf(AuthError)
+    })
+
+    it('rethrows non-auth failures', async () => {
+        const boom = new Error('network down')
+        jest.spyOn(axios, 'get').mockRejectedValueOnce(boom)
+        jest.spyOn(axios, 'post').mockRejectedValueOnce(boom)
+
+        await expect(httpConnector.get('https://example.com')).rejects.toBe(boom)
+        await expect(
+            httpConnector.post('https://example.com', {})
+        ).rejects.toBe(boom)
+    })
+
+    it('posts without auth headers when no key is configured', async () => {
+        const connector = new AxiosProviderConnector()
+        jest.spyOn(axios, 'post').mockResolvedValueOnce({data: {ok: true}})
+
+        await expect(
+            connector.post('https://example.com', {a: 1})
+        ).resolves.toEqual({ok: true})
+        expect(axios.post).toHaveBeenCalledWith(
+            'https://example.com',
+            {a: 1},
+            undefined
+        )
+    })
 })

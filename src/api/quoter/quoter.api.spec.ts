@@ -342,6 +342,28 @@ describe('Quoter API', () => {
         })
     })
 
+    it('rejects an invalid custom preset before posting', async () => {
+        const quoter = QuoterApi.new(
+            {
+                url: 'https://test.com/quoter',
+                network: 1
+            },
+            httpProvider
+        )
+        const body = QuoterCustomPresetRequest.new({
+            customPreset: {
+                auctionDuration: 180,
+                auctionStartAmount: 'not-a-number',
+                auctionEndAmount: '50000'
+            }
+        })
+
+        await expect(
+            quoter.getQuoteWithCustomPreset(params, body)
+        ).rejects.toThrow(/Invalid auctionStartAmount/)
+        expect(httpProvider.post).not.toHaveBeenCalled()
+    })
+
     describe('parseIntegratorFee', () => {
         it('should use response receiver when provided', () => {
             const responseWithFee = {

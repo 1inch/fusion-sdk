@@ -176,4 +176,40 @@ describe('AmountCalculator', () => {
 
         expect(userAmount2).toBe(69365890784904718356n)
     })
+
+    it('calcAuctionTakingAmount applies an optional fee on top of the rate bump', () => {
+        const base = 1_000_000n
+        const rate = 10_000
+        const withoutFee = AmountCalculator.calcAuctionTakingAmount(base, rate)
+        const withFee = AmountCalculator.calcAuctionTakingAmount(
+            base,
+            rate,
+            new Bps(100n)
+        )
+
+        expect(withoutFee).toBeGreaterThan(base)
+        expect(withFee).toBeGreaterThan(withoutFee)
+    })
+
+    it('returns zero fees and the raw making amount when no fee calculator is set', () => {
+        const startTime = 1738650250n
+        const calculator = new AmountCalculator(
+            new AuctionCalculator(startTime, 180n, 0n, [], {
+                gasBumpEstimate: 0n,
+                gasPriceEstimate: 0n
+            })
+        )
+        const taker = Address.fromBigInt(1n)
+
+        expect(
+            calculator.getRequiredMakingAmount(taker, 1000n, startTime)
+        ).toBe(1000n)
+        expect(calculator.getResolverFee(taker, 1000n, startTime)).toBe(0n)
+        expect(calculator.getIntegratorFee(taker, 1000n, startTime)).toBe(0n)
+        expect(
+            calculator.getProtocolShareOfIntegratorFee(taker, 1000n, startTime)
+        ).toBe(0n)
+        expect(calculator.getProtocolFee(taker, 1000n, startTime)).toBe(0n)
+        expect(calculator.getTotalFee(taker, 1000n, startTime)).toBe(0n)
+    })
 })
