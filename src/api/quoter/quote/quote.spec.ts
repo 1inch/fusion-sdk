@@ -1,4 +1,4 @@
-import {Address, Bps, ProxyFactory} from '@1inch/limit-order-sdk'
+import {Address, ProxyFactory} from '@1inch/limit-order-sdk'
 import {Quote} from './quote.js'
 import {FusionOrderParams} from './order-params.js'
 import {QuoterRequest} from '../quoter.request.js'
@@ -16,7 +16,9 @@ const SETTLEMENT = '0xa88800cd213da5ae406ce248380802bd53b47647'
 const NATIVE_FACTORY = '0x62c650084e97a0fba2ecf365cc6d8a7722425363'
 const NATIVE_IMPL = '0xe8773a43fce4eedb18d0edbaf319059e1ae786af'
 
-function presetData(overrides: Partial<QuoterResponse['presets']['fast']> = {}) {
+function presetData(
+    overrides: Partial<QuoterResponse['presets']['fast']> = {}
+): QuoterResponse['presets']['fast'] {
     return {
         auctionDuration: 180,
         startAuctionIn: 12,
@@ -37,7 +39,9 @@ function presetData(overrides: Partial<QuoterResponse['presets']['fast']> = {}) 
     }
 }
 
-function quoteResponse(overrides: Partial<QuoterResponse> = {}): QuoterResponse {
+function quoteResponse(
+    overrides: Partial<QuoterResponse> = {}
+): QuoterResponse {
     return {
         fromTokenAmount: '1000000000000000000000',
         recommended_preset: PresetEnum.medium,
@@ -183,10 +187,7 @@ describe('Quote', () => {
     })
 
     it('attaches surplus when market return is above the auction end amount', () => {
-        const quote = new Quote(
-            request(),
-            quoteResponse({surplusFee: 50})
-        )
+        const quote = new Quote(request(), quoteResponse({surplusFee: 50}))
         const order = quote.createFusionOrder({
             network: NetworkEnum.ETHEREUM
         })
@@ -315,7 +316,9 @@ describe('Quote', () => {
         )
 
         expect(quote.nativeOrderFactory).toBeInstanceOf(ProxyFactory)
-        expect(quote.nativeOrderFactory?.factory.toString()).toBe(NATIVE_FACTORY)
+        expect(quote.nativeOrderFactory?.factory.toString()).toBe(
+            NATIVE_FACTORY
+        )
 
         const order = quote.createFusionOrder({
             network: NetworkEnum.ETHEREUM

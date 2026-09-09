@@ -7,10 +7,9 @@ import {
     OrdersByMakerRequest,
     OrderStatusRequest
 } from './orders/orders.request.js'
-import {NetworkEnum} from '../constants.js'
-import {HttpProviderConnector} from '../connector/index.js'
 import {PresetEnum, QuoterResponse} from './quoter/types.js'
-import {ONE_INCH_LIMIT_ORDER_V4} from '../constants.js'
+import {NetworkEnum, ONE_INCH_LIMIT_ORDER_V4} from '../constants.js'
+import {HttpProviderConnector} from '../connector/index.js'
 
 const quoteBody = {
     fromTokenAmount: '1000000000000000000',

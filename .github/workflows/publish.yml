@@ -77,6 +77,13 @@ jobs:
           echo "@1inch:registry=https://npm.pkg.github.com" >> .npmrc
 
       - name: Publish 🚀
-        run: pnpm publish --no-git-checks
+        run: |
+          VERSION=$(node -p "require('../package.json').version")
+          # rc pre-releases must not re-point the default 'latest' dist-tag
+          if [[ "$VERSION" == *"-rc"* ]]; then
+            pnpm publish --no-git-checks --tag next
+          else
+            pnpm publish --no-git-checks
+          fi
         working-directory: dist
 

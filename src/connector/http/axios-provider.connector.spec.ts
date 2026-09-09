@@ -60,9 +60,9 @@ describe('Axios Http provider connector', () => {
             response: {status: 401}
         })
 
-        await expect(httpConnector.get('https://example.com')).rejects.toBeInstanceOf(
-            AuthError
-        )
+        await expect(
+            httpConnector.get('https://example.com')
+        ).rejects.toBeInstanceOf(AuthError)
         await expect(
             httpConnector.post('https://example.com', {})
         ).rejects.toBeInstanceOf(AuthError)
@@ -73,7 +73,9 @@ describe('Axios Http provider connector', () => {
         jest.spyOn(axios, 'get').mockRejectedValueOnce(boom)
         jest.spyOn(axios, 'post').mockRejectedValueOnce(boom)
 
-        await expect(httpConnector.get('https://example.com')).rejects.toBe(boom)
+        await expect(httpConnector.get('https://example.com')).rejects.toBe(
+            boom
+        )
         await expect(
             httpConnector.post('https://example.com', {})
         ).rejects.toBe(boom)

@@ -101,9 +101,7 @@ describe('Whitelist', () => {
 
     it('fromNow builds a whitelist relative to the current time', () => {
         const address = Address.fromBigInt(7n)
-        const whitelist = Whitelist.fromNow([
-            {address, allowFrom: 0n}
-        ])
+        const whitelist = Whitelist.fromNow([{address, allowFrom: 0n}])
 
         expect(whitelist.isWhitelisted(address)).toBe(true)
         expect(whitelist.canExecuteAt(address, now() + 1n)).toBe(true)
@@ -134,8 +132,8 @@ describe('Whitelist', () => {
         expect(staggered.isExclusivityPeriod(start + 10n)).toBe(true)
         expect(staggered.equal(staggered)).toBe(true)
         expect(staggered.equal(shared)).toBe(false)
-        expect(staggered.canExecuteAt(Address.fromBigInt(99n), start + 100n)).toBe(
-            false
-        )
+        expect(
+            staggered.canExecuteAt(Address.fromBigInt(99n), start + 100n)
+        ).toBe(false)
     })
 })

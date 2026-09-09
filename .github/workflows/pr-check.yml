@@ -37,14 +37,56 @@ jobs:
       - name: Security
         run: pnpm audit --audit-level high
 
+  # Inlined from 1inch/workflows trivy-scan-v1 (v1.0.8). This repo is public and
+  # GitHub cannot resolve that private reusable workflow here, which fails the
+  # entire PR validation run at startup (0 jobs) — including the check job.
+  # Same fix as limit-order-sdk and solana-fusion-sdk pr-check.yml.
   dependabot-audit:
-    uses: 1inch/workflows/.github/workflows/trivy-scan.yaml@trivy-scan-v1
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: read
       packages: read
       security-events: write
-    with:
-      severity: 'CRITICAL'
-      limit-severities-for-sarif: false
-      skip-files: '.npmrc'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Run Trivy scan (SARIF for GitHub Security tab)
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL
+          ignore-unfixed: true
+          scanners: vuln
+          vuln-type: os,library
+          skip-files: .npmrc
+          timeout: 10m0s
+          limit-severities-for-sarif: false
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: '0'
+
+      - name: Upload SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-fs
+
+      - name: Fail on vulnerabilities
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL
+          ignore-unfixed: true
+          scanners: vuln
+          vuln-type: os,library
+          skip-files: .npmrc
+          timeout: 10m0s
+          format: table
+          exit-code: '1'
+          skip-setup-trivy: true

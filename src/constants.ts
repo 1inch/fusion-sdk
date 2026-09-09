@@ -17,7 +17,8 @@ export enum NetworkEnum {
     ROBINHOOD = 4663,
     MONAD = 143,
     CRONOS = 25,
-    HYPEREVM = 999
+    HYPEREVM = 999,
+    ARC = 5042
 }
 
 export const ONE_INCH_LIMIT_ORDER_V4 =

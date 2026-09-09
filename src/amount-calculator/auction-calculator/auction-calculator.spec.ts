@@ -74,9 +74,9 @@ describe('Auction Calculator', () => {
         expect(AuctionCalculator.calcAuctionMakingAmount(1000n, 10000)).toBe(
             999n
         )
-        expect(AuctionCalculator.baseFeeToGasPriceEstimate(1_000_000_000n)).toBe(
-            1000n
-        )
+        expect(
+            AuctionCalculator.baseFeeToGasPriceEstimate(1_000_000_000n)
+        ).toBe(1000n)
         expect(AuctionCalculator.calcGasBumpEstimate(1_000_000n, 1000n)).toBe(
             10000n
         )
