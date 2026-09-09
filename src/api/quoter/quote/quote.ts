@@ -134,7 +134,19 @@ export class Quote {
             whitelist: this.getWhitelist(
                 auctionDetails.startTime,
                 preset.exclusiveResolver
-            )
+            ),
+            // fees must live in `details` - FusionOrder.new reads them from
+            // there to build SettlementPostInteractionData (they were silently
+            // dropped from `extra` between v2.1.12 and v2.1.14-rc.0)
+            fees: {
+                integratorFee: {
+                    ratio: bpsToRatioFormat(this.params.fee) || 0n,
+                    receiver: paramsData?.takingFeeReceiver
+                        ? new Address(paramsData?.takingFeeReceiver)
+                        : Address.ZERO_ADDRESS
+                },
+                bankFee: preset.bankFee
+            }
         }
 
         const extra = {
@@ -145,16 +157,7 @@ export class Quote {
             allowMultipleFills,
             orderExpirationDelay: paramsData?.orderExpirationDelay,
             source: this.params.source,
-            enablePermit2: params.isPermit2,
-            fees: {
-                integratorFee: {
-                    ratio: bpsToRatioFormat(this.params.fee) || 0n,
-                    receiver: paramsData?.takingFeeReceiver
-                        ? new Address(paramsData?.takingFeeReceiver)
-                        : Address.ZERO_ADDRESS
-                },
-                bankFee: preset.bankFee
-            }
+            enablePermit2: params.isPermit2
         }
 
         return this._createOrder(

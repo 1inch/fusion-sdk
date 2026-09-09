@@ -461,10 +461,11 @@ describe('FusionOrder Native', () => {
     })
 
     it.each<[NetworkEnum, string]>([
-        // HyperEVM uses a non-default limit order protocol deployment
+        // HyperEVM and Arc use non-default limit order protocol deployments
         [NetworkEnum.MONAD, ONE_INCH_LIMIT_ORDER_V4],
         [NetworkEnum.CRONOS, ONE_INCH_LIMIT_ORDER_V4],
-        [NetworkEnum.HYPEREVM, '0x5281602adc446a94eb48d055f514a6d8d5bee176']
+        [NetworkEnum.HYPEREVM, '0x5281602adc446a94eb48d055f514a6d8d5bee176'],
+        [NetworkEnum.ARC, '0xe08cab0828a67291ec4af1fb3e7f867e206a6bda']
     ])(
         'should use correct verifying contract for chain %d',
         (chainId, expectedVerifyingContract) => {
