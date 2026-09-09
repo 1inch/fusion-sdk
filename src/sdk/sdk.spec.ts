@@ -176,7 +176,9 @@ describe(__filename, () => {
         expect(quote).toBeInstanceOf(Quote)
         expect(quote.quoteId).toBe('quote-id-1')
         expect(httpProvider.get).toHaveBeenCalledWith(
-            expect.stringContaining('walletAddress=0x0000000000000000000000000000000000000000')
+            expect.stringContaining(
+                'walletAddress=0x0000000000000000000000000000000000000000'
+            )
         )
     })
 
@@ -408,7 +410,11 @@ describe(__filename, () => {
         const maker = new Address(WALLET)
         const expectedSig = sdk.signNativeOrder(order, maker)
 
-        const submitted = await sdk.submitNativeOrder(order, maker, 'quote-id-1')
+        const submitted = await sdk.submitNativeOrder(
+            order,
+            maker,
+            'quote-id-1'
+        )
 
         expect(submitted.signature).toBe(expectedSig)
         expect(httpProvider.post).toHaveBeenCalledWith(
@@ -421,10 +427,12 @@ describe(__filename, () => {
         expect(
             order.isNative(
                 NetworkEnum.ETHEREUM,
-                new ProxyFactory(new Address(nativeFactory), new Address(nativeImpl)),
+                new ProxyFactory(
+                    new Address(nativeFactory),
+                    new Address(nativeImpl)
+                ),
                 expectedSig
             )
         ).toBe(true)
     })
 })
-

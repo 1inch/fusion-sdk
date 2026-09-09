@@ -73,7 +73,10 @@ describe('Private Key provider connector', () => {
         })
 
         await expect(
-            connector.ethCall('0x1111111111111111111111111111111111111111', '0xabcd')
+            connector.ethCall(
+                '0x1111111111111111111111111111111111111111',
+                '0xabcd'
+            )
         ).resolves.toBe('0x01')
         expect(call).toHaveBeenCalledWith({
             to: '0x1111111111111111111111111111111111111111',

@@ -4,6 +4,7 @@ import {
     MakerTraits,
     Extension,
     Interaction,
+    OrderInfoData,
     ProxyFactory
 } from '@1inch/limit-order-sdk'
 import {parseEther, parseUnits} from 'ethers'
@@ -13,6 +14,7 @@ import {Whitelist} from './whitelist/index.js'
 import {SurplusParams} from './surplus-params.js'
 import {Fees, IntegratorFee, ResolverFee} from './fees/index.js'
 import {CHAIN_TO_WRAPPER} from './constants.js'
+import {Details} from './types.js'
 import {NetworkEnum, ONE_INCH_LIMIT_ORDER_V4} from '../constants.js'
 import {AuctionCalculator} from '../amount-calculator/index.js'
 import {now} from '../utils/time.js'
@@ -1181,7 +1183,7 @@ describe('FusionOrder extras', () => {
     const maker = new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
     const resolver = new Address('0x00000000219ab540356cbb839cbe05303d7705fa')
 
-    function details() {
+    function details(): Details {
         return {
             auction: new AuctionDetails({
                 duration: 180n,
@@ -1196,7 +1198,7 @@ describe('FusionOrder extras', () => {
         }
     }
 
-    function erc20Info() {
+    function erc20Info(): OrderInfoData {
         return {
             makerAsset: new Address(
                 '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
@@ -1236,9 +1238,9 @@ describe('FusionOrder extras', () => {
         expect(order.partialFillAllowed).toBe(true)
         expect(order.multipleFillsAllowed).toBe(true)
         expect(order.isBitInvalidatorMode).toBe(false)
-        expect(order.receiver.isZero() || order.receiver.equal(settlement)).toBe(
-            true
-        )
+        expect(
+            order.receiver.isZero() || order.receiver.equal(settlement)
+        ).toBe(true)
         expect(order.realReceiver.equal(maker)).toBe(true)
         expect(order.isExpiredAt(order.deadline)).toBe(false)
         expect(order.isExpiredAt(order.deadline + 1n)).toBe(true)
@@ -1246,12 +1248,10 @@ describe('FusionOrder extras', () => {
         expect(order.isExclusiveResolver(resolver)).toBe(true)
         expect(order.isExclusivityPeriod(1673548149n)).toBe(true)
         expect(order.getCalculator()).toBeInstanceOf(AuctionCalculator)
-        expect(
-            order.getResolverFee(resolver, order.auctionStartTime)
-        ).toBe(0n)
-        expect(
-            order.getIntegratorFee(resolver, order.auctionStartTime)
-        ).toBe(0n)
+        expect(order.getResolverFee(resolver, order.auctionStartTime)).toBe(0n)
+        expect(order.getIntegratorFee(resolver, order.auctionStartTime)).toBe(
+            0n
+        )
         expect(
             order.getProtocolShareOfIntegratorFee(
                 resolver,
@@ -1260,7 +1260,9 @@ describe('FusionOrder extras', () => {
         ).toBe(0n)
         expect(order.getProtocolFee(resolver, order.auctionStartTime)).toBe(0n)
         expect(
-            new MakerTraits(BigInt(order.build().makerTraits)).isNativeUnwrapEnabled()
+            new MakerTraits(
+                BigInt(order.build().makerTraits)
+            ).isNativeUnwrapEnabled()
         ).toBe(true)
         expect(
             new MakerTraits(BigInt(order.build().makerTraits)).isPermit2()
@@ -1268,12 +1270,17 @@ describe('FusionOrder extras', () => {
     })
 
     it('injects a 32-byte hex source into the salt track code', () => {
-        const order = FusionOrder.new(settlement, {
-            ...erc20Info(),
-            salt: undefined
-        }, details(), {
-            source: '0xabcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789'
-        })
+        const order = FusionOrder.new(
+            settlement,
+            {
+                ...erc20Info(),
+                salt: undefined
+            },
+            details(),
+            {
+                source: '0xabcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789'
+            }
+        )
 
         expect(order.salt).toBeGreaterThan(0n)
     })
