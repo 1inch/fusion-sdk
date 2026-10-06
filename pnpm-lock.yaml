@@ -19,7 +19,7 @@ overrides:
   '@isaacs/brace-expansion@<=5.0.0': '>=5.0.1'
   ws@>=8.0.0 <8.21.0: '>=8.21.0'
   form-data@>=4.0.0 <4.0.6: '>=4.0.6'
-  piscina@<=4.9.2: '>=4.9.3 <5'
+  piscina@<4.9.4: '>=4.9.4 <5'
   '@xhmikosr/decompress@<10.2.2': '>=10.2.2 <11'
   undici@>=7.0.0 <7.29.0: '>=7.29.0 <8'
   js-yaml@>=3.0.0 <3.15.2: '>=3.15.2 <4'
@@ -2980,8 +2980,8 @@ packages:
     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
 
-  piscina@4.9.3:
-    resolution: {integrity: sha512-3e3ka9QCE8RJ5I9uszdAADZnkcYi21cqmF3gxox3u884N72qpFHCsIVhHt8cEQ9t3Auq/NqoiCEuhxlxxQuDWA==}
+  piscina@4.9.4:
+    resolution: {integrity: sha512-RyBDr2VheQ8ZfH3N8SzQZHztqVyOtadTwLnUYof6gdj5161/eu2wNhCbGl5GHnNKDpnkicJYpKtL2J+y/gk6XA==}
 
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
@@ -4414,7 +4414,7 @@ snapshots:
       commander: 8.3.0
       fast-glob: 3.3.3
       minimatch: 9.0.9
-      piscina: 4.9.3
+      piscina: 4.9.4
       semver: 7.8.2
       slash: 3.0.0
       source-map: 0.7.6
@@ -7040,7 +7040,7 @@ snapshots:
 
   pirates@4.0.7: {}
 
-  piscina@4.9.3:
+  piscina@4.9.4:
     optionalDependencies:
       '@napi-rs/nice': 1.1.1
 
