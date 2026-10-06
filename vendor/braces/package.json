@@ -1,0 +1,17 @@
+{
+  "name": "braces",
+  "description": "Depth-limited fork of braces 3.0.3. Upstream has no release past the stack-exhaustion advisory, so nesting deeper than MAX_DEPTH throws before the call stack overflows.",
+  "version": "3.0.4",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "dependencies": {
+    "fill-range": "^7.1.1"
+  },
+  "engines": {
+    "node": ">=8"
+  }
+}
