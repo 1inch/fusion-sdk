@@ -24,7 +24,6 @@ overrides:
   undici@>=7.0.0 <7.29.1: '>=7.29.1 <8'
   '@grpc/grpc-js@>=1.14.0 <1.14.5': '>=1.14.5 <2'
   http-cache-semantics@<=4.2.0: '>=4.3.0'
-  braces@<=3.0.3: file:vendor/braces
   js-yaml@>=3.0.0 <3.15.2: '>=3.15.2 <4'
   browserslist@<4.28.7: '>=4.28.7'
   uuid@<11.1.1: '>=11.1.1 <12.0.0'
@@ -1463,8 +1462,8 @@ packages:
     resolution: {integrity: sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==}
     engines: {node: 20 || >=22}
 
-  braces@file:vendor/braces:
-    resolution: {directory: vendor/braces, type: directory}
+  braces@3.0.3:
+    resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
   browserslist@4.28.9:
@@ -5284,7 +5283,7 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
-  braces@file:vendor/braces:
+  braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
 
@@ -6862,7 +6861,7 @@ snapshots:
 
   micromatch@4.0.8:
     dependencies:
-      braces: file:vendor/braces
+      braces: 3.0.3
       picomatch: 2.3.2
 
   mime-db@1.52.0: {}
