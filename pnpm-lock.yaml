@@ -144,19 +144,25 @@ importers:
 packages:
 
   '@1inch/byte-utils@3.0.0':
-    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/3.0.0/1c573a3e72586540ea6f542099cd18da978118df}
+    resolution: {integrity: sha512-CuX4E0z/pzo9hKGzFsMi3vPVgHRRh14ZwNEZ5TY1svnKF8PjxWx3t0CjXCW4dyqKGe6TKAzgYqzzxrMrWPDy5Q==}
     engines: {node: '>=18.16.0'}
     peerDependencies:
       assert: ^2.0.0
+    peerDependenciesMeta:
+      assert:
+        optional: true
 
   '@1inch/byte-utils@3.1.7':
-    resolution: {integrity: sha512-AXS9XWOPXnTYFYozc10fYE3PnplD9RmCzO57U4vzxzGQ0zgdeoTfYe8hXej/NctYJFcTL3PzyC0HZn2sZ7IWbA==, tarball: https://npm.pkg.github.com/download/@1inch/byte-utils/3.1.7/6d70a0ba1ca3c04a6c786f3ca2aa242d322d6c72}
+    resolution: {integrity: sha512-AXS9XWOPXnTYFYozc10fYE3PnplD9RmCzO57U4vzxzGQ0zgdeoTfYe8hXej/NctYJFcTL3PzyC0HZn2sZ7IWbA==}
     engines: {node: '>=22'}
     peerDependencies:
       assert: ^2.0.0
+    peerDependenciesMeta:
+      assert:
+        optional: true
 
   '@1inch/eslint-config@5.0.0':
-    resolution: {integrity: sha512-aSRdTLO466FjDZIbKcKxJozzULnFo34dPQIfoP95EeqilNW/m93nsFgGDo4jj2qUG8v6mvQyEJw8mliy2kEQwQ==, tarball: https://npm.pkg.github.com/download/@1inch/eslint-config/5.0.0/393479a7e8ae646e914cc62c657800bd2b52d09a}
+    resolution: {integrity: sha512-gRDnp7O+HJd8ZKzofna4SmVIOomnc7U3PuYieg5KWoLKa5xRM1iDHyhY3iS/B+fcmUC2d9a7j9blF3/OJbYIgQ==}
     peerDependencies:
       '@eslint/js': ^10.0.0
       '@stylistic/eslint-plugin': ^5.0.0
@@ -172,14 +178,19 @@ packages:
       typescript-eslint: ^8.0.0
 
   '@1inch/limit-order-sdk@5.4.3':
-    resolution: {integrity: sha512-bQb/cYzYQej/ZnsAVW8p91T6mwtT/TeoESVESD8IX/jocaEABZOmdg7aYzYJMc218OJA9s76QtjKWVBUlqQLxQ==, tarball: https://npm.pkg.github.com/download/@1inch/limit-order-sdk/5.4.3/72ced47370ad685b1275cb3397cdb9ebad8ca8b9}
+    resolution: {integrity: sha512-bQb/cYzYQej/ZnsAVW8p91T6mwtT/TeoESVESD8IX/jocaEABZOmdg7aYzYJMc218OJA9s76QtjKWVBUlqQLxQ==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
       axios: '>=1.18.0'
+    peerDependenciesMeta:
+      assert:
+        optional: true
+      axios:
+        optional: true
 
   '@1inch/tsconfig@1.0.8':
-    resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==, tarball: https://npm.pkg.github.com/download/@1inch/tsconfig/1.0.8/7b487c7bfa640c7a1ecee5a664c5d0d5000ca492}
+    resolution: {integrity: sha512-j9N4YPEo/QbGMuB5jP26Upb5P7qiO5H3w9rNtort5VD++LY7y8WD69fVEC/8hSAXxpQ0EHH1N2pY4oavwztyZQ==}
 
   '@adraffy/ens-normalize@1.10.1':
     resolution: {integrity: sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==}
@@ -3713,11 +3724,11 @@ packages:
 snapshots:
 
   '@1inch/byte-utils@3.0.0(assert@2.1.0)':
-    dependencies:
+    optionalDependencies:
       assert: 2.1.0
 
   '@1inch/byte-utils@3.1.7(assert@2.1.0)':
-    dependencies:
+    optionalDependencies:
       assert: 2.1.0
 
   '@1inch/eslint-config@5.0.0(@eslint/js@9.18.0)(@stylistic/eslint-plugin@5.10.0(eslint@9.18.0))(eslint-config-prettier@10.1.8(eslint@9.18.0))(eslint-import-resolver-typescript@3.10.1)(eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.60.1(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.10)(eslint@9.18.0))(eslint-plugin-prettier@5.5.6(eslint-config-prettier@10.1.8(eslint@9.18.0))(eslint@9.18.0)(prettier@3.8.3))(eslint-plugin-unused-imports@4.4.1(@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0)(globals@16.5.0)(prettier@3.8.3)(typescript-eslint@8.60.1(eslint@9.18.0)(typescript@5.7.3))(typescript@5.7.3)':
@@ -3739,9 +3750,10 @@ snapshots:
   '@1inch/limit-order-sdk@5.4.3(assert@2.1.0)(axios@1.18.1)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
+      ethers: 6.16.0
+    optionalDependencies:
       assert: 2.1.0
       axios: 1.18.1
-      ethers: 6.16.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
