@@ -96,7 +96,8 @@ export class FusionSDK {
             enableEstimate: !!params.enableEstimate,
             integratorFee: params?.integratorFee,
             source: params.source,
-            isPermit2: params.isPermit2
+            isPermit2: params.isPermit2,
+            slippage: params.slippage
         })
 
         const bodyRequest = QuoterCustomPresetRequest.new({
