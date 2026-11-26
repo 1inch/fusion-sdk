@@ -219,6 +219,40 @@ describe(__filename, () => {
         )
     })
 
+    it('getQuoteWithCustomPreset forwards the slippage', async () => {
+        const httpProvider = {
+            get: jest.fn(),
+            post: jest.fn().mockResolvedValue(quotePayload())
+        }
+        const sdk = new FusionSDK({
+            url: 'https://test.com',
+            network: NetworkEnum.ETHEREUM,
+            httpProvider
+        })
+
+        await sdk.getQuoteWithCustomPreset(
+            {
+                fromTokenAddress: DAI,
+                toTokenAddress: WETH,
+                amount: '1000000000000000000000',
+                walletAddress: WALLET,
+                slippage: 1.5
+            },
+            {
+                customPreset: {
+                    auctionDuration: 180,
+                    auctionStartAmount: '627398742236202876',
+                    auctionEndAmount: '614454580595911348'
+                }
+            }
+        )
+
+        expect(httpProvider.post).toHaveBeenCalledWith(
+            expect.stringContaining('&slippage=1.5'),
+            expect.anything()
+        )
+    })
+
     it('createOrder builds a prepared order from a quote with quoteId', async () => {
         const httpProvider = createHttpProviderFake(quotePayload())
         const sdk = new FusionSDK({
